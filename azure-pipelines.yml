@@ -61,9 +61,9 @@ steps:
     displayName: "Publish - dotnet publish $(SolutionBaseName)"
     inputs:
       command: publish
-      publishWebProjects: false
+      publishWebProjects: false #set to false as this setting (which defaults to true) will parse the entire repo for web projects
       projects: "src/$(SolutionBaseName)/$(SolutionBaseName).csproj"
-      arguments: "--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build"
+      arguments: "-o $(build.artifactstagingdirectory)/publish -c $(BuildConfiguration)"
 
   - task: CopyFiles@2
     displayName: "Copy Files to: $(build.artifactstagingdirectory)"
