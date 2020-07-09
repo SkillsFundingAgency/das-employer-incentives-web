@@ -36,7 +36,7 @@ steps:
       versionSpec: 5.x
 
   - task: DotNetCoreCLI@2
-    displayName: dot restore
+    displayName: dotnet restore
     inputs:
       command: restore
       projects: "src/**/*.sln"
