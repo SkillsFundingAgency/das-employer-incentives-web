@@ -1,0 +1,21 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.QualificationQuestionViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <h1>@Model.Title</h1>
+
+        <p>You can only apply for new employees who joined your organisation after 1 August 2020.</p>
+        
+        <form asp-action="QualificationQuestion">
+
+            <input asp-for="HasTakenOnNewApprentices" type="radio" value="true" />Yes
+            <input asp-for="HasTakenOnNewApprentices" type="radio" value="false" />No
+
+            <button type="submit">Continue</button>
+
+        </form>
+    </div>
+</main>
