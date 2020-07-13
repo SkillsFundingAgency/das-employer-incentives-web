@@ -3,5 +3,6 @@
     public class EmployerIncentivesWebConfiguration
     {
         public string RedisCacheConnectionString { get; set; }
+        public string CommitmentsBaseUrl { get; set; }
     }
 }

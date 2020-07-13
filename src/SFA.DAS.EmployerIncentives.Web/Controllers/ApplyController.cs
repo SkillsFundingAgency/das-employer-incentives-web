@@ -38,9 +38,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpGet]
+        [Route("CannotApply")]
         public async Task<ViewResult> CannotApply()
         {
-            throw new NotImplementedException();
+            return View(new CannotApplyViewModel());
         }
     }
 }

@@ -1,0 +1,33 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.CannotApplyViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <form>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="CannotApply-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
+                        <span id="CannotApply-hint" class="govuk-hint">
+                            You can only apply for this grant if you have new apprentices who joined your organisation after 1 August 2020.
+                        </span>
+                        <span>
+                            If you have apprentices who are eligible for this grant, you’ll need to <a href="@Model.CommitmentsUrl">add them to your apprenticeship service account.</a>
+                        </span>
+                    </fieldset>
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
