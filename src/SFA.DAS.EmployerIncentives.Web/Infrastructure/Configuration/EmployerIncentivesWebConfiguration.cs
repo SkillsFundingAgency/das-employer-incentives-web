@@ -2,7 +2,7 @@
 {
     public class EmployerIncentivesWebConfiguration
     {
-        public string RedisCacheConnectionString { get; set; }
-        public string CommitmentsBaseUrl { get; set; }
+        public virtual string RedisCacheConnectionString { get; set; }
+        public virtual string CommitmentsBaseUrl { get; set; }
     }
 }

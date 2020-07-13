@@ -7,16 +7,8 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
 {
     [TestFixture]
-    public class WhenYesIsSelected
+    public class WhenYesIsSelected : ApplyControllerTestBase
     {
-        private Web.Controllers.ApplyController _sut;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _sut = new Web.Controllers.ApplyController();
-        }
-
         [Test]
         public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed()
         {
