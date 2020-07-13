@@ -5,20 +5,53 @@
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
-        <h1>@Model.Title</h1>
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="QualificationQuestion">
+                @Html.AntiForgeryToken()
+            
+                <partial name="ValidationSummary" />
 
-        <p>You can only apply for new employees who joined your organisation after 1 August 2020.</p>
-        
-        <form asp-action="QualificationQuestion">
+                <!-- div below needs class of 'govuk-form-group--error' added when this question is in an invalid state -->
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="HasTakenOnNewApprentices-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
+                        <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
+                            You can only apply for new employees who joined your organisation after 1 August 2020.
+                        </span>
 
-            @Html.AntiForgeryToken()
-            <partial name="ValidationSummary" />
+                        <!-- the below needs to be shown when this question is in an invalid state (with same error message as in summary) -->
 
-            <input asp-for="HasTakenOnNewApprentices" type="radio" value="true" />Yes
-            <input asp-for="HasTakenOnNewApprentices" type="radio" value="false" />No
+                        <!-- 
+                        <span id="HasTakenOnNewApprentices-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020
+                        </span> 
+                        -->
 
-            <button type="submit">Continue</button>
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprentices" id="HasTakenOnNewApprentices" type="radio" value="yes" />
+                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprentices">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprentices" id="HasTakenOnNewApprentices-2" type="radio" value="no" />
+                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprentices-2">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
 
-        </form>
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+            </form>
+        </div>
     </div>
 </main>
