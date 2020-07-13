@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)
             {
-                viewModel.AddError("HasTakenOnNewApprentices", "Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020");
+                ModelState.AddModelError("HasTakenOnNewApprentices", "Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020");
                 return View(viewModel);
             }
 

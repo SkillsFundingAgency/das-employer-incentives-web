@@ -11,6 +11,9 @@
         
         <form asp-action="QualificationQuestion">
 
+            @Html.AntiForgeryToken()
+            <partial name="ValidationSummary" />
+
             <input asp-for="HasTakenOnNewApprentices" type="radio" value="true" />Yes
             <input asp-for="HasTakenOnNewApprentices" type="radio" value="false" />No
 
