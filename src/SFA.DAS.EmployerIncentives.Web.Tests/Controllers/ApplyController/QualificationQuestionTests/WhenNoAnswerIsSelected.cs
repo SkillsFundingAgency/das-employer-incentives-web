@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var viewResult = result as ViewResult;
 
             _sut.ViewData.ModelState.IsValid.Should().BeFalse();
-            _sut.ViewData.ModelState.Single(x => x.Key == "HasTakenOnNewApprentices").Value.Errors.Should().Contain(x => x.ErrorMessage == "Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020");
+            _sut.ViewData.ModelState.Single(x => x.Key == "HasTakenOnNewApprentices").Value.Errors.Should().Contain(x => x.ErrorMessage == QualificationQuestionViewModel.HasTakenOnNewApprenticesNotSelectedMessage);
             viewResult.ViewName.Should().BeNullOrEmpty();
         }
     }
