@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Mvc.Extensions;
@@ -87,6 +88,9 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+
+            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
+            services.AddSingleton(config => config.GetService<IOptions<EmployerIncentivesWebConfiguration>>().Value);
 
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {

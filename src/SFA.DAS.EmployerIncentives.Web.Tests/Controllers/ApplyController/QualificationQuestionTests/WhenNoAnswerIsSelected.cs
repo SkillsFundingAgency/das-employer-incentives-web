@@ -8,16 +8,8 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
 {
     [TestFixture]
-    public class WhenNoAnswerIsSelected
+    public class WhenNoAnswerIsSelected : ApplyControllerTestBase
     {
-        private Web.Controllers.ApplyController _sut;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _sut = new Web.Controllers.ApplyController();
-        }
-
         [Test]
         public async Task Then_a_Validation_Error_Is_Displayed()
         {

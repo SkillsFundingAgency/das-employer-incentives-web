@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -8,6 +10,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/[Controller]")]
     public class ApplyController : Controller
     {
+        private readonly EmployerIncentivesWebConfiguration _configuration;
+
+        public ApplyController(IOptions<EmployerIncentivesWebConfiguration> configuration)
+        {
+            _configuration = configuration.Value;
+        }
+
         [Route("")]
         [HttpGet]
         public async Task<ViewResult> QualificationQuestion()
@@ -27,10 +36,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (viewModel.HasTakenOnNewApprentices.Value)
             {
-                return RedirectToAction("SelectApprenticeships");
+                return RedirectToAction("SelectApprenticeships", new { accountId });
             }
 
-            return RedirectToAction("CannotApply");
+            return RedirectToAction("CannotApply", new { accountId });
         }
 
         public async Task<ViewResult> SelectApprenticeships()
@@ -38,9 +47,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpGet]
+        [Route("CannotApply")]
         public async Task<ViewResult> CannotApply()
         {
-            throw new NotImplementedException();
+            return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
         }
     }
 }
