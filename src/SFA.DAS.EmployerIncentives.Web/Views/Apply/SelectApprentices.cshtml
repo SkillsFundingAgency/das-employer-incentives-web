@@ -1,14 +1,19 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticesViewModel
-
 @{
     ViewData["Title"] = Model.Title;
 }
 
-<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<a asp-action="QualificationQuestion" asp-controller="Apply" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <form action="" method="post" class="form">
-                <div class="govuk-form-group">
+                @Html.AntiForgeryToken()
+
+                <partial name="ValidationSummary" />
+
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                     <fieldset class="govuk-fieldset" aria-describedby="new-apprentices-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
@@ -16,22 +21,39 @@
                             </h1>
                         </legend>
 
-                        <p>You can only choose from your apprentices:</p>
+                        <p class="govuk-body">You can only choose from your apprentices:</p>
+                        
                         <ul class="govuk-list govuk-list--bullet">
                             <li>with a planned start date after 1 August 2020</li>
                             <li>that you have not applied for already</li>
                         </ul>
-                        <div class="govuk-inset-text"><p>You must only select apprentices that joined your payroll after 1 August 2020.</p></div>
+
+                        <div class="govuk-inset-text">
+                            You must only select apprentices that joined your payroll after 1 August 2020.
+                        </div>
 
                         <span id="new-apprentices-hint" class="govuk-hint">
                             Select all that apply.
                         </span>
 
+                        <!-- RUS! the below will need to appear dynamically when the ModelState is invalid. -->
+
+                        <!-- <span id="new-apprentices-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Select the apprentices you want to apply for
+                        </span> -->
+
                         <div class="govuk-checkboxes">
                             @foreach (var apprentice in Model.Apprentices)
                             {
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="new-apprentices-@apprentice.Id" name="apprentice1" type="checkbox" value="apprentice1" aria-describedby="new-apprentices-item-hint" />
+                                    <input
+                                        class="govuk-checkboxes__input"
+                                        id="new-apprentices-@apprentice.Id"
+                                        name="new-apprentices"
+                                        type="checkbox"
+                                        value="@apprentice.Id"
+                                        aria-describedby="new-apprentices-item-hint"
+                                    />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprentices-@apprentice.Id">
                                         @apprentice.FullName
                                     </label>

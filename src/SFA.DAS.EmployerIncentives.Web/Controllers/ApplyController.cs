@@ -48,14 +48,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("SelectApprentices")]
+        [Route("select-new-apprentices")]
         public async Task<ViewResult> SelectApprentices()
         {
             return View(new SelectApprenticesViewModel());
         }
 
         [HttpGet]
-        [Route("CannotApply")]
+        [Route("cannot-apply")]
         public async Task<ViewResult> CannotApply()
         {
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
