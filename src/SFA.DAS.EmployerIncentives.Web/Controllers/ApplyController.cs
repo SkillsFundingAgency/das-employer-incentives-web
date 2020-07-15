@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -45,6 +45,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<ViewResult> SelectApprenticeships()
         {
             throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [Route("SelectApprentices")]
+        public async Task<ViewResult> SelectApprentices()
+        {
+            return View(new SelectApprenticesViewModel());
         }
 
         [HttpGet]
