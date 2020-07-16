@@ -1,20 +1,21 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -68,8 +69,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
 
             //services.AddAndConfigureEmployerAuthentication(
-                    //serviceProvider.GetService<IOptions<IdentityServerConfiguration>>(),
-                    //serviceProvider.GetService<IEmployerAccountService>());
+            //serviceProvider.GetService<IOptions<IdentityServerConfiguration>>(),
+            //serviceProvider.GetService<IEmployerAccountService>());
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
@@ -85,6 +86,11 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddHttpsRedirection(options =>
             {
                 options.HttpsPort = _configuration["Environment"] == "LOCAL" ? 5001 : 443;
+            });
+
+            services.Configure<RouteOptions>(options =>
+            {
+                options.LowercaseUrls = true;
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
