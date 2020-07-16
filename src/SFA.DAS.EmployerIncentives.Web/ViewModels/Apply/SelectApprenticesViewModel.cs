@@ -22,6 +22,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public List<string> SelectedApprentices { get; set; }
 
+        public string AccountId { get; set; }
+
         private static IEnumerable<ApprenticeModel> GetSampleApprentices()
         {
             var data = new[]

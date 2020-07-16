@@ -46,7 +46,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("select-new-apprentices")]
         public async Task<ViewResult> SelectApprentices(string accountId)
         {
-            return View(new SelectApprenticesViewModel());
+            var model = new SelectApprenticesViewModel { AccountId = accountId };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -73,9 +75,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("declaration")]
-        public async Task<ViewResult> Declaration(string accountid)
+        public async Task<ViewResult> Declaration(string accountId)
         {
-            return View();
+            return View(new DeclarationViewModel(accountId));
         }
     }
 }
