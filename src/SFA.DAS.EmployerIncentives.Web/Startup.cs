@@ -89,19 +89,15 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
-            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
-            services.AddSingleton(config => config.GetService<IOptions<EmployerIncentivesWebConfiguration>>().Value);
-
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
             }
             else
             {
-                var webConfig = serviceProvider.GetService<EmployerIncentivesWebConfiguration>();
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = webConfig.RedisCacheConnectionString;
+                    options.Configuration = _configuration["RedisCacheConnectionString"];
                 });
             }
 
@@ -136,6 +132,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] { "ready" });
             } */
+
+            if (!_environment.IsDevelopment())
+            {
+                services.AddHealthChecks();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
