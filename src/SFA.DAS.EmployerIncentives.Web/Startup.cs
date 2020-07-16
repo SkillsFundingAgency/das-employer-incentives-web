@@ -132,6 +132,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] { "ready" });
             } */
+
+            if (!_environment.IsDevelopment())
+            {
+                services.AddHealthChecks();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
