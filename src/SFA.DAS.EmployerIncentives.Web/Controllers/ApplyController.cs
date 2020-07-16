@@ -2,12 +2,11 @@
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/[Controller]")]
+    [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
         private readonly EmployerIncentivesWebConfiguration _configuration;
@@ -36,22 +35,33 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (viewModel.HasTakenOnNewApprentices.Value)
             {
-                return RedirectToAction("SelectApprenticeships", new { accountId });
+                return RedirectToAction("SelectApprentices", new { accountId });
             }
 
             return RedirectToAction("CannotApply", new { accountId });
         }
 
-        public async Task<ViewResult> SelectApprenticeships()
-        {
-            throw new NotImplementedException();
-        }
 
         [HttpGet]
         [Route("select-new-apprentices")]
-        public async Task<ViewResult> SelectApprentices()
+        public async Task<ViewResult> SelectApprentices(string accountId)
         {
             return View(new SelectApprenticesViewModel());
+        }
+
+        [HttpPost]
+        [Route("select-new-apprentices")]
+        public async Task<IActionResult> SelectApprentices(string accountId, SelectApprenticesViewModel viewModel)
+        {
+            if (viewModel.HasSelectedApprentices)
+            {
+                return RedirectToAction("Declaration", new { accountId });
+            }
+            else
+            {
+                ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticesViewModel.SelectApprenticesMessage);
+                return View(viewModel);
+            }
         }
 
         [HttpGet]
@@ -59,6 +69,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<ViewResult> CannotApply()
         {
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+        }
+
+        [HttpGet]
+        [Route("declaration")]
+        public async Task<ViewResult> Declaration(string accountid)
+        {
+            return View();
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@model object
+@{
+    ViewData["Title"] = "";
+}
+
+<a asp-action="SelectApprentices" asp-controller="Apply" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <h1 class="govuk-heading-l">Declaration</h1>
+            <p>You are about to submit your application for the new apprentice payment.</p>
+            <p>By submitting this application, you declare that:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>all the information in this application is correct</li>
+                <li>all the apprentices in this application are new employees who started their contract of employment between 1 August 2020 and 31 January 2021</li>
+                <li>you understand that your organisation must tell Education and Skills Funding Agency about any change to any of the information provided</li>
+                <li>you have read and understood the agreement</li>
+            </ul>
+            <form action="" method="post" class="form">
+                @* TODO *@
+                <button class="govuk-button" data-module="govuk-button" disabled="disabled">
+                    Confirm
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+
+</main>

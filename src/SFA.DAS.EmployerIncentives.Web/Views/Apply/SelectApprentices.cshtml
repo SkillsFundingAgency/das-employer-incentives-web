@@ -8,7 +8,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="" method="post" class="form">
+            <form asp-action="SelectApprentices">
                 @Html.AntiForgeryToken()
 
                 <partial name="ValidationSummary" />
@@ -22,7 +22,7 @@
                         </legend>
 
                         <p class="govuk-body">You can only choose from your apprentices:</p>
-                        
+
                         <ul class="govuk-list govuk-list--bullet">
                             <li>with a planned start date after 1 August 2020</li>
                             <li>that you have not applied for already</li>
@@ -36,24 +36,22 @@
                             Select all that apply.
                         </span>
 
-                        <!-- RUS! the below will need to appear dynamically when the ModelState is invalid. -->
-
-                        <!-- <span id="new-apprentices-error" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> Select the apprentices you want to apply for
-                        </span> -->
-
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="new-apprentices-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Select the apprentices you want to apply for
+                            </span>
+                        }
                         <div class="govuk-checkboxes">
                             @foreach (var apprentice in Model.Apprentices)
                             {
                                 <div class="govuk-checkboxes__item">
-                                    <input
-                                        class="govuk-checkboxes__input"
-                                        id="new-apprentices-@apprentice.Id"
-                                        name="new-apprentices"
-                                        type="checkbox"
-                                        value="@apprentice.Id"
-                                        aria-describedby="new-apprentices-item-hint"
-                                    />
+                                    <input class="govuk-checkboxes__input"
+                                           id="new-apprentices-@apprentice.Id"
+                                           name="SelectedApprentices"
+                                           type="checkbox"
+                                           value="@apprentice.Id"
+                                           aria-describedby="new-apprentices-item-hint" />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprentices-@apprentice.Id">
                                         @apprentice.FullName
                                     </label>
@@ -66,7 +64,7 @@
                     </fieldset>
                 </div>
 
-                <button class="govuk-button" data-module="govuk-button">
+                <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Continue
                 </button>
 
