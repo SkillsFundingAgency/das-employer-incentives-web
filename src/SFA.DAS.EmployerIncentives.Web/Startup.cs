@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using Microsoft.IdentityModel.Logging;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -77,6 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                     {
                         options.Filters.Add(new GoogleAnalyticsFilter());
                         options.AddAuthorization();
+                        options.EnableEndpointRouting = false;
                     })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -94,10 +94,9 @@ namespace SFA.DAS.EmployerIncentives.Web
             }
             else
             {
-                var webConfig = serviceProvider.GetService<EmployerIncentivesWebConfiguration>();
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = webConfig.RedisCacheConnectionString;
+                    options.Configuration = _configuration["RedisCacheConnectionString"];
                 });
             }
 
@@ -132,6 +131,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] { "ready" });
             } */
+
+            if (!_environment.IsDevelopment())
+            {
+                services.AddHealthChecks();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
