@@ -295,3 +295,4 @@ src/global.json
 .sonarqube/
 SonarQube.Analysis.xml
 **/*.slconfig
+**.ncrunchsolution.user
