@@ -5,6 +5,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
 {
     public interface IDataService
     {
-        IEnumerable<ApprenticeModel> GetSampleApprentices();
+        IEnumerable<ApprenticeshipModel> GetEligibleApprenticeships();
     }
 }

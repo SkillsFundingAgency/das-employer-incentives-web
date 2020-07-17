@@ -32,15 +32,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> QualificationQuestion(string accountId, QualificationQuestionViewModel viewModel)
         {
-            if (!viewModel.HasTakenOnNewApprentices.HasValue)
+            if (!viewModel.HasTakenOnNewApprenticeships.HasValue)
             {
-                ModelState.AddModelError("HasTakenOnNewApprentices", QualificationQuestionViewModel.HasTakenOnNewApprenticesNotSelectedMessage);
+                ModelState.AddModelError("HasTakenOnNewApprenticeships", QualificationQuestionViewModel.HasTakenOnNewApprenticeshipsNotSelectedMessage);
                 return View(viewModel);
             }
 
-            if (viewModel.HasTakenOnNewApprentices.Value)
+            if (viewModel.HasTakenOnNewApprenticeships.Value)
             {
-                return RedirectToAction("SelectApprentices", new { accountId });
+                return RedirectToAction("SelectApprenticeships", new { accountId });
             }
 
             return RedirectToAction("CannotApply", new { accountId });
@@ -54,30 +54,30 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("select-new-apprentices")]
-        public async Task<ViewResult> SelectApprentices(string accountId)
+        [Route("select-new-apprenticeships")]
+        public async Task<ViewResult> SelectApprenticeships(string accountId)
         {
-            var model = new SelectApprenticesViewModel
+            var model = new SelectApprenticeshipsViewModel
             {
                 AccountId = accountId,
-                Apprentices = _service.GetSampleApprentices().OrderBy(a => a.LastName)
+                Apprenticeships = _service.GetEligibleApprenticeships().OrderBy(a => a.LastName)
             };
 
             return View(model);
         }
 
         [HttpPost]
-        [Route("select-new-apprentices")]
-        public async Task<IActionResult> SelectApprentices(string accountId, SelectApprenticesViewModel viewModel)
+        [Route("select-new-apprenticeships")]
+        public async Task<IActionResult> SelectApprenticeships(string accountId, SelectApprenticeshipsViewModel viewModel)
         {
-            viewModel.Apprentices = _service.GetSampleApprentices().OrderBy(a => a.LastName);
+            viewModel.Apprenticeships = _service.GetEligibleApprenticeships().OrderBy(a => a.LastName);
 
-            if (viewModel.HasSelectedApprentices)
+            if (viewModel.HasSelectedApprenticeships)
             {
                 return RedirectToAction("Declaration", new { accountId });
             }
 
-            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticesViewModel.SelectApprenticesMessage);
+            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             return View(viewModel);
         }
 

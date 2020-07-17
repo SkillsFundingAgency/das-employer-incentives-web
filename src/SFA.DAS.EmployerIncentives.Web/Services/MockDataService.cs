@@ -6,32 +6,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
 {
     public class MockDataService : IDataService
     {
-        public IEnumerable<ApprenticeModel> GetSampleApprentices()
+        public IEnumerable<ApprenticeshipModel> GetEligibleApprenticeships()
         {
             var data = new[]
             {
-                 new ApprenticeModel
+                 new ApprenticeshipModel
                     {FirstName = "Michael", LastName = "Johnson", CourseName = "Water Treatment Technician, Level: 3 (Standard)"},
-                new ApprenticeModel
+                new ApprenticeshipModel
                     {FirstName = "Jack", LastName = "Roberts", CourseName = "Relationship Manager (Banking), Level: 6 (Standard)"},
-                new ApprenticeModel
+                new ApprenticeshipModel
                 {
                     FirstName = "Steven", LastName = "Smith",
                     CourseName = "Non-destructive testing (NDT) operator, Level: 2 (Standard)"
                 },
-                new ApprenticeModel
+                new ApprenticeshipModel
                 {
                     FirstName = "Hubert", LastName = "Blaine Von Wolfeschlegelsteinhausenbergerdorff",
                     CourseName = "Water Treatment Technician, Level: 3 (Standard)"
                 },
-                new ApprenticeModel
+                new ApprenticeshipModel
                     {FirstName = "Rūšlāns", LastName = "Ščēļkunövs", CourseName = "Software Engineer, Level: 1 (Novice)"},
-                new ApprenticeModel {FirstName = "Wassily", LastName = " Kandinsky", CourseName = "Painter, Level: 10 (Advanced)"},
+                new ApprenticeshipModel {FirstName = "Wassily", LastName = " Kandinsky", CourseName = "Painter, Level: 10 (Advanced)"},
             };
 
-            foreach (var apprenticeModel in data)
+            foreach (var apprenticeshipModel in data)
             {
-                apprenticeModel.Id = Guid.NewGuid().ToString();
+                apprenticeshipModel.Id = Guid.NewGuid().ToString();
             }
 
             return data;

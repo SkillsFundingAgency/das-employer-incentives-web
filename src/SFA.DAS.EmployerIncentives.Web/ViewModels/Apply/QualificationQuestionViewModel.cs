@@ -2,12 +2,12 @@
 {
     public class QualificationQuestionViewModel : ViewModel
     {
-        public const string HasTakenOnNewApprenticesNotSelectedMessage = "Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020";
+        public const string HasTakenOnNewApprenticeshipsNotSelectedMessage = "Select yes if you’ve taken on new apprenticeships that joined your payroll after 1 August 2020";
 
-        public QualificationQuestionViewModel() : base("Have you taken on new apprentices that joined your payroll after 1 August 2020?")
+        public QualificationQuestionViewModel() : base("Have you taken on new apprenticeships that joined your payroll after 1 August 2020?")
         {
         }
 
-        public bool? HasTakenOnNewApprentices { get; set; }
+        public bool? HasTakenOnNewApprenticeships { get; set; }
     }
 }

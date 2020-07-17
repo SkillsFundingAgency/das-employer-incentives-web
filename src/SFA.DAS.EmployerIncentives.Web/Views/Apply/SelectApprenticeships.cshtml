@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticesViewModel
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeshipsViewModel
 @{
     ViewData["Title"] = Model.Title;
 }
@@ -8,13 +9,13 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form asp-action="SelectApprentices">
+            <form asp-action="SelectApprenticeships">
                 @Html.AntiForgeryToken()
 
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="new-apprentices-hint">
+                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
@@ -32,31 +33,31 @@
                             You must only select apprentices that joined your payroll after 1 August 2020.
                         </div>
 
-                        <span id="new-apprentices-hint" class="govuk-hint">
+                        <span id="new-apprenticeships-hint" class="govuk-hint">
                             Select all that apply.
                         </span>
 
                         @if (!ViewData.ModelState.IsValid)
                         {
-                            <span id="new-apprentices-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> Select the apprentices you want to apply for
+                            <span id="new-apprenticeships-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
                             </span>
                         }
                         <div class="govuk-checkboxes">
-                            @foreach (var apprentice in Model.Apprentices)
+                            @foreach (var apprenticeship in Model.Apprenticeships)
                             {
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input"
-                                           id="new-apprentices-@apprentice.Id"
-                                           name="SelectedApprentices"
+                                           id="new-apprenticeships-@apprenticeship.Id"
+                                           name="SelectedApprenticeships"
                                            type="checkbox"
-                                           value="@apprentice.Id"
-                                           aria-describedby="new-apprentices-item-hint" />
-                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprentices-@apprentice.Id">
-                                        @apprentice.DisplayName
+                                           value="@apprenticeship.Id"
+                                           aria-describedby="new-apprenticeships-item-hint" />
+                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
+                                        @apprenticeship.DisplayName
                                     </label>
-                                    <span id="new-apprentices-item-hint" class="govuk-hint govuk-checkboxes__hint">
-                                        @apprentice.CourseName
+                                    <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
+                                        @apprenticeship.CourseName
                                     </span>
                                 </div>
                             }

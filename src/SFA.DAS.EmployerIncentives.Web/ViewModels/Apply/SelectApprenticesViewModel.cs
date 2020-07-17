@@ -4,22 +4,22 @@ using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class SelectApprenticesViewModel : ViewModel
+    public class SelectApprenticeshipsViewModel : ViewModel
     {
-        public const string SelectApprenticesMessage = "Select the apprentices you want to apply for";
+        public const string SelectApprenticeshipsMessage = "Select the apprentices you want to apply for";
 
-        public SelectApprenticesViewModel() : base(SelectApprenticesMessage)
+        public SelectApprenticeshipsViewModel() : base(SelectApprenticeshipsMessage)
         {
-            SelectedApprentices = new List<string>();
+            SelectedApprenticeships = new List<string>();
         }
 
-        public IEnumerable<ApprenticeModel> Apprentices { get; set; }
+        public IEnumerable<ApprenticeshipModel> Apprenticeships { get; set; }
 
-        public bool HasSelectedApprentices => SelectedApprentices.Count > 0;
+        public bool HasSelectedApprenticeships => SelectedApprenticeships.Count > 0;
 
-        public string FirstCheckboxId => $"new-apprentices-{Apprentices.First().Id}";
+        public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.First().Id}";
 
-        public List<string> SelectedApprentices { get; set; }
+        public List<string> SelectedApprenticeships { get; set; }
 
         public string AccountId { get; set; }
     }

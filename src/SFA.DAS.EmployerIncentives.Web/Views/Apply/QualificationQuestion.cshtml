@@ -14,33 +14,33 @@
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="HasTakenOnNewApprentices-hint">
+                    <fieldset class="govuk-fieldset" aria-describedby="HasTakenOnNewApprenticeships-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
                             </h1>
                         </legend>
-                        <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
+                        <span id="HasTakenOnNewApprenticeships-hint" class="govuk-hint">
                             You can only apply for new employees who joined your organisation after 1 August 2020.
                         </span>
 
-                        @if (ViewData.ModelState.ContainsKey(nameof(Model.HasTakenOnNewApprentices)) && ViewData.ModelState[nameof(Model.HasTakenOnNewApprentices)].Errors.Any())
+                        @if (ViewData.ModelState.ContainsKey(nameof(Model.HasTakenOnNewApprenticeships)) && ViewData.ModelState[nameof(Model.HasTakenOnNewApprenticeships)].Errors.Any())
                         {
                             <span class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(Model.HasTakenOnNewApprentices)].Errors.First().ErrorMessage
+                                <span class="govuk-visually-hidden">Error:</span> @ViewData.ModelState[nameof(Model.HasTakenOnNewApprenticeships)].Errors.First().ErrorMessage
                             </span>
                         }
 
                         <div class="govuk-radios govuk-radios--inline">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprentices" id="HasTakenOnNewApprentices" type="radio" value="true" />
-                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprentices">
+                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprenticeships" id="HasTakenOnNewApprenticeships" type="radio" value="true" />
+                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprenticeships">
                                     Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprentices" id="HasTakenOnNewApprentices-2" type="radio" value="false" />
-                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprentices-2">
+                                <input class="govuk-radios__input" asp-for="HasTakenOnNewApprenticeships" id="HasTakenOnNewApprenticeships-2" type="radio" value="false" />
+                                <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprenticeships-2">
                                     No
                                 </label>
                             </div>

@@ -5,12 +5,12 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
 {
-    class ApprenticeModelTests
+    class ApprenticeshipModelTests
     {
         [Test]
         public void Apprentice_DisplayName_is_space_separated_FirstName_LastName()
         {
-            var sut = new Fixture().Create<ApprenticeModel>();
+            var sut = new Fixture().Create<ApprenticeshipModel>();
 
             var expected = $"{sut.FirstName} {sut.LastName}";
 

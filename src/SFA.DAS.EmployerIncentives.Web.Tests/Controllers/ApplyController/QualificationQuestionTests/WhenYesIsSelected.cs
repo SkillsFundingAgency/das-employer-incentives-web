@@ -13,12 +13,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = true };
+            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprenticeships = true };
 
             var result = await Sut.QualificationQuestion(accountId, viewModel);
 
             var redirectResult = result as RedirectToActionResult;
-            redirectResult.ActionName.Should().Be("SelectApprentices");
+            redirectResult.ActionName.Should().Be("SelectApprenticeships");
         }
     }
 }

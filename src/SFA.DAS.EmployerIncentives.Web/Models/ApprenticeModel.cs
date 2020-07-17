@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.Models
 {
-    public class ApprenticeModel
+    public class ApprenticeshipModel
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
