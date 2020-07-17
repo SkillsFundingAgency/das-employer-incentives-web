@@ -152,14 +152,6 @@
                             {
                                 "name": "Version",
                                 "value": "[parameters('version')]"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_PATH",
-                                "value": "/Ping"
-                            },
-                            {
-                                "name": "WEBSITE_SWAP_WARMUP_PING_STATUSES",
-                                "value": "200"
                             }
                         ]
                     },
