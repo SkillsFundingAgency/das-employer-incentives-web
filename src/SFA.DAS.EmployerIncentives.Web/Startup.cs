@@ -15,6 +15,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -32,11 +33,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                 .SetBasePath(Directory.GetCurrentDirectory())
 #if DEBUG
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
+                .AddJsonFile("appsettings.development.json", true)
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 config.AddAzureTableStorage(options =>
                     {
@@ -61,6 +62,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddOptions();
+            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
+            services.Configure<EmployerIncentivesApi>(_configuration.GetSection("EmployerIncentivesApi"));
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -78,6 +81,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                     {
                         options.Filters.Add(new GoogleAnalyticsFilter());
                         options.AddAuthorization();
+                        options.EnableEndpointRouting = false;
                     })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -89,8 +93,6 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
-            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
-            services.AddSingleton(config => config.GetService<IOptions<EmployerIncentivesWebConfiguration>>().Value);
 
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {
@@ -115,6 +117,10 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry();
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".EmployerIncentives.AntiForgery", HttpOnly = false });
+
+            services
+                .AddHashingService()
+                .AddEmployerIncentivesService();
 
             /* if (!_environment.IsDevelopment())
             {

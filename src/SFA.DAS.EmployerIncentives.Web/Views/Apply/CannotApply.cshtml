@@ -10,11 +10,21 @@
             <h1 class="govuk-heading-xl">
                 @Model.Title
             </h1>
+            @if(Model is SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.TakenOnCannotApplyViewModel)
+            {
+                <p class="govuk-body">
+                    You can only apply for this grant if you have new apprentices with a planned start date after 1 August 2020.
+                </p>
+            }
+            else
+            {
+                <p class="govuk-body">
+                    You can only apply for this grant if you have new apprentices who joined your organisation after 1 August 2020.
+                </p>
+            }
+
             <p class="govuk-body">
-                You can only apply for this grant if you have new apprentices who joined your organisation after 1 August 2020.
-            </p>
-            <p class="govuk-body">
-                If you have apprentices who are eligible for this grant, you'll need to 
+                If you have apprentices who are eligible for this grant, you'll need to
                 <a class="govuk-link" href="@Model.CommitmentsUrl">
                     add them to your apprenticeship service account.
                 </a>

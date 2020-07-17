@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
     public class WhenYesIsSelected : ApplyControllerTestBase
     {
         [Test]
-        public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed()
+        public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
         {
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = true };
