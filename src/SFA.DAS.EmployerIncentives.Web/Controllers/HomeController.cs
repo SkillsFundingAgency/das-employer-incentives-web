@@ -8,5 +8,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return View();
         }
+
+        [Route("help/cookie-settings")]
+        public IActionResult CookieSettings()
+        {
+            return View();
+        }
+
+        [Route("help/cookie-details")]
+        public IActionResult CookieDetails()
+        {
+            return View();
+        }
     }
 }
