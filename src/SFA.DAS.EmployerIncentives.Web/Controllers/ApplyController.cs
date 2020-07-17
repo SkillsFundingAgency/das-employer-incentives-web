@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -9,10 +11,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
+        private readonly IDataService _service;
         private readonly EmployerIncentivesWebConfiguration _configuration;
 
-        public ApplyController(IOptions<EmployerIncentivesWebConfiguration> configuration)
+        public ApplyController(IOptions<EmployerIncentivesWebConfiguration> configuration,
+            IDataService service)
         {
+            _service = service;
             _configuration = configuration.Value;
         }
 
@@ -41,12 +46,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return RedirectToAction("CannotApply", new { accountId });
         }
 
+        [HttpGet]
+        [Route("cannot-apply")]
+        public async Task<ViewResult> CannotApply()
+        {
+            return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+        }
 
         [HttpGet]
         [Route("select-new-apprentices")]
         public async Task<ViewResult> SelectApprentices(string accountId)
         {
-            var model = new SelectApprenticesViewModel { AccountId = accountId };
+            var model = new SelectApprenticesViewModel
+            {
+                AccountId = accountId,
+                Apprentices = _service.GetSampleApprentices().OrderBy(a => a.LastName)
+            };
 
             return View(model);
         }
@@ -55,22 +70,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("select-new-apprentices")]
         public async Task<IActionResult> SelectApprentices(string accountId, SelectApprenticesViewModel viewModel)
         {
+            viewModel.Apprentices = _service.GetSampleApprentices().OrderBy(a => a.LastName);
+
             if (viewModel.HasSelectedApprentices)
             {
                 return RedirectToAction("Declaration", new { accountId });
             }
-            else
-            {
-                ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticesViewModel.SelectApprenticesMessage);
-                return View(viewModel);
-            }
-        }
 
-        [HttpGet]
-        [Route("cannot-apply")]
-        public async Task<ViewResult> CannotApply()
-        {
-            return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticesViewModel.SelectApprenticesMessage);
+            return View(viewModel);
         }
 
         [HttpGet]

@@ -11,6 +11,7 @@ using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
+using SFA.DAS.EmployerIncentives.Web.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -116,6 +117,8 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry();
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".EmployerIncentives.AntiForgery", HttpOnly = false });
+
+            services.AddSingleton<IDataService, MockDataService>(); // TODO
 
             /* if (!_environment.IsDevelopment())
             {

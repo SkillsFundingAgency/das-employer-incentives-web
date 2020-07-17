@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = false };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await Sut.QualificationQuestion(accountId, viewModel);
 
             var redirectResult = result as RedirectToActionResult;
             redirectResult.ActionName.Should().Be("CannotApply");

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
 {
@@ -15,10 +15,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = true };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await Sut.QualificationQuestion(accountId, viewModel);
 
             var redirectResult = result as RedirectToActionResult;
-            redirectResult.ActionName.Should().Be("SelectApprenticeships");
+            redirectResult.ActionName.Should().Be("SelectApprentices");
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         [Test]
         public async Task Then_the_qualification_question_is_displayed()
         {
-            var result = await _sut.QualificationQuestion();
+            var result = await Sut.QualificationQuestion();
 
             result.Model.Should().BeOfType<QualificationQuestionViewModel>();
             result.ViewName.Should().BeNullOrEmpty();
