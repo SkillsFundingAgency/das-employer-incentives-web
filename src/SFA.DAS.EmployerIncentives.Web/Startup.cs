@@ -75,7 +75,8 @@ namespace SFA.DAS.EmployerIncentives.Web
                     {
                         options.Filters.Add(new GoogleAnalyticsFilter());
                         options.AddAuthorization();
-                        options.EnableEndpointRouting = false;                      
+                        options.EnableEndpointRouting = false;
+                        options.SuppressOutputFormatterBuffering = true;
                     })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
