@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +104,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
 
             document.Title.Should().Be("You cannot apply for this grant");
 
-            var allRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries();
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
 

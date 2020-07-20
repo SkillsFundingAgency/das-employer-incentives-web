@@ -15,16 +15,17 @@ using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using Microsoft.IdentityModel.Logging;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
             var config = new ConfigurationBuilder()
@@ -73,13 +74,12 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddMvc(
                     options =>
                     {
-                        options.Filters.Add(new GoogleAnalyticsFilter());
+                        options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.AddAuthorization();
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
                     })
-                .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddControllersAsServices();
 
             services.AddHttpsRedirection(options =>
             {
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

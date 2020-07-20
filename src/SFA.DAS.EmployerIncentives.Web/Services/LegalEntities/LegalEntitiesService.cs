@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;

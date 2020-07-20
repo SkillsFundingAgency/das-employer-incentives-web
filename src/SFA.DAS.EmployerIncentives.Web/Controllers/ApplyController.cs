@@ -9,6 +9,7 @@ using System.Linq;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.HashingService;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{hashedAccountId}/[Controller]")]
@@ -39,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("")]
-        [HttpPost]        
+        [HttpPost]
         public async Task<IActionResult> QualificationQuestion(string hashedAccountId, QualificationQuestionViewModel viewModel)
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)
@@ -86,3 +87,4 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
     }
 }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
