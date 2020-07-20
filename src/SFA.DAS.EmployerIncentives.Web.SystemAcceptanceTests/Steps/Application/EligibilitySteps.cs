@@ -11,17 +11,17 @@ using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
     [Scope(Feature = "ApplicationEligibility")]
-    public class ApplicationEligibilitySteps : StepsBase
+    public class EligibilitySteps : StepsBase
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testData;
         private readonly IHashingService _hashingService;
 
-        public ApplicationEligibilitySteps(TestContext testContext) : base(testContext)
+        public EligibilitySteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testData = _testContext.TestDataStore;
@@ -178,7 +178,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
 
             document.Title.Should().Be("Select Apprenticeships");
             response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/Apply/{hashedAccountLegalEntityId}/select-new-apprentices");
-
             
             var requests = _testContext
                        .EmployerIncentivesApi

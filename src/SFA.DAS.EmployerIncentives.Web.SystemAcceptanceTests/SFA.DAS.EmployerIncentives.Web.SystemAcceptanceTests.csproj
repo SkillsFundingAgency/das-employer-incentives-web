@@ -30,14 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\ApplicationEligibility.feature">
+    <SpecFlowFeatureFiles Update="Features\Application\Eligibility.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ApplicationEligibility.feature.cs</LastGenOutput>
+      <LastGenOutput>Eligibility.feature.cs</LastGenOutput>
     </SpecFlowFeatureFiles>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Features\ApplicationEligibility.feature" />
+    <Content Include="Features\Application\Eligibility.feature" />
   </ItemGroup>
 
   <ItemGroup>

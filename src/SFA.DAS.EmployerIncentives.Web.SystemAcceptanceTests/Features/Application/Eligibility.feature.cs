@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Application
 {
     using TechTalk.SpecFlow;
     using System;
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features
         private string[] _featureTags = new string[] {
                 "employerIncentivesApi"};
         
-#line 1 "ApplicationEligibility.feature"
+#line 1 "Eligibility.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
