@@ -7,15 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using Microsoft.IdentityModel.Logging;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -135,6 +134,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] { "ready" });
             } */
+
+            if (!_environment.IsDevelopment())
+            {
+                services.AddHealthChecks();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
