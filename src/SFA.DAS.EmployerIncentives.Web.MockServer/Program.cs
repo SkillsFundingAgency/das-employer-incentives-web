@@ -13,16 +13,10 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
                 .Build();
 
-            //var employerIncenticesApi2 = EmployerIncentivesApiBuilder
-            //    .Create(8082)
-            //    .WithAccountWithNoLegalEntities()
-            //    .Build();
-
             Console.WriteLine("Press any key to stop the servers");
             Console.ReadKey();
 
             employerIncenticesApi.Dispose();
-            //employerIncenticesApi2.Dispose();
         }
     }
 }

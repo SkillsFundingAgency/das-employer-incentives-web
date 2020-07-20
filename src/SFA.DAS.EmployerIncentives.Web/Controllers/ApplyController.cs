@@ -6,18 +6,19 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Threading.Tasks;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
-        private readonly EmployerIncentivesWebConfiguration _configuration;
+        private readonly WebConfigurationOptions _configuration;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IApprenticesService _apprenticesService;
         private readonly IHashingService _hashingService;
 
         public ApplyController(
-            IOptions<EmployerIncentivesWebConfiguration> configuration,
+            IOptions<WebConfigurationOptions> configuration,
             ILegalEntitiesService legalEntitiesService,
             IApprenticesService apprenticesService,
             IHashingService hashingService)
@@ -96,3 +97,4 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
     }
 }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

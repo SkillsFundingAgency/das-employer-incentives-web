@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using System.Collections.Generic;
-
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 {
     public class TestWebsite : WebApplicationFactory<Startup>
@@ -13,13 +12,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
         private readonly Dictionary<string, string> _appConfig;
 
         public TestWebsite(TestEmployerIncentivesApi testEmployerIncentivesApi)
-        {
-            
+        {            
             _testEmployerIncentivesApi = testEmployerIncentivesApi;
 
             _appConfig = new Dictionary<string, string>
             {
-                { "EnvironmentName", "LOCAL" },
+                { "Environment", "LOCAL" },
                 { "ConfigurationStorageConnectionString", "UseDevelopmentStorage=true" },
                 { "ConfigNames", "SFA.DAS.EmployerIncentives.Web" },
                 { "Values:AzureWebJobsStorage", "UseDevelopmentStorage=true" }
@@ -28,25 +26,26 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder
+            builder                
                 .ConfigureAppConfiguration(a =>
                 {
+                    a.Sources.Clear();
                     a.AddInMemoryCollection(_appConfig);
-                });
+                });                
 
             builder
                 .ConfigureServices(s =>
-                {
-                    s.Configure<EmployerIncentivesWebConfiguration>(o =>
+                {                    
+                    s.Configure<WebConfigurationOptions>(o =>
                     {
                         o.AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY";
                         o.Hashstring = "SFA: digital apprenticeship service";
                     });
-                    _ = s.Configure<Infrastructure.Configuration.EmployerIncentivesApi>(o =>
+                    s.Configure<EmployerIncentivesApiOptions>(o =>
                       {
                           o.ApiBaseUrl = _testEmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
-                      });
+                    });
                 });
         }
     }

@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Moq;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
@@ -23,7 +25,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         {
             var fixture = new Fixture();
             _apprenticeData = fixture.CreateMany<ApprenticeshipModel>();
-            ServiceMock.Setup(x => x.GetEligibleApprenticeships()).Returns(_apprenticeData);
+        //    ApprenticesQuery query = It.Is<ApprenticesQuery>( x => x.AccountId == _accountId);
+        //    ApprenticesServiceMock.Setup(x => x.Get(query)).Returns(_apprenticeData);
             _accountId = Guid.NewGuid().ToString();
             _result = await Sut.SelectApprenticeships(_accountId);
             _model = (SelectApprenticeshipsViewModel)_result.Model;

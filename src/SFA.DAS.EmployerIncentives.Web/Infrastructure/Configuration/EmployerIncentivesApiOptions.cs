@@ -2,8 +2,10 @@
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
 {
-    public class EmployerIncentivesApi : IApimClientConfiguration
+    public class EmployerIncentivesApiOptions : IApimClientConfiguration
     {
+        public const string EmployerIncentivesApi = "EmployerIncentivesApi";
+
         public string ApiBaseUrl { get; set; }
         public string SubscriptionKey { get; set; }
         public string ApiVersion { get; set; }

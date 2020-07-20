@@ -6,7 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Filters
 {
-    public class GoogleAnalyticsFilter : ActionFilterAttribute
+    public class GoogleAnalyticsFilterAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

@@ -1,32 +1,31 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using Microsoft.IdentityModel.Logging;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using SFA.DAS.EmployerIncentives.Web.Services;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using Microsoft.Extensions.Hosting;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
             var config = new ConfigurationBuilder()
@@ -49,7 +48,8 @@ namespace SFA.DAS.EmployerIncentives.Web
                     }
                 );
             }
-            _configuration = config.Build();
+
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -63,42 +63,31 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddOptions();
-            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
-            services.Configure<EmployerIncentivesApi>(_configuration.GetSection("EmployerIncentivesApi"));
-
-            var serviceProvider = services.BuildServiceProvider();
+            services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
+            services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
 
             //services.AddAuthorizationService();
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
-
-            //services.AddAndConfigureEmployerAuthentication(
-            //serviceProvider.GetService<IOptions<IdentityServerConfiguration>>(),
-            //serviceProvider.GetService<IEmployerAccountService>());
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddMvc(
                     options =>
                     {
-                        options.Filters.Add(new GoogleAnalyticsFilter());
+                        options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.AddAuthorization();
                         options.EnableEndpointRouting = false;
+                        options.SuppressOutputFormatterBuffering = true;
                     })
-                .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddControllersAsServices();
 
             services.AddHttpsRedirection(options =>
             {
                 options.HttpsPort = _configuration["Environment"] == "LOCAL" ? 5001 : 443;
             });
 
-            services.Configure<RouteOptions>(options =>
-            {
-                options.LowercaseUrls = true;
-            });
-
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-
+            
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
@@ -107,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = _configuration["RedisCacheConnectionString"];
+                    options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:SessionRedisConnectionString");
                 });
             }
 
@@ -125,8 +114,6 @@ namespace SFA.DAS.EmployerIncentives.Web
             services
                 .AddHashingService()
                 .AddEmployerIncentivesService();
-
-            services.AddSingleton<IDataService, MockDataService>(); // TODO
 
             /* if (!_environment.IsDevelopment())
             {
@@ -156,7 +143,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

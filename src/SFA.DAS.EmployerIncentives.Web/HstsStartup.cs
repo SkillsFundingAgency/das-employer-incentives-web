@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.HealthCheck;
 
 namespace SFA.DAS.EmployerIncentives.Web
@@ -11,7 +12,7 @@ namespace SFA.DAS.EmployerIncentives.Web
     {
         public static IApplicationBuilder UseDasHsts(this IApplicationBuilder app)
         {
-            var hostingEnvironment = app.ApplicationServices.GetService<IHostingEnvironment>();
+            var hostingEnvironment = app.ApplicationServices.GetService<IWebHostEnvironment>();
 
             if (!hostingEnvironment.IsDevelopment())
             {

@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,18 +69,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
                       )
                   .RespondWith(
               Response.Create()
-                  .WithStatusCode(HttpStatusCode.OK));
+                  .WithStatusCode(HttpStatusCode.NotFound));
         }
 
         [When(@"the employer tries to make a grant application")]
         public async Task WhenTheEmployerMakesAGrantApplication()
         {
-            var viewModel = new QualificationQuestionViewModel
-            {
-                HasTakenOnNewApprenticeships = true
-            };
+            var request = new HttpRequestMessage(
+                HttpMethod.Post, 
+                $"{_testData.Get<string>("hashedAccountId")}/apply")
+                {
+                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("HasTakenOnNewApprentices", "true")
+                    })
+                };
 
-            var response = await _testContext.WebsiteClient.PostAsJsonAsync($"{_testData.Get<string>("hashedAccountId")}/apply", viewModel);
+            var response = await _testContext.WebsiteClient.SendAsync(request);
+
             _testContext.TestData.GetOrCreate("ApplicationEligibilityResponse", onCreate: () =>
             {
                 return response;
@@ -99,7 +104,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
 
             document.Title.Should().Be("You cannot apply for this grant");
 
-            var allRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries();
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
 
