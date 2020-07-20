@@ -11,6 +11,8 @@ using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -32,11 +34,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                 .SetBasePath(Directory.GetCurrentDirectory())
 #if DEBUG
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
+                .AddJsonFile("appsettings.development.json", true)
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 config.AddAzureTableStorage(options =>
                     {
@@ -61,6 +63,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddOptions();
+            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
+            services.Configure<EmployerIncentivesApi>(_configuration.GetSection("EmployerIncentivesApi"));
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -117,6 +121,10 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry();
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".EmployerIncentives.AntiForgery", HttpOnly = false });
+
+            services
+                .AddHashingService()
+                .AddEmployerIncentivesService();
 
             services.AddSingleton<IDataService, MockDataService>(); // TODO
 

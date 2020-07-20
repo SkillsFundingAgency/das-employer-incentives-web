@@ -2,7 +2,7 @@
 {
     public class CannotApplyViewModel : ViewModel
     {
-        public CannotApplyViewModel(string commitmentsUrl) : base("You cannot apply for this grant yet")
+        public CannotApplyViewModel(string commitmentsUrl, string title = "You cannot apply for this grant yet") : base(title)
         {
             CommitmentsUrl = commitmentsUrl;
         }
