@@ -58,7 +58,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     var apprentices = await _apprenticesService.Get(new ApprenticesQuery(accountId, legalEntities.First().AccountLegalEntityId));
                     if (apprentices.Any())
                     {
-                        return RedirectToAction("SelectApprenticeships", new { hashedAccountId });
+                        var hashedAccountLegalEntityId = _hashingService.HashValue(legalEntities.First().AccountLegalEntityId);
+                        return RedirectToAction("SelectApprenticeships", new { hashedAccountId, hashedAccountLegalEntityId });
                     }
                     else
                     {
@@ -70,9 +71,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return RedirectToAction("CannotApply", new { hashedAccountId });
         }
 
-        public async Task<ViewResult> SelectApprenticeships()
+        [Route("{hashedAccountLegalEntityId}/select-new-apprentices")]
+        public async Task<ViewResult> SelectApprenticeships(string hashedAccountId, string hashedAccountLegalEntityId)
         {
-            throw new NotImplementedException();
+            return View(new { hashedAccountId, hashedAccountLegalEntityId} );
         }
 
         [HttpGet]
