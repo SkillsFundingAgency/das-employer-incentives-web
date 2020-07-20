@@ -70,18 +70,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps
                       )
                   .RespondWith(
               Response.Create()
-                  .WithStatusCode(HttpStatusCode.OK));
+                  .WithStatusCode(HttpStatusCode.NotFound));
         }
 
         [When(@"the employer tries to make a grant application")]
         public async Task WhenTheEmployerMakesAGrantApplication()
         {
-            var viewModel = new QualificationQuestionViewModel
-            {
-                HasTakenOnNewApprentices = true
-            };
+            var request = new HttpRequestMessage(
+                HttpMethod.Post, 
+                $"{_testData.Get<string>("hashedAccountId")}/apply")
+                {
+                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("HasTakenOnNewApprentices", "true")
+                    })
+                };
 
-            var response = await _testContext.WebsiteClient.PostAsJsonAsync($"{_testData.Get<string>("hashedAccountId")}/apply", viewModel);
+            var response = await _testContext.WebsiteClient.SendAsync(request);
+
             _testContext.TestData.GetOrCreate("ApplicationEligibilityResponse", onCreate: () =>
             {
                 return response;

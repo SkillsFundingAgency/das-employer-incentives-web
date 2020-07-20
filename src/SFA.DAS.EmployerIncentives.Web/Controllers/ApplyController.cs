@@ -14,13 +14,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{hashedAccountId}/[Controller]")]
     public class ApplyController : Controller
     {
-        private readonly EmployerIncentivesWebConfiguration _configuration;
+        private readonly WebConfigurationOptions _configuration;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IApprenticesService _apprenticesService;
         private readonly IHashingService _hashingService;
 
         public ApplyController(
-            IOptions<EmployerIncentivesWebConfiguration> configuration,
+            IOptions<WebConfigurationOptions> configuration,
             ILegalEntitiesService legalEntitiesService,
             IApprenticesService apprenticesService,
             IHashingService hashingService)
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("")]
-        [HttpPost]
+        [HttpPost]        
         public async Task<IActionResult> QualificationQuestion(string hashedAccountId, QualificationQuestionViewModel viewModel)
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)

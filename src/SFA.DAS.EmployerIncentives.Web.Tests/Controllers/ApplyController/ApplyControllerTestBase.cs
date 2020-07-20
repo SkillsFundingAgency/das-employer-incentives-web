@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
 {
     public abstract class ApplyControllerTestBase
     {
-        protected Mock<IOptions<EmployerIncentivesWebConfiguration>> _configuration;
+        protected Mock<IOptions<WebConfigurationOptions>> _configuration;
         protected Mock<ILegalEntitiesService> _legalEntitiesService;
         protected Mock<IApprenticesService> _apprenticesService;
         protected Mock<IHashingService> _hashingService;
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
         {
             _fixture = new Fixture();
 
-            _configuration = new Mock<IOptions<EmployerIncentivesWebConfiguration>>();
+            _configuration = new Mock<IOptions<WebConfigurationOptions>>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _legalEntitiesService
                 .Setup(m => m.Get(It.IsAny<long>()))

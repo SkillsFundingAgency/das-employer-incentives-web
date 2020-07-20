@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         public static IServiceCollection AddHashingService(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IHashingService>(c => {
-                var settings = c.GetService<IOptions<EmployerIncentivesWebConfiguration>>().Value;
+                var settings = c.GetService<IOptions<WebConfigurationOptions>>().Value;
                 return new HashingService.HashingService(settings.AllowedHashstringCharacters, settings.Hashstring);
             });
 
@@ -25,11 +25,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         {
             serviceCollection.AddTransient<ILegalEntitiesService>(s =>
             {
-                var settings = s.GetService<IOptions<EmployerIncentivesApi>>().Value;
+                var settings = s.GetService<IOptions<EmployerIncentivesApiOptions>>().Value;
 
                 var clientBuilder = new HttpClientBuilder()
                     .WithDefaultHeaders()
-                    //.WithApimAuthorisationHeader(settings)
+                    .WithApimAuthorisationHeader(settings)
                     .WithLogging(s.GetService<ILoggerFactory>());
 
                 var httpClient = clientBuilder.Build();
@@ -41,11 +41,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
             serviceCollection.AddTransient<IApprenticesService>(s =>
             {
-                var settings = s.GetService<IOptions<EmployerIncentivesApi>>().Value;
+                var settings = s.GetService<IOptions<EmployerIncentivesApiOptions>>().Value;
 
                 var clientBuilder = new HttpClientBuilder()
                     .WithDefaultHeaders()
-                    //.WithApimAuthorisationHeader(settings)
+                    .WithApimAuthorisationHeader(settings)
                     .WithLogging(s.GetService<ILoggerFactory>());
 
                 var httpClient = clientBuilder.Build();

@@ -48,7 +48,8 @@ namespace SFA.DAS.EmployerIncentives.Web
                     }
                 );
             }
-            _configuration = config.Build();
+
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -62,17 +63,11 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddOptions();
-            services.Configure<EmployerIncentivesWebConfiguration>(_configuration.GetSection("EmployerIncentivesWeb"));
-            services.Configure<EmployerIncentivesApi>(_configuration.GetSection("EmployerIncentivesApi"));
-
-            var serviceProvider = services.BuildServiceProvider();
+            services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
+            services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
 
             //services.AddAuthorizationService();
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
-
-            //services.AddAndConfigureEmployerAuthentication(
-                    //serviceProvider.GetService<IOptions<IdentityServerConfiguration>>(),
-                    //serviceProvider.GetService<IEmployerAccountService>());
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
@@ -81,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                     {
                         options.Filters.Add(new GoogleAnalyticsFilter());
                         options.AddAuthorization();
-                        options.EnableEndpointRouting = false;
+                        options.EnableEndpointRouting = false;                      
                     })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -92,18 +87,16 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-
-
+            
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
             }
             else
             {
-                var webConfig = serviceProvider.GetService<EmployerIncentivesWebConfiguration>();
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = webConfig.RedisCacheConnectionString;
+                    options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:SessionRedisConnectionString");
                 });
             }
 
