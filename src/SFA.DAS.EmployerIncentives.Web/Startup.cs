@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:SessionRedisConnectionString");
+                    options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:RedisCacheConnectionString");
                 });
             }
 
