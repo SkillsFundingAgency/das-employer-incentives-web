@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         public async Task Then_The_Shutter_Page_Is_Displayed()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprenticeships = false };
+            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = false };
 
             var result = await Sut.QualificationQuestion(accountId, viewModel);
 

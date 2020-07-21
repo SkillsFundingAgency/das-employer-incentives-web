@@ -105,14 +105,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerMakesAGrantApplication()
         {
             var request = new HttpRequestMessage(
-                HttpMethod.Post, 
+                HttpMethod.Post,
                 $"{_testData.Get<string>("hashedAccountId")}/apply")
-                {
-                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+            {
+                Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("HasTakenOnNewApprentices", "true")
                     })
-                };
+            };
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 
@@ -171,14 +171,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
             var hashedAccountId = _testData.Get<string>("hashedAccountId");
             var hashedAccountLegalEntityId = _testData.Get<string>("hashedAccountLegalEntityId");
-            
+
             response.EnsureSuccessStatusCode();
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
 
             document.Title.Should().Be("Select Apprenticeships");
             response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/Apply/{hashedAccountLegalEntityId}/select-new-apprentices");
-            
+
             var requests = _testContext
                        .EmployerIncentivesApi
                        .MockServer
@@ -201,7 +201,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                            .WithParam("accountlegalentityid", accountLegalEntityId.ToString())
                            .UsingGet());
 
-            requests.AsEnumerable().Count().Should().Be(1);
+            requests.AsEnumerable().Count().Should().Be(2);
         }
     }
 }

@@ -22,5 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public List<string> SelectedApprenticeships { get; set; }
 
         public string AccountId { get; set; }
+
+        public string AccountLegalEntityId { get; set; }
     }
 }

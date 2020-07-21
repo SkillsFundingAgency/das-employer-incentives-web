@@ -8,6 +8,6 @@
         {
         }
 
-        public bool? HasTakenOnNewApprenticeships { get; set; }
+        public bool? HasTakenOnNewApprentices { get; set; }
     }
 }
