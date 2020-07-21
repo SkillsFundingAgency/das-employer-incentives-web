@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public HttpClient WebsiteClient { get; set; }
         public TestEmployerIncentivesApi EmployerIncentivesApi { get; set; }
         public IHashingService HashingService { get; set; }
-        public TestData TestData { get; set; }
+        public TestDataStore TestDataStore { get; set; }
         public List<IHook> Hooks { get; set; }
 
         public TestContext()
@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
             {
                 Directory.CreateDirectory(TestDirectory.FullName);
             }
-            TestData = new TestData();
+            TestDataStore = new TestDataStore();
             Hooks = new List<IHook>();
         }
     }    

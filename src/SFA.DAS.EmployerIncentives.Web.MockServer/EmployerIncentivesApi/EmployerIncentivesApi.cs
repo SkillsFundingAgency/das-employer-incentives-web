@@ -9,6 +9,8 @@ using WireMock.Logging;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
+using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 {
@@ -71,6 +73,39 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.NotFound));
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithSingleLegalEntityWithEligibleApprenticeships()
+        {
+            var data = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+
+            _server
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", data.AccountId.ToString())
+                      .WithParam("accountlegalentityid", data.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices))
+                  .WithStatusCode(HttpStatusCode.OK));
 
             return this;
         }

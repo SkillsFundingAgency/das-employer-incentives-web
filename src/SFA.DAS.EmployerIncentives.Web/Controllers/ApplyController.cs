@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using System.Linq;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.HashingService;
+using System.Linq;
+using System.Threading.Tasks;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -58,7 +57,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     var apprentices = await _apprenticesService.Get(new ApprenticesQuery(accountId, legalEntities.First().AccountLegalEntityId));
                     if (apprentices.Any())
                     {
-                        return RedirectToAction("SelectApprenticeships", new { hashedAccountId });
+                        var hashedAccountLegalEntityId = _hashingService.HashValue(legalEntities.First().AccountLegalEntityId);                        
+                        return RedirectToAction("SelectApprenticeships", new { hashedAccountId, hashedAccountLegalEntityId });
                     }
                     else
                     {
@@ -70,9 +70,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return RedirectToAction("CannotApply", new { hashedAccountId });
         }
 
-        public async Task<ViewResult> SelectApprenticeships()
+        [Route("{hashedAccountLegalEntityId}/select-new-apprentices")]
+        public async Task<ViewResult> SelectApprenticeships(string hashedAccountId, string hashedAccountLegalEntityId)
         {
-            throw new NotImplementedException();
+            return View(new { hashedAccountId, hashedAccountLegalEntityId} );
         }
 
         [HttpGet]
