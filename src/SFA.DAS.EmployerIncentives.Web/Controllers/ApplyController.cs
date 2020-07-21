@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)
             {
-                ModelState.AddModelError("HasTakenOnNewApprentices", QualificationQuestionViewModel.HasTakenOnNewApprenticeshipsNotSelectedMessage);
+                ModelState.AddModelError("HasTakenOnNewApprentices", QualificationQuestionViewModel.HasTakenOnNewApprenticesNotSelectedMessage);
                 return View(viewModel);
             }
 

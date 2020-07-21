@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var viewResult = result as ViewResult;
 
             Sut.ViewData.ModelState.IsValid.Should().BeFalse();
-            Sut.ViewData.ModelState.Single(x => x.Key == "HasTakenOnNewApprentices").Value.Errors.Should().Contain(x => x.ErrorMessage == QualificationQuestionViewModel.HasTakenOnNewApprenticeshipsNotSelectedMessage);
+            Sut.ViewData.ModelState.Single(x => x.Key == "HasTakenOnNewApprentices").Value.Errors.Should().Contain(x => x.ErrorMessage == QualificationQuestionViewModel.HasTakenOnNewApprenticesNotSelectedMessage);
             viewResult.ViewName.Should().BeNullOrEmpty();
         }
     }
