@@ -5,7 +5,7 @@ using NLog.Web;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

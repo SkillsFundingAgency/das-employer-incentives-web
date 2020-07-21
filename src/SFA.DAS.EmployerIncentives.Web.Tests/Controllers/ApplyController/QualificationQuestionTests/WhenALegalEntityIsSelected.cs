@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
@@ -11,7 +12,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         [Test]
         public async Task Then_the_qualification_question_is_displayed()
         {
-            var result = await _sut.QualificationQuestion();
+            var result = await _sut.QualificationQuestion() as ViewResult;
 
             result.Model.Should().BeOfType<QualificationQuestionViewModel>();
             result.ViewName.Should().BeNullOrEmpty();
