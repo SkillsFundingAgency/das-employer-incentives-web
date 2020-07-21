@@ -1,21 +1,20 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EmployerIncentives.Web.Filters;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using Microsoft.IdentityModel.Logging;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using Microsoft.Extensions.Hosting;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -70,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-
+                        
             services.AddMvc(
                     options =>
                     {
