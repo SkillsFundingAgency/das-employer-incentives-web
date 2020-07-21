@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
         private readonly Dictionary<string, string> _appConfig;
 
         public TestWebsite(TestEmployerIncentivesApi testEmployerIncentivesApi)
-        {            
+        {
             _testEmployerIncentivesApi = testEmployerIncentivesApi;
 
             _appConfig = new Dictionary<string, string>
@@ -26,16 +26,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder                
+            builder
                 .ConfigureAppConfiguration(a =>
                 {
                     a.Sources.Clear();
                     a.AddInMemoryCollection(_appConfig);
-                });                
+                });
 
             builder
                 .ConfigureServices(s =>
-                {                    
+                {
                     s.Configure<WebConfigurationOptions>(o =>
                     {
                         o.AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY";
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                       {
                           o.ApiBaseUrl = _testEmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
-                    });
+                      });
                 });
         }
     }
