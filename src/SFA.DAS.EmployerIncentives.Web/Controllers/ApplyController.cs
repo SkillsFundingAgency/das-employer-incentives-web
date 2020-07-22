@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{hashedAccountId}/[Controller]")]
+    [Route("{hashedAccountId}/apply")]
     public class ApplyController : Controller
     {
         private readonly WebConfigurationOptions _configuration;
@@ -65,6 +65,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     {
                         return RedirectToAction("CannotApply", new { hashedAccountId, hasTakenOnNewApprentices = true });
                     }
+                }
+                if(legalEntities.Count() > 1)
+                {
+                    return RedirectToAction("ChooseOrganisation", new { hashedAccountId });
                 }
             }
 
@@ -125,6 +129,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View(new TakenOnCannotApplyViewModel(_configuration.CommitmentsBaseUrl));
             }
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+        }
+
+        [HttpGet]
+        [Route("choose-organisation")]
+        public async Task<ViewResult> ChooseOrganisation()
+        {
+            return View(new ChooseOrganisationViewModel());
         }
     }
 }

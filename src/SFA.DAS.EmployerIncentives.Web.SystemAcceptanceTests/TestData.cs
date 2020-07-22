@@ -37,6 +37,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
             }
+
+            public class WithMultipleLegalEntities
+            {
+                public long AccountId { get; } = 30002;
+                public string HashedAccountId => "VBKBLD";                
+
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity1, LegalEntity2, LegalEntity3 };
+
+                public long AccountLegalEntityId1 => 40001;
+                public string HashedAccountLegalEntityId1 => "MLG4LW";
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
+                public long AccountLegalEntityId2 => 40002;
+                public string HashedAccountLegalEntityId2 => "VBGNWB";
+                public LegalEntityDto LegalEntity2 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId2, LegalEntityName = $"Organisation {AccountLegalEntityId2}" };
+                public long AccountLegalEntityId3 => 40003;
+                public string HashedAccountLegalEntityId3 => "VKD7X7";
+                public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}" };
+            }
         }        
     }
 }

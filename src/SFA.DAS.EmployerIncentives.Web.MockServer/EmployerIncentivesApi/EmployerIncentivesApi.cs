@@ -110,6 +110,25 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+        public EmployerIncentivesApiBuilder WithMultipleLegalEntities()
+        {
+            var data = new TestData.Account.WithMultipleLegalEntities();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+
+            return this;
+        }
+
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
