@@ -21,12 +21,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if(!_testdata.ContainsKey(key))
+            if(!_testdata.ContainsKey(key.ToLowerInvariant()))
             {
                 return default;
             }
 
-            return (T)_testdata[key];
+            return (T)_testdata[key.ToLowerInvariant()];
         }
 
         public void Add<T>(string key, T value)
@@ -36,12 +36,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (_testdata.ContainsKey(key))
+            if (_testdata.ContainsKey(key.ToLowerInvariant()))
             {
-                throw new InvalidOperationException("key alrady exists");
+                throw new InvalidOperationException("key already exists");
             }
 
-            _testdata.Add(key, value);
+            _testdata.Add(key.ToLowerInvariant(), value);
         }
 
         public T GetOrCreate<T>(string key = null, Func<T> onCreate = null)
@@ -51,19 +51,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 key = typeof(T).FullName;
             }
 
-            if (!_testdata.ContainsKey(key))
+            if (!_testdata.ContainsKey(key.ToLowerInvariant()))
             {
                 if (onCreate == null)
                 {
-                    _testdata.Add(key, _fixture.Create<T>());
+                    _testdata.Add(key.ToLowerInvariant(), _fixture.Create<T>());
                 }
                 else
                 {
-                    _testdata.Add(key, onCreate.Invoke());
+                    _testdata.Add(key.ToLowerInvariant(), onCreate.Invoke());
                 }
             }
 
-            return (T)_testdata[key];
+            return (T)_testdata[key.ToLowerInvariant()];
         }
     }
 }

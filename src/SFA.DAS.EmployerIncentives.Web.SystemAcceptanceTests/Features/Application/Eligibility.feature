@@ -14,3 +14,8 @@ Scenario: An employer has eligible apprentices
 	When the employer tries to make a grant application
 	Then the employer is asked to select the apprentice the grant is for
 
+Scenario: An employer has multiple legal entites
+	Given an employer applying for a grant has multiple legal entities
+	When the employer tries to make a grant application
+	Then the employer is asked to select the legal entity the grant applies to
+

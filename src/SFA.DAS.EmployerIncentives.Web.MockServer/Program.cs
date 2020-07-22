@@ -11,7 +11,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .Create(8081)
                 .WithAccountWithNoLegalEntities()
                 .WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
-                .WithSingleLegalEntityWithEligibleApprenticeships()
+                .WithSingleLegalEntityWithEligibleApprenticeships()      
+                .WithMultipleLegalEntities()
                 .Build();
 
             Console.WriteLine("Press any key to stop the servers");
