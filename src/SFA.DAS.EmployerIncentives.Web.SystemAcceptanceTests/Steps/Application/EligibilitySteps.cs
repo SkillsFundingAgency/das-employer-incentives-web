@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -199,7 +200,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
 
-            document.Title.Should().Be("Select Apprenticeships");
+            document.Title.Should().Be(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
 
             var requests = _testContext
@@ -224,13 +225,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                            .WithParam("accountlegalentityid", accountLegalEntityId.ToString())
                            .UsingGet());
 
-            requests.AsEnumerable().Count().Should().Be(1);
+            requests.AsEnumerable().Count().Should().Be(2);
         }
 
         [Then(@"the employer is asked to select the legal entity the grant applies to")]
         public async Task ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
-            var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");            
+            var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var accountId = _testData.Get<long>("AccountId");
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
 
