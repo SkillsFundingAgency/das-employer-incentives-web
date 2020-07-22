@@ -251,7 +251,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                            .WithPath($"/accounts/{accountId}/legalentities")
                            .UsingGet());
 
-            requests.AsEnumerable().Count().Should().Be(2);
+            requests.AsEnumerable().Count().Should().Be(1);
         }
     }
 }
