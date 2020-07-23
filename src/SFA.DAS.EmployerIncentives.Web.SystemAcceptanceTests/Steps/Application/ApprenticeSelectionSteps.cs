@@ -17,6 +17,7 @@ using WireMock.ResponseBuilders;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
+    [Scope(Feature = "ApprenticeSelection")]
     public class ApprenticeSelectionSteps : StepsBase
     {
         private readonly TestContext _testContext;

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
@@ -18,27 +19,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
         private ViewResult _result;
-        private IEnumerable<ApprenticeDto> _apprenticeData;
+        private IEnumerable<ApprenticeshipModel> _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
         private ApprenticesQuery _getApprenticesQuery;
 
         [SetUp]
         public async Task Arrange()
         {
-            _apprenticeData = Fixture.CreateMany<ApprenticeDto>();
+            _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
 
-            var accountId = Fixture.Create<long>();
-            HashingService.Setup(x => x.DecodeValue(_hashedAccountId)).Returns(accountId);
-
-            var legalEntityId = Fixture.Create<long>();
-            HashingService.Setup(x => x.DecodeValue(_hashedLegalEntityId)).Returns(legalEntityId);
-
             _getApprenticesQuery = It.IsAny<ApprenticesQuery>();
+
             ApprenticesServiceMock
-                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q =>
-                    q.AccountId == accountId && q.AccountLegalEntityId == legalEntityId)))
+                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q => q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
@@ -82,7 +77,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 .BeEquivalentTo(_apprenticeData,
                     opt => opt
                         .Excluding(x => x.Id)
-                        .Excluding(x => x.FullName)
+                        .Excluding(x => x.DisplayName)
                     );
         }
 

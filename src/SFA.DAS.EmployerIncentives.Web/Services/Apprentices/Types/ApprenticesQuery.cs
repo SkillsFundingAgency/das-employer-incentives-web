@@ -2,10 +2,10 @@
 {
     public class ApprenticesQuery
     {
-        public long AccountId { get; private set; }
-        public long AccountLegalEntityId { get; private set; }
+        public string AccountId { get; private set; }
+        public string AccountLegalEntityId { get; private set; }
         
-        public ApprenticesQuery(long accountId, long accountLegalEntityId)
+        public ApprenticesQuery(string accountId, string accountLegalEntityId)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;        

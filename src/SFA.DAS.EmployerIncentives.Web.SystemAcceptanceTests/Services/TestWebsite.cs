@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using System.Collections.Generic;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 {
@@ -10,10 +12,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
     {
         private readonly TestEmployerIncentivesApi _testEmployerIncentivesApi;
         private readonly Dictionary<string, string> _appConfig;
+        private readonly IHook<IActionResult> _actionResultHook;
 
-        public TestWebsite(TestEmployerIncentivesApi testEmployerIncentivesApi)
+        public TestWebsite(TestEmployerIncentivesApi testEmployerIncentivesApi, IHook<IActionResult> actionResultHook)
         {
             _testEmployerIncentivesApi = testEmployerIncentivesApi;
+            _actionResultHook = actionResultHook;
 
             _appConfig = new Dictionary<string, string>
             {
@@ -46,6 +50,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                           o.ApiBaseUrl = _testEmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
                       });
+                    s.AddControllersWithViews(options =>
+                    {
+                        options.Filters.Add(new TestActionResultFilter(_actionResultHook));
+                    });
                 });
         }
     }

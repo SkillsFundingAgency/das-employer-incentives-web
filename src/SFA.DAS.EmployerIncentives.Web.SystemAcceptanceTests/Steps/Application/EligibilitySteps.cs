@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _hashingService = _testContext.HashingService;
         }
 
-        [Given(@"an employer applying for a grant has no apprentices matching the eligibility requirement")]
+        [Given(@"an employer applying for a grant has no apprenticeships matching the eligibility requirement")]
         public void GivenAnEmployerApplyingHasNoApprenticesMatchingTheEligibilityCriteria()
         {
             var testdata = new TestData.Account.WithSingleLegalEntityWithNoEligibleApprenticeships();
@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .WithStatusCode(HttpStatusCode.NotFound));
         }
 
-        [Given(@"an employer applying for a grant has apprentices matching the eligibility requirement")]
+        [Given(@"an employer applying for a grant has apprenticeships matching the eligibility requirement")]
         public void GivenAnEmployerApplyingHasApprenticesMatchingTheEligibilityCriteria()
         {
             var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
@@ -102,6 +102,26 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .WithStatusCode(HttpStatusCode.OK));
         }
 
+        [Given(@"an employer applying for a grant has no legal entities")]
+        public void GivenAnEmployerApplyingHasNoLegalentities()
+        {
+            var testdata = new TestData.Account.WithNoLegalEntites();
+
+            var accountId = _testData.GetOrCreate("AccountId", onCreate: () => testdata.AccountId);
+            _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/legalentities")
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithStatusCode(HttpStatusCode.NotFound));
+        }
+
         [Given(@"an employer applying for a grant has multiple legal entities")]
         public void GivenAnEmployerApplyingHasMultipleLegalentities()
         {
@@ -129,14 +149,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerMakesAGrantApplication()
         {
             var request = new HttpRequestMessage(
-                HttpMethod.Post,
+                HttpMethod.Get, 
                 $"{_testData.Get<string>("HashedAccountId")}/apply")
-            {
-                Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                {
+                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
-                        new KeyValuePair<string, string>("HasTakenOnNewApprentices", "true")
+                        new KeyValuePair<string, string>("hasTakenOnNewApprentices", "true")
                     })
-            };
+                };            
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 
@@ -146,9 +166,42 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }
 
+        [Then(@"the employer is informed they cannot apply for the grant yet")]
+        public async Task ThenTheEmployerIsInformedTheycannotApplyForTheGrantYet()
+        {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+            var model = _testContext.ActionResult.LastViewResult.Model as CannotApplyViewModel;
+            model.Should().NotBeNull();
+
+            var accountId = _testData.Get<long>("AccountId");
+            var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var hashedAccountId = _testData.Get<string>("HashedAccountId");
+
+            response.EnsureSuccessStatusCode();
+
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
+
+            document.Title.Should().Be("You cannot apply for this grant yet");
+            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/cannot-apply");
+
+            var requests = _testContext
+                       .EmployerIncentivesApi
+                       .MockServer
+                       .FindLogEntries(
+                           Request
+                           .Create()
+                           .WithPath($"/accounts/{accountId}/legalentities")
+                           .UsingGet());
+
+            requests.AsEnumerable().Count().Should().Be(1);
+        }
+         
         [Then(@"the employer is informed they cannot apply for the grant")]
         public async Task ThenTheEmployerIsInformedTheycannotApplyForTheGrant()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
@@ -187,22 +240,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             requests.AsEnumerable().Count().Should().Be(1);
         }
 
-        [Then(@"the employer is asked to select the apprentice the grant is for")]
-        public async Task ThenTheEmployerIsAskedToSelectTheApprenticeTheGrantIsFor()
+        [Then(@"the employer is asked if they have taken on qualifying apprenticeships")]
+        public async Task ThenTheEmployerIsAskedIfTheyHavetakenOnQualifyingApprenticeships()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
-
+            
             response.EnsureSuccessStatusCode();
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
 
-            document.Title.Should().Be(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
-
+            document.Title.Should().Be("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
+            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
+            
             var requests = _testContext
                        .EmployerIncentivesApi
                        .MockServer
@@ -225,13 +280,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                            .WithParam("accountlegalentityid", accountLegalEntityId.ToString())
                            .UsingGet());
 
-            requests.AsEnumerable().Count().Should().Be(2);
+            requests.AsEnumerable().Count().Should().Be(1);
         }
 
         [Then(@"the employer is asked to select the legal entity the grant applies to")]
         public async Task ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
-            var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+            var model = _testContext.ActionResult.LastViewResult.Model as ChooseOrganisationViewModel;
+            model.Should().NotBeNull();
+
+            var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");            
             var accountId = _testData.Get<long>("AccountId");
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
 

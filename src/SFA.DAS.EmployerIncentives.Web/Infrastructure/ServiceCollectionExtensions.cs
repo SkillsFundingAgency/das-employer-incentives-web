@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
-                return new LegalEntitiesService(httpClient);
+                return new LegalEntitiesService(httpClient, s.GetRequiredService<IHashingService>());
             });
 
             serviceCollection.AddTransient<IApprenticesService>(s =>
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
-                return new ApprenticesService(httpClient);
+                return new ApprenticesService(httpClient, s.GetRequiredService<IHashingService>());
             });
 
             return serviceCollection;
