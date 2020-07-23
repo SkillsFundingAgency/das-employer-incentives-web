@@ -1,12 +1,12 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
+using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 {
     public interface IApprenticesService
     {
-        Task<IEnumerable<ApprenticeDto>> Get(ApprenticesQuery query);
+        Task<IEnumerable<ApprenticeshipModel>> Get(ApprenticesQuery query);
     }    
 }

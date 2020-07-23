@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public long AccountId { get; } = 22222;
                 public string HashedAccountId => "MWG69Y";
                 public long AccountLegalEntityId => 33333;
+                public string HashedAccountLegalEntityId => "V9YW7W";
                 public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity };
                 public LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = "Organisation 33333" };
             }
@@ -33,9 +34,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
 
                 public LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}" };
-                public ApprenticeDto Apprentice1 => new ApprenticeDto { FirstName = "Adam", FullName = "Adam 1 Glover", LastName= "Glover", CourseName = "Early Years Educator Level 3" };
-                public ApprenticeDto Apprentice2 => new ApprenticeDto { FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
-                public ApprenticeDto Apprentice3 => new ApprenticeDto { FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
+                public ApprenticeDto Apprentice1 => new ApprenticeDto { Id = 1,  FirstName = "Adam", FullName = "Adam 1 Glover", LastName= "Glover", CourseName = "Early Years Educator Level 3" };
+                public ApprenticeDto Apprentice2 => new ApprenticeDto { Id = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
+                public ApprenticeDto Apprentice3 => new ApprenticeDto { Id = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
             }
 
             public class WithMultipleLegalEntities

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -11,18 +13,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
     public class ApprenticesService : IApprenticesService
     {
         private readonly HttpClient _client;
+        private readonly IHashingService _hashingService;
 
-        public ApprenticesService(HttpClient client)
+        public ApprenticesService(HttpClient client, IHashingService hashingService)
         {
             _client = client;
+            _hashingService = hashingService;
         }
 
-        public async Task<IEnumerable<ApprenticeDto>> Get(ApprenticesQuery query)
+        public async Task<IEnumerable<ApprenticeshipModel>> Get(ApprenticesQuery query)
         {
             var queryParams = new Dictionary<string, string>()
             {
-                {"accountid", query.AccountId.ToString() },
-                {"accountlegalentityid", query.AccountLegalEntityId.ToString() }
+                {"accountid", _hashingService.DecodeValue(query.AccountId).ToString() },
+                {"accountlegalentityid", _hashingService.DecodeValue(query.AccountLegalEntityId).ToString() }
             };
             
             var url = QueryHelpers.AddQueryString("/apprenticeships", queryParams);
@@ -31,12 +35,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return new List<ApprenticeDto>();
+                return new List<ApprenticeshipModel>();
             }
 
             response.EnsureSuccessStatusCode();
 
-            return await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeDto>>(await response.Content.ReadAsStreamAsync());
+            var data = await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeDto>>(await response.Content.ReadAsStreamAsync());
+            return data.ToApprenticeshipModel(_hashingService);
         }
     }
 }

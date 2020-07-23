@@ -1,12 +1,8 @@
-﻿using AutoFixture;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
 {
@@ -16,14 +12,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         [Test]
         public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
         {
-            ApprenticesServiceMock
-                .Setup(m => m.Get(It.IsAny<ApprenticesQuery>()))
-                .ReturnsAsync(Fixture.CreateMany<ApprenticeDto>());
-
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = true };
+            var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = true };
 
-            var result = await Sut.QualificationQuestion(accountId, viewModel);
+            var result = await Sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
             redirectResult.ActionName.Should().Be("SelectApprenticeships");

@@ -1,47 +1,57 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{hashedAccountId}/apply")]
+    [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
         private readonly WebConfigurationOptions _configuration;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly IApprenticesService _apprenticesService;
-        private readonly IHashingService _hashingService;
+        private readonly IApprenticesService _apprenticesService;        
 
         public ApplyController(
             IOptions<WebConfigurationOptions> configuration,
             ILegalEntitiesService legalEntitiesService,
-            IApprenticesService apprenticesService,
-            IHashingService hashingService)
+            IApprenticesService apprenticesService)
         {
             _configuration = configuration.Value;
             _legalEntitiesService = legalEntitiesService;
             _apprenticesService = apprenticesService;
-            _hashingService = hashingService;
         }
 
-        [Route("")]
         [HttpGet]
-        public async Task<IActionResult> QualificationQuestion()
+        [Route("")]
+        public async Task<IActionResult> Default()
         {
-            return View(new QualificationQuestionViewModel());
+            return RedirectToAction("GetChooseOrganisation");
         }
 
-        [Route("")]
+        [HttpGet]
+        [Route("declaration")]
+        public async Task<ViewResult> Declaration(string accountId)
+        {
+            return View(new DeclarationViewModel(accountId));
+        }
+
+        [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
+        [HttpGet]
+        public async Task<IActionResult> GetQualificationQuestion(QualificationQuestionViewModel viewModel)
+        {
+            return View("QualificationQuestion", viewModel);
+        }
+
+        [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
         [HttpPost]
-        public async Task<IActionResult> QualificationQuestion(string hashedAccountId, QualificationQuestionViewModel viewModel)
+        public async Task<IActionResult> QualificationQuestion(QualificationQuestionViewModel viewModel)
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)
             {
@@ -51,73 +61,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (viewModel.HasTakenOnNewApprentices.Value)
             {
-                var accountId = _hashingService.DecodeValue(hashedAccountId);
-                var legalEntities = await _legalEntitiesService.Get(accountId);
-                if (legalEntities.Count() == 1)
-                {
-                    var apprentices = await _apprenticesService.Get(new ApprenticesQuery(accountId, legalEntities.First().AccountLegalEntityId));
-                    if (apprentices.Any())
-                    {
-                        var hashedAccountLegalEntityId = _hashingService.HashValue(legalEntities.First().AccountLegalEntityId);
-                        return RedirectToAction("SelectApprenticeships", new { hashedAccountId, hashedAccountLegalEntityId });
-                    }
-                    else
-                    {
-                        return RedirectToAction("CannotApply", new { hashedAccountId, hasTakenOnNewApprentices = true });
-                    }
-                }
-                if (legalEntities.Count() > 1)
-                {
-                    return RedirectToAction("ChooseOrganisation", new { hashedAccountId });
-                }
+                return RedirectToAction("SelectApprenticeships", new { viewModel.AccountId, accountLegalEntityId = viewModel.AccountLegalEntityId });
             }
 
-            return RedirectToAction("CannotApply", new { hashedAccountId });
-        }
-
-        [HttpGet]
-        [Route("{hashedAccountLegalEntityId}/select-new-apprentices")]
-        public async Task<ViewResult> SelectApprenticeships(string hashedAccountId, string hashedAccountLegalEntityId)
-        {
-            var model = await GetInitialSelectApprenticeshipsViewModel(hashedAccountId, hashedAccountLegalEntityId);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Route("{hashedAccountLegalEntityId}/select-new-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string hashedAccountId, string hashedAccountLegalEntityId, [FromBody] SelectApprenticeshipsViewModel viewModel)
-        {
-            if (viewModel.HasSelectedApprenticeships)
-            {
-                return RedirectToAction("Declaration", new { hashedAccountId });
-            }
-
-            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-            return View(viewModel);
-        }
-
-        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string hashedAccountId, string hashedAccountLegalEntityId)
-        {
-            var query = new ApprenticesQuery(_hashingService.DecodeValue(hashedAccountId),
-                _hashingService.DecodeValue(hashedAccountLegalEntityId));
-            var apprenticeships = await _apprenticesService.Get(query);
-
-            var model = new SelectApprenticeshipsViewModel
-            {
-                AccountId = hashedAccountId,
-                AccountLegalEntityId = hashedAccountLegalEntityId,
-                Apprenticeships = apprenticeships.ToApprenticeshipModel(_hashingService).OrderBy(a => a.LastName)
-            };
-            return model;
-        }
-
-
-        [HttpGet]
-        [Route("declaration")]
-        public async Task<ViewResult> Declaration(string accountId)
-        {
-            return View(new DeclarationViewModel(accountId));
+            return RedirectToAction("CannotApply", new { viewModel.AccountId });
         }
 
         [HttpGet]
@@ -129,14 +76,88 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View(new TakenOnCannotApplyViewModel(_configuration.CommitmentsBaseUrl));
             }
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
-        }
+        }        
 
         [HttpGet]
         [Route("choose-organisation")]
-        public async Task<ViewResult> ChooseOrganisation()
+        public async Task<IActionResult> GetChooseOrganisation(ChooseOrganisationViewModel viewModel)
         {
-            return View(new ChooseOrganisationViewModel());
+            var legalEntities = await _legalEntitiesService.Get(viewModel.AccountId);
+            if (legalEntities.Count() == 1)
+            {
+                var accountLegalEntityId = legalEntities.First().AccountLegalEntityId;
+                var apprentices = await _apprenticesService.Get(new ApprenticesQuery(viewModel.AccountId, accountLegalEntityId));
+                if (apprentices.Any())
+                {
+                    return RedirectToAction("GetQualificationQuestion", new { viewModel.AccountId, accountLegalEntityId });
+                }
+                else
+                {
+                    return RedirectToAction("CannotApply", new { viewModel.AccountId, hasTakenOnNewApprentices = true });
+                }
+            }
+            if (legalEntities.Count() > 1)
+            {
+                viewModel.AddOrganisations(legalEntities);
+                return View("ChooseOrganisation", viewModel);
+            }
+
+            return RedirectToAction("CannotApply", new { viewModel.AccountId });            
         }
+
+        [HttpPost]
+        [Route("choose-organisation")]
+        public async Task<IActionResult> ChooseOrganisation(ChooseOrganisationViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.Selected))
+            {
+                return RedirectToAction("GetQualificationQuestion", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
+            }
+
+            if (string.IsNullOrEmpty(viewModel.Selected))
+            {
+                ModelState.AddModelError("OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
+            }
+
+            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        public async Task<ViewResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
+        {
+            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, [FromBody] SelectApprenticeshipsViewModel viewModel)
+        {
+            if (viewModel.HasSelectedApprenticeships)
+            {
+                return RedirectToAction("Declaration", new { accountId });
+            }
+
+            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            return View(viewModel);
+        }
+
+        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
+        {
+            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
+
+            var model = new SelectApprenticeshipsViewModel
+            {
+                AccountId = accountId,
+                AccountLegalEntityId = accountLegalEntityId,
+                Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
+            };
+            return model;
+        }       
 
         [HttpGet]
         [Route("need-bank-details")]
@@ -178,8 +199,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("complete/need-bank-details")]
         public async Task<ViewResult> NeedBankDetails()
         {
-            return View();
-        }
+            return View();        
+        }          
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
