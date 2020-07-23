@@ -16,14 +16,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
         public TestEmployerIncentivesApi()
         {
-            MockServer = WireMockServer.Start(ssl: true);
+            MockServer = WireMockServer.Start();
             BaseAddress = MockServer.Urls[0];
             MockServer.LogEntriesChanged += MockServer_LogEntriesChanged;
         }
 
         private void MockServer_LogEntriesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach(LogEntry newItem in e.NewItems)
+            foreach (LogEntry newItem in e.NewItems)
             {
                 Debug.WriteLine("============================= TestEmployerIncentivesApi MockServer called ================================");
                 Debug.WriteLine(JsonConvert.SerializeObject(TestHelper.Map(newItem), Formatting.Indented));
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             isDisposed = true;
         }
 
-        
+
 
     }
 }
