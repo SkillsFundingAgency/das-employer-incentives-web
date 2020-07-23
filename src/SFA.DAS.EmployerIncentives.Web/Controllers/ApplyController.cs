@@ -135,11 +135,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("{accountLegalEntityId}/select-new-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsViewModel viewModel)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, [FromBody] SelectApprenticeshipsViewModel viewModel)
         {
             if (viewModel.HasSelectedApprenticeships)
             {
-                return RedirectToAction("Declaration", new { viewModel.AccountId });
+                return RedirectToAction("Declaration", new { accountId });
             }
 
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);

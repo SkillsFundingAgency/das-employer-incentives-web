@@ -30,13 +30,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
 
-            var accountId = Fixture.Create<string>();
-            var legalEntityId = Fixture.Create<string>();
-
             _getApprenticesQuery = It.IsAny<ApprenticesQuery>();
 
             ApprenticesServiceMock
-                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q => q.AccountId == accountId && q.AccountLegalEntityId == legalEntityId)))
+                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q => q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
@@ -95,7 +92,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         {
             _model.SelectedApprenticeships.Clear();
 
-            var result = Sut.SelectApprenticeships(new SelectApprenticeshipsViewModel
+            var result = Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId, new SelectApprenticeshipsViewModel
             {
                 Apprenticeships = _model.Apprenticeships
             });
@@ -113,7 +110,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         {
             _model.SelectedApprenticeships.Add(_model.Apprenticeships.Last().Id);
 
-            var result = Sut.SelectApprenticeships(_model);
+            var result = Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId, _model);
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
