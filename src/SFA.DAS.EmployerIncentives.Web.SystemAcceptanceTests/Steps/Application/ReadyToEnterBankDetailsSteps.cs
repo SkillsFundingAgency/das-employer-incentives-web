@@ -1,8 +1,10 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
@@ -140,10 +142,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await _continueNavigationResponse.Content.ReadAsStreamAsync());
-
             document.Title.Should().Be(new BankDetailsConfirmationViewModel().Title);
-            document.DocumentElement.InnerHtml.Should().Contain(ErrorHeading);
-            document.DocumentElement.InnerHtml.Should().Contain(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as BankDetailsConfirmationViewModel;
+            model.Should().NotBeNull();
+            model.CanProvideBankDetails.Should().BeNull();
+            viewResult.ViewData.ModelState.ErrorCount.Should().Be(1);
+            var validationError = viewResult.ViewData.ModelState.Values.ToList()[0].Errors[0].ErrorMessage;
+            validationError.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);               
+            
         }
 
     }
