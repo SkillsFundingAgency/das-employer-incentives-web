@@ -30,7 +30,7 @@
         "certificateName": {
             "type": "string"
         },
-        "sharedApimName": {
+        "sharedApimServiceName": {
             "type": "string"
         },
         "sharedApimResourceGroup": {
@@ -75,13 +75,13 @@
                 },
                 "parameters": {
                     "apimName": {
-                        "value": "[parameters('sharedApimName')]"
+                        "value": "[parameters('sharedApimServiceName')]"
                     },
                     "subscriptionName": {
                         "value": "[variables('appServiceName')]"
                     },
                     "subscriptionScope": {
-                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', 'das-at-shared-apim', '/products/EmployerIncentivesOuterApi')]"
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimServiceName'), '/products/EmployerIncentivesOuterApi')]"
                     }
                 }
             }
