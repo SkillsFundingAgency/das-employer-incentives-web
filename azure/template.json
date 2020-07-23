@@ -30,6 +30,12 @@
         "certificateName": {
             "type": "string"
         },
+        "sharedApimName": {
+            "type": "string"
+        },
+        "sharedApimResourceGroup": {
+            "type": "string"
+        },
         "sharedKeyVaultName": {
             "type": "string"
         },
@@ -51,11 +57,35 @@
         }
     },
     "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/DASD-7963-AddApimSubscriptionTemplate/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]"
     },
     "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "apim-subscription",
+            "resourceGroup": "[parameters('sharedApimResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'apim/apim-subscription.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apimName": {
+                        "value": "[parameters('sharedApimName')]"
+                    },
+                    "subscriptionName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "subscriptionScope": {
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', 'das-at-shared-apim', '/products/EmployerIncentivesOuterApi')]"
+                    }
+                }
+            }
+        },        
         {
             "apiVersion": "2017-05-10",
             "name": "app-insights",
@@ -74,9 +104,7 @@
                         "value": "[variables('appServiceName')]"
                     }
                 }
-            },
-            "dependsOn": [
-            ]
+            }
         },
         {
             "condition": "[greater(length(parameters('customHostName')), 0)]",
