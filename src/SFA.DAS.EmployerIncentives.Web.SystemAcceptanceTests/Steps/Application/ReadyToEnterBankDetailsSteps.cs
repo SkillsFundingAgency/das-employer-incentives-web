@@ -1,6 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
@@ -12,12 +11,12 @@ using TechTalk.SpecFlow;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
+    [Scope(Feature = "ReadyToEnterBankDetails")]
     public class ReadyToEnterBankDetailsSteps : StepsBase
     {
         private const string ReadyToEnterBankDetailsUrl = "need-bank-details";
         private const string NeedBankDetailsUrl = "complete/need-bank-details";
         private const string EnterBankDetailsUrl = "enter-bank-details";
-        private const string ErrorHeading = "There is a problem";
 
         private readonly TestContext _testContext;
         private readonly TestDataStore _testData;
@@ -31,13 +30,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _hashingService = _testContext.HashingService;
         }
 
+
         [When(@"the employer has confirmed their apprenticeship details")]
         public async Task WhenTheEmployerHasConfirmedTheirApprenticeshipDetails()
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
 
-            var url = $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}";
+            var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/{ReadyToEnterBankDetailsUrl}";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -57,10 +59,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
 
             var request = new HttpRequestMessage(
              HttpMethod.Post,
-             $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+             $"{hashedAccountId}/apply/{hashedLegalEntityId}/{ReadyToEnterBankDetailsUrl}")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
@@ -72,12 +76,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
-        [Then(@"the employer is redirected to the enter bank details page")]
+        [Then(@"the employer is requested to enter their bank details")]
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
-            var url = $"/{hashedAccountId}/apply/{EnterBankDetailsUrl}";
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
+
+            var url = $"/{hashedAccountId}/apply/{hashedLegalEntityId}/{EnterBankDetailsUrl}";
 
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(url);
         }
@@ -87,10 +94,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
 
             var request = new HttpRequestMessage(
                HttpMethod.Post,
-               $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+               $"{hashedAccountId}/apply/{hashedLegalEntityId}/{ReadyToEnterBankDetailsUrl}")
                 {
                     Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
@@ -102,12 +111,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
-        [Then(@"the employer is redirected to the ready to enter bank details page")]
+        [Then(@"the employer is requested to enter their bank details at a later date")]
         public void ThenTheEmployerIsRedirectedToTheReadyToEnterBankDetailsPage()
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
-            var url = $"/{hashedAccountId}/apply/{NeedBankDetailsUrl}";
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
+
+            var url = $"/{hashedAccountId}/apply/{hashedLegalEntityId}/{NeedBankDetailsUrl}";
 
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(url);
         }
@@ -117,10 +129,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
 
             var request = new HttpRequestMessage(
                HttpMethod.Post,
-               $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+               $"{hashedAccountId}/apply/{hashedLegalEntityId}/{ReadyToEnterBankDetailsUrl}")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                 {
@@ -136,7 +150,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
-            var url = $"/{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}";
+            var legalEntityId = _testData.GetOrCreate<long>("LegalEntityId");
+            var hashedLegalEntityId = _hashingService.HashValue(legalEntityId.ToString());
+
+            var url = $"/{hashedAccountId}/apply/{hashedLegalEntityId}/{ReadyToEnterBankDetailsUrl}";
 
             _continueNavigationResponse.RequestMessage.RequestUri.LocalPath.Should().Be(url);
 
@@ -150,9 +167,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.CanProvideBankDetails.Should().BeNull();
             viewResult.ViewData.ModelState.ErrorCount.Should().Be(1);
-            var validationError = viewResult.ViewData.ModelState.Values.ToList()[0].Errors[0].ErrorMessage;
-            validationError.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);               
-            
+            viewResult.ViewData.ModelState.ContainsKey(nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)).Should().BeTrue();
+            viewResult.ViewData.ModelState[nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)]
+                .Errors.First().ErrorMessage.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
         }
 
     }

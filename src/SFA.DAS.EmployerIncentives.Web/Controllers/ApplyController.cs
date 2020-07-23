@@ -160,15 +160,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }       
 
         [HttpGet]
-        [Route("need-bank-details")]
-        public async Task<ViewResult> BankDetailsConfirmation()
+        [Route("{accountLegalEntityId}/need-bank-details")]
+        public async Task<ViewResult> BankDetailsConfirmation(string accountId, string accountLegalEntityId)
         {
-            return View(new BankDetailsConfirmationViewModel());
+            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, AccountLegalEntityId = accountLegalEntityId });
         }
 
         [HttpPost]
-        [Route("need-bank-details")]
-        public async Task<IActionResult> BankDetailsConfirmation(string hashedAccountId, BankDetailsConfirmationViewModel viewModel)
+        [Route("{accountLegalEntityId}/need-bank-details")]
+        public async Task<IActionResult> BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
             {
@@ -188,7 +188,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
 
         [HttpGet]
-        [Route("enter-bank-details")]
+        [Route("{accountLegalEntityId}/enter-bank-details")]
         public async Task<ViewResult> EnterBankDetails()
         {
             // Once integration mechanism is finalised, redirect / post to external site
@@ -196,7 +196,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("complete/need-bank-details")]
+        [Route("{accountLegalEntityId}/complete/need-bank-details")]
         public async Task<ViewResult> NeedBankDetails()
         {
             return View();        

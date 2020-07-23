@@ -12,11 +12,11 @@ Scenario: An employer has confirmed their apprenticeship details
 
 Scenario: An employer confirms they can provide their bank details
 	When the employer confirms they can provide their bank details
-	Then the employer is redirected to the enter bank details page
+	Then the employer is requested to enter their bank details
 
 Scenario: An employer cannot provide their bank details now
 	When the employer states that they are unable to provide bank details now
-	Then the employer is redirected to the ready to enter bank details page
+	Then the employer is requested to enter their bank details at a later date
 
 Scenario: An employer does not confirm whether they can provide bank details
 	When the employer does not confirm whether they can provide bank details now

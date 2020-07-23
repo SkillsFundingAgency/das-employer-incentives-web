@@ -9,6 +9,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         {
         }
 
+        public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
         public bool? CanProvideBankDetails { get; set; }
     }
 }

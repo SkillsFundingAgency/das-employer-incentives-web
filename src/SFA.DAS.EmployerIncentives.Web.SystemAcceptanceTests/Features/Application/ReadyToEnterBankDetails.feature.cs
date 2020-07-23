@@ -147,7 +147,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the employer confirms they can provide their bank details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 15
- testRunner.Then("the employer is redirected to the enter bank details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is requested to enter their bank details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -184,7 +184,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the employer states that they are unable to provide bank details now", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 19
- testRunner.Then("the employer is redirected to the ready to enter bank details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is requested to enter their bank details at a later date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
