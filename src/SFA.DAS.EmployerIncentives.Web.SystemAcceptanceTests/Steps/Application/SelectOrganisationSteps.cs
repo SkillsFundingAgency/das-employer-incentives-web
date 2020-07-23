@@ -145,8 +145,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                            .UsingGet());
 
             requests.AsEnumerable().Count().Should().Be(1);
-
-            // todo get viewmodel and check for error
         }
     }
 }
