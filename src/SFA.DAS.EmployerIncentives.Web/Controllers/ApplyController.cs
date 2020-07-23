@@ -137,6 +137,49 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return View(new ChooseOrganisationViewModel());
         }
+
+        [HttpGet]
+        [Route("need-bank-details")]
+        public async Task<ViewResult> BankDetailsConfirmation()
+        {
+            return View(new BankDetailsConfirmationViewModel());
+        }
+
+        [HttpPost]
+        [Route("need-bank-details")]
+        public async Task<IActionResult> BankDetailsConfirmation(string hashedAccountId, BankDetailsConfirmationViewModel viewModel)
+        {
+            if (!viewModel.CanProvideBankDetails.HasValue)
+            {
+                ModelState.AddModelError("CanProvideBankDetails", BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+                return View(viewModel);
+            }
+
+            if (viewModel.CanProvideBankDetails.Value)
+            {
+                // redirect to business central
+                return RedirectToAction("EnterBankDetails");
+            }
+
+            // redirect to need bank details page
+            return RedirectToAction("NeedBankDetails");
+        }
+
+
+        [HttpGet]
+        [Route("enter-bank-details")]
+        public async Task<ViewResult> EnterBankDetails()
+        {
+            // Once integration mechanism is finalised, redirect / post to external site
+            return View();
+        }
+
+        [HttpGet]
+        [Route("complete/need-bank-details")]
+        public async Task<ViewResult> NeedBankDetails()
+        {
+            return View();
+        }
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
