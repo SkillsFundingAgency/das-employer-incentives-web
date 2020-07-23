@@ -52,7 +52,7 @@ steps:
     inputs:
       command: test
       projects: '**/*.Tests.csproj'
-      arguments: '--configuration $(buildConfiguration) --no-build --logger trx --collect "Code coverage'
+      arguments: '--configuration $(buildConfiguration) --no-build --logger trx --collect "Code coverage"'
 
   - template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks
 
