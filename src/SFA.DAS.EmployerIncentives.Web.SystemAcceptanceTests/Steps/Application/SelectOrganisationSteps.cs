@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +101,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is asked if they have taken on qualifying apprenticeships")]
         public async Task ThenTheEmployerIsAskedIfTheyHavetakenOnQualifyingApprenticeships()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+
             var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
@@ -115,6 +118,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is informed that a legal entity needs to be selected")]
         public async Task ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+            var model = _testContext.ActionResult.LastViewResult.Model as ChooseOrganisationViewModel;
+            model.Should().NotBeNull();
+            var error = _testContext.ActionResult.LastViewResult.ViewData.ModelState["OrganisationNotSelected"];
+            error.Errors.Count().Should().Be(1);
+
             var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");            
             var accountId = _testDataStore.Get<long>("AccountId");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");

@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,7 +156,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     {
                         new KeyValuePair<string, string>("hasTakenOnNewApprentices", "true")
                     })
-                };
+                };            
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 
@@ -168,6 +169,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is informed they cannot apply for the grant yet")]
         public async Task ThenTheEmployerIsInformedTheycannotApplyForTheGrantYet()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+            var model = _testContext.ActionResult.LastViewResult.Model as CannotApplyViewModel;
+            model.Should().NotBeNull();
+
             var accountId = _testData.Get<long>("AccountId");
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
@@ -195,6 +200,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is informed they cannot apply for the grant")]
         public async Task ThenTheEmployerIsInformedTheycannotApplyForTheGrant()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
@@ -236,6 +243,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is asked if they have taken on qualifying apprenticeships")]
         public async Task ThenTheEmployerIsAskedIfTheyHavetakenOnQualifyingApprenticeships()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var accountId = _testData.Get<long>("AccountId");
             var accountLegalEntityId = _testData.Get<long>("AccountLegalEntityId");
@@ -277,6 +286,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is asked to select the legal entity the grant applies to")]
         public async Task ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
+            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
+            var model = _testContext.ActionResult.LastViewResult.Model as ChooseOrganisationViewModel;
+            model.Should().NotBeNull();
+
             var response = _testData.Get<HttpResponseMessage>("ApplicationEligibilityResponse");            
             var accountId = _testData.Get<long>("AccountId");
             var hashedAccountId = _testData.Get<string>("HashedAccountId");

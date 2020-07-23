@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public IHashingService HashingService { get; set; }
         public TestDataStore TestDataStore { get; set; }
         public List<IHook> Hooks { get; set; }
-
+        public TestActionResult ActionResult { get; set; }
         public TestContext()
         {
             TestDirectory = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString()));
