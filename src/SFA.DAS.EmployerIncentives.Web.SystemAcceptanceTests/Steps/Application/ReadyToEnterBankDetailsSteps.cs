@@ -2,6 +2,7 @@
 using FluentAssertions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
@@ -55,8 +56,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
 
-            var url = $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}?canProvideBankDetails=true";
-            _continueNavigationResponse = await _testContext.WebsiteClient.PostValueAsync(url, new { });
+            var request = new HttpRequestMessage(
+             HttpMethod.Post,
+             $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+            {
+                Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("canProvideBankDetails", "true")
+                    })
+            };
+
+            _continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
@@ -76,8 +86,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
 
-            var url = $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}?canProvideBankDetails=false";
-            _continueNavigationResponse = await _testContext.WebsiteClient.PostValueAsync(url, new { });
+            var request = new HttpRequestMessage(
+               HttpMethod.Post,
+               $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+                {
+                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("canProvideBankDetails", "false")
+                    })
+                };
+
+            _continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
@@ -97,8 +116,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
 
-            var url = $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}?canProvideBankDetails=";
-            _continueNavigationResponse = await _testContext.WebsiteClient.PostValueAsync(url, new { });
+            var request = new HttpRequestMessage(
+               HttpMethod.Post,
+               $"{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}")
+            {
+                Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                {
+                })
+            };
+
+            _continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
@@ -107,9 +134,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var accountId = _testData.GetOrCreate<long>("AccountId");
             var hashedAccountId = _hashingService.HashValue(accountId.ToString());
-            var url = $"/{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}?canProvideBankDetails=";
+            var url = $"/{hashedAccountId}/apply/{ReadyToEnterBankDetailsUrl}";
 
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(url);
+            _continueNavigationResponse.RequestMessage.RequestUri.LocalPath.Should().Be(url);
 
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await _continueNavigationResponse.Content.ReadAsStreamAsync());
