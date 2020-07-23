@@ -12,9 +12,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Canno
         public async Task Then_the_cannot_apply_page_is_displayed()
         {
             var expectedCommitmentsUrl = "expectedUrl";
-            _configuration.Setup(x => x.Value.CommitmentsBaseUrl).Returns(expectedCommitmentsUrl);
+            ConfigurationMock.Setup(x => x.Value.CommitmentsBaseUrl).Returns(expectedCommitmentsUrl);
 
-            var result = await _sut.CannotApply();
+            var result = await Sut.CannotApply();
 
             result.Model.Should().BeOfType<CannotApplyViewModel>();
             var viewModel = result.Model as CannotApplyViewModel;

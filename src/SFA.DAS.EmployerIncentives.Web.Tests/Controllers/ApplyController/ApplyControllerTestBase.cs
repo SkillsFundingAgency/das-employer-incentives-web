@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoFixture;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
@@ -6,45 +7,41 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
-using AutoFixture;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
 {
     public abstract class ApplyControllerTestBase
     {
-        protected Mock<IOptions<WebConfigurationOptions>> _configuration;
-        protected Mock<ILegalEntitiesService> _legalEntitiesService;
-        protected Mock<IApprenticesService> _apprenticesService;
-        protected Mock<IHashingService> _hashingService;
+        protected Mock<IOptions<WebConfigurationOptions>> ConfigurationMock;
+        protected Mock<ILegalEntitiesService> LegalEntitiesService;
+        protected Mock<IApprenticesService> ApprenticesServiceMock;
+        protected Mock<IHashingService> HashingService;
 
-        protected Web.Controllers.ApplyController _sut;
+        protected Web.Controllers.ApplyController Sut;
 
-        private Fixture _fixture;
+        protected Fixture Fixture;
 
         [SetUp]
         public void SetUp()
         {
-            _fixture = new Fixture();
+            Fixture = new Fixture();
 
-            _configuration = new Mock<IOptions<WebConfigurationOptions>>();
-            _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _legalEntitiesService
+            ConfigurationMock = new Mock<IOptions<WebConfigurationOptions>>();
+            LegalEntitiesService = new Mock<ILegalEntitiesService>();
+            LegalEntitiesService
                 .Setup(m => m.Get(It.IsAny<long>()))
-                .ReturnsAsync(new List<LegalEntityDto>() { _fixture.Create<LegalEntityDto>() });
-                
-            _apprenticesService = new Mock<IApprenticesService>();
-            _apprenticesService
-                .Setup(m => m.Get(It.IsAny<ApprenticesQuery>()))
-                .ReturnsAsync(_fixture.Create<List<ApprenticeDto>>());
+                .ReturnsAsync(new List<LegalEntityDto>() { Fixture.Create<LegalEntityDto>() });
 
-            _hashingService = new Mock<IHashingService>();
-            _configuration.Setup(x => x.Value.CommitmentsBaseUrl).Returns("");
-            _sut = new Web.Controllers.ApplyController(
-                _configuration.Object,
-                _legalEntitiesService.Object,
-                _apprenticesService.Object,
-                _hashingService.Object);
+            ApprenticesServiceMock = new Mock<IApprenticesService>();
+
+            HashingService = new Mock<IHashingService>();
+            ConfigurationMock.Setup(x => x.Value.CommitmentsBaseUrl).Returns("");
+
+            Sut = new Web.Controllers.ApplyController(
+                ConfigurationMock.Object,
+                LegalEntitiesService.Object,
+                ApprenticesServiceMock.Object,
+                HashingService.Object);
         }
     }
 }
