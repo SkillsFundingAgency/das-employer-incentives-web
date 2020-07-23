@@ -13,9 +13,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = true };
+            var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = true };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await _sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
             redirectResult.ActionName.Should().Be("SelectApprenticeships");

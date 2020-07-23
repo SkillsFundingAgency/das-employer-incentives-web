@@ -14,9 +14,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         public async Task Then_a_Validation_Error_Is_Displayed()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel();
+            var viewModel = new QualificationQuestionViewModel() { AccountId = accountId };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await _sut.QualificationQuestion(viewModel);
 
             var viewResult = result as ViewResult;
 

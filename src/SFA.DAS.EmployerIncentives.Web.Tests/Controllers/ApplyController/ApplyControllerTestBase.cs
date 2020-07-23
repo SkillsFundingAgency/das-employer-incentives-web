@@ -16,8 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
         protected Mock<IOptions<WebConfigurationOptions>> _configuration;
         protected Mock<ILegalEntitiesService> _legalEntitiesService;
         protected Mock<IApprenticesService> _apprenticesService;
-        protected Mock<IHashingService> _hashingService;
-
+        
         protected Web.Controllers.ApplyController _sut;
 
         private Fixture _fixture;
@@ -30,7 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
             _configuration = new Mock<IOptions<WebConfigurationOptions>>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _legalEntitiesService
-                .Setup(m => m.Get(It.IsAny<long>()))
+                .Setup(m => m.Get(It.IsAny<string>()))
                 .ReturnsAsync(new List<LegalEntityDto>() { _fixture.Create<LegalEntityDto>() });
                 
             _apprenticesService = new Mock<IApprenticesService>();
@@ -38,13 +37,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
                 .Setup(m => m.Get(It.IsAny<ApprenticesQuery>()))
                 .ReturnsAsync(_fixture.Create<List<ApprenticeDto>>());
 
-            _hashingService = new Mock<IHashingService>();
             _configuration.Setup(x => x.Value.CommitmentsBaseUrl).Returns("");
             _sut = new Web.Controllers.ApplyController(
                 _configuration.Object,
                 _legalEntitiesService.Object,
-                _apprenticesService.Object,
-                _hashingService.Object);
+                _apprenticesService.Object);
         }
     }
 }

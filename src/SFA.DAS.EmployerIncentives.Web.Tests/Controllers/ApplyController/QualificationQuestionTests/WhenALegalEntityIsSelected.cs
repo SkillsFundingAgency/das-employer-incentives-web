@@ -12,10 +12,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         [Test]
         public async Task Then_the_qualification_question_is_displayed()
         {
-            var result = await _sut.QualificationQuestion() as ViewResult;
+            var result = await _sut.GetQualificationQuestion(new QualificationQuestionViewModel()) as ViewResult;
 
             result.Model.Should().BeOfType<QualificationQuestionViewModel>();
-            result.ViewName.Should().BeNullOrEmpty();
+            result.ViewName.Should().Be("QualificationQuestion");
         }
     }
 }

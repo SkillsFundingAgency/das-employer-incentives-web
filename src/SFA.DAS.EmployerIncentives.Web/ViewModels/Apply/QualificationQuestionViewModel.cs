@@ -9,5 +9,8 @@
         }
 
         public bool? HasTakenOnNewApprentices { get; set; }
+
+        public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
     }
 }

@@ -2,8 +2,8 @@
 {
     public class LegalEntityDto
     {
-        public long AccountId { get; set; }
-        public long AccountLegalEntityId { get; set; }
+        public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
         public string LegalEntityName { get; set; }
     }
 }

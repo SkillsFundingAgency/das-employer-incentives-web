@@ -13,9 +13,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         public async Task Then_The_Shutter_Page_Is_Displayed()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel { HasTakenOnNewApprentices = false };
+            var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = false };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await _sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
             redirectResult.ActionName.Should().Be("CannotApply");
