@@ -1,5 +1,82 @@
-﻿
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeshipsViewModel
+
 @{
-    ViewData["Title"] = "Select Apprenticeships";
+    ViewData["Title"] = Model.Title;
 }
 
+<a asp-action="QualificationQuestion" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="SelectApprenticeships">
+
+                @Html.AntiForgeryToken()
+
+                <partial name="ValidationSummary" />
+
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+
+                                @Model.Title
+                            </h1>
+                        </legend>
+
+                        <p class="govuk-body">You can only choose from your apprentices:</p>
+
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>with a planned start date after 1 August 2020</li>
+                            <li>that you have not applied for already</li>
+                        </ul>
+
+                        <div class="govuk-inset-text">
+                            You must only select apprentices that joined your payroll after 1 August 2020.
+                        </div>
+
+                        <span id="new-apprenticeships-hint" class="govuk-hint">
+                            Select all that apply.
+                        </span>
+
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="new-apprenticeships-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
+                            </span>
+                        }
+                        <div class="govuk-checkboxes">
+
+                            @foreach (var apprenticeship in Model.Apprenticeships)
+                            {
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input"
+                                           id="new-apprenticeships-@apprenticeship.Id"
+                                           name="SelectedApprenticeships"
+                                           type="checkbox"
+                                           value="@apprenticeship.Id"
+                                           aria-describedby="new-apprenticeships-item-hint" />
+                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
+
+                                        @apprenticeship.DisplayName
+                                    </label>
+                                    <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
+
+                                        @apprenticeship.CourseName
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+
+            </form>
+        </div>
+    </div>
+</main>

@@ -3,8 +3,8 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +26,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             _configuration = configuration.Value;
             _legalEntitiesService = legalEntitiesService;
             _apprenticesService = apprenticesService;
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> Default()
+        {
+            return RedirectToAction("GetChooseOrganisation");
+        }
+
+        [HttpGet]
+        [Route("declaration")]
+        public async Task<ViewResult> Declaration(string accountId)
+        {
+            return View(new DeclarationViewModel(accountId));
         }
 
         [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
@@ -53,13 +67,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return RedirectToAction("CannotApply", new { viewModel.AccountId });
         }
 
-        [Route("{accountLegalEntityId}/select-new-apprentices")]
-        [HttpGet]
-        public async Task<ViewResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
-        {
-            return View(new { accountId, accountLegalEntityId } );
-        }
-
         [HttpGet]
         [Route("cannot-apply")]
         public async Task<ViewResult> CannotApply(bool hasTakenOnNewApprentices = false)
@@ -69,14 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View(new TakenOnCannotApplyViewModel(_configuration.CommitmentsBaseUrl));
             }
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
-        }
-
-        [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> Default()
-        {
-            return RedirectToAction("GetChooseOrganisation");
-        }
+        }        
 
         [HttpGet]
         [Route("choose-organisation")]
@@ -98,14 +98,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             if (legalEntities.Count() > 1)
             {
-                viewModel.Organisations = new List<OrganisationViewModel>();
-
-                legalEntities.ToList().ForEach(o => viewModel.Organisations.Add(
-                    new OrganisationViewModel { 
-                        Name = o.LegalEntityName,
-                        AccountLegalEntityId = o.AccountLegalEntityId 
-                    }));
-
+                viewModel.AddOrganisations(legalEntities);
                 return View("ChooseOrganisation", viewModel);
             }
 
@@ -117,7 +110,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ChooseOrganisation(ChooseOrganisationViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(viewModel.Selected))
-            {          
+            {
                 return RedirectToAction("GetQualificationQuestion", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
             }
 
@@ -126,19 +119,45 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ModelState.AddModelError("OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
             }
 
-            var legalEntities = await _legalEntitiesService.Get(viewModel.AccountId);
-
-            viewModel.Organisations = new List<OrganisationViewModel>();
-
-            legalEntities.ToList().ForEach(o => viewModel.Organisations.Add(
-                new OrganisationViewModel
-                {
-                    Name = o.LegalEntityName,
-                    AccountLegalEntityId = o.AccountLegalEntityId
-                }));
+            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        public async Task<ViewResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
+        {
+            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsViewModel viewModel)
+        {
+            if (viewModel.HasSelectedApprenticeships)
+            {
+                return RedirectToAction("Declaration", new { viewModel.AccountId });
+            }
+
+            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            return View(viewModel);
+        }
+
+        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
+        {
+            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
+
+            var model = new SelectApprenticeshipsViewModel
+            {
+                AccountId = accountId,
+                AccountLegalEntityId = accountLegalEntityId,
+                Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
+            };
+            return model;
+        }          
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

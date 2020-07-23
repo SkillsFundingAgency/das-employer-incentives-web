@@ -126,7 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
 
-            document.Title.Should().Be("Select Apprenticeships");
+            document.Title.Should().Be("Select the apprentices you want to apply for");
             response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
         }
 

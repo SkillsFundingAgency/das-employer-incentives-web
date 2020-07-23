@@ -10,7 +10,7 @@
         <div class="govuk-grid-column-two-thirds">
             <form asp-action="QualificationQuestion" method="post">
                 @Html.AntiForgeryToken()
-            
+
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
@@ -23,7 +23,7 @@
                         <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
                             You can only apply for new employees who joined your organisation after 1 August 2020.
                         </span>
-                        
+
                         @if (ViewData.ModelState.ContainsKey(nameof(Model.HasTakenOnNewApprentices)) && ViewData.ModelState[nameof(Model.HasTakenOnNewApprentices)].Errors.Any())
                         {
                             <span class="govuk-error-message">

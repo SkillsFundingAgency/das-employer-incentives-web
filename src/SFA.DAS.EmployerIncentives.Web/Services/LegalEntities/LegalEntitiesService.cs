@@ -1,10 +1,9 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
@@ -19,35 +18,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
             _hashingService = hashingService;
         }
 
-        public async Task<IEnumerable<LegalEntityDto>> Get(string accountId)
+        public async Task<IEnumerable<LegalEntityModel>> Get(string accountId)
         {
-            var legalEntityList = new List<LegalEntityDto>();
-
             var id = _hashingService.DecodeValue(accountId);
             using var response = await _client.GetAsync($"/accounts/{id}/legalentities", HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return legalEntityList;
+                return new List<LegalEntityModel>();
             }
 
             response.EnsureSuccessStatusCode();
 
-            var result = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync());
+            var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync());
 
-            if (!result.Any())
-            {
-                return legalEntityList;
-            }
-
-            result.ToList().ForEach(i => legalEntityList.Add(
-                new LegalEntityDto { 
-                    AccountId = _hashingService.HashValue(long.Parse(i.AccountId)),
-                    AccountLegalEntityId = _hashingService.HashValue(long.Parse(i.AccountLegalEntityId)),
-                     LegalEntityName = i.LegalEntityName
-                }));
-
-            return legalEntityList;
+            return data.ToLegalEntityModel(_hashingService);
         }       
     }
 }
