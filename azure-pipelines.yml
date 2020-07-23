@@ -52,7 +52,7 @@ steps:
     displayName: dotnet test
     inputs:
       command: test
-      projects: "**/*.UnitTests.csproj"
+      projects: "**/*.*Tests.csproj"
       arguments: "--configuration $(buildConfiguration) --no-build"
 
   - template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks
