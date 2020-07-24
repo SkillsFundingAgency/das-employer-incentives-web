@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;

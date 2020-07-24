@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -135,14 +136,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("{accountLegalEntityId}/select-new-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, /*[FromForm]*/ SelectApprenticeshipsViewModel viewModel)
+        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form)
         {
-            if (viewModel.HasSelectedApprenticeships)
+            if (form.HasSelectedApprenticeships)
             {
-                return RedirectToAction("Declaration", new { accountId });
+                return RedirectToAction("Declaration", new { form.AccountId });
             }
 
-            viewModel = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
+            var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
             return View(viewModel);
