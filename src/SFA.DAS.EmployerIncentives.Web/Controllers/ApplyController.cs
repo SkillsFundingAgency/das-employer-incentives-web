@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly WebConfigurationOptions _configuration;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly IApprenticesService _apprenticesService;        
+        private readonly IApprenticesService _apprenticesService;
 
         public ApplyController(
             IOptions<WebConfigurationOptions> configuration,
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View(new TakenOnCannotApplyViewModel(_configuration.CommitmentsBaseUrl));
             }
             return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
-        }        
+        }
 
         [HttpGet]
         [Route("choose-organisation")]
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View("ChooseOrganisation", viewModel);
             }
 
-            return RedirectToAction("CannotApply", new { viewModel.AccountId });            
+            return RedirectToAction("CannotApply", new { viewModel.AccountId });
         }
 
         [HttpPost]
@@ -135,14 +135,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("{accountLegalEntityId}/select-new-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, [FromBody] SelectApprenticeshipsViewModel viewModel)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, /*[FromForm]*/ SelectApprenticeshipsViewModel viewModel)
         {
             if (viewModel.HasSelectedApprenticeships)
             {
                 return RedirectToAction("Declaration", new { accountId });
             }
 
+            viewModel = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+
             return View(viewModel);
         }
 
@@ -150,14 +152,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
 
-            var model = new SelectApprenticeshipsViewModel
+            return new SelectApprenticeshipsViewModel
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
                 Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
             };
-            return model;
-        }          
+        }
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

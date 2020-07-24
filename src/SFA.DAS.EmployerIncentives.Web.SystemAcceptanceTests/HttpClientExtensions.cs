@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
@@ -8,13 +7,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
     public static class HttpClientExtensions
     {
 
-        public static async Task<HttpResponseMessage> PostValueAsync<T>(this HttpClient client, string url, T data)
+        public static async Task<HttpResponseMessage> PostFormAsync(this HttpClient client, string url, params KeyValuePair<string, string>[] data)
         {
-            return await client.PostAsync(url, data.GetStringContent());
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new FormUrlEncodedContent(data)
+            };
+
+            return await client.SendAsync(request);
         }
-
-
-        public static StringContent GetStringContent(this object obj)
-            => new StringContent(JsonConvert.SerializeObject(obj), Encoding.Default, "application/json");
     }
 }
