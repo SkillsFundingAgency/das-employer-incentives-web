@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("need-bank-details")]
-        public async Task<IActionResult> BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
+        public IActionResult BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
             {
