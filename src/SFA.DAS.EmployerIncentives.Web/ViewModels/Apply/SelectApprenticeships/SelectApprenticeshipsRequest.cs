@@ -2,14 +2,16 @@
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 {
-    public class SelectApprenticeshipsRequest : ISelectedApprenticeships
+    public class SelectApprenticeshipsRequest
     {
         public string AccountId { get; set; }
 
         public string AccountLegalEntityId { get; set; }
 
-        public List<string> SelectedApprenticeships { get; set; } = new List<string>();
+        public List<string> SelectedApprenticeships { get; set; }
 
-        public bool HasSelectedApprenticeships => SelectedApprenticeships.Count > 0;
+        public static string SelectedApprenticeshipsPropertyName => nameof(SelectedApprenticeships);
+
+        public bool HasSelectedApprenticeships => SelectedApprenticeships != null && SelectedApprenticeships.Count > 0;
     }
 }
