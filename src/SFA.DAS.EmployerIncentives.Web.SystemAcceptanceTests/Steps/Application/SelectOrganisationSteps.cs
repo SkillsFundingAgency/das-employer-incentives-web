@@ -1,10 +1,10 @@
 ﻿using AngleSharp.Html.Parser;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -118,33 +118,22 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is informed that a legal entity needs to be selected")]
         public async Task ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
-            _testContext.ActionResult.LastViewResult.Should().NotBeNull();
-            var model = _testContext.ActionResult.LastViewResult.Model as ChooseOrganisationViewModel;
-            model.Should().NotBeNull();
-            var error = _testContext.ActionResult.LastViewResult.ViewData.ModelState["OrganisationNotSelected"];
-            error.Errors.Count().Should().Be(1);
-
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");            
-            var accountId = _testDataStore.Get<long>("AccountId");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
-
+            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             response.EnsureSuccessStatusCode();
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
-
-            document.Title.Should().Be("Choose organisation");
             response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/choose-organisation");
 
-            var requests = _testContext
-                       .EmployerIncentivesApi
-                       .MockServer
-                       .FindLogEntries(
-                           Request
-                           .Create()
-                           .WithPath($"/accounts/{accountId}/legalentities")
-                           .UsingGet());
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ChooseOrganisationViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Choose organisation");
+            model.AccountId.Should().Be(hashedAccountId);
+            viewResult.Should().ContainError("OrganisationNotSelected", model.OrganisationNotSelectedMessage);
 
-            requests.AsEnumerable().Count().Should().Be(1);
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
+            document.Title.Should().Be("Choose organisation");
         }
     }
 }
