@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
-@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeshipsViewModel
-
+@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
 @{
     ViewData["Title"] = Model.Title;
 }
@@ -10,8 +10,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form asp-action="SelectApprenticeships">
-
+            <form asp-action="SelectApprenticeships" method="post">
                 @Html.AntiForgeryToken()
 
                 <partial name="ValidationSummary" />
@@ -20,7 +19,6 @@
                     <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
-
                                 @Model.Title
                             </h1>
                         </legend>
@@ -40,7 +38,6 @@
                             Select all that apply.
                         </span>
 
-
                         @if (!ViewData.ModelState.IsValid)
                         {
                             <span id="new-apprenticeships-error" class="govuk-error-message">
@@ -48,7 +45,6 @@
                             </span>
                         }
                         <div class="govuk-checkboxes">
-
                             @foreach (var apprenticeship in Model.Apprenticeships)
                             {
                                 <div class="govuk-checkboxes__item">
@@ -59,11 +55,9 @@
                                            value="@apprenticeship.Id"
                                            aria-describedby="new-apprenticeships-item-hint" />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
-
                                         @apprenticeship.DisplayName
                                     </label>
                                     <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
-
                                         @apprenticeship.CourseName
                                     </span>
                                 </div>
