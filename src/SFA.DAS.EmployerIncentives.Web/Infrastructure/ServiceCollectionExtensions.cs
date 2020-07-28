@@ -6,6 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {

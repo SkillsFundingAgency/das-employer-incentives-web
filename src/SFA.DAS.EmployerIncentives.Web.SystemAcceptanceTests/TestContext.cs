@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
-    public class TestContext
+    public class TestContext : IDisposable
     {
         public DirectoryInfo TestDirectory { get; set; }
         public TestWebsite Website { get; set; }
@@ -18,6 +18,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public TestDataStore TestDataStore { get; set; }
         public List<IHook> Hooks { get; set; }
         public TestActionResult ActionResult { get; set; }
+
+        private bool _isDisposed;
+
         public TestContext()
         {
             TestDirectory = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString()));
@@ -28,7 +31,26 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
             TestDataStore = new TestDataStore();
             Hooks = new List<IHook>();
         }
-    }    
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed) return;
+
+            if (disposing)
+            {
+                WebsiteClient?.Dispose();
+                EmployerIncentivesApi?.Dispose();
+            }
+
+            _isDisposed = true;
+        }
+    }
 }
 
 

@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
     {
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
+        private string _hashedDraftSubmissionId;
         private ViewResult _result;
         private IEnumerable<ApprenticeshipModel> _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
@@ -27,11 +28,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
+            _hashedDraftSubmissionId = Guid.NewGuid().ToString();
 
             ApprenticesServiceMock
                 .Setup(x => x.Get(It.Is<ApprenticesQuery>(q =>
                     q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
+
+            ApprenticesServiceMock
+                .Setup(x => x.CreateDraftSubmission(It.Is<CreateDraftSubmission>(q =>
+                    q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
+                .ReturnsAsync(_hashedDraftSubmissionId);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = (SelectApprenticeshipsViewModel)_result.Model;
@@ -104,7 +111,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public async Task Then_the_Declaration_page_is_displayed()
+        public async Task Then_the_ConfirmApprenticeships_page_is_displayed()
         {
             var request = new SelectApprenticeshipsRequest();
             request.SelectedApprenticeships.Add(_apprenticeData.First().Id);
@@ -113,7 +120,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
-            redirectResult?.ActionName.Should().Be("Declaration");
+            redirectResult?.ActionName.Should().Be("ConfirmApprenticeships");
         }
     }
 }

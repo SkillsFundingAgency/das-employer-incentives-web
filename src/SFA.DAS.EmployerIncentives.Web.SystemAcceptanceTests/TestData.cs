@@ -1,5 +1,7 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System.Collections.Generic;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -56,6 +58,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public string HashedAccountLegalEntityId3 => "VKD7X7";
                 public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}" };
             }
+
+            public class WithDraftSubmission : WithSingleLegalEntityWithEligibleApprenticeships
+            {
+                public long DraftSubmissionId => 50002;
+                public ApprenticesService.CreateDraftSubmissionResponse CreateDraftSubmission =>
+                    new ApprenticesService.CreateDraftSubmissionResponse
+                    {
+                        AccountId = this.AccountId, AccountLegalEntityId = this.AccountLegalEntityId,
+                        DraftSubmissionId = this.DraftSubmissionId
+                    };
+            }
+
         }        
     }
 }

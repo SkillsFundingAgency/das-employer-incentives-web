@@ -6,6 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using System.Collections.Generic;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController
 {
