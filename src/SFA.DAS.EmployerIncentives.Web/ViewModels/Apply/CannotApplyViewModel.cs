@@ -2,11 +2,13 @@
 {
     public class CannotApplyViewModel : ViewModel
     {
-        public CannotApplyViewModel(string commitmentsUrl, string title = "You cannot apply for this grant yet") : base(title)
+        public CannotApplyViewModel(string accountId, string commitmentsUrl, string title = "You cannot apply for this grant yet") : base(title)
         {
-            CommitmentsUrl = commitmentsUrl;
+            AccountId = accountId;
+            CommitmentsUrl = commitmentsUrl;            
         }
 
+        public string AccountId { get; }
         public string CommitmentsUrl { get; }
     }
 }

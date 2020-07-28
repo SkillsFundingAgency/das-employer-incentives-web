@@ -69,13 +69,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("cannot-apply")]
-        public async Task<ViewResult> CannotApply(bool hasTakenOnNewApprentices = false)
+        public async Task<ViewResult> CannotApply(string accountId, bool hasTakenOnNewApprentices = false)
         {
             if (hasTakenOnNewApprentices)
             {
-                return View(new TakenOnCannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+                return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
             }
-            return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+            return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
         }        
 
         [HttpGet]
@@ -114,12 +114,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("GetQualificationQuestion", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
             }
 
+            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
+
             if (string.IsNullOrEmpty(viewModel.Selected))
             {
-                ModelState.AddModelError("OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
+                ModelState.AddModelError(viewModel.Organisations.Any() ? viewModel.Organisations.First().AccountLegalEntityId : "OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
             }
-
-            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
 
             return View(viewModel);
         }
