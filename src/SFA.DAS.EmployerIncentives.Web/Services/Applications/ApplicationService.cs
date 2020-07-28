@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
@@ -13,7 +14,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     {
         private readonly HttpClient _client;
         private readonly IHashingService _hashingService;
-        private readonly ILogger<ApplicationService> _logger;
 
         public ApplicationService(HttpClient client, IHashingService hashingService)
         {
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         public async Task<Guid> Post(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             var applicationId = Guid.NewGuid();
-            var request = MapToRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
+            var request = MapToPostRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
 
             using var response = await _client.PostAsJsonAsync($"/accounts/{request.AccountId}/applications", request);
 
@@ -33,7 +33,37 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return applicationId;
         }
 
-        private CreateApplicationRequest MapToRequest(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
+        public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId)
+        {
+            using var response = await _client.GetAsync($"/accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}", HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync());
+            
+            return MapFromGetApplicationResponse(data);
+        }
+
+        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(GetApplicationResponse application)
+        {
+            return new ApplicationConfirmationViewModel(application.ApplicationId, _hashingService.HashValue(application.AccountId),
+                _hashingService.HashValue(application.AccountLegalEntityId),
+                application.Apprentices.Select(MapFromApplicationApprenticeDto));
+        }
+
+        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipDto apprentice)
+        {
+            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            {
+                ApprenticeshipId = _hashingService.HashValue(apprentice.ApprenticeshipId),
+                CourseName = apprentice.CourseName,
+                FirstName = apprentice.FirstName,
+                LastName = apprentice.LastName,
+                ExpectedAmount = apprentice.ExpectedAmount
+            };
+        }
+
+        private CreateApplicationRequest MapToPostRequest(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             return new CreateApplicationRequest(applicationId, _hashingService.DecodeValue(accountId),
                 _hashingService.DecodeValue(accountLegalEntityId),

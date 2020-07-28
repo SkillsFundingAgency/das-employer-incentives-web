@@ -1,7 +1,7 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+﻿using System;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System.Collections.Generic;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -59,15 +59,36 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}" };
             }
 
-            public class WithDraftSubmission : WithSingleLegalEntityWithEligibleApprenticeships
+            public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships
             {
-                //public long DraftSubmissionId => 50002;
-                //public ApprenticesService.CreateDraftSubmissionResponse CreateDraftSubmission =>
-                //    new ApprenticesService.CreateDraftSubmissionResponse
-                //    {
-                //        AccountId = this.AccountId, AccountLegalEntityId = this.AccountLegalEntityId,
-                //        DraftSubmissionId = this.DraftSubmissionId
-                //    };
+                public Guid ApplicationId = Guid.NewGuid();
+                public GetApplicationResponse GetApplicationResponse => new GetApplicationResponse
+                {
+                    AccountId = AccountId,
+                    AccountLegalEntityId = AccountLegalEntityId,
+                    ApplicationId = ApplicationId,
+                    Apprentices = new ApplicationApprenticeshipDto[]
+                    {
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 1,
+                            CourseName = "Computing...",
+                            LastName = "Shipman",
+                            FirstName = "Harry",
+                            ExpectedAmount = 2000m
+                        },
+
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 2,
+                            CourseName = "T&D ...",
+                            LastName = "Leeman",
+                            FirstName = "Thomas",
+                            ExpectedAmount = 1000m
+                        }
+                    }
+                };
+
             }
 
         }        

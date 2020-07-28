@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
@@ -157,9 +158,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<ViewResult> ConfirmApprenticeships(string accountId, string applicationId)
+        public async Task<ViewResult> ConfirmApprenticeships(string accountId, Guid applicationId)
         {
-            return View("NotImplementedYet");
+            var model = await _applicationService.Get(accountId, applicationId);
+            return View(model);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)

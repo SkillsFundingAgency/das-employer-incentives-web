@@ -129,9 +129,9 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
-        public EmployerIncentivesApiBuilder WithCreateDraftSubmission()
+        public EmployerIncentivesApiBuilder WithInitialApplication()
         {
-            var data = new TestData.Account.WithDraftSubmission();
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
 
             _server
                 .Given(
@@ -143,6 +143,20 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse))
+                    );
 
             return this;
         }
