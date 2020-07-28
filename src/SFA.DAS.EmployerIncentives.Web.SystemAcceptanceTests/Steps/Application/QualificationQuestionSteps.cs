@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -106,7 +107,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             {
                 return response;
             });
-        }        
+        }
 
         [Then(@"the employer is asked to select the apprenticeship")]
         public void ThenTheEmployerIsAskedWoSelectTheApprenticeship()
@@ -124,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");            
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
         }
 
         [Then(@"the employer is informed that they cannot apply")]

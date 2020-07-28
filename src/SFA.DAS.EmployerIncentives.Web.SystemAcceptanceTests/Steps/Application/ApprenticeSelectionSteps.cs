@@ -1,9 +1,10 @@
-﻿using AngleSharp.Html.Parser;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -65,39 +65,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerSelectsTheApprenticeTheGrantAppliesTo()
         {
             var apprenticeships = _apprenticeshipData.ToApprenticeshipModel(_hashingService).ToArray();
-
-            var viewModelWithValidSelection = new SelectApprenticeshipsViewModel
-            {
-                Apprenticeships = apprenticeships,
-                SelectedApprenticeships = new List<string> { apprenticeships.First().Id }
-            };
-
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
             var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices";
+            var form = new KeyValuePair<string, string>("SelectedApprenticeships", apprenticeships.First().Id);
 
-            _continueNavigationResponse = await _testContext.WebsiteClient.PostValueAsync(url, viewModelWithValidSelection);
+            _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, form);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
         [When(@"the employer doesn't select any apprentice the grant applies to")]
         public async Task WhenTheEmployerDoesnTSelectAnyApprenticeTheGrantAppliesTo()
         {
-            var apprenticeships = _apprenticeshipData.ToApprenticeshipModel(_hashingService).ToArray();
-
-            var viewModelWithValidSelection = new SelectApprenticeshipsViewModel
-            {
-                Apprenticeships = apprenticeships,
-                SelectedApprenticeships = new List<string>() // no selection made
-            };
-
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
             var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices";
 
-            _continueNavigationResponse = await _testContext.WebsiteClient.PostValueAsync(url, viewModelWithValidSelection);
+            _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
@@ -126,14 +112,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-            //model.AccountId.Should().Be(hashedAccountId);
-            //model.AccountLegalEntityId.Should().Be(hashedLegalEntityId);            
-
-            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-
             _continueNavigationResponse.Should().HaveTitle(model.Title);
             _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices");
+            model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
+            model.AccountId.Should().Be(hashedAccountId);
+            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
         }
     }
 }
