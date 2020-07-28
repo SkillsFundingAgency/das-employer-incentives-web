@@ -61,13 +61,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
             public class WithDraftSubmission : WithSingleLegalEntityWithEligibleApprenticeships
             {
-                public long DraftSubmissionId => 50002;
-                public ApprenticesService.CreateDraftSubmissionResponse CreateDraftSubmission =>
-                    new ApprenticesService.CreateDraftSubmissionResponse
-                    {
-                        AccountId = this.AccountId, AccountLegalEntityId = this.AccountLegalEntityId,
-                        DraftSubmissionId = this.DraftSubmissionId
-                    };
+                //public long DraftSubmissionId => 50002;
+                //public ApprenticesService.CreateDraftSubmissionResponse CreateDraftSubmission =>
+                //    new ApprenticesService.CreateDraftSubmissionResponse
+                //    {
+                //        AccountId = this.AccountId, AccountLegalEntityId = this.AccountLegalEntityId,
+                //        DraftSubmissionId = this.DraftSubmissionId
+                //    };
             }
 
         }        

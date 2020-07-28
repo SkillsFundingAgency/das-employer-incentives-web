@@ -39,14 +39,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Given(@"an employer applying for a grant has apprentices matching the eligibility requirement")]
         public void GivenAnEmployerApplyingForAGrantHasApprenticesMatchingTheEligibilityRequirement()
         {
-            var data = new TestData.Account.WithDraftSubmission();
+            var data = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
             _apprenticeshipData = data.Apprentices;
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => data.AccountId);
             _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
             var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => data.AccountLegalEntityId);
             _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
-            _testData.Add("HashedDraftSubmissionId", _hashingService.HashValue(data.DraftSubmissionId));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -62,26 +61,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithBody(JsonConvert.SerializeObject(_apprenticeshipData))
                         .WithStatusCode(HttpStatusCode.OK));
 
-            //var content = JsonConvert.SerializeObject(new
-            //{
-            //    //AccountLegalEntityId = accountLegalEntityId,
-            //    //ApprenticeshipIds = _apprenticeshipData.Select(x => x.ApprenticeshipId).ToArray()
-            //});
-            var content = @"{""accountLegalEntityId"":" + accountLegalEntityId + @",""apprenticeshipIds"":[" + _apprenticeshipData[0].ApprenticeshipId + "]}";
-
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{accountId}/draft-submissions")
-                        .WithBody(content)
-                        //.WithBody(new JsonMatcher(content, false), MatchBehaviour.AcceptOnMatch)
+                        .WithPath($"/accounts/{accountId}/applications")
                         .UsingPost()
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(data.CreateDraftSubmission))
-                        .WithHeader("Content-Type", "application/json")
                         .WithStatusCode(HttpStatusCode.Created));
         }
 
@@ -115,8 +103,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
-            var hashedDraftSubmissionId = _testData.Get<string>("HashedDraftSubmissionId");
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/confirm-apprentices/{hashedDraftSubmissionId}");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
         }
 
         [Then(@"the employer is informed that they haven't selected an apprentice")]

@@ -8,6 +8,5 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
     public interface IApprenticesService
     {
         Task<IEnumerable<ApprenticeshipModel>> Get(ApprenticesQuery query);
-        Task<string> CreateDraftSubmission(CreateDraftSubmission draftSubmission);
     }    
 }

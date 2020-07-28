@@ -10,11 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
     public class WhenSelectingApprentices : ApplyControllerTestBase
     {
+        private Guid _applicationId;
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
         private string _hashedDraftSubmissionId;
@@ -25,6 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         [SetUp]
         public async Task Arrange()
         {
+            _applicationId = Guid.NewGuid();
             _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
@@ -35,10 +38,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                     q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
 
-            ApprenticesServiceMock
-                .Setup(x => x.CreateDraftSubmission(It.Is<CreateDraftSubmission>(q =>
-                    q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
-                .ReturnsAsync(_hashedDraftSubmissionId);
+            ApplicationServiceMock
+                .Setup(x => x.Post(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(_applicationId);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = (SelectApprenticeshipsViewModel)_result.Model;

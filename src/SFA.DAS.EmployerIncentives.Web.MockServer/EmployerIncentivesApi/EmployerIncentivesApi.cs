@@ -137,13 +137,12 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{data.AccountId}/draft-submissions")
+                        .WithPath($"/accounts/{data.AccountId}/applications")
                         .UsingPost()
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithStatusCode(HttpStatusCode.Created)
-                        .WithBody(JsonConvert.SerializeObject(data.CreateDraftSubmission)));
+                        .WithStatusCode(HttpStatusCode.Created));
 
             return this;
         }

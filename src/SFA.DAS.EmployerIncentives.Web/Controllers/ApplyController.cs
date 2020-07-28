@@ -8,6 +8,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -19,15 +20,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly WebConfigurationOptions _configuration;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IApprenticesService _apprenticesService;
+        private readonly IApplicationService _applicationService;
 
         public ApplyController(
             IOptions<WebConfigurationOptions> configuration,
             ILegalEntitiesService legalEntitiesService,
-            IApprenticesService apprenticesService)
+            IApprenticesService apprenticesService,
+            IApplicationService applicationService)
         {
             _configuration = configuration.Value;
             _legalEntitiesService = legalEntitiesService;
             _apprenticesService = apprenticesService;
+            _applicationService = applicationService;
         }
 
         [HttpGet]
@@ -141,8 +145,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (form.HasSelectedApprenticeships)
             {
-                var draftSubmissionId = await _apprenticesService.CreateDraftSubmission(new CreateDraftSubmission(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships));
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, draftSubmissionId  });
+                var applicationId = await _applicationService.Post(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
+                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId  });
             }
 
             var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
@@ -152,8 +156,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("confirm-apprentices/{draftSubmissionId}")]
-        public async Task<ViewResult> ConfirmApprenticeships(string accountId, string draftSubmissionId)
+        [Route("confirm-apprentices/{applicationId}")]
+        public async Task<ViewResult> ConfirmApprenticeships(string accountId, string applicationId)
         {
             return View("NotImplementedYet");
         }
