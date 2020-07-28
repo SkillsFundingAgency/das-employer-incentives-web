@@ -114,12 +114,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("GetQualificationQuestion", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
             }
 
+            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
+
             if (string.IsNullOrEmpty(viewModel.Selected))
             {
-                ModelState.AddModelError("OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
+                ModelState.AddModelError(viewModel.Organisations.Any() ? viewModel.Organisations.First().AccountLegalEntityId : "OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
             }
-
-            viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
 
             return View(viewModel);
         }

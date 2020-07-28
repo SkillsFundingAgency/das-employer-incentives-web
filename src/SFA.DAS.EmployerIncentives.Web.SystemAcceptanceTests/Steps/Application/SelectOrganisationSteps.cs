@@ -4,6 +4,7 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -129,7 +130,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle("Choose organisation");
             model.AccountId.Should().Be(hashedAccountId);
-            viewResult.Should().ContainError("OrganisationNotSelected", model.OrganisationNotSelectedMessage);
+            viewResult.Should().ContainError(model.Organisations.First().AccountLegalEntityId, model.OrganisationNotSelectedMessage);
 
             response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/choose-organisation");
