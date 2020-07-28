@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 
         public IEnumerable<ApprenticeshipModel> Apprenticeships { get; set; }
 
-        public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.First().Id}";
+        public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.FirstOrDefault()?.Id}";
 
     }
 }
