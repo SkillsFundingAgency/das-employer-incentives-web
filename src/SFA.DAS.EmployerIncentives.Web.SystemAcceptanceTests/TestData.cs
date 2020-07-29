@@ -77,7 +77,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             FirstName = "Harry",
                             ExpectedAmount = 2000m
                         },
-
                         new ApplicationApprenticeshipDto
                         {
                             ApprenticeshipId = 2,
@@ -85,6 +84,30 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             LastName = "Leeman",
                             FirstName = "Thomas",
                             ExpectedAmount = 1000m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 3,
+                            CourseName = "Water Treatment Technician, Level: 3 (Standard)",
+                            LastName = "Johnson",
+                            FirstName = "Michael",
+                            ExpectedAmount = 2000m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 4,
+                            CourseName = "Relationship Manager (Banking), Level: 6 (Standard)",
+                            LastName = "Roberts",
+                            FirstName = "Jack",
+                            ExpectedAmount = 1500m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 5,
+                            CourseName = "Non-destructive testing (NDT) operator, Level: 2 (Standard)",
+                            LastName = "Smith",
+                            FirstName = "Steven",
+                            ExpectedAmount = 2000m
                         }
                     }
                 };
