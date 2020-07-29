@@ -146,7 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (form.HasSelectedApprenticeships)
             {
-                var applicationId = await _applicationService.Post(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
+                var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
                 return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId  });
             }
 
