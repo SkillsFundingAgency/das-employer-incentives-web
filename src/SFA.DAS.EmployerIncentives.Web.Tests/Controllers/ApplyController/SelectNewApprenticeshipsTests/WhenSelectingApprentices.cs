@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 .ReturnsAsync(_apprenticeData);
 
             ApplicationServiceMock
-                .Setup(x => x.Post(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
+                .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(_applicationId);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);

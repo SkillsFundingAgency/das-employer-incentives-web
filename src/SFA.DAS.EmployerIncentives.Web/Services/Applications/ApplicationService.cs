@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             _hashingService = hashingService;
         }
 
-        public async Task<Guid> Post(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
+        public async Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             var applicationId = Guid.NewGuid();
             var request = MapToPostRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);

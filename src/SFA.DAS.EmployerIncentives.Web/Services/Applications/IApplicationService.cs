@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public interface IApplicationService
     {
-        Task<Guid> Post(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds);
+        Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds);
         Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId);
     }    
 }
