@@ -146,8 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (form.HasSelectedApprenticeships)
             {
-                //var applicationId = await _applicationService.Post(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
-                var applicationId = Guid.NewGuid();
+                var applicationId = await _applicationService.Post(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
                 return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId  });
             }
 
@@ -159,7 +158,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<ViewResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
         {
             var model = await _applicationService.Get(accountId, applicationId);
             return View(model);
