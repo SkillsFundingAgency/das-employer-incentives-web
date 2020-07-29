@@ -13,9 +13,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
         private readonly TestEmployerIncentivesApi _testEmployerIncentivesApi;
         private readonly Dictionary<string, string> _appConfig;
         private readonly IHook<IActionResult> _actionResultHook;
+        private readonly WebConfigurationOptions _webConfigurationOptions;
 
-        public TestWebsite(TestEmployerIncentivesApi testEmployerIncentivesApi, IHook<IActionResult> actionResultHook)
+        public TestWebsite(
+            WebConfigurationOptions webConfigurationOptions,
+            TestEmployerIncentivesApi testEmployerIncentivesApi, 
+            IHook<IActionResult> actionResultHook)
         {
+            _webConfigurationOptions = webConfigurationOptions;
             _testEmployerIncentivesApi = testEmployerIncentivesApi;
             _actionResultHook = actionResultHook;
 
@@ -42,8 +47,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                 {
                     s.Configure<WebConfigurationOptions>(o =>
                     {
-                        o.AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY";
-                        o.Hashstring = "SFA: digital apprenticeship service";
+                        o.AllowedHashstringCharacters = _webConfigurationOptions.AllowedHashstringCharacters;
+                        o.Hashstring = _webConfigurationOptions.Hashstring;
+                        o.CommitmentsBaseUrl = _webConfigurationOptions.CommitmentsBaseUrl;
                     });
                     s.Configure<EmployerIncentivesApiOptions>(o =>
                       {

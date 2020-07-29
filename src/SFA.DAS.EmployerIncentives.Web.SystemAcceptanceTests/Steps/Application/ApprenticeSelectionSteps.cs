@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Given(@"an employer applying for a grant has apprentices matching the eligibility requirement")]
         public void GivenAnEmployerApplyingForAGrantHasApprenticesMatchingTheEligibilityRequirement()
         {
-            var data = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
             _apprenticeshipData = data.Apprentices;
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => data.AccountId);
@@ -71,6 +71,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.Created));
+
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{accountId}/applications/*")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse)));
+
         }
 
         [When(@"the employer selects the apprentice the grant applies to")]
@@ -104,31 +119,31 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
-        }
-
-        [Then(@"the employer is informed that they haven't selected an apprentice")]
-        public async Task ThenTheEmployerIsInformedThatTheyHavenTSelectedAnApprentice()
-        {
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(await _continueNavigationResponse.Content.ReadAsStreamAsync());
-
-            document.Title.Should().Be(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-
-            var hashedAccountId = _testData.Get<string>("HashedAccountId");
-            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
-
-            var url = $"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices";
-
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(url);
 
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ApplicationConfirmationViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Confirm your apprentices");
+        }
+
+        [Then(@"the employer is informed that they haven't selected an apprentice")]
+        public void ThenTheEmployerIsInformedThatTheyHaventSelectedAnApprentice()
+        {
+            var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
+            var viewResult = _testContext.ActionResult.LastViewResult;
+
+            viewResult.Should().NotBeNull();
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
+            _continueNavigationResponse.Should().HaveTitle(model.Title);
+            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices");
             model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
             model.AccountId.Should().Be(hashedAccountId);
             viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
         }
+
     }
 }

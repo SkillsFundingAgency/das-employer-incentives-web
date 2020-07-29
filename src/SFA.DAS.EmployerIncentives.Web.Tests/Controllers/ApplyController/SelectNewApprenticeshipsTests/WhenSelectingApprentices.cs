@@ -71,12 +71,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public void Then_should_have_no_apprentices_selected_by_default()
-        {
-            _model.SelectedApprenticeships.Should().BeEmpty();
-        }
-
-        [Test]
         public void Then_should_display_a_list_of_apprentices()
         {
             _model.Apprenticeships.Should()
@@ -115,8 +109,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         [Test]
         public async Task Then_the_ConfirmApprenticeships_page_is_displayed()
         {
-            var request = new SelectApprenticeshipsRequest();
-            request.SelectedApprenticeships.Add(_apprenticeData.First().Id);
+            var request = new SelectApprenticeshipsRequest
+            {
+                SelectedApprenticeships = new List<string> { _apprenticeData.First().Id }
+            };
 
             var result = Sut.SelectApprenticeships(request);
             var redirectResult = await result as RedirectToActionResult;

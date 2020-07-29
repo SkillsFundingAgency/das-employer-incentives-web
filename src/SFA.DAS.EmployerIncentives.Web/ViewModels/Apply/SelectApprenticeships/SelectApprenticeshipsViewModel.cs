@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 {
-    public class SelectApprenticeshipsViewModel : ViewModel, ISelectedApprenticeships
+    public class SelectApprenticeshipsViewModel : ViewModel
     {
         public const string SelectApprenticeshipsMessage = "Select the apprentices you want to apply for";
 
@@ -16,8 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 
         public IEnumerable<ApprenticeshipModel> Apprenticeships { get; set; }
 
-        public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.First().Id}";
+        public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.FirstOrDefault()?.Id}";
 
-        public List<string> SelectedApprenticeships { get; } = new List<string>();
     }
 }
