@@ -88,9 +88,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         }
                     }
                 };
-
             }
-
         }        
     }
 }
