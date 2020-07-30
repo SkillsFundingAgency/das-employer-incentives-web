@@ -4,13 +4,13 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Given(@"an employer applying for a grant has apprentices matching the eligibility requirement")]
         public void GivenAnEmployerApplyingForAGrantHasApprenticesMatchingTheEligibilityRequirement()
         {
-            var data = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
             _apprenticeshipData = data.Apprentices;
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => data.AccountId);
@@ -58,6 +58,30 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(_apprenticeshipData))
                         .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{accountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{accountId}/applications/*")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse)));
 
         }
 
@@ -87,19 +111,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
-        [Then(@"the employer is asked to sign the declaration")]
-        public void ThenTheEmployerIsAskedToSignTheDeclaration()
+        [Then(@"the employer is asked to confirm the selected apprentices")]
+        public async Task ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
+
             var viewResult = _testContext.ActionResult.LastViewResult;
-
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as DeclarationViewModel;
+            var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Declaration");
-
-            _continueNavigationResponse.Should().HaveTitle(model.Title);
-            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/declaration");
+            model.Should().HaveTitle("Confirm your apprentices");
         }
 
         [Then(@"the employer is informed that they haven't selected an apprentice")]
