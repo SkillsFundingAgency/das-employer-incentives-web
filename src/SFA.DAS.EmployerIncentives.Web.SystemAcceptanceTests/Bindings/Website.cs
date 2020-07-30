@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
         }
 
         [BeforeScenario()]
-        public void InitialiseFunctions()
+        public void InitialiseWebsite()
         {
             var hook = new Hook<IActionResult>();
             _context.Hooks.Add(hook);

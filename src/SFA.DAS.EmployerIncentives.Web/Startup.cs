@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
-            var config = new ConfigurationBuilder()
+            var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
 #if DEBUG
@@ -38,17 +38,21 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["EnvironmentName"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
-            }
+                configBuilder.AddAzureTableStorage(options =>
+                        {
+                            options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                            options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                            options.EnvironmentName = configuration["EnvironmentName"];
+                            options.PreFixConfigurationKeys = false;
+                        }
+                    );
 
-            _configuration = configuration;
+                _configuration = configBuilder.Build();
+            }
+            else
+            {
+                _configuration = configuration;
+            }
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -69,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-                        
+
             services.AddMvc(
                     options =>
                     {
@@ -86,7 +90,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-            
+
             if (_configuration["EnvironmentName"] == "LOCAL" || _configuration["EnvironmentName"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
