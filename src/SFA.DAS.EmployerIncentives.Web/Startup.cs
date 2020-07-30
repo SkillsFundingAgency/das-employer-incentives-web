@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-                        
+
             services.AddMvc(
                     options =>
                     {
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-            
+
             if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
             {
                 services.AddDistributedMemoryCache();

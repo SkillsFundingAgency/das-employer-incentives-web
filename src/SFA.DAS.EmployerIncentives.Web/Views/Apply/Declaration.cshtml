@@ -4,7 +4,7 @@
     ViewData["Title"] = Model.Title;
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+<a asp-action="ConfirmApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" asp-route-applicationId="@Model.ApplicationId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 

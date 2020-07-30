@@ -24,20 +24,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SpecFlow.NUnit" Version="3.3.30" />
-    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.3.30" />
+    <PackageReference Include="SpecFlow" Version="3.3.57" />
+    <PackageReference Include="SpecFlow.NUnit" Version="3.3.57" />
     <PackageReference Include="WireMock.Net" Version="1.2.14" />
   </ItemGroup>
 
-  <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Application\Eligibility.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Eligibility.feature.cs</LastGenOutput>
-    </SpecFlowFeatureFiles>
-  </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Features\Application\Eligibility.feature" />
+    <Content Include="Features\Application\*.feature" />
   </ItemGroup>
 
   <ItemGroup>

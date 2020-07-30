@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.HashingService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
@@ -40,9 +40,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             response.EnsureSuccessStatusCode();
 
             var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync());
-            
+
             return MapFromGetApplicationResponse(data);
         }
+
+        public async Task Confirm(string accountId, Guid applicationId)
+        {
+            var request = MapToPostRequest(applicationId, accountId);
+
+            using var response = await _client.PostAsJsonAsync($"/accounts/{request.AccountId}/confirm-application/{applicationId}", request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
 
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(GetApplicationResponse application)
         {
@@ -68,6 +78,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return new CreateApplicationRequest(applicationId, _hashingService.DecodeValue(accountId),
                 _hashingService.DecodeValue(accountLegalEntityId),
                 apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
+        }
+
+        private ConfirmApplicationRequest MapToPostRequest(Guid applicationId, string accountId)
+        {
+            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId));
         }
     }
 }
