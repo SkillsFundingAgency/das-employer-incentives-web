@@ -129,6 +129,38 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+        public EmployerIncentivesApiBuilder WithInitialApplication()
+        {
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse))
+                    );
+
+            return this;
+        }
+
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;

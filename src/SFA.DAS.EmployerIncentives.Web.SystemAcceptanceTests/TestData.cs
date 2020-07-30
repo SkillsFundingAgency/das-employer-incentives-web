@@ -1,5 +1,7 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+﻿using System;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System.Collections.Generic;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -34,9 +36,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
 
                 public LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}" };
-                public ApprenticeDto Apprentice1 => new ApprenticeDto { Id = 1,  FirstName = "Adam", FullName = "Adam 1 Glover", LastName= "Glover", CourseName = "Early Years Educator Level 3" };
-                public ApprenticeDto Apprentice2 => new ApprenticeDto { Id = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
-                public ApprenticeDto Apprentice3 => new ApprenticeDto { Id = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
+                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1,  FirstName = "Adam", FullName = "Adam 1 Glover", LastName= "Glover", CourseName = "Early Years Educator Level 3" };
+                public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
+                public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
             }
 
             public class WithMultipleLegalEntities
@@ -55,6 +57,60 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public long AccountLegalEntityId3 => 40003;
                 public string HashedAccountLegalEntityId3 => "VKD7X7";
                 public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}" };
+            }
+
+            public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships
+            {
+                public Guid ApplicationId = Guid.NewGuid();
+                public GetApplicationResponse GetApplicationResponse => new GetApplicationResponse
+                {
+                    AccountId = AccountId,
+                    AccountLegalEntityId = AccountLegalEntityId,
+                    ApplicationId = ApplicationId,
+                    Apprentices = new ApplicationApprenticeshipDto[]
+                    {
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 1,
+                            CourseName = "Computing...",
+                            LastName = "Shipman",
+                            FirstName = "Harry",
+                            ExpectedAmount = 2000m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 2,
+                            CourseName = "T&D ...",
+                            LastName = "Leeman",
+                            FirstName = "Thomas",
+                            ExpectedAmount = 1000m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 3,
+                            CourseName = "Water Treatment Technician, Level: 3 (Standard)",
+                            LastName = "Johnson",
+                            FirstName = "Michael",
+                            ExpectedAmount = 2000m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 4,
+                            CourseName = "Relationship Manager (Banking), Level: 6 (Standard)",
+                            LastName = "Roberts",
+                            FirstName = "Jack",
+                            ExpectedAmount = 1500m
+                        },
+                        new ApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 5,
+                            CourseName = "Non-destructive testing (NDT) operator, Level: 2 (Standard)",
+                            LastName = "Smith",
+                            FirstName = "Steven",
+                            ExpectedAmount = 2000m
+                        }
+                    }
+                };
             }
         }        
     }

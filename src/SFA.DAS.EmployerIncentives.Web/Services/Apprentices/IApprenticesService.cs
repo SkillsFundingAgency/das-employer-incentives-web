@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
-namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
+namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
     public interface IApprenticesService
     {

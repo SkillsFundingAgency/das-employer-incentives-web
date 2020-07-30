@@ -7,7 +7,7 @@ Feature: ApprenticeSelection
 Scenario: An employer has selected apprenticeships
 	Given an employer applying for a grant has apprentices matching the eligibility requirement
 	When the employer selects the apprentice the grant applies to
-	Then the employer is asked to sign the declaration
+	Then the employer is asked to confirm the selected apprentices
 	
 Scenario: An employer has not selected apprenticeships
 	Given an employer applying for a grant has apprentices matching the eligibility requirement

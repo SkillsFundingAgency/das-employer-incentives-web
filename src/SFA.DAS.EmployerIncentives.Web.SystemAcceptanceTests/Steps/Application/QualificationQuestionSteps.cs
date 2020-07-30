@@ -1,15 +1,11 @@
-﻿using AngleSharp.Html.Parser;
-using FluentAssertions;
-using Newtonsoft.Json;
-using SFA.DAS.HashingService;
+﻿using FluentAssertions;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
-using WireMock.RequestBuilders;
-using WireMock.ResponseBuilders;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -19,13 +15,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testDataStore;
-        private readonly IHashingService _hashingService;
 
         public QualificationQuestionSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testDataStore = _testContext.TestDataStore;
-            _hashingService = _testContext.HashingService;
         }
 
         [Given(@"an employer applying for a grant has qualifying apprenticeships")]
@@ -108,57 +102,66 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             };
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
-
+            response.EnsureSuccessStatusCode();
             _testContext.TestDataStore.GetOrCreate("ApplicationEligibilityResponse", onCreate: () =>
             {
                 return response;
             });
-        }        
+        }
 
         [Then(@"the employer is asked to select the apprenticeship")]
-        public async Task ThenTheEmployerIsAskedWoSelectTheApprenticeship()
+        public void ThenTheEmployerIsAskedWoSelectTheApprenticeship()
         {
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var viewResult = _testContext.ActionResult.LastViewResult;
 
-            response.EnsureSuccessStatusCode();
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as SelectApprenticeshipsViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Select the apprentices you want to apply for");
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
-            document.Title.Should().Be("Select the apprentices you want to apply for");
-            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
+            response.Should().HaveTitle(model.Title);
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
         }
 
         [Then(@"the employer is informed that they cannot apply")]
-        public async Task ThenTheEmployerIsInformedTheyCannotApply()
+        public void ThenTheEmployerIsInformedTheyCannotApply()
         {
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var viewResult = _testContext.ActionResult.LastViewResult;
 
-            response.EnsureSuccessStatusCode();
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as CannotApplyViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("You cannot apply for this grant yet");
+            model.AccountId.Should().Be(hashedAccountId);
 
-            document.Title.Should().Be("You cannot apply for this grant yet");
-            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/cannot-apply");
+            response.Should().HaveTitle(model.Title);
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have qualifying apprenticeships")]
-        public async Task ThenTheEmployerIsInformedTheyNeedToSelectAnOption()
+        public void ThenTheEmployerIsInformedTheyNeedToSelectAnOption()
         {
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var viewResult = _testContext.ActionResult.LastViewResult;
 
-            response.EnsureSuccessStatusCode();
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(await response.Content.ReadAsStreamAsync());
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as QualificationQuestionViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
-            document.Title.Should().Be("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
-            response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
-
-            // todo get viewmodel and check for error
+            response.Should().HaveTitle(model.Title);
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
         }
     }
 }

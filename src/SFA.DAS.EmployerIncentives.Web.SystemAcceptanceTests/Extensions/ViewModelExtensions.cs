@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
+using System.Net.Http;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
 {
-    public static class ViewModelExtensions
+    public static class AssertionsExtensions
     {
         public static ViewModelAssertions Should(this ViewModel instance)
         {
@@ -13,6 +14,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
         public static ViewResultAssertions Should(this ViewResult instance)
         {
             return new ViewResultAssertions(instance);
+        }
+        public static HttpResponseMessageAssertions Should(this HttpResponseMessage instance)
+        {
+            return new HttpResponseMessageAssertions(instance);
         }
     }
 }
