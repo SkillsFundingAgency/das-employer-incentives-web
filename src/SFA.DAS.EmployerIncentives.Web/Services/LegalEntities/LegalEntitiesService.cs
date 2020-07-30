@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
         public async Task<IEnumerable<LegalEntityModel>> Get(string accountId)
         {
             var id = _hashingService.DecodeValue(accountId);
-            using var response = await _client.GetAsync($"/accounts/{id}/legalentities", HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _client.GetAsync($"accounts/{id}/legalentities", HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {

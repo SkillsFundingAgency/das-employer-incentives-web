@@ -36,6 +36,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                 var httpClient = clientBuilder.Build();
 
+                if (!settings.ApiBaseUrl.EndsWith("/"))
+                {
+                    settings.ApiBaseUrl += "/";
+                }
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
                 return new LegalEntitiesService(httpClient, s.GetRequiredService<IHashingService>());
@@ -52,6 +56,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                 var httpClient = clientBuilder.Build();
 
+                if (!settings.ApiBaseUrl.EndsWith("/"))
+                {
+                    settings.ApiBaseUrl += "/";
+                }
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
                 return new ApprenticesService(httpClient, s.GetRequiredService<IHashingService>());
@@ -68,6 +76,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                 var httpClient = clientBuilder.Build();
 
+                if (!settings.ApiBaseUrl.EndsWith("/"))
+                {
+                    settings.ApiBaseUrl += "/";
+                }
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
                 return new ApplicationService(httpClient, s.GetRequiredService<IHashingService>());
