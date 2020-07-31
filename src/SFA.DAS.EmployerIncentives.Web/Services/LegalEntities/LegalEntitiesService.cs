@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync());
+            var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return data.ToLegalEntityModel(_hashingService);
         }       

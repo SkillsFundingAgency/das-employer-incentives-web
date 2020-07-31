@@ -1,4 +1,4 @@
-﻿
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Home.HomeViewModel
 @{
     ViewData["Title"] = "Apply for the hire a new apprentice payment";
 }
@@ -26,12 +26,12 @@
             <p>The payment is different to the apprenticeship levy and you can use it to pay for recruiting and employing new apprentices.</p>
             <h2 class="govuk-heading-m">Eligibility</h2>
             <p>You can only apply for this payment for new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021.</p>
-            <a href="#" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
+            <a href="@Model.AccountId/apply" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now
                 <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                     <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
                 </svg>
             </a>
         </div>
-        </div>
+    </div>
 </main>

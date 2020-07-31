@@ -14,6 +14,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -56,7 +57,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(_apprenticeshipData))
+                        .WithBody(JsonConvert.SerializeObject(_apprenticeshipData, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -81,7 +82,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse)));
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
         }
 
