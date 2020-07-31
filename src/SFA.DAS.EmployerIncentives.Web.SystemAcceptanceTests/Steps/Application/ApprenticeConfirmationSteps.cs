@@ -7,6 +7,7 @@ using Castle.Core.Internal;
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using TechTalk.SpecFlow;
@@ -43,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_testData.GetApplicationResponse)));
+                        .WithBody(JsonConvert.SerializeObject(_testData.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
         }
         
         [When(@"the employer arrives on the confirm apprentices page")]

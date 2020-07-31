@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities))
+                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -84,7 +85,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.OK)
-                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities)));
+                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -97,7 +98,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(testdata.Apprentices))
+                  .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
         }
 
@@ -141,7 +142,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.OK)
-                  .WithBody(JsonConvert.SerializeObject(legalEntities)));
+                  .WithBody(JsonConvert.SerializeObject(legalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [When(@"the employer tries to make a grant application")]
