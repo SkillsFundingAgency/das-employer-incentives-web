@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync());
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             
             return MapFromGetApplicationResponse(data);
         }
