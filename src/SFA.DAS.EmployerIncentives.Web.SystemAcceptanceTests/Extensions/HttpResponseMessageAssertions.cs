@@ -14,6 +14,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
         {
             var parser = new HtmlParser();
             _document = parser.ParseDocument(instance.Content.ReadAsStringAsync().Result);
+
             Subject = instance;
         }
 
@@ -30,6 +31,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
              .ForCondition(t => t.Equals(title))
              .FailWith("Expected {context:Title} to contain {0} but found {1}",
                  _ => title, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
+        public AndConstraint<HttpResponseMessageAssertions> HaveBackLink(string link, string because = "", params object[] becauseArgs)
+        {
+             Execute.Assertion
+             .BecauseOf(because, becauseArgs)
+             .ForCondition(!string.IsNullOrEmpty(link))
+             .FailWith("Link to assert on not provided")
+             .Then
+             .Given(() => _document.DocumentElement.QuerySelector(".govuk-back-link").Attributes["href"].Value)
+             .ForCondition(t => _document.DocumentElement.QuerySelector(".govuk-back-link").Attributes["href"].Value == link)
+             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                 _ => link, item => item);
 
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }

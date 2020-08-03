@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _hashingService = _testContext.HashingService;
         }
 
-        [Given(@"an employer applying for a grant has multiple legal entities")]
-        public void GivenAnEmployerApplyingHasMultipleLegalentities()
+        [Given(@"an employer applying for a grant has multiple legal entities with eligible apprenticeships")]
+        public void GivenAnEmployerApplyingHasMultipleLegalentitiesWithEligibleApprenticeships()
         {
-            var testdata = new TestData.Account.WithMultipleLegalEntities();
+            var testdata = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
 
             var accountId = _testDataStore.GetOrCreate("AccountId", onCreate: () => testdata.AccountId);
             _testDataStore.Add("HashedAccountId", _hashingService.HashValue(accountId));
+            _testDataStore.Add("HashedAccountLegalEntityId", _hashingService.HashValue(testdata.LegalEntities.First().AccountLegalEntityId));
 
             var legalEntities = _testDataStore.GetOrCreate("Legalentities", onCreate: () => testdata.LegalEntities);
 
@@ -50,21 +52,35 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               Response.Create()
                   .WithStatusCode(HttpStatusCode.OK)
                   .WithBody(JsonConvert.SerializeObject(legalEntities, TestHelper.DefaultSerialiserSettings)));
-        }
 
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", testdata.AccountId.ToString())
+                      .WithParam("accountlegalentityid", testdata.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithStatusCode(HttpStatusCode.OK));
+        }
+        
         [When(@"the employer selects the legal entity the application is for")]
         public async Task WhenTheEmployerSelectsTheLegalEntityTheApplicationIsFor()
         {
-            var testdata = new TestData.Account.WithMultipleLegalEntities();
-            _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId2);
+            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
 
             var request = new HttpRequestMessage(
                 HttpMethod.Post, 
-                $"{testdata.HashedAccountId}/apply/choose-organisation")
+                $"{hashedAccountId}/apply/choose-organisation")
                 {
                     Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
-                        new KeyValuePair<string, string>("Selected", testdata.HashedAccountLegalEntityId2)
+                        new KeyValuePair<string, string>("Selected", hashedAccountLegalEntityId)
                     })
                 };
 
@@ -80,11 +96,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer does not select the legal entity the application is for")]
         public async Task WhenTheEmployerDoesNotSelectTheLegalEntityTheApplicationIsFor()
         {
-            var testdata = new TestData.Account.WithMultipleLegalEntities();
+            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
 
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
-                $"{testdata.HashedAccountId}/apply/choose-organisation")
+                $"{hashedAccountId}/apply/choose-organisation")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
@@ -99,8 +115,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }
 
-        [Then(@"the employer is asked if they have taken on qualifying apprenticeships")]
-        public void ThenTheEmployerIsAskedIfTheyHavetakenOnQualifyingApprenticeships()
+        [Then(@"the employer is asked to select the apprenticeship")]
+        public void ThenTheEmployerIsAskedWoSelectTheApprenticeship()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
@@ -108,15 +124,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as QualificationQuestionViewModel;
+            var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
+            model.Should().HaveTitle("Select the apprentices you want to apply for");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
-            model.HasTakenOnNewApprentices.Should().BeNull();
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
+            response.Should().HaveBackLink($"/{hashedAccountId}/apply/taken-on-new-apprentices");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
         }
 
         [Then(@"the employer is informed that a legal entity needs to be selected")]

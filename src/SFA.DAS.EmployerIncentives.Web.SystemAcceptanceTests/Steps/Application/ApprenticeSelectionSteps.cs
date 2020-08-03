@@ -116,12 +116,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
 
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
+            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices");
             model.Should().HaveTitle("Confirm your apprentices");
         }
 

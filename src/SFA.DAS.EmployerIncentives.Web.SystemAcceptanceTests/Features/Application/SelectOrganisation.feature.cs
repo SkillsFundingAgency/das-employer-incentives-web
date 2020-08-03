@@ -79,12 +79,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer selects a legal entity")]
-        public virtual void AnEmployerSelectsALegalEntity()
+        [NUnit.Framework.DescriptionAttribute("An employer with multiple legal entities and eligible apprenticeships selects a l" +
+            "egal entity")]
+        public virtual void AnEmployerWithMultipleLegalEntitiesAndEligibleApprenticeshipsSelectsALegalEntity()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer selects a legal entity", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with multiple legal entities and eligible apprenticeships selects a l" +
+                    "egal entity", null, tagsOfScenario, argumentsOfScenario);
 #line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -106,13 +108,14 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 8
- testRunner.Given("an employer applying for a grant has multiple legal entities", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer applying for a grant has multiple legal entities with eligible appren" +
+                        "ticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 9
  testRunner.When("the employer selects the legal entity the application is for", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 10
- testRunner.Then("the employer is asked if they have taken on qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is asked to select the apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -146,7 +149,8 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 13
- testRunner.Given("an employer applying for a grant has multiple legal entities", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer applying for a grant has multiple legal entities with eligible appren" +
+                        "ticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 14
  testRunner.When("the employer does not select the legal entity the application is for", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");

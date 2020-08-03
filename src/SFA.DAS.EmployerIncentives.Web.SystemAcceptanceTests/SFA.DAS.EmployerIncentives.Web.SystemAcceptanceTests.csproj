@@ -30,17 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Application\Eligibility.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Eligibility.feature.cs</LastGenOutput>
-    </SpecFlowFeatureFiles>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Features\Application\Eligibility.feature" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj" />
   </ItemGroup>
 
