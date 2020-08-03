@@ -46,7 +46,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task Confirm(string accountId, Guid applicationId)
         {
-            var request = MapToPostRequest(applicationId, accountId);
+            const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
 
             using var response = await _client.PostAsJsonAsync($"/accounts/{request.AccountId}/confirm-application/{applicationId}", request);
 
@@ -80,9 +81,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
         }
 
-        private ConfirmApplicationRequest MapToPostRequest(Guid applicationId, string accountId)
+        private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string user)
         {
-            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId));
+            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), user);
         }
     }
 }

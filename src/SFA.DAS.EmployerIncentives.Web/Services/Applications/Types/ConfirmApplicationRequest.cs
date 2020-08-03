@@ -4,14 +4,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
 {
     public class ConfirmApplicationRequest
     {
-        public Guid ApplicationId { get; }
+        public Guid IncentiveApplicationId { get; }
         public long AccountId { get; }
         public DateTime DateSubmitted { get; set; }
+        public string SubmittedBy { get; set; }
 
-        public ConfirmApplicationRequest(Guid applicationId, long accountId)
+        public ConfirmApplicationRequest(Guid incentiveApplicationId, long accountId, string submittedBy)
         {
-            ApplicationId = applicationId;
+            IncentiveApplicationId = incentiveApplicationId;
             AccountId = accountId;
+            SubmittedBy = submittedBy;
             DateSubmitted = DateTime.UtcNow;
         }
     }
