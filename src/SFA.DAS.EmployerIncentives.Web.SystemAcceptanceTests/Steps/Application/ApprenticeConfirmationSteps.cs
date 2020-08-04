@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using FluentAssertions;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -44,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_testData.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonConvert.SerializeObject(_testData.ApplicationResponse, TestHelper.DefaultSerialiserSettings)));
         }
         
         [When(@"the employer arrives on the confirm apprentices page")]
@@ -66,25 +62,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
 
-            var apiResponse = _testData.GetApplicationResponse;
+            var apiResponse = _testData.ApplicationResponse;
 
             model.ApplicationId.Should().Be(_testData.ApplicationId);
             model.AccountId.Should().Be(_testContext.HashingService.HashValue(_testData.AccountId));
             model.AccountLegalEntityId.Should().Be(_testContext.HashingService.HashValue(_testData.AccountLegalEntityId));
-            model.Apprentices.Count.Should().Be(apiResponse.Apprentices.Length);
-            model.TotalPaymentAmount.Should().Be(apiResponse.Apprentices.Sum(x => x.ExpectedAmount));
+            model.Apprentices.Count.Should().Be(apiResponse.Application.Apprenticeships.Count());
+            model.TotalPaymentAmount.Should().Be(apiResponse.Application.Apprenticeships.Sum(x => x.TotalIncentiveAmount));
 
-            // For check the apprenticeships
-            foreach (var apprentice in model.Apprentices)
-            {
-                var apiApprentice = apiResponse.Apprentices.First(x =>
-                    x.ApprenticeshipId == _testContext.HashingService.DecodeValue(apprentice.ApprenticeshipId));
+            // Check the apprenticeships
+            var apprentice = model.Apprentices.First();
+            var apiApprentice = apiResponse.Application.Apprenticeships.First();
 
-                apprentice.ApprenticeshipId.Should().Be(_testContext.HashingService.HashValue(apiApprentice.ApprenticeshipId));
-                apprentice.DisplayName.Should().Be($"{apiApprentice.FirstName} {apiApprentice.LastName}");
-                apprentice.CourseName.Should().Be(apiApprentice.CourseName);
-                apprentice.ExpectedAmount.Should().Be(apiApprentice.ExpectedAmount);
-            }
+            apprentice.DisplayName.Should().Be($"{apiApprentice.FirstName} {apiApprentice.LastName}");
+            apprentice.CourseName.Should().Be(apiApprentice.CourseName);
+            apprentice.ExpectedAmount.Should().Be(apiApprentice.TotalIncentiveAmount);
         }
     }
 }
