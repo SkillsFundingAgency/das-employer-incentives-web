@@ -29,12 +29,7 @@
     <PackageReference Include="WireMock.Net" Version="1.2.14" />
   </ItemGroup>
 
-
-  <ItemGroup>
     <Content Include="Features\Application\*.feature" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj" />
   </ItemGroup>
 

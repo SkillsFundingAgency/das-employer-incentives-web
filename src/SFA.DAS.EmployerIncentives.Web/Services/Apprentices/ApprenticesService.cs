@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 {"accountlegalentityid", _hashingService.DecodeValue(query.AccountLegalEntityId).ToString()}
             };
 
-            var url = QueryHelpers.AddQueryString("/apprenticeships", queryParams);
+            var url = QueryHelpers.AddQueryString("apprenticeships", queryParams);
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             response.EnsureSuccessStatusCode();
 
             var data = await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeDto>>(
-                await response.Content.ReadAsStreamAsync());
+                await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return data.ToApprenticeshipModel(_hashingService);
         }
     }

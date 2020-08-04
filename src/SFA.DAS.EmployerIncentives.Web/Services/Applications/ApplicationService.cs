@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var applicationId = Guid.NewGuid();
             var request = MapToPostRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
 
-            using var response = await _client.PostAsJsonAsync($"/accounts/{request.AccountId}/applications", request);
+            using var response = await _client.PostAsJsonAsync($"accounts/{request.AccountId}/applications", request);
 
             response.EnsureSuccessStatusCode();
 
@@ -35,11 +35,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId)
         {
-            using var response = await _client.GetAsync($"/accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}", HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}", HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync());
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return MapFromGetApplicationResponse(data);
         }

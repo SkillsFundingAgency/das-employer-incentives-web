@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(new List<LegalEntityDto>() { data.LegalEntity })));
+                .WithBody(JsonConvert.SerializeObject(new List<LegalEntityDto>() { data.LegalEntity }, TestHelper.DefaultSerialiserSettings)));
 
             _server
               .Given(
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _server
               .Given(
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(data.Apprentices))
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
             return this;
@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 
         public EmployerIncentivesApiBuilder WithMultipleLegalEntities()
         {
-            var data = new TestData.Account.WithMultipleLegalEntities();
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithNoEligibleApprenticeships();
 
             _server
             .Given(
@@ -124,7 +124,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             return this;
         }
@@ -155,7 +155,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse))
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings))
                     );
 
             return this;

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -41,7 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_testData.GetApplicationResponse)));
+                        .WithBody(JsonConvert.SerializeObject(_testData.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
         }
 
         [When(@"the employer arrives on the confirm apprentices page")]
