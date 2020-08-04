@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
@@ -49,11 +50,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
             var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
 
-            using var response = await _client.PostAsJsonAsync($"/accounts/{request.AccountId}/confirm-application/{applicationId}", request);
+            using var response = await _client.PatchAsJsonAsync($"/accounts/{request.AccountId}/applications/{applicationId}", request);
 
             response.EnsureSuccessStatusCode();
         }
-
 
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(GetApplicationResponse application)
         {

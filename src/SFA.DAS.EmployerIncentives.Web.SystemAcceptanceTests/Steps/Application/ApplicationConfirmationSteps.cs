@@ -40,8 +40,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/confirm-application/{_testData.ApplicationId}")
-                        .UsingPost()
+                        .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                        .UsingPatch()
                 )
                 .RespondWith(
                     Response.Create()
