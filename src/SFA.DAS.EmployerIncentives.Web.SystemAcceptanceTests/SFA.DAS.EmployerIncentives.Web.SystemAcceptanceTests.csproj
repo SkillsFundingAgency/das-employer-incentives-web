@@ -37,17 +37,4 @@
     <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Features\Application\StartApplication.feature.cs">
-      <DependentUpon>StartApplication.feature</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Application\StartApplication.feature">
-      <Visible>$(UsingMicrosoftNETSdk)</Visible>
-      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-    </SpecFlowFeatureFiles>
-  </ItemGroup>
-
 </Project>
