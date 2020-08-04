@@ -1,27 +1,40 @@
 ﻿@employerIncentivesApi
-Feature: ApplicationEligibility
+Feature: Eligibility
 	As an employer applying for the new apprenticeship grant
-	I want to be made aware if there are no apprenticeships eligible for the grant
-	So that I can stop my application
+	I want to be able to specify if I have eligible apprenticeships
+	So that I am informed if I can apply for the grant
 
-Scenario: An employer has no eligible apprentices
-	Given an employer applying for a grant has no apprenticeships matching the eligibility requirement
-	When the employer tries to make a grant application
-	Then the employer is informed they cannot apply for the grant
+Scenario: An employer with a single organisation selects that they have eligible apprenticeships
+	Given an employer with a single organisation applying for a grant has eligible apprenticeships
+	When the employer specifies that they have eligible apprenticeships
+	Then the employer is asked to select the apprenticeship
 
-Scenario: An employer has eligible apprentices
-	Given an employer applying for a grant has apprenticeships matching the eligibility requirement
-	When the employer tries to make a grant application
-	Then the employer is asked if they have taken on qualifying apprenticeships
+Scenario: An employer with a single organisation without any eligible apprenticeships
+	Given an employer with a single organisation applying for a grant has no eligible apprenticeships
+	When the employer specifies that they have eligible apprenticeships
+	Then the employer is informed that they cannot apply
 
-Scenario: An employer has multiple legal entities
-	Given an employer applying for a grant has multiple legal entities
-	When the employer tries to make a grant application
-	Then the employer is asked to select the legal entity the grant applies to
+Scenario: An employer with multiple organisations selects that they have eligible apprenticeships
+	Given an employer with a multiple organisations applying for a grant
+	When the employer specifies that they have eligible apprenticeships
+	Then the employer is asked to choose the organisation
 
-Scenario: An employer has no legal entities
-	Given an employer applying for a grant has no legal entities
-	When the employer tries to make a grant application
-	Then the employer is informed they cannot apply for the grant yet
+Scenario: An employer selects that they do not have eligible apprenticeships
+	Given an employer applying for a grant does not have eligible apprenticeships
+	When the employer specifies that they do not have eligible apprenticeships
+	Then the employer is informed that they cannot apply yet
 
+Scenario: An employer selects that they have eligible apprenticeships when they do not
+	Given an employer applying for a grant does not have eligible apprenticeships
+	When the employer specifies that they have eligible apprenticeships
+	Then the employer is informed that they cannot apply
 
+Scenario: An employer selects that they have eligible apprenticeships when they do not have any organisationa
+	Given an employer applying for a grant does not have any organisations
+	When the employer specifies that they have eligible apprenticeships
+	Then the employer is informed that they cannot apply
+
+Scenario: An employer does not select whether or not they have eligible apprenticeships
+	Given an employer applying for a grant has eligible apprenticeships
+	When the employer does not specify whether or not they have eligible apprenticeships
+	Then the employer is informed that they need to specify whether or not they have eligible apprenticeships

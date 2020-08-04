@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };                
             }
 
-            public class WithMultipleLegalEntities
+            public class WithMultipleLegalEntitiesWithNoEligibleApprenticeships
             {
                 public long AccountId { get; } = 30002;
                 public string HashedAccountId => "VBKBLD";                
@@ -57,6 +57,27 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public long AccountLegalEntityId3 => 40003;
                 public string HashedAccountLegalEntityId3 => "VKD7X7";
                 public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}" };
+            }
+
+            public class WithMultipleLegalEntitiesWithEligibleApprenticeships
+            {
+                public long AccountId { get; } = 30003;
+                public string HashedAccountId => "VKGK4B";
+
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity1, LegalEntity2 };
+
+                public long AccountLegalEntityId1 => 40004;
+                public string HashedAccountLegalEntityId1 => "M76GLY";
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
+                public long AccountLegalEntityId2 => 40005;
+                public string HashedAccountLegalEntityId2 => "VW6RJG";
+                public LegalEntityDto LegalEntity2 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId2, LegalEntityName = $"Organisation {AccountLegalEntityId2}" };
+
+                public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
+                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3" };
+                public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
+                public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };
+
             }
 
             public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships

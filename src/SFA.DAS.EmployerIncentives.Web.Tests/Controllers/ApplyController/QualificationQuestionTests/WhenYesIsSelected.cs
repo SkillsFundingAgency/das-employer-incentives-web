@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
     public class WhenYesIsSelected : ApplyControllerTestBase
     {
         [Test]
-        public async Task Then_The_Select_Apprenticeships_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
+        public async Task Then_The_Choose_Organisation_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
         {
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = true };
@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var result = await Sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
-            redirectResult.ActionName.Should().Be("SelectApprenticeships");
+            redirectResult.ActionName.Should().Be("GetChooseOrganisation");
         }
     }
 }

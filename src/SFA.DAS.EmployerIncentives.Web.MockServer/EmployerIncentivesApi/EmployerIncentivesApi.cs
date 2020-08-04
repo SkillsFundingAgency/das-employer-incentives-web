@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 
         public EmployerIncentivesApiBuilder WithMultipleLegalEntities()
         {
-            var data = new TestData.Account.WithMultipleLegalEntities();
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithNoEligibleApprenticeships();
 
             _server
             .Given(
