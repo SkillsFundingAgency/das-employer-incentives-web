@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -12,10 +14,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class ApplyOrganisationController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly WebConfigurationOptions _configuration;
 
-        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService)
+        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService, WebConfigurationOptions configuration)
         {
             _legalEntitiesService = legalEntitiesService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -52,6 +56,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ModelState.AddModelError(viewModel.Organisations.Any() ? viewModel.Organisations.First().AccountLegalEntityId : "OrganisationNotSelected", viewModel.OrganisationNotSelectedMessage);
             }
 
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{accountLegalEntityId}/validate-terms-signed")]
+        public async Task<IActionResult> ValidateTermsSigned(string accountId, string accountLegalEntityId)
+        {
+            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
+
+            if (legalEntity.HasSignedIncentiveTerms)
+            {
+                return RedirectToAction("SelectApprenticeships", "ApplyApprenticeships", new { accountId, accountLegalEntityId });
+            }
+
+            var viewModel = new ValidateTermsSignedViewModel(accountId, _configuration.AccountsBaseUrl);
             return View(viewModel);
         }
     }

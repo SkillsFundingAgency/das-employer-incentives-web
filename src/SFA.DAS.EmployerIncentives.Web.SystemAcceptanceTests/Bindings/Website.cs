@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY",
                 Hashstring = "SFA: digital apprenticeship service",
                 CommitmentsBaseUrl = $"http://{Guid.NewGuid()}",
+                AccountsBaseUrl = $"http://{Guid.NewGuid()}",
                 RedisCacheConnectionString = "localhost"
             };
 
