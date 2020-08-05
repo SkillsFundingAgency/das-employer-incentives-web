@@ -3,14 +3,14 @@
     ViewData["Title"] = Model.Title;
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">Confirm your apprentices</h1>
 
-            <form asp-action="ConfirmApplication" method="post">
+            <form asp-action="ConfirmApplication" asp-controller="Apply" method="post">
                 @Html.AntiForgeryToken()
 
                 <table class="govuk-table govuk-!-margin-bottom-9">
@@ -30,7 +30,7 @@
                                 <td class="govuk-table__cell">@apprenticeship.CourseName</td>
                                 <td class="govuk-table__cell">@string.Format("{0:C}", @apprenticeship.ExpectedAmount)</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-link govuk-link--no-visited-state">
+                                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" class="govuk-link govuk-link--no-visited-state">
                                         Change <span class="govuk-visually-hidden">selected apprentices</span>
                                     </a>
                                 </td>
