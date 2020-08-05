@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
         private const string NeedBankDetailsUrl = "/complete/need-bank-details";
-        private const string EnterBankDetailsUrl = "/enter-bank-details";
+        private const string AddBankDetailsUrl = "/add-bank-details";
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is requested to enter their bank details")]
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(EnterBankDetailsUrl);
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(AddBankDetailsUrl);
         }
 
         [When(@"the employer states that they are unable to provide bank details now")]

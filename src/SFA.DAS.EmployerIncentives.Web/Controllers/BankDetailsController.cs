@@ -28,16 +28,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (viewModel.CanProvideBankDetails.Value)
             {
-                // redirect to business central
-                return RedirectToAction("EnterBankDetails");
+                // redirect to interstitial page
+                return RedirectToAction("AddBankDetails");
             }
 
             // redirect to need bank details page
             return RedirectToAction("NeedBankDetails");
         }
 
-
         [HttpGet]
+        [Route("add-bank-details")]
+        public ViewResult AddBankDetails()
+        {
+            return View();
+        }
+
+        [HttpPost]
         [Route("enter-bank-details")]
         public ViewResult EnterBankDetails()
         {
