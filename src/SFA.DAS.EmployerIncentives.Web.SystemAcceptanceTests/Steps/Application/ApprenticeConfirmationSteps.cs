@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
-using FluentAssertions;
-using Newtonsoft.Json;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -21,7 +17,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private readonly TestContext _testContext;
         private TestData.Account.WithInitialApplicationForASingleEntity _testData;
-        private HttpResponseMessage _continueNavigationResponse;
 
         public ApprenticeConfirmationSteps(TestContext testContext) : base(testContext)
         {
@@ -54,8 +49,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 HttpMethod.Get,
                 $"{_testData.HashedAccountId}/apply/confirm-apprentices/{_testData.ApplicationId}");
 
-            var _continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
-            _continueNavigationResponse.EnsureSuccessStatusCode();
+            var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
+            continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
         [Then(@"the employer is asked to confirm the apprentices and expected amounts")]

@@ -19,8 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         private Guid _applicationId;
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
-        private string _hashedDraftSubmissionId;
-        private ViewResult _result;
+        private IActionResult _result;
         private IEnumerable<ApprenticeshipModel> _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
 
@@ -31,7 +30,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
-            _hashedDraftSubmissionId = Guid.NewGuid().ToString();
 
             ApprenticesServiceMock
                 .Setup(x => x.Get(It.Is<ApprenticesQuery>(q =>
@@ -43,7 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 .ReturnsAsync(_applicationId);
 
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
-            _model = (SelectApprenticeshipsViewModel)_result.Model;
+            _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
         }
 
         [Test]

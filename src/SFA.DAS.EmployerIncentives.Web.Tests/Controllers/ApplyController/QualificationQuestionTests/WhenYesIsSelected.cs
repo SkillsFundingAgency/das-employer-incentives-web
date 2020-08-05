@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var result = await Sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
-            redirectResult.ActionName.Should().Be("GetChooseOrganisation");
+            redirectResult.ActionName.Should().Be("SelectApprenticeships");
         }
     }
 }
