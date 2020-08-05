@@ -4,29 +4,34 @@
     ViewData["Title"] = Model.Title;
 }
 
-<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<main class="govuk-main-wrapper " id="main-content" role="main">
 
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            <h1 class="govuk-heading-l">We need your organisation's bank details</h1>
-            <p>You must provide information about your banking and payments to DfE, so that we can make the hire a new apprentice payment.</p>
-            <p>You'll need to give us your:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>contact details</li>
-                <li>organisation's address and bank account details</li>
-            </ul>
-            <h3 class="govuk-heading-m">Can you add your organisation's bank details below?</h3>
-            <p>If you do not have these details, someone else from your organisation can add them later.</p>
             <form asp-action="BankDetailsConfirmation" method="post">
                 @Html.AntiForgeryToken()
 
                 <partial name="ValidationSummary" />
 
+                <h1 class="govuk-heading-l">We need your organisation's bank details</h1>
+                <p class="govuk-body">You must provide information about your banking and payments to DfE, so that we can make the hire a new apprentice payment.</p>
+                <p class="govuk-body">You'll need to give us your:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>contact details</li>
+                    <li>organisation's address and bank account details</li>
+                </ul>
+
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                     <fieldset class="govuk-fieldset">
-          
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h2 class="govuk-fieldset__heading">
+                                Can you add your organisation's bank details now?
+                            </h2>
+                        </legend>
+
+                        <p class="govuk-body">If you do not have these details, someone else from your organisation can add them later.</p>
+        
                         @if (ViewData.ModelState.ContainsKey(nameof(Model.CanProvideBankDetails)) && ViewData.ModelState[nameof(Model.CanProvideBankDetails)].Errors.Any())
                         {
                             <span class="govuk-error-message">
@@ -51,7 +56,7 @@
                     </fieldset>
                 </div>
 
-                <button class="govuk-button" data-module="govuk-button">
+                <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Continue
                 </button>
 

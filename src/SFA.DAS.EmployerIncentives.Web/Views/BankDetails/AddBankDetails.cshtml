@@ -3,29 +3,30 @@
     ViewData["Title"] = "Add your organisation's bank account details";
 }
 
-<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-
+<main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
 
             <h1 class="govuk-heading-xl">Add your organisation's bank account details</h1>
-            <p>We need your organisation's bank account details, so that we can make your hire a new apprentice payment.</p>
-            <p>You can only add one bank account for your organisation. We'll use this account to make all of your payments.</p>
+            <p class="govuk-body">We need your organisation's bank account details, so that we can make your hire a new apprentice payment.</p>
+            <p class="govuk-body">You can only add one bank account for your organisation. We'll use this account to make all of your payments.</p>
+
             <h2 class="govuk-heading-m">Before you start</h2>
-            <p>You'll need to give us your:</p>
+            <p class="govuk-body">You'll need to give us your:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>contact information</li>
                 <li>organisation's address and bank account details</li>
             </ul>
+
             <div class="govuk-inset-text">We may contact a person with significant control to verify the information you provide.</div>
+
             <form asp-action="EnterBankDetails" method="post">
                 @Html.AntiForgeryToken()
 
-                <button class="govuk-button" data-module="govuk-button">
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Continue
                 </button>
-
             </form>
 
         </div>
