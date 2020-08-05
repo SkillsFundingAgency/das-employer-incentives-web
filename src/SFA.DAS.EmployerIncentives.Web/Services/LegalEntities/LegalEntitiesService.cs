@@ -33,6 +33,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
             var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return data.ToLegalEntityModel(_hashingService);
-        }       
+        }
+
+        public async Task<LegalEntityModel> Get(string hashedAccountId, string hashedAccountLegalEntityId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountLegalEntityIdId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
+            using var response = await _client.GetAsync($"accounts/{accountId}/legalentities/{accountLegalEntityIdId}", HttpCompletionOption.ResponseHeadersRead);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var data = await JsonSerializer.DeserializeAsync<LegalEntityDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return data.ToLegalEntityModel(_hashingService);
+        }
     }
 }

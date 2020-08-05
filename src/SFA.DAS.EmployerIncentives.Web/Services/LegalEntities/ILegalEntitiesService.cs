@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
     public interface ILegalEntitiesService
     {
         Task<IEnumerable<LegalEntityModel>> Get(string accountId);
+        Task<LegalEntityModel> Get(string accountId, string accountLegalEntityId);
     }
 }
