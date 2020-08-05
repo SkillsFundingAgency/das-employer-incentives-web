@@ -3,41 +3,45 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
     public class WhenSelectingApprentices : ApplyControllerTestBase
     {
+        private Guid _applicationId;
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
-        private ViewResult _result;
+        private IActionResult _result;
         private IEnumerable<ApprenticeshipModel> _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
-        private ApprenticesQuery _getApprenticesQuery;
 
         [SetUp]
         public async Task Arrange()
         {
+            _applicationId = Guid.NewGuid();
             _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
 
-            _getApprenticesQuery = It.IsAny<ApprenticesQuery>();
-
             ApprenticesServiceMock
-                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q => q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
+                .Setup(x => x.Get(It.Is<ApprenticesQuery>(q =>
+                    q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
 
+            ApplicationServiceMock
+                .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(_applicationId);
+
             _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
-            _model = (SelectApprenticeshipsViewModel)_result.Model;
+            _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
         }
 
         [Test]
@@ -65,12 +69,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public void Then_should_have_no_apprentices_selected_by_default()
-        {
-            _model.HasSelectedApprenticeships.Should().BeFalse();
-        }
-
-        [Test]
         public void Then_should_display_a_list_of_apprentices()
         {
             _model.Apprenticeships.Should()
@@ -78,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                     opt => opt
                         .Excluding(x => x.Id)
                         .Excluding(x => x.DisplayName)
-                    );
+                );
         }
 
         [Test]
@@ -90,12 +88,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         [Test]
         public async Task Then_should_show_error_if_no_selection_is_made()
         {
-            _model.SelectedApprenticeships.Clear();
-
-            var result = Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId, new SelectApprenticeshipsViewModel
+            var request = new SelectApprenticeshipsRequest()
             {
-                Apprenticeships = _model.Apprenticeships
-            });
+                AccountLegalEntityId = _hashedLegalEntityId,
+                AccountId = _hashedAccountId
+            };
+            var result = Sut.SelectApprenticeships(request);
+
             var viewResult = await result as ViewResult;
 
             viewResult.Should().NotBeNull();
@@ -106,15 +105,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public async Task Then_the_Declaration_page_is_displayed()
+        public async Task Then_the_ConfirmApprenticeships_page_is_displayed()
         {
-            _model.SelectedApprenticeships.Add(_model.Apprenticeships.Last().Id);
+            var request = new SelectApprenticeshipsRequest
+            {
+                SelectedApprenticeships = new List<string> { _apprenticeData.First().Id }
+            };
 
-            var result = Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId, _model);
+            var result = Sut.SelectApprenticeships(request);
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
-            redirectResult?.ActionName.Should().Be("Declaration");
+            redirectResult?.ActionName.Should().Be("ConfirmApprenticeships");
         }
     }
 }

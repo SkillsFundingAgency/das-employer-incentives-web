@@ -1,0 +1,57 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.ApplicationConfirmationViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Confirm your apprentices</h1>
+
+            <form asp-action="ConfirmApplication" method="post">
+                @Html.AntiForgeryToken()
+
+                <table class="govuk-table govuk-!-margin-bottom-9">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Name of apprentice</th>
+                            <th scope="col" class="govuk-table__header">Course name</th>
+                            <th scope="col" class="govuk-table__header">Payment amount</th>
+                            <th scope="col" class="govuk-table__header"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var apprenticeship in Model.Apprentices)
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">@apprenticeship.DisplayName</th>
+                                <td class="govuk-table__cell">@apprenticeship.CourseName</td>
+                                <td class="govuk-table__cell">@string.Format("{0:C}", @apprenticeship.ExpectedAmount)</td>
+                                <td class="govuk-table__cell">
+                                    <a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-link govuk-link--no-visited-state">
+                                        Change <span class="govuk-visually-hidden">selected apprentices</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Total amount</th>
+                            <td class="govuk-table__cell"></td>
+                            <td class="govuk-table__cell">@string.Format("{0:C}", Model.TotalPaymentAmount)</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Confirm
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+</main>

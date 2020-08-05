@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
-            var config = new ConfigurationBuilder()
+            var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
 #if DEBUG
@@ -36,19 +36,23 @@ namespace SFA.DAS.EmployerIncentives.Web
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
-            }
+                configBuilder.AddAzureTableStorage(options =>
+                        {
+                            options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                            options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                            options.EnvironmentName = configuration["EnvironmentName"];
+                            options.PreFixConfigurationKeys = false;
+                        }
+                    );
 
-            _configuration = configuration;
+                _configuration = configBuilder.Build();
+            }
+            else
+            {
+                _configuration = configuration;
+            }
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -69,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-                        
+
             services.AddMvc(
                     options =>
                     {
@@ -82,12 +86,12 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddHttpsRedirection(options =>
             {
-                options.HttpsPort = _configuration["Environment"] == "LOCAL" ? 5001 : 443;
+                options.HttpsPort = _configuration["EnvironmentName"] == "LOCAL" ? 5001 : 443;
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-            
-            if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
+
+            if (_configuration["EnvironmentName"] == "LOCAL" || _configuration["EnvironmentName"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
             }

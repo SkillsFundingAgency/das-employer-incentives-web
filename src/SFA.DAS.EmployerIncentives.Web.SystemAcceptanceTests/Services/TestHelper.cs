@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using System;
 using System.Linq;
@@ -16,6 +18,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
     public class TestHelper
     {
         private readonly TestContext _testContext;
+
+        public static JsonSerializerSettings DefaultSerialiserSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
         public TestHelper(TestContext testContext)
         {

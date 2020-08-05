@@ -20,9 +20,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("QualificationQuestion")]
+    [NUnit.Framework.DescriptionAttribute("StartApplication")]
     [NUnit.Framework.CategoryAttribute("employerIncentivesApi")]
-    public partial class QualificationQuestionFeature
+    public partial class StartApplicationFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -30,16 +30,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         private string[] _featureTags = new string[] {
                 "employerIncentivesApi"};
         
-#line 1 "QualificationQuestion.feature"
+#line 1 "StartApplication.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "QualificationQuestion", "\tAs an employer applying for the new apprenticeship grant\r\n\tI want to be able to " +
-                    "specify if I have qualifying apprenticeships\r\n\tSo that I am informed if I can ap" +
-                    "ply for the grant", ProgrammingLanguage.CSharp, new string[] {
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "StartApplication", "\tAs an employer applying for the new apprenticeship grant\r\n\tI want to be able to " +
+                    "start an application\r\n\tSo that I can get the apprenticeship grant", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -79,12 +78,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer selects that they have qualifying apprenticeships")]
-        public virtual void AnEmployerSelectsThatTheyHaveQualifyingApprenticeships()
+        [NUnit.Framework.DescriptionAttribute("An employer with a single organisation starts an application")]
+        public virtual void AnEmployerWithASingleOrganisationStartsAnApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer selects that they have qualifying apprenticeships", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a single organisation starts an application", null, tagsOfScenario, argumentsOfScenario);
 #line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -106,25 +105,26 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 8
- testRunner.Given("an employer applying for a grant has qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with a single organisation wants to apply for a grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 9
- testRunner.When("the employer specifies that they have qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 10
- testRunner.Then("the employer is asked to select the apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is informed that they need to specify whether or not they have eligi" +
+                        "ble apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer selects that they do not have qualifying apprenticeships")]
-        public virtual void AnEmployerSelectsThatTheyDoNotHaveQualifyingApprenticeships()
+        [NUnit.Framework.DescriptionAttribute("An employer with a multiple organisations starts an application")]
+        public virtual void AnEmployerWithAMultipleOrganisationsStartsAnApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer selects that they do not have qualifying apprenticeships", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a multiple organisations starts an application", null, tagsOfScenario, argumentsOfScenario);
 #line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -146,25 +146,25 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 13
- testRunner.Given("an employer applying for a grant does not have qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with a multiple organisations wants to apply for a grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 14
- testRunner.When("the employer specifies that they do not have qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 15
- testRunner.Then("the employer is informed that they cannot apply", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is asked to choose the organisation", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer does not select whether or not they have qualifying apprenticeships")]
-        public virtual void AnEmployerDoesNotSelectWhetherOrNotTheyHaveQualifyingApprenticeships()
+        [NUnit.Framework.DescriptionAttribute("An employer without any organisations starts an application")]
+        public virtual void AnEmployerWithoutAnyOrganisationsStartsAnApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer does not select whether or not they have qualifying apprenticeships", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer without any organisations starts an application", null, tagsOfScenario, argumentsOfScenario);
 #line 17
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -186,15 +186,13 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 18
- testRunner.Given("an employer applying for a grant has qualifying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer without any organisations wants to apply for a grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 19
- testRunner.When("the employer does not specify whether or not they have qualifying apprenticeships" +
-                        "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 20
- testRunner.Then("the employer is informed that they need to specify whether or not they have quali" +
-                        "fying apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is informed that they cannot apply", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

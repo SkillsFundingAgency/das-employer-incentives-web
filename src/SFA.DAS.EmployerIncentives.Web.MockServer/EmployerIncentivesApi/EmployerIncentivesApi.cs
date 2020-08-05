@@ -1,16 +1,16 @@
 ﻿using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using WireMock.Logging;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
-using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 {
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(new List<LegalEntityDto>() { data.LegalEntity })));
+                .WithBody(JsonConvert.SerializeObject(new List<LegalEntityDto>() { data.LegalEntity }, TestHelper.DefaultSerialiserSettings)));
 
             _server
               .Given(
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _server
               .Given(
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(data.Apprentices))
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
             return this;
@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 
         public EmployerIncentivesApiBuilder WithMultipleLegalEntities()
         {
-            var data = new TestData.Account.WithMultipleLegalEntities();
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithNoEligibleApprenticeships();
 
             _server
             .Given(
@@ -124,7 +124,72 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
-                .WithBody(JsonConvert.SerializeObject(data.LegalEntities)));
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithMultipleLegalEntityWithEligibleApprenticeships()
+        {
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", data.AccountId.ToString())
+                      .WithParam("accountlegalentityid", data.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithInitialApplication()
+        {
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings))
+                    );
 
             return this;
         }

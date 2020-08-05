@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         {
             return dtos.Select(x => new ApprenticeshipModel
             {
-                Id = hashingService.HashValue(x.Id),
+                Id = hashingService.HashValue(x.ApprenticeshipId),
                 LastName = x.LastName,
                 FirstName = x.FirstName,
                 CourseName = x.CourseName
