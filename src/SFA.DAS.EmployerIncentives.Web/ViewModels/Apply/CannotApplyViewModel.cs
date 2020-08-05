@@ -2,10 +2,15 @@
 {
     public class CannotApplyViewModel : ViewModel
     {
-        public CannotApplyViewModel(string accountId, string commitmentsUrl, string title = "You cannot apply for this grant yet") : base(title)
+        public CannotApplyViewModel(string accountId, string commitmentsBaseUrl, string title = "You cannot apply for this grant yet") : base(title)
         {
             AccountId = accountId;
-            CommitmentsUrl = commitmentsUrl;            
+
+            if (!commitmentsBaseUrl.EndsWith("/"))
+            {
+                commitmentsBaseUrl += "/";
+            }
+            CommitmentsUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/home";
         }
 
         public string AccountId { get; }
