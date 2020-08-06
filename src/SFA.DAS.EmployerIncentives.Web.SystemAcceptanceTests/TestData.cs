@@ -80,6 +80,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
             }
 
+            public class WithoutASignedAgreement
+            {
+                public long AccountId { get; } = 30037;
+                public string HashedAccountId => "VKGKBB";
+                public long AccountLegalEntityId => 30037;
+                public string HashedAccountLegalEntityId => "VKGKBB";
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity };
+                public virtual LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = "Organisation 30037", HasSignedIncentiveTerms = false };
+            }
+
             public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships
             {
                 public Guid ApplicationId = Guid.NewGuid();

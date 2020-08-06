@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -16,10 +17,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly WebConfigurationOptions _configuration;
 
-        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService, WebConfigurationOptions configuration)
+        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService, IOptions<WebConfigurationOptions> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
-            _configuration = configuration;
+            _configuration = configuration.Value;
         }
 
         [HttpGet]

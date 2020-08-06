@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
@@ -26,8 +27,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             _fixture = new Fixture();
             _legalEntityServiceMock = new Mock<ILegalEntitiesService>();
             _webConfigurationOptionsMock = new Mock<WebConfigurationOptions>();
+            var mockOptions = new Mock<IOptions<WebConfigurationOptions>>();
+            mockOptions.Setup(x => x.Value).Returns(_webConfigurationOptionsMock.Object);
 
-            _sut = new ApplyOrganisationController(_legalEntityServiceMock.Object, _webConfigurationOptionsMock.Object);
+            _sut = new ApplyOrganisationController(_legalEntityServiceMock.Object, mockOptions.Object);
         }
 
         [Test]
