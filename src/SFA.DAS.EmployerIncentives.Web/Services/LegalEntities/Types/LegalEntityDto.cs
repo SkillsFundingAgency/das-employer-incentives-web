@@ -5,6 +5,6 @@
         public long AccountId { get; set; }
         public long AccountLegalEntityId { get; set; }
         public string LegalEntityName { get; set; }
-        public bool HasSignedIncentiveTerms { get; set; }
+        public bool HasSignedIncentivesTerms { get; set; }
     }
 }

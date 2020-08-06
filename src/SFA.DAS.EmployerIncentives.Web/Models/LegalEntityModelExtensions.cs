@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 AccountId = hashingService.HashValue(dto.AccountId),
                 AccountLegalEntityId = hashingService.HashValue(dto.AccountLegalEntityId),
                 Name = dto.LegalEntityName,
-                HasSignedIncentiveTerms = dto.HasSignedIncentiveTerms
+                HasSignedIncentiveTerms = dto.HasSignedIncentivesTerms
             };
         }
     }
