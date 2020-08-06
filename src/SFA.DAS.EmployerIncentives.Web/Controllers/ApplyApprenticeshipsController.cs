@@ -1,11 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,13 +38,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("select-new-apprentices/{applicationId}")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
-        {
-            return View("NotImplementedYet");
-        }
-
         [HttpPost]
         [Route("{accountLegalEntityId}/select-new-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form)
@@ -57,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId  });
+                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
@@ -66,6 +54,36 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        [Route("select-new-apprentices/{applicationId}")]
+        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
+        {
+            var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId);
+
+            if (!model.Apprenticeships.Any())
+            {
+                return RedirectToAction("CannotApply", "Apply", new { accountId });
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("select-new-apprentices/{applicationId}")]
+        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form, Guid applicationId)
+        {
+            if (form.HasSelectedApprenticeships)
+            {
+                // TODO add something like
+                // await _applicationService.Update(form.AccountId,applicationId, form.SelectedApprenticeships);
+                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
+            }
+
+            var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId);
+            ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+
+            return View(viewModel);
+        }
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
@@ -83,6 +101,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
+                Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
+            };
+        }
+
+        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId)
+        {
+            var application = await _applicationService.Get(accountId, applicationId);
+            var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
+
+            apprenticeships.ForEach(x=>x.Selected = application.Apprentices.Any(a=>a.ApprenticeshipId == x.Id));
+
+            return new SelectApprenticeshipsViewModel
+            {
+                AccountId = accountId,
                 Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
             };
         }

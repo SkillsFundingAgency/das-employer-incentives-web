@@ -7,5 +7,6 @@
         public string LastName { get; set; }
         public string CourseName { get; set; }
         public string DisplayName => $"{FirstName} {LastName}";
+        public bool Selected { get; set; }
     }
 }
