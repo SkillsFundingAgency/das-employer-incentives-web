@@ -43,6 +43,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Route("select-new-apprentices/{applicationId}")]
+        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
+        {
+            return View("NotImplementedYet");
+        }
+
         [HttpPost]
         [Route("{accountLegalEntityId}/select-new-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form)
@@ -58,6 +65,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return View(viewModel);
         }
+
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
