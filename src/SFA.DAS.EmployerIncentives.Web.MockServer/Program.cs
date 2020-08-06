@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
                 .WithSingleLegalEntityWithEligibleApprenticeships()      
                 .WithMultipleLegalEntities()
+                .WithMultipleLegalEntityWithEligibleApprenticeships()
                 .WithInitialApplication()
                 .Build();
 

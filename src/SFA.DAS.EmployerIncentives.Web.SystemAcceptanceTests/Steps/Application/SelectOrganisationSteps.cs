@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var response = await _testContext.WebsiteClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            _testContext.TestDataStore.GetOrCreate("ApplicationEligibilityResponse", onCreate: () =>
+            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () =>
             {
                 return response;
             });
@@ -109,37 +108,37 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 
-            _testContext.TestDataStore.GetOrCreate("ApplicationEligibilityResponse", onCreate: () =>
+            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () =>
             {
                 return response;
             });
         }
 
-        [Then(@"the employer is asked to select the apprenticeship")]
-        public void ThenTheEmployerIsAskedWoSelectTheApprenticeship()
+        [Then(@"the employer is asked if they have any eligible apprenticeships")]
+        public void ThenTheEmployerIsAskedIfTheyHaveAnyEligibleApprenticeships()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as SelectApprenticeshipsViewModel;
+            var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Select the apprentices you want to apply for");
+            model.Should().HaveTitle("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}/apply/taken-on-new-apprentices");
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-new-apprentices");
+            response.Should().HaveBackLink($"/{hashedAccountId}");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
         }
 
         [Then(@"the employer is informed that a legal entity needs to be selected")]
         public void ThenTheEmployerIsAskedToSelectTheLegalEntityTheGrantIsFor()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
-            var response = _testDataStore.Get<HttpResponseMessage>("ApplicationEligibilityResponse");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();

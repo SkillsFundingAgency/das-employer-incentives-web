@@ -113,7 +113,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         }
 
         [Then(@"the employer is asked to confirm the selected apprentices")]
-        public async Task ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
+        public void ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
