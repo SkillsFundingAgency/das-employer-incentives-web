@@ -3,6 +3,15 @@
     ViewData["Title"] = Model.Title;
 }
 
+<script>
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+        'vpv': '/apply/confirm-apprentices',
+        'EmpAccountID': '@Model.AccountId',
+        'LegalEntityID': '@Model.AccountLegalEntityId'
+    });
+</script>
+
 <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">

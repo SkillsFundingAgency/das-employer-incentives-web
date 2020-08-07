@@ -5,6 +5,15 @@
     ViewData["Title"] = Model.Title;
 }
 
+<script>
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+        'vpv': '/apply/select-new-apprentices',
+        'EmpAccountID': '@Model.AccountId',
+        'LegalEntityID': '@Model.AccountLegalEntityId'
+    });
+</script>
+
 <a asp-action="QualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
