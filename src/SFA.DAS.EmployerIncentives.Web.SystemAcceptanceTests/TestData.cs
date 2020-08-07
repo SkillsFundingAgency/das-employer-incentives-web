@@ -102,6 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         {
                             new IncentiveApplicationApprenticeshipDto
                             {
+                                ApprenticeshipId = 1,
                                 CourseName = "Computing...",
                                 LastName = "Shipman",
                                 FirstName = "Harry",
@@ -109,6 +110,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
+                                ApprenticeshipId = 2,
                                 CourseName = "T&D ...",
                                 LastName = "Leeman",
                                 FirstName = "Thomas",
@@ -116,6 +118,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
+                                ApprenticeshipId = 3,
                                 CourseName = "Water Treatment Technician, Level: 3 (Standard)",
                                 LastName = "Johnson",
                                 FirstName = "Michael",
@@ -123,6 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
+                                ApprenticeshipId = 4, 
                                 CourseName = "Relationship Manager (Banking), Level: 6 (Standard)",
                                 LastName = "Roberts",
                                 FirstName = "Jack",
@@ -130,6 +134,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
+                                ApprenticeshipId = 5,
                                 CourseName = "Non-destructive testing (NDT) operator, Level: 2 (Standard)",
                                 LastName = "Smith",
                                 FirstName = "Steven",

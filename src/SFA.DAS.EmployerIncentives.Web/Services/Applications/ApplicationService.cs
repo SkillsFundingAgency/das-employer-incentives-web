@@ -55,6 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             return new ApplicationConfirmationViewModel.ApplicationApprenticeship
             {
+                ApprenticeshipId = apprentice.ApprenticeshipId,
                 CourseName = apprentice.CourseName,
                 FirstName = apprentice.FirstName,
                 LastName = apprentice.LastName,
