@@ -143,6 +143,70 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         }
                     }
                 };
+
+                public ApplicationResponse GetApplicationResponseWithFirstTwoApprenticesSelected =>
+                    new ApplicationResponse
+                    {
+                        Application = new IncentiveApplicationDto
+                        {
+                            AccountLegalEntityId = AccountLegalEntityId,
+                            Apprenticeships = new IncentiveApplicationApprenticeshipDto[]
+                            {
+                                new IncentiveApplicationApprenticeshipDto
+                                {
+                                    ApprenticeshipId = 1,
+                                    CourseName = "Computing...",
+                                    LastName = "Shipman",
+                                    FirstName = "Harry",
+                                    TotalIncentiveAmount = 2000m
+                                },
+                                new IncentiveApplicationApprenticeshipDto
+                                {
+                                    ApprenticeshipId = 2,
+                                    CourseName = "T&D ...",
+                                    LastName = "Leeman",
+                                    FirstName = "Thomas",
+                                    TotalIncentiveAmount = 1000m
+                                }
+                            }
+                        }
+                    };
+
+                public ApplicationResponse GetApplicationResponseWithFirstTwoApprenticesSelectedAndAnAdditionalApprentice =>
+                    new ApplicationResponse
+                    {
+                        Application = new IncentiveApplicationDto
+                        {
+                            AccountLegalEntityId = AccountLegalEntityId,
+                            Apprenticeships = new IncentiveApplicationApprenticeshipDto[]
+                            {
+                                new IncentiveApplicationApprenticeshipDto
+                                {
+                                    ApprenticeshipId = 1,
+                                    CourseName = "Computing...",
+                                    LastName = "Shipman",
+                                    FirstName = "Harry",
+                                    TotalIncentiveAmount = 2000m
+                                },
+                                new IncentiveApplicationApprenticeshipDto
+                                {
+                                    ApprenticeshipId = 2,
+                                    CourseName = "T&D ...",
+                                    LastName = "Leeman",
+                                    FirstName = "Thomas",
+                                    TotalIncentiveAmount = 1000m
+                                },
+                                new IncentiveApplicationApprenticeshipDto
+                                {
+                                    ApprenticeshipId = 99,
+                                    CourseName = "Additional No longer valid ...",
+                                    LastName = "Nora",
+                                    FirstName = "Moon",
+                                    TotalIncentiveAmount = 1000m
+                                }
+                            }
+                        }
+                    };
             }
         }
     }

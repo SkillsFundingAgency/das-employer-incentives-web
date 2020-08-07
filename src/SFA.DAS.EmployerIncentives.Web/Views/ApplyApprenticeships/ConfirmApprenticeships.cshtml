@@ -6,7 +6,7 @@
     ViewData["Title"] = Model.Title;
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -33,7 +33,7 @@
                                 <td class="govuk-table__cell">@apprenticeship.CourseName</td>
                                 <td class="govuk-table__cell">@(apprenticeship.ExpectedAmount.ToString("C0", culture))</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" class="govuk-link govuk-link--no-visited-state">
+                                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
                                         Change <span class="govuk-visually-hidden">selected apprentices</span>
                                     </a>
                                 </td>
