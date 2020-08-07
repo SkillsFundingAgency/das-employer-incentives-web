@@ -83,6 +83,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
             public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships
             {
                 public Guid ApplicationId = Guid.NewGuid();
+
                 public GetApplicationResponse GetApplicationResponse => new GetApplicationResponse
                 {
                     AccountId = AccountId,
@@ -132,6 +133,68 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         }
                     }
                 };
+
+                public GetApplicationResponse GetApplicationResponseWithFirstTwoApprenticesSelected =>
+                    new GetApplicationResponse
+                    {
+                        AccountId = AccountId,
+                        AccountLegalEntityId = AccountLegalEntityId,
+                        ApplicationId = ApplicationId,
+                        Apprentices = new ApplicationApprenticeshipDto[]
+                        {
+                            new ApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 1,
+                                CourseName = "Computing...",
+                                LastName = "Shipman",
+                                FirstName = "Harry",
+                                ExpectedAmount = 2000m
+                            },
+                            new ApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 2,
+                                CourseName = "T&D ...",
+                                LastName = "Leeman",
+                                FirstName = "Thomas",
+                                ExpectedAmount = 1000m
+                            }
+                        }
+                    };
+
+                public GetApplicationResponse GetApplicationResponseWithFirstTwoApprenticesSelectedAndAnAdditionalApprentice =>
+                    new GetApplicationResponse
+                    {
+                        AccountId = AccountId,
+                        AccountLegalEntityId = AccountLegalEntityId,
+                        ApplicationId = ApplicationId,
+                        Apprentices = new ApplicationApprenticeshipDto[]
+                        {
+                            new ApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 1,
+                                CourseName = "Computing...",
+                                LastName = "Shipman",
+                                FirstName = "Harry",
+                                ExpectedAmount = 2000m
+                            },
+                            new ApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 2,
+                                CourseName = "T&D ...",
+                                LastName = "Leeman",
+                                FirstName = "Thomas",
+                                ExpectedAmount = 1000m
+                            },
+                            new ApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 99,
+                                CourseName = "Additional No longer valid ...",
+                                LastName = "Nora",
+                                FirstName = "Moon",
+                                ExpectedAmount = 1000m
+                            }
+                        }
+                    };
             }
         }        
     }

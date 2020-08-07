@@ -27,23 +27,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private readonly IHashingService _hashingService;
         private HttpResponseMessage _continueNavigationResponse;
         private List<ApprenticeDto> _apprenticeshipData;
+        private TestData.Account.WithInitialApplicationForASingleEntity _data;
 
         public ApprenticeSelectionSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testData = _testContext.TestDataStore;
             _hashingService = _testContext.HashingService;
+            _data = new TestData.Account.WithInitialApplicationForASingleEntity();
+
         }
 
         [Given(@"an employer applying for a grant has apprentices matching the eligibility requirement")]
         public void GivenAnEmployerApplyingForAGrantHasApprenticesMatchingTheEligibilityRequirement()
         {
-            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _apprenticeshipData = data.Apprentices;
+            _apprenticeshipData = _data.Apprentices;
 
-            var accountId = _testData.GetOrCreate("AccountId", onCreate: () => data.AccountId);
+            var accountId = _testData.GetOrCreate("AccountId", onCreate: () => _data.AccountId);
             _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
-            var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => data.AccountLegalEntityId);
+            var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => _data.AccountLegalEntityId);
             _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -82,7 +84,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonConvert.SerializeObject(_data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
         }
 
@@ -123,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
-            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices");
+            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/select-new-apprentices/{_data.ApplicationId}");
             model.Should().HaveTitle("Confirm your apprentices");
         }
 
