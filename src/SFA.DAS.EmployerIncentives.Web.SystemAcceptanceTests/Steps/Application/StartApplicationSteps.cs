@@ -179,6 +179,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle("You cannot apply for this grant yet");
             model.AccountId.Should().Be(hashedAccountId);
+            model.CommitmentsUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/home");
 
             response.Should().HaveTitle(model.Title);            
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");

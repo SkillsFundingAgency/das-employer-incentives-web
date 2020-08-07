@@ -10,11 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using SFA.DAS.EmployerIncentives.Web.Controllers;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
-    public class WhenSelectingApprentices : ApplyControllerTestBase
+    public class WhenSelectingApprentices
     {
         private Guid _applicationId;
         private string _hashedAccountId;
@@ -22,25 +24,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         private IActionResult _result;
         private IEnumerable<ApprenticeshipModel> _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
+        private Mock<IApprenticesService> _apprenticesServiceMock;
+        private Mock<IApplicationService> _applicationServiceMock;
+        private ApplyApprenticeshipsController _sut;
 
         [SetUp]
         public async Task Arrange()
         {
             _applicationId = Guid.NewGuid();
-            _apprenticeData = Fixture.CreateMany<ApprenticeshipModel>();
+            _apprenticeData = new Fixture().CreateMany<ApprenticeshipModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
 
-            ApprenticesServiceMock
+            _apprenticesServiceMock = new Mock<IApprenticesService>();
+            _apprenticesServiceMock
                 .Setup(x => x.Get(It.Is<ApprenticesQuery>(q =>
                     q.AccountId == _hashedAccountId && q.AccountLegalEntityId == _hashedLegalEntityId)))
                 .ReturnsAsync(_apprenticeData);
 
-            ApplicationServiceMock
+            _applicationServiceMock = new Mock<IApplicationService>();
+            _applicationServiceMock
                 .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(_applicationId);
 
-            _result = await Sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
+            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object);
+
+            _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
         }
 
@@ -93,13 +102,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 AccountLegalEntityId = _hashedLegalEntityId,
                 AccountId = _hashedAccountId
             };
-            var result = Sut.SelectApprenticeships(request);
+            var result = _sut.SelectApprenticeships(request);
 
             var viewResult = await result as ViewResult;
 
             viewResult.Should().NotBeNull();
-            Sut.ViewData.ModelState.IsValid.Should().BeFalse();
-            Sut.ViewData.ModelState.Single(x => x.Key == _model.FirstCheckboxId).Value.Errors
+            _sut.ViewData.ModelState.IsValid.Should().BeFalse();
+            _sut.ViewData.ModelState.Single(x => x.Key == _model.FirstCheckboxId).Value.Errors
                 .Should().Contain(x => x.ErrorMessage == SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             viewResult?.ViewName.Should().BeNullOrEmpty();
         }
@@ -112,7 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 SelectedApprenticeships = new List<string> { _apprenticeData.First().Id }
             };
 
-            var result = Sut.SelectApprenticeships(request);
+            var result = _sut.SelectApprenticeships(request);
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
