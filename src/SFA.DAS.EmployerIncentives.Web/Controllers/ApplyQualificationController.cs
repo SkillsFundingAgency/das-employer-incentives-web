@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (viewModel.HasTakenOnNewApprentices.Value)
             {
-                return RedirectToAction("SelectApprenticeships", "ApplyApprenticeships", new { viewModel.AccountId, viewModel.AccountLegalEntityId });
+                return RedirectToAction("ValidateTermsSigned", "ApplyOrganisation", new { viewModel.AccountId, viewModel.AccountLegalEntityId });
             }
 
             return RedirectToAction("CannotApply", "Apply", new { viewModel.AccountId });

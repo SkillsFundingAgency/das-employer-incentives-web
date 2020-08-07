@@ -82,7 +82,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(data.GetApplicationResponse, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
         }
 

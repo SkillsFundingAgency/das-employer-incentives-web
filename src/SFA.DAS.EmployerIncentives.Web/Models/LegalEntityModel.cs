@@ -5,5 +5,6 @@
         public string AccountId { get; set; }
         public string AccountLegalEntityId { get; set; }
         public string Name { get; set; }
+        public bool HasSignedIncentiveTerms { get; set; }
     }
 }

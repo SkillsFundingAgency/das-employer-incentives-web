@@ -6,6 +6,7 @@
 
         public virtual string RedisCacheConnectionString { get; set; }
         public virtual string CommitmentsBaseUrl { get; set; }
+        public virtual string AccountsBaseUrl { get; set; }
         public virtual string AllowedHashstringCharacters { get; set; }
         public virtual string Hashstring { get; set; }
     }
