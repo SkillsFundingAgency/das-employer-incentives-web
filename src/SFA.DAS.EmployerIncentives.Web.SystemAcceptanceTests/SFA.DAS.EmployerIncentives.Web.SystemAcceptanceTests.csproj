@@ -35,6 +35,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\Application\ReadyToEnterBankDetails.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ReadyToEnterBankDetails.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Application\Eligibility.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Eligibility.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Features\Application\Eligibility.feature" />
     <Folder Include="Drivers\" />
     <Folder Include="Hooks\" />
   </ItemGroup>
@@ -56,6 +70,11 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>TermsAgreed.feature.cs</LastGenOutput>
     </SpecFlowFeatureFiles>
+
+    <Compile Update="Features\Application\ReadyToEnterBankDetails.feature.cs">
+      <DependentUpon>ReadyToEnterBankDetails.feature</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
   </ItemGroup>
 
 </Project>
