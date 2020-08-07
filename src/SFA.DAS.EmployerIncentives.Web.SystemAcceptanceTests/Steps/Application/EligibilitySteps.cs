@@ -49,6 +49,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testdata.AccountId}/legalentities/{testdata.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
              .Given(
                      Request
                      .Create()
@@ -83,6 +95,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testdata.AccountId}/legalentities/{testdata.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
              .Given(
                      Request
                      .Create()
@@ -114,6 +138,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
                 .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testdata.AccountId}/legalentities/{testdata.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
