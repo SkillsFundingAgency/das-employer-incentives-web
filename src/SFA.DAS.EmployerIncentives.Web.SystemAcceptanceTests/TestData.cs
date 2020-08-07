@@ -126,7 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
-                                ApprenticeshipId = 4,
+                                ApprenticeshipId = 4, 
                                 CourseName = "Relationship Manager (Banking), Level: 6 (Standard)",
                                 LastName = "Roberts",
                                 FirstName = "Jack",

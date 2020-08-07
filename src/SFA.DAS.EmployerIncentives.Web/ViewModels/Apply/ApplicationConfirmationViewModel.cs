@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public class ApplicationApprenticeship
         {
-            public string ApprenticeshipId { get; set; }
+            public long ApprenticeshipId { get; set; }
             public string DisplayName => $"{FirstName} {LastName}";
             public string FirstName { get; set; }
             public string LastName { get; set; }
