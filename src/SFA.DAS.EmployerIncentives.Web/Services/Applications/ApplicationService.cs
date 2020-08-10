@@ -40,9 +40,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var data = await JsonSerializer.DeserializeAsync<ApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return MapFromGetApplicationResponse(data);
+            return MapFromGetApplicationResponse(data.Application, accountId, applicationId);
         }
 
         public async Task Confirm(string accountId, Guid applicationId)
@@ -55,14 +55,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             response.EnsureSuccessStatusCode();
         }
 
-        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(GetApplicationResponse application)
+        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
-            return new ApplicationConfirmationViewModel(application.ApplicationId, _hashingService.HashValue(application.AccountId),
+            return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
-                application.Apprentices.Select(MapFromApplicationApprenticeDto));
+                application.Apprenticeships.Select(MapFromApplicationApprenticeDto));
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipDto apprentice)
+        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
         {
             return new ApplicationConfirmationViewModel.ApplicationApprenticeship
             {
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 CourseName = apprentice.CourseName,
                 FirstName = apprentice.FirstName,
                 LastName = apprentice.LastName,
-                ExpectedAmount = apprentice.ExpectedAmount
+                ExpectedAmount = apprentice.TotalIncentiveAmount
             };
         }
 
@@ -80,7 +80,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 _hashingService.DecodeValue(accountLegalEntityId),
                 apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
         }
-
         private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string user)
         {
             return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), user);

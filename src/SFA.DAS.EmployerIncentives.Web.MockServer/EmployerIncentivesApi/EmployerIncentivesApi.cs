@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using WireMock.Logging;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -305,12 +305,12 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{data.AccountId}/confirm-application/*")
-                        .UsingPost()
+                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .UsingPatch()
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithStatusCode(HttpStatusCode.Created));
+                        .WithStatusCode(HttpStatusCode.OK));
 
             return this;
         }
