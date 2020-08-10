@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         }
 
         private EmployerIncentivesApiBuilder(int port)
-        { 
+        {
             _server = WireMockServer.StartWithAdminInterface(port);
         }
 
@@ -297,6 +297,24 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+        public EmployerIncentivesApiBuilder WithApplicationConfirmation()
+        {
+            var data = new TestData.Account.WithInitialApplicationForASingleEntity();
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/confirm-application/*")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            return this;
+        }
+
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
@@ -321,14 +339,14 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         private readonly WireMockServer _server;
         public EmployerIncentivesApi(WireMockServer server)
         {
-            _server = server; 
+            _server = server;
         }
 
         public void Dispose()
         {
-            if(_server.IsStarted)
+            if (_server.IsStarted)
             {
-                _server.Stop();                
+                _server.Stop();
             }
         }
     }

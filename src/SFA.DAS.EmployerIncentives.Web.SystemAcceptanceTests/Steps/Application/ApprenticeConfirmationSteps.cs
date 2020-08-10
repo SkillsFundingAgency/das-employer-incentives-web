@@ -1,7 +1,8 @@
 using FluentAssertions;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -41,7 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(JsonConvert.SerializeObject(_testData.ApplicationResponse, TestHelper.DefaultSerialiserSettings)));
         }
-        
+
         [When(@"the employer arrives on the confirm apprentices page")]
         public async Task WhenTheEmployerArrivesOnTheConfirmApprenticesPage()
         {
@@ -77,5 +78,29 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             apprentice.CourseName.Should().Be(apiApprentice.CourseName);
             apprentice.ExpectedAmount.Should().Be(apiApprentice.TotalIncentiveAmount);
         }
+        }
+
+        [When(@"the employer confirms their selection")]
+        public async Task WhenTheEmployerConfirmsTheirSelection()
+        {
+            var url = $"{_testData.HashedAccountId}/apply/confirm-apprentices/{_testData.ApplicationId}/";
+            var formData = new KeyValuePair<string, string>();
+            _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, formData);
+            _continueNavigationResponse.EnsureSuccessStatusCode();
+        }
+
+        [Then(@"the employer is asked to read and accept a declaration")]
+        public void ThenTheEmployerIsAskedToReadAndAcceptADeclaration()
+        {
+            _continueNavigationResponse.Should().HavePathAndQuery($"/{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as DeclarationViewModel;
+            model.Should().NotBeNull();
+            model.Title.Should().Be("Declaration");
+            model.ApplicationId.Should().Be(_testData.ApplicationId);
+            model.AccountId.Should().Be(_testData.HashedAccountId);
     }
 }

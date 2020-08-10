@@ -51,9 +51,6 @@
     <Content Include="Features\Application\Eligibility.feature" />
     <Folder Include="Drivers\" />
     <Folder Include="Hooks\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj" />
   </ItemGroup>
 

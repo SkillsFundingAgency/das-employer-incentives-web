@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.HashingService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
@@ -39,19 +40,29 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<ApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            
-            return MapFromGetApplicationResponse(data.Application, accountId, applicationId);
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return MapFromGetApplicationResponse(data);
         }
 
-        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
+        public async Task Confirm(string accountId, Guid applicationId)
         {
-            return new ApplicationConfirmationViewModel(applicationId, accountId,
-                _hashingService.HashValue(application.AccountLegalEntityId),
-                application.Apprenticeships.Select(MapFromApplicationApprenticeDto));
+            const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
+
+            using var response = await _client.PatchAsJsonAsync($"/accounts/{request.AccountId}/applications/{applicationId}", request);
+
+            response.EnsureSuccessStatusCode();
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
+        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(GetApplicationResponse application)
+        {
+            return new ApplicationConfirmationViewModel(application.ApplicationId, _hashingService.HashValue(application.AccountId),
+                _hashingService.HashValue(application.AccountLegalEntityId),
+                application.Apprentices.Select(MapFromApplicationApprenticeDto));
+        }
+
+        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipDto apprentice)
         {
             return new ApplicationConfirmationViewModel.ApplicationApprenticeship
             {
@@ -59,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 CourseName = apprentice.CourseName,
                 FirstName = apprentice.FirstName,
                 LastName = apprentice.LastName,
-                ExpectedAmount = apprentice.TotalIncentiveAmount
+                ExpectedAmount = apprentice.ExpectedAmount
             };
         }
 
@@ -68,6 +79,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return new CreateApplicationRequest(applicationId, _hashingService.DecodeValue(accountId),
                 _hashingService.DecodeValue(accountLegalEntityId),
                 apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
+        }
+
+        private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string user)
+        {
+            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), user);
         }
     }
 }
