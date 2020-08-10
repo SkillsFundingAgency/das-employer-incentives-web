@@ -1,0 +1,34 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete.ConfirmationViewModel
+@{
+    ViewData["Title"] = "Application complete";
+}
+
+<main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-8">
+                <h1 class="govuk-panel__title">Application complete</h1>
+            </div>
+
+            <h2 class="govuk-heading-m">What happens next</h2>
+            <p class="govuk-body">You'll receive the first payment after the apprentice completes 90 days of their apprenticeship and the second payment after 365 days.</p>
+            <p class="govuk-body">We make payments on the 10th working day of each month, using the bank details in your organisation. You do not need to do anything else.</p>
+
+            <h2 class="govuk-heading-m">Changes to your payment</h2>
+            <p class="govuk-body">Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.</p>
+            <p class="govuk-body">We cannot make your payment if:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>an apprentice is on a break in learning</li>
+                <li>an apprentice's contract of employment ends before they complete 90 or 365 days of their apprenticeship</li>
+                <li>the training provider does not confirm that the apprentice has started their apprenticeship</li>
+                <li>the apprentice started their contract of employment before 1 August 2020</li>
+            </ul>
+
+            <a href="@Model.AccountsUrl" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                Return to account home
+            </a>
+
+            <p class="govuk-body"><a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)</p>
+        </div>
+    </div>
+</main>

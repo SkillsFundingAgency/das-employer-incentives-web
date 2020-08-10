@@ -61,6 +61,10 @@
                                            id="new-apprenticeships-@apprenticeship.Id"
                                            name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
                                            type="checkbox"
+                                           @if(apprenticeship.Selected)
+                                           {
+                                               @Html.Raw("checked")
+                                           } 
                                            value="@apprenticeship.Id"
                                            aria-describedby="new-apprenticeships-item-hint" />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
@@ -75,7 +79,7 @@
                     </fieldset>
                 </div>
 
-                <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Continue
                 </button>
 

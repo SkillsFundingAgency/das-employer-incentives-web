@@ -20,27 +20,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("ApprenticeConfirmation")]
-    [NUnit.Framework.CategoryAttribute("employerIncentivesApi")]
-    public partial class ApprenticeConfirmationFeature
+    [NUnit.Framework.DescriptionAttribute("CompleteApplication")]
+    public partial class CompleteApplicationFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-        private string[] _featureTags = new string[] {
-                "employerIncentivesApi"};
+        private string[] _featureTags = ((string[])(null));
         
-#line 1 "ApprenticeConfirmation.feature"
+#line 1 "CompleteApplication.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ApprenticeConfirmation", "\tAs an employer applying for the new apprentice grant\n\tIf I have selected 2 eligi" +
-                    "ble apprenticeships\n\tI want to be able to confirm the apprentices and expected a" +
-                    "mounts", ProgrammingLanguage.CSharp, new string[] {
-                        "employerIncentivesApi"});
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "CompleteApplication", "As an employer applying for the new apprenticeship grant\r\n\tI want to receive conf" +
+                    "irmation that the application has completed\r\n\tSo that I can complete the applica" +
+                    "tion journey", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -79,13 +76,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer is confirming selected apprenticeships")]
-        public virtual void AnEmployerIsConfirmingSelectedApprenticeships()
+        [NUnit.Framework.DescriptionAttribute("An employer performs the entry of their bank details and completes the applicatio" +
+            "n")]
+        public virtual void AnEmployerPerformsTheEntryOfTheirBankDetailsAndCompletesTheApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is confirming selected apprenticeships", null, tagsOfScenario, argumentsOfScenario);
-#line 7
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer performs the entry of their bank details and completes the applicatio" +
+                    "n", null, tagsOfScenario, argumentsOfScenario);
+#line 6
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -105,14 +104,15 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
+#line 7
+ testRunner.Given("the employer has entered all the information required to process their bank detai" +
+                        "ls", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
 #line 8
- testRunner.Given("an employer applying for a grant has already selected 2 eligible apprentices", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.When("the employer is shown the confirmation page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 9
- testRunner.When("the employer arrives on the confirm apprentices page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 10
- testRunner.Then("the employer is asked to confirm the apprentices and expected amounts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer has the option to return to their accounts page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

@@ -9,12 +9,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
     {
         public static IEnumerable<LegalEntityModel> ToLegalEntityModel(this IEnumerable<LegalEntityDto> dtos, IHashingService hashingService)
         {
-            return dtos.Select(x => new LegalEntityModel
+            return dtos.Select(x => x.ToLegalEntityModel(hashingService));
+        }
+
+        public static LegalEntityModel ToLegalEntityModel(this LegalEntityDto dto, IHashingService hashingService)
+        {
+            return new LegalEntityModel
             {
-                AccountId = hashingService.HashValue(x.AccountId),
-                AccountLegalEntityId = hashingService.HashValue(x.AccountLegalEntityId),
-                Name = x.LegalEntityName
-            });
+                AccountId = hashingService.HashValue(dto.AccountId),
+                AccountLegalEntityId = hashingService.HashValue(dto.AccountLegalEntityId),
+                Name = dto.LegalEntityName,
+                HasSignedIncentiveTerms = dto.HasSignedIncentivesTerms
+            };
         }
     }
 }

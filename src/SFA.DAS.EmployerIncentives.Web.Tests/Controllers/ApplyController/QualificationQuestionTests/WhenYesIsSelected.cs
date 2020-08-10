@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
         }
 
         [Test]
-        public async Task Then_The_Choose_Organisation_Page_Is_Displayed_When_Eligible_Apprenticeships_Exist()
+        public async Task Then_The_Agreement_Is_Checked_When_Eligible_Apprenticeships_Exist()
         {
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = true };
@@ -27,7 +27,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
             var result = await _sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
-            redirectResult.ActionName.Should().Be("SelectApprenticeships");
+            redirectResult.ActionName.Should().Be("ValidateTermsSigned");
+            redirectResult.ControllerName.Should().Be("ApplyOrganisation");
         }
     }
 }
