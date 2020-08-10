@@ -9,5 +9,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     {
         Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds);
         Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId);
-    }    
+        Task Update(Guid applicationId, string accountId, IEnumerable<string> apprenticeshipIds);
+    }
 }

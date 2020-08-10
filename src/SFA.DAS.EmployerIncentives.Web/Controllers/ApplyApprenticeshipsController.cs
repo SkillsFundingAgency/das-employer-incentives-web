@@ -74,12 +74,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (form.HasSelectedApprenticeships)
             {
-                // TODO add something like
-                // await _applicationService.Update(form.AccountId,applicationId, form.SelectedApprenticeships);
+                await _applicationService.Update(applicationId, form.AccountId, form.SelectedApprenticeships);
                 return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
             }
 
-            var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId);
+            var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, false);
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
             return View(viewModel);
@@ -105,12 +104,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             };
         }
 
-        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId)
+        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, bool showSelected = true)
         {
             var application = await _applicationService.Get(accountId, applicationId);
             var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
 
-            apprenticeships.ForEach(x=>x.Selected = application.Apprentices.Any(a=>a.ApprenticeshipId == x.Id));
+            if (showSelected)
+            {
+                apprenticeships.ForEach(x => x.Selected = application.Apprentices.Any(a => a.ApprenticeshipId == x.Id));
+            }
 
             return new SelectApprenticeshipsViewModel
             {
