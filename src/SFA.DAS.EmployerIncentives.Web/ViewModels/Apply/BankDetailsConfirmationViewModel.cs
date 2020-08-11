@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
     public class BankDetailsConfirmationViewModel : ViewModel
@@ -9,8 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         {
         }
 
-        public string AccountId { get; set; }
-        public string AccountLegalEntityId { get; set; }
+        public Guid ApplicationId { get; set; }
         public bool? CanProvideBankDetails { get; set; }
     }
 }

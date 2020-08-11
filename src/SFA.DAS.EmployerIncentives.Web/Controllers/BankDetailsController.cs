@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/bankdetails")]
+    [Route("{applicationId}/bankdetails")]
     public class BankDetailsController : Controller
     {
         [HttpGet]
-        [Route("{accountLegalEntityId}/need-bank-details")]
-        public ViewResult BankDetailsConfirmation(string accountId, string accountLegalEntityId)
+        [Route("need-bank-details")]
+        public ViewResult BankDetailsConfirmation(Guid applicationId)
         {
-            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, AccountLegalEntityId = accountLegalEntityId });
+            return View(new BankDetailsConfirmationViewModel { ApplicationId = applicationId });
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/need-bank-details")]
+        [Route("need-bank-details")]
         public IActionResult BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
@@ -34,23 +35,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/add-bank-details")]
-        public ViewResult AddBankDetails()
+        [Route("add-bank-details")]
+        public ViewResult AddBankDetails(Guid applicationId)
         {
             return View();
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/enter-bank-details")]
-        public ViewResult EnterBankDetails()
+        [Route("enter-bank-details")]
+        public ViewResult EnterBankDetails(Guid applicationId)
         {
             // Once integration mechanism is finalised, redirect / post to external site
             return View();
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/complete/need-bank-details")]
-        public ViewResult NeedBankDetails()
+        [Route("complete/need-bank-details")]
+        public ViewResult NeedBankDetails(Guid applicationId)
         {
             return View();
         }
