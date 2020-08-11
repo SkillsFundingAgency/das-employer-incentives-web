@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     [Binding]
     public class ApplicationConfirmationSteps : StepsBase
     {
+        private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
         private readonly TestData.Account.WithInitialApplicationForASingleEntity _testData;
@@ -46,7 +48,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.Created));
-
         }
 
         [When(@"the employer understands and confirms the declaration")]
@@ -55,15 +56,23 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var url = $"{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}/";
             var formData = new KeyValuePair<string, string>();
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, formData);
+        }
+
+        [Then(@"the employer application declaration is accepted")]
+        public void ThenTheApprenticeshipApplicationIsSubmittedAndSaved()
+        {
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
-        [Then(@"then the employer application declaration is accepted")]
-        public void ThenTheApprentishipApplicationIsSubmittedAndSaved()
+        [Then(@"the employer is asked to enter bank details")]
+        public void ThenTheEmployerIsAskedToEnterBankDetails()
         {
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{_testData.HashedAccountId}/apply/bank-details");
-            var viewResult = _testContext.ActionResult.LastViewResult;
+            var expectedUrl = $"/{_testData.HashedAccountId}/bankdetails/{_testData.ApplicationId}{ReadyToEnterBankDetailsUrl}";
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(expectedUrl);
+            var viewResult = _testContext.ActionResult.LastViewResult.Model as BankDetailsConfirmationViewModel;
             viewResult.Should().NotBeNull();
+            viewResult.AccountId.Should().Be(_testData.HashedAccountId);
+            viewResult.ApplicationId.Should().Be(_testData.ApplicationId);
         }
 
     }

@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             await _applicationService.Confirm(accountId, applicationId);
 
-            return RedirectToAction("BankDetails", new { });
+            return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }
 
         [HttpGet]
@@ -55,13 +55,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
             }
             return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
-        }
-
-        [HttpGet]
-        [Route("bank-details")]
-        public async Task<ViewResult> BankDetails() // TODO
-        {
-            return View();
         }
     }
 }

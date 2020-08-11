@@ -7,4 +7,5 @@ Feature: ApplicationConfirmation
 Scenario: An employer is viewing and accepting declaration
 	Given an employer applying for a grant is asked to agree a declaration
 	When the employer understands and confirms the declaration
-	Then then the employer application declaration is accepted
+	Then the employer application declaration is accepted
+	And the employer is asked to enter bank details
