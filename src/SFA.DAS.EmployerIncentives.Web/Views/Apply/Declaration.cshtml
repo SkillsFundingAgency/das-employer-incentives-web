@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/declaration";
 }
 
 <a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
