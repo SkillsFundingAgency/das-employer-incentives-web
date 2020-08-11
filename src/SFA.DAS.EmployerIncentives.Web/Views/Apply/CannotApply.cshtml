@@ -2,15 +2,8 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/cannot-apply";
 }
-
-<script>
-    window.dataLayer = window.dataLayer || [];
-    dataLayer.push({
-        'vpv': '/apply/cannot-apply',
-        'EmpAccountID': '@Model.AccountId'
-    });
-</script>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">

@@ -1,18 +1,11 @@
 ﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 @using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 @model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
+
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/select-new-apprentices";
 }
-
-<script>
-    window.dataLayer = window.dataLayer || [];
-    dataLayer.push({
-        'vpv': '/apply/select-new-apprentices',
-        'EmpAccountID': '@Model.AccountId',
-        'LegalEntityID': '@Model.AccountLegalEntityId'
-    });
-</script>
 
 <a asp-action="QualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
 
