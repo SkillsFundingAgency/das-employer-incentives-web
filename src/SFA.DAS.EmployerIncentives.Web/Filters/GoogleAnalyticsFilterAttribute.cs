@@ -23,18 +23,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
         private GoogleAnalyticsData PopulateForEmployer(ActionExecutingContext context)
         {
             string hashedAccountId = null;
+            string hashedAccountLegalEntityId = null;
 
             var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaims.IdamsUserIdClaimTypeIdentifier))?.Value;
 
-            if (context.RouteData.Values.TryGetValue("accountId", out var employerAccountId))
+            if (context.RouteData.Values.TryGetValue("accountId", out var accountId))
             {
-                hashedAccountId = employerAccountId.ToString();
+                hashedAccountId = accountId.ToString();
+            }
+
+            if (context.RouteData.Values.TryGetValue("accountLegalEntityId", out var accountLegalEntityId))
+            {
+                hashedAccountLegalEntityId = accountLegalEntityId.ToString();
             }
 
             return new GoogleAnalyticsData
             {
                 UserId = userId,
-                Acc = hashedAccountId
+                Acc = hashedAccountId,
+                Ale = hashedAccountLegalEntityId
             };
         }
 

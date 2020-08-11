@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.Models
 {
@@ -10,6 +7,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string DataLoaded { get; set; } = "dataLoaded";
         public string UserId { get; set; }
         public string Acc { get; set; }
+        public string Ale { get; set; }
         public IDictionary<string, string> Extras { get; set; } = new Dictionary<string, string>();
     }
 }
