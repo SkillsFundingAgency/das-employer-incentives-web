@@ -4,14 +4,14 @@ using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{applicationId}/bankdetails")]
+    [Route("{accountId}/bankdetails/{applicationId}")]
     public class BankDetailsController : Controller
     {
         [HttpGet]
         [Route("need-bank-details")]
-        public ViewResult BankDetailsConfirmation(Guid applicationId)
+        public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
         {
-            return View(new BankDetailsConfirmationViewModel { ApplicationId = applicationId });
+            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
         }
 
         [HttpPost]

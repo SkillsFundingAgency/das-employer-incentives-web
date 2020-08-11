@@ -37,7 +37,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerHasConfirmedTheirApprenticeshipDetails()
         {
             var applicationId = Guid.NewGuid();
-            var url = $"{applicationId}/bankdetails{ReadyToEnterBankDetailsUrl}";
+            var accountId = _fixture.Create<long>();
+            var hashedAccountId = _hashingService.HashValue(accountId);
+
+            var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -56,7 +59,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerConfirmsTheyCanProvideTheirBankDetails()
         {
             var applicationId = Guid.NewGuid();
-            var url = $"{applicationId}/bankdetails{ReadyToEnterBankDetailsUrl}";
+            var accountId = _fixture.Create<long>();
+            var hashedAccountId = _hashingService.HashValue(accountId);
+
+            var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
             var request = new HttpRequestMessage(
              HttpMethod.Post, url)
@@ -81,7 +87,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerStatesThatTheyAreUnableToProvideBankDetailsNow()
         {
             var applicationId = Guid.NewGuid();
-            var url = $"{applicationId}/bankdetails{ReadyToEnterBankDetailsUrl}";
+            var accountId = _fixture.Create<long>();
+            var hashedAccountId = _hashingService.HashValue(accountId);
+
+            var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
             var request = new HttpRequestMessage(
                HttpMethod.Post, url)
@@ -106,7 +115,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerDoesNotConfirmWhetherTheyCanProvideBankDetailsNow()
         {
             var applicationId = Guid.NewGuid();
-            var url = $"{applicationId}/bankdetails{ReadyToEnterBankDetailsUrl}";
+            var accountId = _fixture.Create<long>();
+            var hashedAccountId = _hashingService.HashValue(accountId);
+
+            var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
             var request = new HttpRequestMessage(
                HttpMethod.Post, url)
