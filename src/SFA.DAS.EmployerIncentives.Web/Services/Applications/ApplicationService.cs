@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
-                application.Apprenticeships.Select(MapFromApplicationApprenticeDto));
+                application.Apprenticeships.OrderBy(x=>x.LastName).Select(MapFromApplicationApprenticeDto));
         }
 
         private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
