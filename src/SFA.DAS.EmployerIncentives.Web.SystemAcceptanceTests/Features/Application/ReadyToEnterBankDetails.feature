@@ -17,6 +17,7 @@ Scenario: An employer confirms they can provide their bank details
 Scenario: An employer cannot provide their bank details now
 	When the employer states that they are unable to provide bank details now
 	Then the employer is requested to enter their bank details at a later date
+	And the employer is sent an email reminding them to supply their bank details to complete the application
 
 Scenario: An employer does not confirm whether they can provide bank details
 	When the employer does not confirm whether they can provide bank details now

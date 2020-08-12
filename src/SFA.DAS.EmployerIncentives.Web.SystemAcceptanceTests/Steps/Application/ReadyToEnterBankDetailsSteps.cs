@@ -6,9 +6,12 @@ using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -88,6 +91,35 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                       .UsingGet()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.OK)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(accountLegalEntityId.ToString()));
+
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/email/bank-details-required")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.OK)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(string.Empty));
+
+
             var hashedAccountId = _hashingService.HashValue(accountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
@@ -150,6 +182,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.ViewData.ModelState.ContainsKey(nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)).Should().BeTrue();
             viewResult.ViewData.ModelState[nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)]
                 .Errors.First().ErrorMessage.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+        }
+
+        [Then(@"the employer is sent an email reminding them to supply their bank details to complete the application")]
+        public void ThenTheEmployerIsSentAnEmailRemindingThemToSupplyTheirBankDetailsToCompleteTheApplication()
+        {
+            var emailRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries(Request.Create().WithPath($"/email/bank-details-required").UsingPost());
+            emailRequests.ToList().Count().Should().Be(1);
         }
 
     }
