@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                        .WithPath($"/accounts/{_testData.AccountId}/applications")
                         .UsingPatch()
                 )
                 .RespondWith(
