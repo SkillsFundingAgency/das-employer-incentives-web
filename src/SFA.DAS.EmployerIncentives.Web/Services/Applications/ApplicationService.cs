@@ -50,7 +50,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
             var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
 
-            using var response = await _client.PatchAsJsonAsync($"/accounts/{request.AccountId}/applications/{applicationId}", request);
+            // TODO: change when APIM is re-deployed
+            // using var response = await _client.PatchAsJsonAsync($"/accounts/{request.AccountId}/applications/{applicationId}", request);
+            using var response = await _client.PatchAsJsonAsync("applications", request);
 
             response.EnsureSuccessStatusCode();
         }
