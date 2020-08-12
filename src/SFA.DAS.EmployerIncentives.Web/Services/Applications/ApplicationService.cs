@@ -55,6 +55,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId)
+        {
+            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}/accountlegalentity", HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var accountLegalEntityId = await JsonSerializer.DeserializeAsync<long>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return accountLegalEntityId;
+        }
+ 
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,

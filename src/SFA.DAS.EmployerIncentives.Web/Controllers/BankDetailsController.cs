@@ -1,12 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.Email;
+using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.HashingService;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/bankdetails/{applicationId}")]
     public class BankDetailsController : Controller
     {
+        private readonly IEmailService _emailService;
+        private readonly IApplicationService _applicationService;
+        private readonly IHashingService _hashingService;
+
+        public BankDetailsController(IEmailService emailService, IApplicationService applicationService, IHashingService hashingService)
+        {
+            _emailService = emailService;
+            _applicationService = applicationService;
+            _hashingService = hashingService;
+        }
+
         [HttpGet]
         [Route("need-bank-details")]
         public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
@@ -16,7 +34,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("need-bank-details")]
-        public IActionResult BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
+        public async Task<IActionResult> BankDetailsConfirmation(BankDetailsConfirmationViewModel viewModel)
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
             {
@@ -31,6 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             // redirect to need bank details page
+            await SendBankDetailsRequiredEmail(viewModel.AccountId, viewModel.ApplicationId);
             return RedirectToAction("NeedBankDetails");
         }
 
@@ -54,6 +73,31 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public ViewResult NeedBankDetails(Guid applicationId)
         {
             return View();
+        }
+
+        private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)
+        {
+            var bankDetailsUrl = CreateAddBankDetailsUrl(accountId, applicationId);
+
+            var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
+
+            var sendEmailRequest = new SendBankDetailsRequiredEmailRequest
+            {
+                AccountId = _hashingService.DecodeValue(accountId),
+                AccountLegalEntityId = accountLegalEntityId,
+                EmailAddress = "test@test.com",            // EI-191 - retrieve email address from the claims associated with logged in user
+                AddBankDetailsUrl = bankDetailsUrl
+            };
+
+            await _emailService.SendBankDetailsRequiredEmail(sendEmailRequest);
+        }
+
+        private string CreateAddBankDetailsUrl(string accountId, Guid applicationId)
+        {
+            var requestContext = ControllerContext.HttpContext.Request;
+            var host = $"{requestContext.Scheme}://{requestContext.Host}";
+            var bankDetailsUrl = $"{host}/{accountId}/bankdetails/{applicationId}/add-bank-details";
+            return bankDetailsUrl;
         }
     }
 }
