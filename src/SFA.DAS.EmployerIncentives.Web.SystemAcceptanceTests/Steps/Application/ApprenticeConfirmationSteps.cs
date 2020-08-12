@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             // Check the apprenticeships
             var apprentice = model.Apprentices.First();
-            var apiApprentice = apiResponse.Application.Apprenticeships.First();
+            var apiApprentice = apiResponse.Application.Apprenticeships.OrderBy(x=>x.LastName).First();
 
             apprentice.DisplayName.Should().Be($"{apiApprentice.FirstName} {apiApprentice.LastName}");
             apprentice.CourseName.Should().Be(apiApprentice.CourseName);
