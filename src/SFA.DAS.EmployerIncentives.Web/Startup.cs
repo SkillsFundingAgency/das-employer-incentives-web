@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.EmployerIncentives.Web.Authorization;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
@@ -80,9 +83,9 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddMvc(
                     options =>
                     {
-                        options.Filters.Add(new AuthorizeFilter());
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
-                        options.AddAuthorization();                        
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
                     })

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("{accountId}/apply")]
     public class ApplyOrganisationController : Controller
     {

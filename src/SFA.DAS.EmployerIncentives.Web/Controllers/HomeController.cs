@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
-    [Route("/")]
+    [Route("{accountId}")]
     public class HomeController : Controller
     {
         [Route("")]
-        public IActionResult Home()
+        public IActionResult Home(string accountId)
         {
-            var accountId = "";
-            return View(new HomeViewModel(accountId));
+            return RedirectToAction("Default", "apply", new { accountId});
         }
     }
 }
