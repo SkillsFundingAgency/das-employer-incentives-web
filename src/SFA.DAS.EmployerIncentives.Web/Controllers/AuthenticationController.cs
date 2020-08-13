@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
-    [Route("/")]
-    public class HomeController : Controller
+    [Route("authentication")]
+    public class AuthenticationController : Controller
     {
         [Route("")]
-        public IActionResult Home()
+        public IActionResult SignIn()
         {
-            var accountId = "";
-            return View(new HomeViewModel(accountId));
+            return new OkResult();
         }
     }
 }

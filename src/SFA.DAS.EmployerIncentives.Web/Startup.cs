@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -62,23 +63,26 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.None;                
             });
 
             services.AddOptions();
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
             services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
+            services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
 
-            //services.AddAuthorizationService();
+            services.AddAuthorizationPolicies();            
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
-
+            services.AddEmployerAuthentication(_configuration);
+            
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddMvc(
                     options =>
                     {
+                        options.Filters.Add(new AuthorizeFilter());
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
-                        options.AddAuthorization();
+                        options.AddAuthorization();                        
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
                     })
@@ -154,6 +158,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             }
             else
             {
+                app.UseUnauthorizedAccessExceptionHandler();
                 app.UseExceptionHandler("/error/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseDasHsts();
@@ -182,6 +187,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                     await next();
                 }
             });
+
             app.UseAuthentication();
 
             if (!_environment.IsDevelopment())
