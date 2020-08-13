@@ -5,6 +5,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Email
 {
     public interface IEmailService
     { 
-        Task SendBankDetailsRequiredEmail(SendBankDetailsRequiredEmailRequest request);
+        Task SendBankDetailsRequiredEmail(SendBankDetailsEmailRequest request);
+        Task SendBankDetailsReminderEmail(SendBankDetailsEmailRequest request);
     }
 }

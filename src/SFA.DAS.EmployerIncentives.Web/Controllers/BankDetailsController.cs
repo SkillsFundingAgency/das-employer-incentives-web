@@ -45,6 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (viewModel.CanProvideBankDetails.Value)
             {
                 // redirect to interstitial page
+                await SendBankDetailsReminderEmail(viewModel.AccountId, viewModel.ApplicationId);
                 return RedirectToAction("AddBankDetails");
             }
 
@@ -79,17 +80,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var bankDetailsUrl = CreateAddBankDetailsUrl(accountId, applicationId);
 
+            var sendEmailRequest = await CreateSendBankDetailsEmailRequest(accountId, applicationId, bankDetailsUrl);
+
+            await _emailService.SendBankDetailsRequiredEmail(sendEmailRequest);
+        }
+
+        private async Task SendBankDetailsReminderEmail(string accountId, Guid applicationId)
+        {
+            var bankDetailsUrl = CreateAddBankDetailsUrl(accountId, applicationId);
+
+            var sendEmailRequest = await CreateSendBankDetailsEmailRequest(accountId, applicationId, bankDetailsUrl);
+
+            await _emailService.SendBankDetailsReminderEmail(sendEmailRequest);
+        }
+
+        private async Task<SendBankDetailsEmailRequest> CreateSendBankDetailsEmailRequest(string accountId, Guid applicationId, string bankDetailsUrl)
+        {
             var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
 
-            var sendEmailRequest = new SendBankDetailsRequiredEmailRequest
+            var sendEmailRequest = new SendBankDetailsEmailRequest
             {
                 AccountId = _hashingService.DecodeValue(accountId),
                 AccountLegalEntityId = accountLegalEntityId,
                 EmailAddress = "test@test.com",            // EI-191 - retrieve email address from the claims associated with logged in user
                 AddBankDetailsUrl = bankDetailsUrl
             };
-
-            await _emailService.SendBankDetailsRequiredEmail(sendEmailRequest);
+            return sendEmailRequest;
         }
 
         private string CreateAddBankDetailsUrl(string accountId, Guid applicationId)

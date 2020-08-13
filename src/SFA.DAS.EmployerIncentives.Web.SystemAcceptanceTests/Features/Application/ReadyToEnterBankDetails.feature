@@ -13,6 +13,7 @@ Scenario: An employer has confirmed their apprenticeship details
 Scenario: An employer confirms they can provide their bank details
 	When the employer confirms they can provide their bank details
 	Then the employer is requested to enter their bank details
+	And the employer is sent an email with details of how to enter their bank details in case they are unable to complete the journey
 
 Scenario: An employer cannot provide their bank details now
 	When the employer states that they are unable to provide bank details now
