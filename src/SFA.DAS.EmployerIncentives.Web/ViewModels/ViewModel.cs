@@ -1,6 +1,4 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-
-namespace SFA.DAS.EmployerIncentives.Web.ViewModels
+﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels
 {
     public class ViewModel
     {
