@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
 
-            if(!model.Apprenticeships.Any())
+            if (!model.Apprenticeships.Any())
             {
                 return RedirectToAction("CannotApply", "Apply", new { accountId });
             }
@@ -93,6 +93,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [Route("confirm-apprentices/{applicationId}")]
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
+        {
+            return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
+        }
+
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
         {
             var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
@@ -110,7 +117,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var application = await _applicationService.Get(accountId, applicationId);
             var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
 
-            apprenticeships.ForEach(x=>x.Selected = application.Apprentices.Any(a=>a.ApprenticeshipId == x.Id));
+            apprenticeships.ForEach(x => x.Selected = application.Apprentices.Any(a => a.ApprenticeshipId == x.Id));
 
             return new SelectApprenticeshipsViewModel
             {
