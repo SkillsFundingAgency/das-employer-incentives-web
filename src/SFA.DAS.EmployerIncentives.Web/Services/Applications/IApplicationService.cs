@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
@@ -9,5 +9,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     {
         Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds);
         Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId);
-    }    
+        Task Confirm(string accountId, Guid applicationId);
+
+    }
 }
