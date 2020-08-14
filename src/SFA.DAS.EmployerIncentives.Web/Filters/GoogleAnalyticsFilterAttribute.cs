@@ -60,8 +60,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
             };
         }
 
-        public string DataLoaded { get; set; }
-
         private static string GetAccountLegalEntityIdFromApplication(ActionExecutingContext context, object accountIdRouteValue, object applicationIdRouteValue)
         {
             string hashedAccountLegalEntityId;
@@ -69,10 +67,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
             var applicationService = context.HttpContext.RequestServices.GetService<IApplicationService>();
             var unhashedAccountId = hashingService.DecodeValue(accountIdRouteValue.ToString()).ToString();
             var applicationId = new Guid(applicationIdRouteValue.ToString());
-            var accountLegalEntityId = applicationService.GetApplicationLegalEntity(unhashedAccountId, applicationId);
+            var accountLegalEntityId = applicationService.GetApplicationLegalEntity(unhashedAccountId, applicationId).GetAwaiter().GetResult();
 
             hashedAccountLegalEntityId = hashingService.HashValue(accountLegalEntityId.ToString());
             return hashedAccountLegalEntityId;
         }
+
+        public string DataLoaded { get; set; }
+
     }
 }
