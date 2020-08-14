@@ -268,7 +268,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle("You cannot apply for this grant yet");
             model.AccountId.Should().Be(hashedAccountId);
-            model.CommitmentsUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/home");
+            model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
@@ -286,7 +286,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle("You cannot apply for this grant");
             model.AccountId.Should().Be(hashedAccountId);
-            model.CommitmentsUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/home");
+            model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
@@ -306,7 +306,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}");        
+            response.Should().HaveBackLink($"/{hashedAccountId}");
         }
     }
 }

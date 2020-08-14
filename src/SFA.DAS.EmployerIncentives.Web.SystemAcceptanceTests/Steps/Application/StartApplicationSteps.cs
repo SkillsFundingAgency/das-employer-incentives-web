@@ -116,7 +116,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerAppliesForTheGrant()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
-            
+
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
                 $"{hashedAccountId}/apply");
@@ -179,9 +179,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle("You cannot apply for this grant yet");
             model.AccountId.Should().Be(hashedAccountId);
-            model.CommitmentsUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/home");
+            model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
-            response.Should().HaveTitle(model.Title);            
+            response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
         }
     }

@@ -52,9 +52,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (hasTakenOnNewApprentices)
             {
-                return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+                return View(new TakenOnCannotApplyViewModel(accountId, _configuration.AccountsBaseUrl, _configuration.CommitmentsBaseUrl));
             }
-            return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+            return View(new CannotApplyViewModel(accountId, _configuration.AccountsBaseUrl, _configuration.CommitmentsBaseUrl));
         }
     }
 }

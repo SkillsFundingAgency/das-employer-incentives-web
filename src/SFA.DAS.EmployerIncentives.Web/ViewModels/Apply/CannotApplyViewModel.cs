@@ -2,18 +2,24 @@
 {
     public class CannotApplyViewModel : ViewModel
     {
-        public CannotApplyViewModel(string accountId, string commitmentsBaseUrl, string title = "You cannot apply for this grant yet") : base(title)
+        public CannotApplyViewModel(
+            string accountId,
+            string accountsBaseUrl,
+            string commitmentsBaseUrl,
+            string title = "You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021"
+        ) : base(title)
         {
             AccountId = accountId;
 
-            if (!commitmentsBaseUrl.EndsWith("/"))
+            if (!accountsBaseUrl.EndsWith("/"))
             {
-                commitmentsBaseUrl += "/";
+                accountsBaseUrl += "/";
             }
-            CommitmentsUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/home";
+            AccountHomeUrl = $"{accountsBaseUrl}commitments/accounts/{accountId}/teams";
         }
 
         public string AccountId { get; }
-        public string CommitmentsUrl { get; }
+        public string AccountHomeUrl { get; }
+        public string AddApprenticesUrl { get; set; }
     }
 }
