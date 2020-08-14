@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.HashingService;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 
 namespace SFA.DAS.EmployerIncentives.Web.Filters
 {
@@ -22,17 +26,28 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
 
         private GoogleAnalyticsData PopulateForEmployer(ActionExecutingContext context)
         {
+            object accountIdRouteValue;
+            object applicationIdRouteValue;
+            
             string hashedAccountId = null;
             string hashedAccountLegalEntityId = null;
 
             var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaims.IdamsUserIdClaimTypeIdentifier))?.Value;
 
-            if (context.RouteData.Values.TryGetValue("accountId", out var accountId))
+            if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue))
             {
-                hashedAccountId = accountId.ToString();
+                if (!accountIdRouteValue.ToString().Contains(".html"))
+                {
+                    hashedAccountId = accountIdRouteValue.ToString();
+                }
             }
-
-            if (context.RouteData.Values.TryGetValue("accountLegalEntityId", out var accountLegalEntityId))
+            
+            if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue)
+                && context.RouteData.Values.TryGetValue("applicationId", out applicationIdRouteValue))
+            {
+                hashedAccountLegalEntityId = GetAccountLegalEntityIdFromApplication(context, accountIdRouteValue, applicationIdRouteValue);
+            }
+            else if (context.RouteData.Values.TryGetValue("accountLegalEntityId", out var accountLegalEntityId))
             {
                 hashedAccountLegalEntityId = accountLegalEntityId.ToString();
             }
@@ -46,5 +61,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
         }
 
         public string DataLoaded { get; set; }
+
+        private static string GetAccountLegalEntityIdFromApplication(ActionExecutingContext context, object accountIdRouteValue, object applicationIdRouteValue)
+        {
+            string hashedAccountLegalEntityId;
+            var hashingService = context.HttpContext.RequestServices.GetService<IHashingService>();
+            var applicationService = context.HttpContext.RequestServices.GetService<IApplicationService>();
+            var unhashedAccountId = hashingService.DecodeValue(accountIdRouteValue.ToString()).ToString();
+            var applicationId = new Guid(applicationIdRouteValue.ToString());
+            var accountLegalEntityId = applicationService.GetApplicationLegalEntity(unhashedAccountId, applicationId);
+
+            hashedAccountLegalEntityId = hashingService.HashValue(accountLegalEntityId.ToString());
+            return hashedAccountLegalEntityId;
+        }
     }
 }
