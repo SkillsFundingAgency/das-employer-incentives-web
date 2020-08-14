@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
+    [Route("{accountId}/bankdetails/{applicationId}")]
     public class BankDetailsController : Controller
     {
         [HttpGet]
         [Route("need-bank-details")]
-        public ViewResult BankDetailsConfirmation(string accountId, string accountLegalEntityId)
+        public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
         {
-            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, AccountLegalEntityId = accountLegalEntityId });
+            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
         }
 
         [HttpPost]
@@ -38,14 +36,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public ViewResult AddBankDetails()
+        public ViewResult AddBankDetails(Guid applicationId)
         {
             return View();
         }
 
         [HttpPost]
         [Route("enter-bank-details")]
-        public ViewResult EnterBankDetails()
+        public ViewResult EnterBankDetails(Guid applicationId)
         {
             // Once integration mechanism is finalised, redirect / post to external site
             return View();
@@ -53,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("complete/need-bank-details")]
-        public ViewResult NeedBankDetails()
+        public ViewResult NeedBankDetails(Guid applicationId)
         {
             return View();
         }

@@ -5,10 +5,7 @@
     ViewBag.GaData.Vpv = "/apply/declaration";
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="Apply" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
-
-<main class="govuk-main-wrapper " id="main-content" role="main">
-
+<main class="govuk-main-wrapper" id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -22,9 +19,8 @@
                 <li>you understand that your organisation must tell Education and Skills Funding Agency about any change to any of the information provided</li>
                 <li>you have read and understood the agreement</li>
             </ul>
-            <form action="" method="post" class="form">
-                @* TODO *@
-                <button type="submit" class="govuk-button" data-module="govuk-button" disabled="disabled" data-prevent-double-click="true">
+            <form asp-action="SubmitApplication" asp-controller="Apply" method="post" class="form">
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Confirm
                 </button>
 
