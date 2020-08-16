@@ -7,6 +7,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     public class ApplicationCompleteController : Controller
     {
+        public const string ApplicationCompleteRoute = "application-complete";
         private readonly WebConfigurationOptions _configuration;
 
         public ApplicationCompleteController(IOptions<WebConfigurationOptions> configuration)
@@ -15,7 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("application-complete")]
+        [Route(ApplicationCompleteRoute)]
         public ViewResult Confirmation()
         {
             var model = new ConfirmationViewModel(_configuration.AccountsBaseUrl);

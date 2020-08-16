@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
     {
         static void Main(string[] args)
         {
-            var employerIncenticesApi = EmployerIncentivesApiBuilder
+            var employerIncentivesApi = EmployerIncentivesApiBuilder
                 .Create(8081)
                 .WithAccountWithNoLegalEntities()
                 .WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
@@ -17,12 +17,13 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithInitialApplication()
                 .WithoutASignedAgreement()
                 .WithApplicationConfirmation()
+                .WithBankingDetails()
                 .Build();
 
             Console.WriteLine("Press any key to stop the servers");
             Console.ReadKey();
 
-            employerIncenticesApi.Dispose();
+            employerIncentivesApi.Dispose();
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Services;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
-using System;
-using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApplication
 {
@@ -21,9 +25,29 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         }
 
         [Given(@"the employer has entered all the information required to process their bank details")]
-        public void GivenTheEmployerHasEnteredAllTheInformationRequiredToProcessTheirBankDetails()
+        public async Task GivenTheEmployerHasEnteredAllTheInformationRequiredToProcessTheirBankDetails()
         {
-            // TODO: will require call back information to be passed back from Business Central
+            var data = new TestData.Account.WithInitialApplicationAndBankingDetails();
+
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                    Request
+                        .Create()
+                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId))
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.BankingDetails, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"{data.HashedAccountId}/bank-details/{data.ApplicationId}/add-bank-details");
+
+            var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
+            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&returnURL=https://localhost:5001/application-complete&data=");
         }
 
         [When(@"the employer is shown the confirmation page")]

@@ -13,5 +13,7 @@
         public virtual string ZenDeskSnippetKey { get; set; }
         public virtual string ZenDeskSectionId { get; set; }
         public virtual string ZenDeskCobrowsingSnippetKey { get; set; }
+        public virtual string AchieveServiceBaseUrl { get; set; } = "https://dfeuat.achieveservice.com/service/provide-organisation-information"; // TODO move to config
+        public virtual string DataEncryptionServiceKey { get; set; } = "P5T1NjQ1xqo1FgFM8RG+Yg=="; // TODO move to config
     }
 }

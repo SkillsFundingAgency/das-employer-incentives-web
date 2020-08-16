@@ -1,4 +1,5 @@
-﻿Feature: CompleteApplication
+﻿@employerIncentivesApi
+Feature: CompleteApplication
 As an employer applying for the new apprenticeship grant
 	I want to receive confirmation that the application has completed
 	So that I can complete the application journey

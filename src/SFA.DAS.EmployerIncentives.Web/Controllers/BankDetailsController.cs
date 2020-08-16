@@ -1,12 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/bankdetails/{applicationId}")]
+    [Route("{accountId}/bank-details/{applicationId}")]
     public class BankDetailsController : Controller
     {
+        private readonly IVerificationService _verificationService;
+
+        public BankDetailsController(IVerificationService verificationService)
+        {
+            _verificationService = verificationService;
+        }
+
         [HttpGet]
         [Route("need-bank-details")]
         public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
@@ -36,17 +45,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public ViewResult AddBankDetails(Guid applicationId)
+        public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
         {
-            return View();
-        }
+            var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}/{ApplicationCompleteController.ApplicationCompleteRoute}";
+            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, applicationId, returnUrl);
 
-        [HttpPost]
-        [Route("enter-bank-details")]
-        public ViewResult EnterBankDetails(Guid applicationId)
-        {
-            // Once integration mechanism is finalised, redirect / post to external site
-            return View();
+            return Redirect(achieveServiceUrl);
         }
 
         [HttpGet]

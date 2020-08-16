@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is asked to enter bank details")]
         public void ThenTheEmployerIsAskedToEnterBankDetails()
         {
-            var expectedUrl = $"/{_testData.HashedAccountId}/bankdetails/{_testData.ApplicationId}{ReadyToEnterBankDetailsUrl}";
+            var expectedUrl = $"/{_testData.HashedAccountId}/bank-details/{_testData.ApplicationId}{ReadyToEnterBankDetailsUrl}";
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(expectedUrl);
             var viewResult = _testContext.ActionResult.LastViewResult.Model as BankDetailsConfirmationViewModel;
             viewResult.Should().NotBeNull();

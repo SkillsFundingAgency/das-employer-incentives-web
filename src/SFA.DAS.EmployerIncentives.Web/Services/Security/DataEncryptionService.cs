@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace SFA.DAS.EmployerIncentives.Web.Services
+namespace SFA.DAS.EmployerIncentives.Web.Services.Security
 {
-    public class DataEncryptionService
+    public class DataEncryptionService : IDataEncryptionService
     {
         private readonly string _key;
 

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.EmployerIncentives.Web.Services;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
     public class DataEncodingServiceTests
     {
         private const string TestAesKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
-        private const string OriginalRaw = "DW5T8V|P0007983|Angus Sinclair|07365363563|ag@gmail.com|Harold Shipman|07356356353|hs@gmail.com|Fred West|07265625622|fs@gmail.com|Ian Brady|01367363783|ib@gmail.com|apps=53";
+        private const string OriginalRaw = "DW5T8V|P0007983|Angus Sinclair|07365363563|ag@gmail.com";
 
         [Test]
         public void CanEncryptStringDataPrefixedWithRandomIv()
