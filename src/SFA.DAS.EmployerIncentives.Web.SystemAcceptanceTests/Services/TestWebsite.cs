@@ -54,6 +54,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                           o.ApiBaseUrl = _testEmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
                       });
+                    s.Configure<ExternalLinksConfiguration>(o =>
+                    {
+                        o.EmployerRecruitmentSiteUrl = "http://localhost";
+                        o.ManageApprenticeshipSiteUrl = "http://localhost";
+                        o.CommitmentsSiteUrl = "http://localhost";
+                    });
+                    s.Configure<AuthenticationConfiguration>(o =>
+                    {
+                        o.Authority = "XXX";
+                        o.ClientId = "XXX";
+                    });
                     s.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new TestActionResultFilter(_actionResultHook));
