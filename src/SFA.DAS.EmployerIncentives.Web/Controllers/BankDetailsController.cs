@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
@@ -81,11 +82,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
 
+            var emailAddress = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.EmailAddress))?.Value;
+
             var sendEmailRequest = new SendBankDetailsRequiredEmailRequest
             {
                 AccountId = _hashingService.DecodeValue(accountId),
                 AccountLegalEntityId = accountLegalEntityId,
-                EmailAddress = "test@test.com",            // EI-191 - retrieve email address from the claims associated with logged in user
+                EmailAddress = emailAddress,
                 AddBankDetailsUrl = bankDetailsUrl
             };
 
