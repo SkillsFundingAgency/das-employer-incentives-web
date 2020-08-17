@@ -45,10 +45,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return MapFromGetApplicationResponse(data.Application, accountId, applicationId);
         }
 
-        public async Task Confirm(string accountId, Guid applicationId)
+        public async Task Confirm(string accountId, Guid applicationId, string userId)
         {
-            const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
-            var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, userId);
 
             using var response = await _client.PatchAsJsonAsync($"/accounts/{request.AccountId}/applications/{applicationId}", request);
 
