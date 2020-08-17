@@ -86,10 +86,23 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/accounts/{accountId}/applications")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.Created)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(string.Empty));
+
+            _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
                       .Create()
-                      .WithPath(x => x.Contains("accountlegalentity")) // applicationid is generated in application service so will vary per request
+                      .WithPath(x => x.EndsWith("accountlegalentity")) // applicationid is generated in application service so will vary per request
                       .UsingGet()
               )
               .RespondWith(
