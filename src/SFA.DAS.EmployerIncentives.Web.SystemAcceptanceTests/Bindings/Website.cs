@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
         private readonly TestContext _context;
         public Website(TestContext context)
         {
-            _context = context;           
+            _context = context;
         }
 
         [BeforeScenario()]
@@ -28,7 +28,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 Hashstring = "SFA: digital apprenticeship service",
                 CommitmentsBaseUrl = $"http://{Guid.NewGuid()}",
                 AccountsBaseUrl = $"http://{Guid.NewGuid()}",
-                RedisCacheConnectionString = "localhost"
+                RedisCacheConnectionString = "localhost",
+                AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information",
+                DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg=="
             };
 
             _context.Website = new TestWebsite(_context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook);

@@ -10,6 +10,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Security
 
         public DataEncryptionService(string key)
         {
+            if (string.IsNullOrEmpty(key)) throw new ArgumentException("DataEncryptionServiceKey is not configured.");
             _key = key;
         }
 

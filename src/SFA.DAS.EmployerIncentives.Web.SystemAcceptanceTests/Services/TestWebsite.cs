@@ -48,6 +48,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.Hashstring = _webConfigurationOptions.Hashstring;
                         o.CommitmentsBaseUrl = _webConfigurationOptions.CommitmentsBaseUrl;
                         o.AccountsBaseUrl = _webConfigurationOptions.AccountsBaseUrl;
+                        o.AchieveServiceBaseUrl = _webConfigurationOptions.AchieveServiceBaseUrl;
+                        o.DataEncryptionServiceKey = _webConfigurationOptions.DataEncryptionServiceKey;
                     });
                     s.Configure<EmployerIncentivesApiOptions>(o =>
                       {
