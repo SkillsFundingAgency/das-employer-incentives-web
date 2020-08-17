@@ -38,8 +38,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "SelectOrganisation", "\tAs an employer applying for the new apprenticeship grant with more than one lega" +
-                    "l entity organisation\n\tI want to be able to select the leagl entity the applicat" +
-                    "ion is for\n\tSo that the correct legal entity is used in my application", ProgrammingLanguage.CSharp, new string[] {
+                    "l entity organisation\r\n\tI want to be able to select the leagl entity the applica" +
+                    "tion is for\r\n\tSo that the correct legal entity is used in my application", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
             testRunner.OnFeatureStart(featureInfo);
         }

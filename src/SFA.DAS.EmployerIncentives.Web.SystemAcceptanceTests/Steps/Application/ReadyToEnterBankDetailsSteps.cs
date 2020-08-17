@@ -6,9 +6,12 @@ using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -39,6 +42,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -61,6 +78,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -89,6 +120,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -117,6 +162,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 

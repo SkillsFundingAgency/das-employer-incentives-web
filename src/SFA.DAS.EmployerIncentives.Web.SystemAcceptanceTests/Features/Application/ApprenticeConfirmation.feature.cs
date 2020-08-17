@@ -37,9 +37,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ApprenticeConfirmation", "\tAs an employer applying for the new apprentice grant\n\tIf I have selected 2 eligi" +
-                    "ble apprenticeships\n\tI want to be able to confirm the apprentices and expected a" +
-                    "mounts", ProgrammingLanguage.CSharp, new string[] {
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ApprenticeConfirmation", "\tAs an employer applying for the new apprentice grant\r\n\tIf I have selected 2 elig" +
+                    "ible apprenticeships\r\n\tI want to be able to confirm the apprentices and expected" +
+                    " amounts", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
             testRunner.OnFeatureStart(featureInfo);
         }

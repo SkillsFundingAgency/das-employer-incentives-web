@@ -127,7 +127,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Filters
 
             var unhashedAccountId = _fixture.Create<long>();
             var hashingService = new Mock<IHashingService>();
-            hashingService.Setup(x => x.DecodeValue(_accountId)).Returns(unhashedAccountId);
             var hashedAccountLegalEntityId = _fixture.Create<string>();
             hashingService.Setup(x => x.HashValue(It.IsAny<string>())).Returns(hashedAccountLegalEntityId);
 
