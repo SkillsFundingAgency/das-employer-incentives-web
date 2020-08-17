@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
 {
@@ -21,9 +22,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
                 SubmittedByEmailAddress = "bob@gmail.com",
                 SignedAgreements = new List<SignedAgreementModel>
                 {
-                    new SignedAgreementModel { SignedByName = "Michelle Brown", SignedByEmail = "michelle.brown@education.gov.uk", SignedDate = DateTime.Parse("01-08-2020 12:20:21")},
-                    new SignedAgreementModel { SignedByName = "Samar Ali", SignedByEmail = "Samar.Ali@education.gov.uk", SignedDate = DateTime.Parse("03-08-2020 15:20:21")},
-                    new SignedAgreementModel { SignedByName = "Daniel Davies", SignedByEmail = "Daniel.Davies@education.gov.uk", SignedDate = DateTime.Parse("30-09-2020 01:23:45")},
+                    new SignedAgreementModel { SignedByName = "Michelle Brown", SignedByEmail = "michelle.brown@education.gov.uk", SignedDate = DateTime.Parse("01-08-2020 12:20:21", new CultureInfo("en-GB"))},
+                    new SignedAgreementModel { SignedByName = "Samar Ali", SignedByEmail = "Samar.Ali@education.gov.uk", SignedDate = DateTime.Parse("03-08-2020 15:20:21", new CultureInfo("en-GB"))},
+                    new SignedAgreementModel { SignedByName = "Daniel Davies", SignedByEmail = "Daniel.Davies@education.gov.uk", SignedDate = DateTime.Parse("30-09-2020 01:23:45", new CultureInfo("en-GB"))},
                 }
             };
 

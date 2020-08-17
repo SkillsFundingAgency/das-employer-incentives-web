@@ -10,6 +10,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
@@ -35,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
                 VendorCode = "000000",
                 SignedAgreements = new List<SignedAgreementDto>
                 {
-                    new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59")}
+                    new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59", new CultureInfo("en-GB"))}
                 }
             };
 
