@@ -266,7 +266,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You cannot apply for this grant yet");
+            model.Should().HaveTitle("You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021");
             model.AccountId.Should().Be(hashedAccountId);
             model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
@@ -284,7 +284,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as TakenOnCannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You cannot apply for this grant");
+            model.Should().HaveTitle("You cannot apply for this payment");
             model.AccountId.Should().Be(hashedAccountId);
             model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
@@ -302,7 +302,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
+            model.Should().HaveTitle("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
