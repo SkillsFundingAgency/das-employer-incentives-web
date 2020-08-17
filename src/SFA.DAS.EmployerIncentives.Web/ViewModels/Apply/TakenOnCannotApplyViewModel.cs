@@ -2,7 +2,7 @@
 {
     public class TakenOnCannotApplyViewModel : CannotApplyViewModel
     {
-        public TakenOnCannotApplyViewModel(string accountId, string accountsBaseUrl, string commitmentsBaseUrl, string title = "You cannot apply for this payment") : base(accountId, accountsBaseUrl, commitmentsBaseUrl, title)
+        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string title = "You cannot apply for this payment") : base(accountId, commitmentsBaseUrl, title)
         {
             if (!commitmentsBaseUrl.EndsWith("/"))
             {
