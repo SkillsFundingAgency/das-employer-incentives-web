@@ -2,7 +2,8 @@
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
-{    
+{
+    [Route("/")]
     public class HomeController : Controller
     {
         [Route("{accountId}")]

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.Filters
 {
@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
         {
             string hashedAccountId = null;
 
-            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaims.IdamsUserIdClaimTypeIdentifier))?.Value;
+            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
 
             if (context.RouteData.Values.TryGetValue("employerAccountId", out var employerAccountId))
             {
