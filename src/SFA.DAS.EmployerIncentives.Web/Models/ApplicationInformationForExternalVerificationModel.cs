@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.Models
 {
@@ -13,11 +15,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public decimal IncentiveAmount { get; set; }
         public string HashedAccountId { get; set; }
         public Guid ApplicationId { get; set; }
+        public IEnumerable<SignedAgreementModel> SignedAgreements { get; set; } = new List<SignedAgreementModel>();
 
         public string ToPsvString()
         {
-            return string.Join("|", HashedLegalEntityId, VendorId, SubmittedByFullName, SubmittedByEmailAddress, IncentiveAmount.ToString(CultureInfo.InvariantCulture));
+            return string.Join("|", HashedLegalEntityId, VendorId, SubmittedByFullName, SubmittedByEmailAddress, IncentiveAmount.ToString(CultureInfo.InvariantCulture),
+                string.Join("|", SignedAgreements.Select(x => x.ToPsvString())), $"apps={SignedAgreements.Count()}");
         }
-
     }
 }

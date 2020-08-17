@@ -219,7 +219,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         ApplicantName = "Uncle Bob",
                         VendorCode = "000000",
                         ApplicationValue = ApplicationResponse.Application.Apprenticeships.Sum(x => x.TotalIncentiveAmount),
-                        ApplicantEmail = "bob.martin@email.com"
+                        ApplicantEmail = "bob.martin@email.com",
+                        SignedAgreements = new List<SignedAgreementDto>
+                        {
+                            new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59")}
+                        }
                     };
             }
         }

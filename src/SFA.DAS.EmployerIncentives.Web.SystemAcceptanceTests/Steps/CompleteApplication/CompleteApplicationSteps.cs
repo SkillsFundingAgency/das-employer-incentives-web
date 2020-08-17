@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                 $"{data.HashedAccountId}/bank-details/{data.ApplicationId}/add-bank-details");
 
             var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
-            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&returnURL=https://localhost:5001/application-complete&data=");
+            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&return=https://localhost:5001/application-complete&data=");
         }
 
         [When(@"the employer is shown the confirmation page")]

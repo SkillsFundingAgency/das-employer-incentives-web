@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is requested to enter their bank details")]
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&returnURL=https://localhost:5001/application-complete&data=");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&return=https://localhost:5001/application-complete&data=");
         }
 
         [When(@"the employer states that they are unable to provide bank details now")]

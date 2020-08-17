@@ -4,6 +4,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.HashingService;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
@@ -30,6 +31,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             var bankingDetails = await _bankingDetailsService.GetBankingDetails(accountId, applicationId);
 
+            if (bankingDetails == null) throw new ArgumentException("Requested banking details records cannot be found");
+            if (bankingDetails.SignedAgreements == null || !bankingDetails.SignedAgreements.Any()) throw new ArgumentException("Requested application records are invalid");
+
             var data = new ApplicationInformationForExternalVerificationModel
             {
                 ApplicationId = applicationId,
@@ -40,11 +44,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 VendorId = bankingDetails.VendorCode,
                 SubmittedByFullName = bankingDetails.ApplicantName,
                 SubmittedByEmailAddress = bankingDetails.ApplicantEmail,
+                SignedAgreements = bankingDetails.SignedAgreements?.Select(x => new SignedAgreementModel
+                {
+                    SignedByEmail = x.SignedByEmail,
+                    SignedByName = x.SignedByName,
+                    SignedDate = x.SignedDate
+                })
             };
 
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();
 
-            return $"{_configuration.AchieveServiceBaseUrl}/journey=new&returnURL={returnUrl}&data={encryptedData}";
+            return $"{_configuration.AchieveServiceBaseUrl}/journey=new&return={returnUrl}&data={encryptedData}";
         }
 
     }

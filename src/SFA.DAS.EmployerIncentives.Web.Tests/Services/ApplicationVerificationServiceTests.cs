@@ -9,6 +9,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.HashingService;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
@@ -31,7 +32,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
                 ApplicantEmail = "bob@clean-code.com",
                 ApplicationValue = 3000,
                 LegalEntityId = legalEntityId,
-                VendorCode = "000000"
+                VendorCode = "000000",
+                SignedAgreements = new List<SignedAgreementDto>
+                {
+                    new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59")}
+                }
             };
 
             var bankDetailsServiceMock = new Mock<IBankingDetailsService>();
@@ -47,13 +52,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var mockOptions = new Mock<IOptions<WebConfigurationOptions>>();
             mockOptions.Setup(x => x.Value).Returns(webConfigurationOptionsMock.Object);
 
-            const string returnUrl = "employer-incentives.gov.uk/bankdetails/XFS24D/confirmed";
+            const string returnUrl = "employer-incentives.gov.uk/completed";
 
             const string encryptedData = "qNgwIVvU8twX0GPjF4yHcw==Qqm35mLvFQZ9RCNQ2Ff7zee2sO4CNS0H7hN9PzKM6Cfo7U+ajB52gza8VEt0F9jnKpTxYt93HWq4xZPrdzEDZw==";
             var dataEncryptionServiceMock = new Mock<IDataEncryptionService>();
-            dataEncryptionServiceMock.Setup(x => x.Encrypt("ABCD2X|000000|Bob Martin|bob@clean-code.com|3000")).Returns(encryptedData);
+            dataEncryptionServiceMock.Setup(x => x.Encrypt("ABCD2X|000000|Bob Martin|bob@clean-code.com|3000|Jon Skeet|jon.skeet@google.com|2020-09-01T12:34:59|apps=1")).Returns(encryptedData);
 
-            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information/journey=new&returnURL={returnUrl}&data={encryptedData.ToUrlString()}";
+            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information/journey=new&return={returnUrl}&data={encryptedData.ToUrlString()}";
 
             var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, webConfigurationOptionsMock.Object);
 
