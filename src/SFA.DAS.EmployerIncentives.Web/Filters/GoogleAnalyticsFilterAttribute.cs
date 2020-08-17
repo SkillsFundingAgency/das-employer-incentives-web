@@ -63,12 +63,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
         private static string GetAccountLegalEntityIdFromApplication(ActionExecutingContext context, object accountIdRouteValue, object applicationIdRouteValue)
         {
             string hashedAccountLegalEntityId;
-            var hashingService = context.HttpContext.RequestServices.GetService<IHashingService>();
             var applicationService = context.HttpContext.RequestServices.GetService<IApplicationService>();
-            var unhashedAccountId = hashingService.DecodeValue(accountIdRouteValue.ToString()).ToString();
             var applicationId = new Guid(applicationIdRouteValue.ToString());
-            var accountLegalEntityId = applicationService.GetApplicationLegalEntity(unhashedAccountId, applicationId).GetAwaiter().GetResult();
+            var accountLegalEntityId = applicationService.GetApplicationLegalEntity(accountIdRouteValue.ToString(), applicationId).GetAwaiter().GetResult();
 
+            var hashingService = context.HttpContext.RequestServices.GetService<IHashingService>();
             hashedAccountLegalEntityId = hashingService.HashValue(accountLegalEntityId.ToString());
             return hashedAccountLegalEntityId;
         }
