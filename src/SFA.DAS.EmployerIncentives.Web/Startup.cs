@@ -68,6 +68,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddOptions();
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
             services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
+            services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
+            services.Configure<AuthenticationConfiguration>(_configuration.GetSection(AuthenticationConfiguration.EmployerIncentivesAuthenticationConfiguration));
 
             //services.AddAuthorizationService();
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
