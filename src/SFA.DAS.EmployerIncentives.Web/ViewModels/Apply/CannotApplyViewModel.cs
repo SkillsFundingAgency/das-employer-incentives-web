@@ -20,6 +20,6 @@
 
         public string AccountId { get; }
         public string AccountHomeUrl { get; }
-        public string AddApprenticesUrl { get; }
+        public string AddApprenticesUrl { get; set; }
     }
 }
