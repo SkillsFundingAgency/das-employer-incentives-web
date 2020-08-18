@@ -1,21 +1,29 @@
+@using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
+@using Microsoft.Extensions.Options
+@inject  IOptions<WebConfigurationOptions> configurationOptions
+
+@{
+    var options = configurationOptions.Value;
+}
+
 <script type="text/javascript">
-  window.zESettings = {
-    webWidget: {
-      contactForm: {
-        attachments: false
-      },
-      chat: { 
-        menuOptions: {
-        emailTranscript: false
+    window.zESettings = {
+        webWidget: {
+            contactForm: {
+                attachments: false
+            },
+            chat: {
+                menuOptions: {
+                    emailTranscript: false
+                }
+            },
+            helpCenter: {
+                filter: {
+                    section: "@options.ZenDeskSectionId"
+                }
+            }
         }
-      },
-      helpCenter: { 
-        filter: {
-          section: "360003002699"
-        }
-      }
-    }
-  };
+    };
 </script>
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=e0730bdd-a32c-4c39-8032-7d7a908eacb4"></script>
-<script id="co-snippet" src="https://embed-euw1.rcrsv.io/Qec2OgXsUy8lsUO1iOuleFAMjl7AcIEGdOojlQjLesShBHx0wrM4xXlR7X1h9bEo?zwwi=1"></script>
+<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=@options.ZenDeskSnippetKey"></script>
+<script id="co-snippet" src="https://embed-euw1.rcrsv.io/@options.ZenDeskCobrowsingSnippetKey?zwwi=1"></script>

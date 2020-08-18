@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels
         {
             viewModel.Organisations = new List<OrganisationViewModel>();
 
-            legalEntities.ToList().ForEach(o => viewModel.Organisations.Add(
+            legalEntities.OrderBy(n => n.Name).ToList().ForEach(o => viewModel.Organisations.Add(
                 new OrganisationViewModel
                 {
                     Name = o.Name,

@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices";
+            var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices";
             var form = new KeyValuePair<string, string>("SelectedApprenticeships", apprenticeships.First().Id);
 
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, form);
@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices";
+            var url = $"{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
-            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/select-new-apprentices/{model.ApplicationId}");
+            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
             model.Should().HaveTitle("Confirm your apprentices");
         }
 
@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveTitle(model.Title);
-            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-new-apprentices");
+            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices");
             model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
             model.AccountId.Should().Be(hashedAccountId);

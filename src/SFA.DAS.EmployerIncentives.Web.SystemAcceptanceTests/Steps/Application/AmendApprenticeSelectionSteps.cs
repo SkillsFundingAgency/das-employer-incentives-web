@@ -90,12 +90,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _hashingService.HashValue(_data.AccountId);
 
-            var url = $"{hashedAccountId}/apply/select-new-apprentices/{_data.ApplicationId}";
+            var url = $"{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}";
 
             _response = await _testContext.WebsiteClient.GetAsync(url);
             _response.EnsureSuccessStatusCode();
         }
-        
+
         [Then(@"the employer can see the previous apprentices checked")]
         public void ThenTheEmployerCanSeeThePreviousApprenticesChecked()
         {
