@@ -21,7 +21,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
             _userService = userService;
             _hashingService = hashingService;
         }
-
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerAccountRequirement requirement)
         {
             var isAuthorised = await IsEmployerAuthorised(context);
@@ -31,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
             }            
         }
 
-        public Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context)
+        private Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context)
         {
             if (!(context.Resource is AuthorizationFilterContext mvcContext))
             {

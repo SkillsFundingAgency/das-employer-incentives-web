@@ -18,23 +18,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authenti
 
         public async Task InvokeAsync(HttpContext context, ITestAuthenticationOptions options)
         {
-            var claimsIdentity = new ClaimsIdentity(
-            new List<Claim>
-                {
-                    new Claim(EmployerClaimTypes.UserId, TestData.User.AccountOwnerUserId.ToString()),
-                    new Claim(EmployerClaimTypes.Account, options.TestContext.TestDataStore.Get<string>("HashedAccountId")),
-                    
-                    new Claim(EmployerClaimTypes.EmailAddress, "test@test.com"),
-                    new Claim(EmployerClaimTypes.GivenName, "FirstName"),
-                    new Claim(EmployerClaimTypes.FamilyName, "Surname"),
-                    new Claim(EmployerClaimTypes.DisplayName, "Firstname and Surname"),
-                    new Claim(EmployerClaimTypes.FamilyName, "Surname")
-                },
-            "AuthenticationTypes.Federation"
-            );
+            if (options.Claims?.Count > 0)
+            {
+                var claimsIdentity = new ClaimsIdentity(
+                    options.Claims,
+                    "AuthenticationTypes.Federation"
+                );
 
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            context.User = claimsPrincipal;
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                context.User = claimsPrincipal;
+            }
 
             await _next(context);
         }

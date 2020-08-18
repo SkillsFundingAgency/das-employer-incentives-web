@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
 using System.Net;
@@ -23,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             _testContext = testContext;
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
         }
 
         [Given(@"an employer applying for a grant is asked to agree a declaration")]

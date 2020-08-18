@@ -6,7 +6,9 @@ using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
+using System.Threading.Tasks;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("/")]
@@ -14,13 +16,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         [Route("")]            
         [AllowAnonymous()]
-        public IActionResult AnonymousHome()
+        public async Task<IActionResult> AnonymousHome()
         {            
             return RedirectToAction("login");
         }
 
         [Route("/login")]        
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             if (User.HasClaim(c => c.Type.Equals(EmployerClaimTypes.Account)))
             {
@@ -30,13 +32,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("{accountId}")]
-        public IActionResult Home(string accountId)
+        public async Task<IActionResult> Home(string accountId)
         {
             return View(new HomeViewModel(accountId));
         }
 
         [Route("{accountId}/signout")]
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOut()
         {
             return SignOut(
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties
@@ -50,9 +52,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [Route("signoutcleanup")]
         [AllowAnonymous()]
-        public void SignOutCleanup()
+        public async Task SignOutCleanup()
         {
             Response.Cookies.Delete(CookieNames.AuthCookie);
         }
     }
 }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

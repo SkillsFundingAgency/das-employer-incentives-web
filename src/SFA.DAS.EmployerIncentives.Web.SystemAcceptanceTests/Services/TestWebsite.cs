@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     s.AddTransient<TestAuthenticationMiddleware>();
                     s.AddScoped<ITestAuthenticationOptions, TestAuthenticationOptions>(s =>
                     {
-                        return new TestAuthenticationOptions(_testContext);
+                        return new TestAuthenticationOptions(_testContext.Claims);
                     });
                     s.AddTransient<IStartupFilter, TestAuthenticationMiddlewareStartupFilter>();                
 
