@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Filters
             // Arrange
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, _userId)
+                new Claim(EmployerClaimTypes.UserId, _userId)
             }, "mockUser"));
 
             _httpContext.User = user;
@@ -93,10 +93,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Filters
         }
 
         [Test]
-        public void Then_the_account_id_is_populated_if_passed_in_url()
+        public void Then_the_account_id_is_populated_if_present()
         {
             // Arrange
-            _routeData.Values.Add("accountId", _accountId);
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(EmployerClaimTypes.Account, _accountId)
+            }, "mockUser"));
+
+            _httpContext.User = user;
 
             // Act
             _sut.OnActionExecuting(_context);

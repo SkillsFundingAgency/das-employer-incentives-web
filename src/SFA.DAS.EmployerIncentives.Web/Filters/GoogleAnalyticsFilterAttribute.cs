@@ -29,19 +29,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
             object accountIdRouteValue;
             object applicationIdRouteValue;
             
-            string hashedAccountId = null;
             string hashedAccountLegalEntityId = null;
 
-            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaims.IdamsUserIdClaimTypeIdentifier))?.Value;
-
-            if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue))
-            {
-                if (!accountIdRouteValue.ToString().Contains(".html"))
-                {
-                    hashedAccountId = accountIdRouteValue.ToString();
-                }
-            }
-            
+            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
+            var hashedAccountId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaimTypes.Account))?.Value;
+                    
             if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue)
                 && context.RouteData.Values.TryGetValue("applicationId", out applicationIdRouteValue))
             {
