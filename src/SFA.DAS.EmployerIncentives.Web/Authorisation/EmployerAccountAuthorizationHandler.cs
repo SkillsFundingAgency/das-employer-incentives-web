@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
         private readonly IHashingService _hashingService;
 
         public EmployerAccountAuthorizationHandler(
-            IUserService userService, 
+            IUserService userService,
             IHashingService hashingService)
         {
             _userService = userService;
@@ -28,12 +28,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
             if (isAuthorised)
             {
                 context.Succeed(requirement);
-            }
+            }            
         }
 
         public Task<bool> IsEmployerAuthorised(AuthorizationHandlerContext context)
-        {   
-            if (!(context.Resource is AuthorizationFilterContext mvcContext) || !mvcContext.RouteData.Values.ContainsKey(RouteValueKeys.AccountHashedId))
+        {
+            if (!(context.Resource is AuthorizationFilterContext mvcContext))
+            {
+                return Task.FromResult(false);
+            }
+
+            if (mvcContext.RouteData.Values["controller"].Equals("Home"))
+            {
+                return Task.FromResult(true);
+            }
+
+            if (!mvcContext.RouteData.Values.ContainsKey(RouteValueKeys.AccountHashedId))
             {
                 return Task.FromResult(false);
             }
@@ -45,12 +55,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
                 return Task.FromResult(false);
             }
 
-            if(!Guid.TryParse(userIdClaim.Value, out Guid userId))
+            if (!Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return Task.FromResult(false);
             }
 
-            var accountClaim = context.User.FindFirst(c => 
+            var accountClaim = context.User.FindFirst(c =>
                 c.Type.Equals(EmployerClaimTypes.Account) &&
                 c.Value.Equals(accountIdFromUrl, StringComparison.InvariantCultureIgnoreCase)
                 );
@@ -59,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
             {
                 return Task.FromResult(true);
             }
-            
+
             return Task.FromResult(false);
         }
     }

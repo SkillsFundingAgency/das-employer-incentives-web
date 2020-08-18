@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users
             _accountUsersRepository = accountUsersRepository;
             _hashingService = hashingService;
         }
-        
+
         public async Task<UserModel> Get(GetUserRequest request, CancellationToken cancellationToken = default)
         {
             var options = new FeedOptions { EnableCrossPartitionQuery = true };
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users
                         r.removed == null &&
                         r.role != null && r.role.Value == request.Role);
 
-            if(acccount == null)
+            if (acccount == null)
             {
                 return null;
             }

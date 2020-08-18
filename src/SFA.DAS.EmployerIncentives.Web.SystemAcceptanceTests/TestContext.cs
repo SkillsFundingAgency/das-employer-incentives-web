@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
     {
         public DirectoryInfo TestDirectory { get; set; }
         public TestWebsite Website { get; set; }
+        public TestCosmosDb ReadStore { get; set; }        
         public HttpClient WebsiteClient { get; set; }
         public TestEmployerIncentivesApi EmployerIncentivesApi { get; set; }
         public IHashingService HashingService { get; set; }
@@ -20,7 +21,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public List<IHook> Hooks { get; set; }
         public TestActionResult ActionResult { get; set; }
         public WebConfigurationOptions WebConfigurationOptions { get; set; }
-
+        public CosmosDbConfigurationOptions CosmosDbConfigurationOptions { get; set; }
+        
         private bool _isDisposed;
 
         public TestContext()

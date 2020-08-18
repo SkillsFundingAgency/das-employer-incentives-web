@@ -61,8 +61,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             IdentityModelEventSource.ShowPII = true;
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                            options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -81,8 +81,8 @@ namespace SFA.DAS.EmployerIncentives.Web
                     options =>
                     {
                         options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
-                        options.Filters.Add(new GoogleAnalyticsFilterAttribute());                        
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));                        
+                        options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
                     })
@@ -158,7 +158,6 @@ namespace SFA.DAS.EmployerIncentives.Web
             }
             else
             {
-
                 app.UseExceptionHandler("/error/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseDasHsts();

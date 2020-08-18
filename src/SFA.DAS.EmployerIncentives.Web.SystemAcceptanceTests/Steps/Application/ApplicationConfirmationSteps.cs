@@ -11,6 +11,7 @@ using WireMock.ResponseBuilders;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
+    [Scope(Feature = "ApplicationConfirmation")]
     public class ApplicationConfirmationSteps : StepsBase
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
@@ -22,6 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             _testContext = testContext;
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
         }
 
         [Given(@"an employer applying for a grant is asked to agree a declaration")]

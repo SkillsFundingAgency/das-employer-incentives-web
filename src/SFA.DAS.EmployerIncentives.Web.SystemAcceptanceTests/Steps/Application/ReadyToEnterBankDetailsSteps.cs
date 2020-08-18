@@ -39,6 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -61,6 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -89,6 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -117,6 +120,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 

@@ -29,6 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testContext = testContext;
             _hashingService = _testContext.HashingService;
             _data = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _data.HashedAccountId);
         }
 
         [Given(@"there are eligible apprenticeships for the grant")]

@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context = context;
         }
 
-        [BeforeScenario()]
+        [BeforeScenario(Order = 1)]
         public void InitialiseApi()
         {
             _context.EmployerIncentivesApi = new TestEmployerIncentivesApi();            

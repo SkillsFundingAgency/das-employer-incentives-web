@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 {
                     options.AccessDeniedPath = new PathString("/error/403");
                     options.ExpireTimeSpan = TimeSpan.FromHours(1);
-                    options.Cookie.Name = "sfa-das-employer-incentives";
+                    options.Cookie.Name = CookieNames.AuthCookie;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.SlidingExpiration = true;
                     options.Cookie.SameSite = SameSiteMode.None;
@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         }
 
         private static async Task PopulateAccountsClaim(
-            TokenValidatedContext ctx, 
+            TokenValidatedContext ctx,
             IUserService userService)
         {
             var userIdString = ctx.Principal.Claims

@@ -1,14 +1,17 @@
-﻿using SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi;
+﻿using SFA.DAS.EmployerIncentives.Web.MockServer.CosmosDb;
+using SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
 using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer
 {
     public static class Program
     {
-        static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var employerIncenticesApi = EmployerIncentivesApiBuilder
-                .Create(8081)
+                .Create(8083)
                 .WithAccountWithNoLegalEntities()
                 .WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
                 .WithSingleLegalEntityWithEligibleApprenticeships()
@@ -18,6 +21,10 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithoutASignedAgreement()
                 .WithApplicationConfirmation()
                 .Build();
+
+            var readStore = await AccountsReadStoreBuilder.Create();
+            await readStore.WithAccountForAccountOwnerUserId(new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships().AccountId);
+            readStore.Build();
 
             Console.WriteLine("Press any key to stop the servers");
             Console.ReadKey();
