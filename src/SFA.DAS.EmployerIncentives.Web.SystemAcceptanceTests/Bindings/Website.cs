@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context = context;           
         }
 
-        [BeforeScenario()]
+        [BeforeScenario(Order = 1)]
         public void InitialiseWebsite()
         {
             var hook = new Hook<IActionResult>();
@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 RedisCacheConnectionString = "localhost"
             };
 
-            _context.Website = new TestWebsite(_context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook);
+            _context.Website = new TestWebsite(_context, _context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook);
             _context.WebsiteClient = _context.Website.CreateClient();
             _context.HashingService = _context.Website.Services.GetService(typeof(IHashingService)) as IHashingService;
         }
