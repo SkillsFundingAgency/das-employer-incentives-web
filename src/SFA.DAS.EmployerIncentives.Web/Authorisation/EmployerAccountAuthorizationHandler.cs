@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.RouteValues;
-using SFA.DAS.EmployerIncentives.Web.Services.Users;
-using SFA.DAS.HashingService;
 using System;
 using System.Threading.Tasks;
 

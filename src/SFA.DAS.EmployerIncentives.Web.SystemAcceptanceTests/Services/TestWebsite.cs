@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -16,19 +17,22 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
         private readonly TestEmployerIncentivesApi _testEmployerIncentivesApi;
         private readonly Dictionary<string, string> _appConfig;
         private readonly IHook<IActionResult> _actionResultHook;
+        private readonly IHook<AuthorizationHandlerContext> _authContextHook;
         private readonly WebConfigurationOptions _webConfigurationOptions;
         public IWebHostBuilder WebHostBuilder { get; private set; }
 
         public TestWebsite(
             TestContext testContext,
             WebConfigurationOptions webConfigurationOptions,
-            TestEmployerIncentivesApi testEmployerIncentivesApi, 
-            IHook<IActionResult> actionResultHook)
+            TestEmployerIncentivesApi testEmployerIncentivesApi,
+            IHook<IActionResult> actionResultHook,
+            IHook<AuthorizationHandlerContext> authContextHook)
         {
             _testContext = testContext;
             _webConfigurationOptions = webConfigurationOptions;
             _testEmployerIncentivesApi = testEmployerIncentivesApi;
             _actionResultHook = actionResultHook;
+            _authContextHook = authContextHook;
 
             _appConfig = new Dictionary<string, string>
             {
@@ -47,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
             builder
                 .ConfigureAppConfiguration(a =>
-                {           
+                {
                     a.Sources.Clear();
                     a.AddInMemoryCollection(_appConfig);
                 });
@@ -60,7 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     {
                         return new TestAuthenticationOptions(_testContext.Claims);
                     });
-                    s.AddTransient<IStartupFilter, TestAuthenticationMiddlewareStartupFilter>();                
+                    s.AddTransient<IStartupFilter, TestAuthenticationMiddlewareStartupFilter>();
 
                     s.Configure<WebConfigurationOptions>(o =>
                     {
@@ -78,10 +82,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     {
                         o.Uri = "https://localhost:8081/";
                         o.AuthKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-                    });                  
+                    });
+                    s.Configure<ExternalLinksConfiguration>(o =>
+                    {
+                        o.EmployerRecruitmentSiteUrl = "http://localhost";
+                        o.ManageApprenticeshipSiteUrl = "http://localhost";
+                        o.CommitmentsSiteUrl = "http://localhost";
+                    });                   
                     s.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new TestActionResultFilter(_actionResultHook));
+                    });
+
+                    s.Decorate<IAuthorizationHandler>((handler, testhandler) =>
+                    {
+                        return new TestAuthorizationHandler(handler, _authContextHook);
                     });
                 });
         }
