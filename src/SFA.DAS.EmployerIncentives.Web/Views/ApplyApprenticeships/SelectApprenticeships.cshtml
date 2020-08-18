@@ -24,19 +24,19 @@
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">You can only choose from your apprentices:</p>
-
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>with a planned start date after 1 August 2020</li>
-                            <li>that you have not applied for already</li>
-                        </ul>
+                        <p class="govuk-body">
+                            Choose from the apprentices in your apprenticeship service account with a planned start date from 1 August 2020.
+                        </p>
+                        <p class="govuk-body">
+                            You cannot view any apprentices that you've already applied for.
+                        </p>
 
                         <div class="govuk-inset-text">
-                            You must only select apprentices that joined your payroll after 1 August 2020.
+                            You must only select apprentices who started their contract of employment with your organisation from 1 August 2020 to 31 January 2021.
                         </div>
 
                         <span id="new-apprenticeships-hint" class="govuk-hint">
-                            Select all that apply.
+                            Select all that apply
                         </span>
 
                         @if (!ViewData.ModelState.IsValid)
@@ -49,16 +49,18 @@
                             @foreach (var apprenticeship in Model.Apprenticeships)
                             {
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input"
-                                           id="new-apprenticeships-@apprenticeship.Id"
-                                           name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
-                                           type="checkbox"
-                                           @if(apprenticeship.Selected)
-                                           {
-                                               @Html.Raw("checked")
-                                           } 
-                                           value="@apprenticeship.Id"
-                                           aria-describedby="new-apprenticeships-item-hint" />
+                                    <input
+                                        class="govuk-checkboxes__input"
+                                        id="new-apprenticeships-@apprenticeship.Id"
+                                        name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
+                                        type="checkbox"
+                                        @if(apprenticeship.Selected)
+                                        {
+                                            @Html.Raw("checked")
+                                        } 
+                                        value="@apprenticeship.Id"
+                                        aria-describedby="new-apprenticeships-item-hint" 
+                                    />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
                                         @apprenticeship.DisplayName
                                     </label>
