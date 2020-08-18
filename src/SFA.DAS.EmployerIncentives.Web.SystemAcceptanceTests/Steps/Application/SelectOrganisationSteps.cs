@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
         }
-        
+
         [When(@"the employer selects the legal entity the application is for")]
         public async Task WhenTheEmployerSelectsTheLegalEntityTheApplicationIsFor()
         {
@@ -74,14 +74,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
 
             var request = new HttpRequestMessage(
-                HttpMethod.Post, 
+                HttpMethod.Post,
                 $"{hashedAccountId}/apply/choose-organisation")
-                {
-                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+            {
+                Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("Selected", hashedAccountLegalEntityId)
                     })
-                };
+            };
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -102,8 +102,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 $"{hashedAccountId}/apply/choose-organisation")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
-                    {
-                    })
+                {
+                })
             };
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
@@ -125,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices that joined your payroll after 1 August 2020?");
+            model.Should().HaveTitle("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 

@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
         {
             var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form)
         {
             if (form.HasSelectedApprenticeships)
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("select-new-apprentices/{applicationId}")]
+        [Route("select-apprentices/{applicationId}")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
         {
             var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId);
@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpPost]
-        [Route("select-new-apprentices/{applicationId}")]
+        [Route("select-apprentices/{applicationId}")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form, Guid applicationId)
         {
             if (form.HasSelectedApprenticeships)
