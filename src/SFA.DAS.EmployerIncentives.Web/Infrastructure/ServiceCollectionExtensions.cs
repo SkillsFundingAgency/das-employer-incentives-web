@@ -19,8 +19,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using System;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using System.Linq;
 using System.Net.Http;
