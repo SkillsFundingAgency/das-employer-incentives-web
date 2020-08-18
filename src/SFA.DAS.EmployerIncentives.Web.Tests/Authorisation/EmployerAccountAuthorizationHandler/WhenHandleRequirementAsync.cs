@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
             _identity = new ClaimsIdentity(_claims);
             _user = new ClaimsPrincipal(_identity);
 
-            _sut = new EmployerAccountAuthorizationHandler(_mockUserService.Object, _mockHashingService.Object);
+            _sut = new EmployerAccountAuthorizationHandler();
         }
 
         [Test]
