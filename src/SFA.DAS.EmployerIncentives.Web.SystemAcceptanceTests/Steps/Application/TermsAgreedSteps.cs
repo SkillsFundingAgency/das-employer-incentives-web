@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -33,6 +34,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -79,6 +81,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var testdata = new TestData.Account.WithoutASignedAgreement();
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
 
             _testContext.EmployerIncentivesApi.MockServer

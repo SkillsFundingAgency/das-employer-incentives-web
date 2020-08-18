@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -215,6 +216,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     md.Score
                 } as object).ToList()
             };
-        }
+        }        
     }
 }

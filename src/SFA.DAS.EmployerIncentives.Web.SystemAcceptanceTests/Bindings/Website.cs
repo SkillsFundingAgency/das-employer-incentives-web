@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
@@ -17,11 +18,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context = context;           
         }
 
-        [BeforeScenario()]
+        [BeforeScenario(Order = 1)]
         public void InitialiseWebsite()
         {
             var hook = new Hook<IActionResult>();
+            var authHook = new Hook<AuthorizationHandlerContext>();
             _context.Hooks.Add(hook);
+            _context.Hooks.Add(authHook);
             _context.WebConfigurationOptions = new WebConfigurationOptions
             {
                 AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY",
@@ -31,7 +34,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 RedisCacheConnectionString = "localhost"
             };
 
-            _context.Website = new TestWebsite(_context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook);
+            _context.Website = new TestWebsite(_context, _context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook, authHook);
             _context.WebsiteClient = _context.Website.CreateClient();
             _context.HashingService = _context.Website.Services.GetService(typeof(IHashingService)) as IHashingService;
         }
