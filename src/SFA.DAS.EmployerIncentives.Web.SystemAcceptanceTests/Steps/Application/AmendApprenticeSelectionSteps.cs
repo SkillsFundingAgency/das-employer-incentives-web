@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
@@ -29,6 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testContext = testContext;
             _hashingService = _testContext.HashingService;
             _data = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _data.HashedAccountId);
         }
 
         [Given(@"there are eligible apprenticeships for the grant")]
