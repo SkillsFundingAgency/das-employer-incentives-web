@@ -23,8 +23,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
     public class WhenHandleRequirementAsync
     {
         private EmployerAccountAuthorizationHandler _sut;
-        private Mock<IUserService> _mockUserService;
-        private Mock<IHashingService> _mockHashingService;        
         private List<IAuthorizationRequirement> _requirements;
         private ClaimsPrincipal _user;
         private ClaimsIdentity _identity;
@@ -37,9 +35,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
         [SetUp]
         public void SetUp()
         {
-            _mockUserService = new Mock<IUserService>();
-            _mockHashingService = new Mock<IHashingService>();
-
             _userId = Guid.NewGuid();
             _accountClaimValue = Guid.NewGuid().ToString();
 
@@ -67,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
             _identity = new ClaimsIdentity(_claims);
             _user = new ClaimsPrincipal(_identity);
 
-            _sut = new EmployerAccountAuthorizationHandler(_mockUserService.Object, _mockHashingService.Object);
+            _sut = new EmployerAccountAuthorizationHandler();
         }
 
         [Test]

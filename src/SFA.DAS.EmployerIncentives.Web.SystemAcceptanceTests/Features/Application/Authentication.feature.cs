@@ -76,10 +76,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("An unauthorised user is asked to log on")]
-        public virtual void AnUnauthorisedUserIsAskedToLogOn()
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/choose-organisation\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/taken-on-new-apprentices\"", null)]
+        public virtual void AnUnauthorisedUserIsAskedToLogOn(string url, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("url", url);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An unauthorised user is asked to log on", null, tagsOfScenario, argumentsOfScenario);
 #line 6
 this.ScenarioInitialize(scenarioInfo);
@@ -105,7 +109,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("a user of the system has not logged on", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
- testRunner.When("the user access the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When(string.Format("the user access the {0} page", url), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 9
  testRunner.Then("the user is asked to log on", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

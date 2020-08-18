@@ -3,7 +3,15 @@
 	As a system
 	I want to only allow authorised access
 
-Scenario: An unauthorised user is asked to log on
+Scenario Outline: An unauthorised user is asked to log on
 	Given a user of the system has not logged on
-	When the user access the home page
+	When the user access the <url> page
 	Then the user is asked to log on
+
+  Examples:
+    | url                                             |
+    | "/VBKBLD/apply"                                 |
+    | "/VBKBLD/apply/choose-organisation"             |
+    | "/VBKBLD/apply/MLP7DD/taken-on-new-apprentices" |
+
+	
