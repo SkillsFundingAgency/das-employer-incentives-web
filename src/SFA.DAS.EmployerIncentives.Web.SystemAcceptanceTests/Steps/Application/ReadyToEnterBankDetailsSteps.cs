@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Html.Parser;
 using AutoFixture;
 using FluentAssertions;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
@@ -42,6 +43,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -91,6 +94,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                      .WithStatusCode(HttpStatusCode.OK)
                      .WithHeader("Content-Type", "application/json")
                      .WithBody(string.Empty));
+
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -148,6 +154,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
 
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -176,6 +184,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bankdetails/{applicationId}{ReadyToEnterBankDetailsUrl}";
 

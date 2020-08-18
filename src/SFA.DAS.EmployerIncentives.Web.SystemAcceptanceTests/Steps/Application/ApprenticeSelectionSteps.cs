@@ -15,6 +15,7 @@ using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -43,6 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => data.AccountId);
             _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
             var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => data.AccountLegalEntityId);
             _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
 
