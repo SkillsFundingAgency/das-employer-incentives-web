@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -25,12 +25,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
         {
             var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
 
-            if(!model.Apprenticeships.Any())
+            if (!model.Apprenticeships.Any())
             {
                 return RedirectToAction("CannotApply", "Apply", new { accountId });
             }
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/select-new-apprentices")]
+        [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form)
         {
             if (form.HasSelectedApprenticeships)
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("select-new-apprentices/{applicationId}")]
+        [Route("select-apprentices/{applicationId}")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
         {
             var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId);
@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpPost]
-        [Route("select-new-apprentices/{applicationId}")]
+        [Route("select-apprentices/{applicationId}")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form, Guid applicationId)
         {
             if (form.HasSelectedApprenticeships)
@@ -90,6 +90,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var model = await _applicationService.Get(accountId, applicationId);
             return View(model);
+        }
+
+        [HttpPost]
+        [Route("confirm-apprentices/{applicationId}")]
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
+        {
+            return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)

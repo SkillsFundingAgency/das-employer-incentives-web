@@ -1,21 +1,33 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete.ConfirmationViewModel
 @{
-    ViewData["Title"] = "Application complete";
+    ViewData["Title"] = Model.Title;
+    ViewData["ZenDeskLabels"] = "ei-applicationcomplete";
 }
 
 <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-8">
-                <h1 class="govuk-panel__title">Application complete</h1>
+                <h1 class="govuk-panel__title">
+                    @Model.Title
+                </h1>
             </div>
 
             <h2 class="govuk-heading-m">What happens next</h2>
-            <p class="govuk-body">You'll receive the first payment after the apprentice completes 90 days of their apprenticeship and the second payment after 365 days.</p>
-            <p class="govuk-body">We make payments on the 10th working day of each month, using the bank details in your organisation. You do not need to do anything else.</p>
+            <p class="govuk-body">
+                You'll receive the first payment after the apprentice completes 90 days of their apprenticeship training and the second payment after 365 days.
+            </p>
+            <p class="govuk-body">
+                We make payments on the 10th working day of each month, starting from January 2021. It will take longer to get your first payment for any apprentices who start their training in August or September.
+            </p>
+            <p class="govuk-body">
+                We'll use your organisation's bank details to make your payment. You do not need to do anything else.
+            </p>
 
             <h2 class="govuk-heading-m">Changes to your payment</h2>
-            <p class="govuk-body">Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.</p>
+            <p class="govuk-body">
+                Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.
+            </p>
             <p class="govuk-body">We cannot make your payment if:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>an apprentice is on a break in learning</li>
@@ -28,7 +40,9 @@
                 Return to account home
             </a>
 
-            <p class="govuk-body"><a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)</p>
+            <p class="govuk-body">
+                <a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)
+            </p>
         </div>
     </div>
 </main>

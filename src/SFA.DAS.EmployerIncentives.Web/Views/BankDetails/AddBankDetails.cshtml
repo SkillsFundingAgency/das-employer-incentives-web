@@ -1,14 +1,14 @@
 ﻿
 @{
     ViewData["Title"] = "Add your organisation's bank account details";
+    ViewData["ZenDeskLabels"] = "ei-addbankdetails";
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            <h1 class="govuk-heading-xl">Add your organisation's bank account details</h1>
+            <h1 class="govuk-heading-l">Add your organisation's bank account details</h1>
             <p class="govuk-body">We need your organisation's bank account details, so that we can make your hire a new apprentice payment.</p>
             <p class="govuk-body">You can only add one bank account for your organisation. We'll use this account to make all of your payments.</p>
 
@@ -19,7 +19,7 @@
                 <li>organisation's address and bank account details</li>
             </ul>
 
-            <div class="govuk-inset-text">We may contact a person with significant control to verify the information you provide.</div>
+            <div class="govuk-inset-text">We may contact someone from your organisation to verify the information you provide.</div>
 
             <form asp-action="EnterBankDetails" method="post">
                 @Html.AntiForgeryToken()

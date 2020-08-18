@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewData["ZenDeskLabels"] = "ei-signagreement";
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">
+            <h1 class="govuk-heading-l">
                 @Model.Title
             </h1>
             <p class="govuk-body">
@@ -17,7 +18,7 @@
                 The new agreement includes the terms for using the payment and accessing funding through the apprenticeship service.
             </p>
             <p class="govuk-body">
-                You must have permission to ‘accept agreements’ for your organisation
+                You must have permission to 'accept agreements' for your organisation
             </p>
 
             <a href="@Model.AccountsAgreementsUrl" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
