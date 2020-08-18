@@ -2,9 +2,9 @@
 {
     public class QualificationQuestionViewModel : ViewModel
     {
-        public const string HasTakenOnNewApprenticesNotSelectedMessage = "Select yes if you’ve taken on new apprentices that joined your payroll after 1 August 2020";
+        public const string HasTakenOnNewApprenticesNotSelectedMessage = "Select yes if you've taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021";
 
-        public QualificationQuestionViewModel() : base("Have you taken on new apprentices that joined your payroll after 1 August 2020?")
+        public QualificationQuestionViewModel() : base("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?")
         {
         }
 

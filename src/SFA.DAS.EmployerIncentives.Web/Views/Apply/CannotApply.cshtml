@@ -13,22 +13,26 @@
             @if(Model is SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.TakenOnCannotApplyViewModel)
             {
                 <p class="govuk-body">
-                    You can only apply for this grant if you have new apprentices with a planned start date after 1 August 2020.
+                    You can only apply for this payment if you have new apprentices with a planned start date from 1 August 2020.
+                </p>
+                <p class="govuk-body">
+                    If you have apprentices who are eligible for this payment, you'll need to 
+                    <a class="govuk-link" href="@Model.AddApprenticesUrl">
+                        add them to your apprenticeship service account.
+                    </a>
                 </p>
             }
             else
             {
                 <p class="govuk-body">
-                    You can only apply for this grant if you have new apprentices who joined your organisation after 1 August 2020.
+                    You cannot apply for this payment because you do not have any new apprentices who started their contact of employment between 1 August 2020 and 31 January 2021.
+                </p>
+                <p class="govuk-body">
+                    <a class="govuk-button" href="@Model.AccountHomeUrl">
+                        Return to account home
+                    </a>
                 </p>
             }
-
-            <p class="govuk-body">
-                If you have apprentices who are eligible for this grant, you'll need to
-                <a class="govuk-link" href="@Model.CommitmentsUrl">
-                    add them to your apprenticeship service account.
-                </a>
-            </p>
         </div>
     </div>
 </main>
