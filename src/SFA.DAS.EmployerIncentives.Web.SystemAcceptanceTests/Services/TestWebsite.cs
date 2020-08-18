@@ -83,6 +83,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.Uri = "https://localhost:8081/";
                         o.AuthKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
                     });
+                    s.Configure<ExternalLinksConfiguration>(o =>
+                    {
+                        o.EmployerRecruitmentSiteUrl = "http://localhost";
+                        o.ManageApprenticeshipSiteUrl = "http://localhost";
+                        o.CommitmentsSiteUrl = "http://localhost";
+                    });                   
                     s.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new TestActionResultFilter(_actionResultHook));

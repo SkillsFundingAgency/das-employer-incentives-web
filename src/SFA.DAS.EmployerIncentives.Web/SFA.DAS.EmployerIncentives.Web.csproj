@@ -16,6 +16,7 @@
     <PackageReference Include="SFA.DAS.CosmosDb" Version="1.0.47" />
     <PackageReference Include="SFA.DAS.HashingService" Version="1.0.183" />
     <PackageReference Include="SFA.DAS.Http" Version="3.2.53" />
+    <PackageReference Include="SFA.DAS.MA.Shared.UI" Version="1.1.56" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.2.1" />
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />

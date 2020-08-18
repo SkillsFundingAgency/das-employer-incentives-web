@@ -70,6 +70,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
             services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
             services.Configure<CosmosDbConfigurationOptions>(_configuration.GetSection(CosmosDbConfigurationOptions.CosmosDbConfiguration));
+            services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
+            services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
 
             services.AddAuthorizationPolicies();            
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
