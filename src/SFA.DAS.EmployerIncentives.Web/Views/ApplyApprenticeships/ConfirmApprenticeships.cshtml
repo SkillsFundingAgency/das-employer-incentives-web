@@ -4,6 +4,7 @@
 @{
     var culture = new CultureInfo("en-GB");
     ViewData["Title"] = Model.Title;
+    ViewData["ZenDeskLabel"] = "ei-confirmapprentices";
 }
 
 <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>

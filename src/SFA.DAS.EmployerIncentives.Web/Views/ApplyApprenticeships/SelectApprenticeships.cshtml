@@ -3,6 +3,7 @@
 @model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
 @{
     ViewData["Title"] = Model.Title;
+    ViewData["ZenDeskLabel"] = "ei-selectapprentices";
 }
 
 <a asp-action="QualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
