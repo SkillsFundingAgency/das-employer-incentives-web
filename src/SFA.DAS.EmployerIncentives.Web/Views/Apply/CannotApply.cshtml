@@ -2,6 +2,16 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    
+}
+
+@if(Model is SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.TakenOnCannotApplyViewModel)
+{
+    ViewData["ZenDeskLabels"] = "ei-nocommitments";
+}
+else
+{
+    ViewData["ZenDeskLabels"] = "ei-noeligible";
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
