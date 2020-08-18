@@ -34,15 +34,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 options.AddPolicy(
                     PolicyNames.IsAuthenticated,
                     policy =>
-                    {
-                        policy.RequireAuthenticatedUser();
+                    {              
+                        policy.Requirements.Add(new IsAuthenticatedRequirement());
                     });
 
                 options.AddPolicy(
                     PolicyNames.HasEmployerAccount,
                     policy =>
                     {
-                        policy.RequireClaim(EmployerClaimTypes.Account);
                         policy.Requirements.Add(new EmployerAccountRequirement());
                     });
             });
@@ -54,6 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
+            serviceCollection.AddSingleton<IAuthorizationHandler, IsAuthenticatedAuthorizationHandler>();
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
             _ = serviceCollection

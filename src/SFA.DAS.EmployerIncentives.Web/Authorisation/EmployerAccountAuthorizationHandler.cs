@@ -11,16 +11,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
 {
     public class EmployerAccountAuthorizationHandler : AuthorizationHandler<EmployerAccountRequirement>
     {
-        private readonly IUserService _userService;
-        private readonly IHashingService _hashingService;
-
-        public EmployerAccountAuthorizationHandler(
-            IUserService userService,
-            IHashingService hashingService)
-        {
-            _userService = userService;
-            _hashingService = hashingService;
-        }
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerAccountRequirement requirement)
         {
             var isAuthorised = await IsEmployerAuthorised(context);
