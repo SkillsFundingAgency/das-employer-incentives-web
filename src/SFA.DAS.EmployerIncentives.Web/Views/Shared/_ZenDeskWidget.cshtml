@@ -29,5 +29,6 @@
 <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=@options.ZenDeskSnippetKey"></script>
 <script id="co-snippet" src="https://embed-euw1.rcrsv.io/@options.ZenDeskCobrowsingSnippetKey?zwwi=1"></script>
 <script type="text/javascript">
-  zE('webWidget', 'helpCenter:setSuggestions', { labels: ['@ViewBag.ZenDeskLabel'] });
+  var zendeskLabelArray = "@ViewBag.ZenDeskLabels".replace(/\s/g, '').split(',');
+  zE('webWidget', 'helpCenter:setSuggestions', { labels: zendeskLabelArray });
 </script>
