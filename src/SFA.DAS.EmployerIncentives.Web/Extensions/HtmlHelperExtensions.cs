@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
                     HashedAccountId = html.ViewContext.RouteData.Values["accountId"]?.ToString()
                 });
 
-            headerModel.SelectMenu("WhichMenuOptionShouldBeSelected");
+            headerModel.SelectMenu("Finance");
 
             if ((html.ViewBag.IsErrorPage is bool && html.ViewBag.IsErrorPage) ||
                 (html.ViewBag.ShowNav is bool && !html.ViewBag.ShowNav))
