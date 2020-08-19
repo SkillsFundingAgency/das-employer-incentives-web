@@ -253,7 +253,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .WithPath(x => x.Contains($"/accounts/{data.AccountId}/applications/") && !x.Contains("accountlegalentity"))
                         .UsingGet()
                 )
                 .RespondWith(
