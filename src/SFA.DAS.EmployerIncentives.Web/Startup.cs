@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
-using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
@@ -60,25 +61,30 @@ namespace SFA.DAS.EmployerIncentives.Web
             IdentityModelEventSource.ShowPII = true;
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                            options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             services.AddOptions();
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
             services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
+            services.Configure<CosmosDbConfigurationOptions>(_configuration.GetSection(CosmosDbConfigurationOptions.CosmosDbConfiguration));
+            services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
+            services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
 
-            //services.AddAuthorizationService();
+            services.AddAuthorizationPolicies();            
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
+            services.AddEmployerAuthentication(_configuration);
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddMvc(
                     options =>
                     {
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));                        
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
-                        options.AddAuthorization();
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
                     })

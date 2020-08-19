@@ -45,6 +45,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bank-details/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -65,6 +67,36 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerConfirmsTheyCanProvideTheirBankDetails()
         {
             var data = new TestData.Account.WithInitialApplicationAndBankingDetails();
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+
+            _testContext.EmployerIncentivesApi.MockServer
+             .Given(
+                 Request
+                     .Create()
+                     .WithPath($"/email/bank-details-reminder")
+                     .UsingPost()
+             )
+             .RespondWith(
+                 Response.Create()
+                     .WithStatusCode(HttpStatusCode.OK)
+                     .WithHeader("Content-Type", "application/json")
+                     .WithBody(string.Empty));
+
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -101,7 +133,38 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                       .UsingGet()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.OK)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(accountLegalEntityId.ToString()));
+
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/email/bank-details-required")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.OK)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(string.Empty));
+
+
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bank-details/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -130,6 +193,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
             var url = $"{hashedAccountId}/bank-details/{applicationId}{ReadyToEnterBankDetailsUrl}";
 
@@ -163,6 +228,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.ViewData.ModelState.ContainsKey(nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)).Should().BeTrue();
             viewResult.ViewData.ModelState[nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)]
                 .Errors.First().ErrorMessage.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+        }
+
+        [Then(@"the employer is sent an email reminding them to supply their bank details to complete the application")]
+        public void ThenTheEmployerIsSentAnEmailRemindingThemToSupplyTheirBankDetailsToCompleteTheApplication()
+        {
+            var emailRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries(Request.Create().WithPath($"/email/bank-details-required").UsingPost());
+            emailRequests.ToList().Count().Should().Be(1);
+        }
+
+        [Then(@"the employer is sent an email with details of how to enter their bank details in case they are unable to complete the journey")]
+        public void ThenTheEmployerIsSentAnEmailWithDetailsOfHowToEnterTheirBankDetailsInCaseTheyAreUnableToCompleteTheJourney()
+        {
+            var emailRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries(Request.Create().WithPath($"/email/bank-details-reminder").UsingPost());
+            emailRequests.ToList().Count().Should().Be(1);
         }
 
     }

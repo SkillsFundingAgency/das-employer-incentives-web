@@ -22,6 +22,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         public CompleteApplicationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
+            var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
+            _testContext.TestDataStore.Add("HashedAccountId", testdata.HashedAccountId);
         }
 
         [Given(@"the employer has entered all the information required to process their bank details")]
@@ -70,6 +72,5 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             model.Should().NotBeNull();
             model.AccountsUrl.Should().NotBeNullOrEmpty();
         }
-
     }
 }

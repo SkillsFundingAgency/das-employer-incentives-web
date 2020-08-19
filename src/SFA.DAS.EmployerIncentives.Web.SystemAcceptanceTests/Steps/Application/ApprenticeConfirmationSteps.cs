@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -15,6 +16,7 @@ using WireMock.ResponseBuilders;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
+    [Scope(Feature = "ApprenticeConfirmation")]
     public class ApprenticeConfirmationSteps : StepsBase
     {
         private readonly TestContext _testContext;
@@ -30,6 +32,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void GivenAnEmployerApplyingForAGrantHasAlreadySelectedEligibleApprentices(int p0)
         {
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
