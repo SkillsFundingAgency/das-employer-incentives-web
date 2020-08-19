@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                      .WithHeader("Content-Type", "application/json")
                      .WithBody(string.Empty));
 
-            var getBankingDetailsUrl = OuterApiRoutes.GetBankingDetailsUrl(_data.AccountId, _data.ApplicationId, _data.HashedAccountId).Split("?").First();
+            var getBankingDetailsUrl = "/" + OuterApiRoutes.GetBankingDetailsUrl(_data.AccountId, _data.ApplicationId, _data.HashedAccountId).Split("?").First();
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
