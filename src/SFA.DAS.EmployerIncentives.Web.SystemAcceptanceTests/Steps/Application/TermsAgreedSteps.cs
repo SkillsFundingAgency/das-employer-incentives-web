@@ -165,7 +165,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ValidateTermsSignedViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You need to sign a new agreement");
+            model.Should().HaveTitle("You need to accept the employer agreement");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);

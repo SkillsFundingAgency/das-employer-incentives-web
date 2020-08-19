@@ -2,7 +2,7 @@
 {
     public class ValidateTermsSignedViewModel : ViewModel
     {
-        public ValidateTermsSignedViewModel(string accountId, string accountsBaseUrl, string title = "You need to sign a new agreement") : base(title)
+        public ValidateTermsSignedViewModel(string accountId, string accountsBaseUrl, string title = "You need to accept the employer agreement") : base(title)
         {
             AccountId = accountId;
             _accountsBaseUrl = accountsBaseUrl;
