@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             var url = OuterApiRoutes.GetBankingDetailsUrl(accountId, applicationId, hashedAccountId);
 
-            _logger.LogInformation("[BankingDetailsService] Call outer API: " + url);
+            _logger.LogInformation("[BankingDetailsService] Call outer API: " + _client.BaseAddress + url);
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
