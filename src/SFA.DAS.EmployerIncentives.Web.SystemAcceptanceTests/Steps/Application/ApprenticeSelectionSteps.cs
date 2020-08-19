@@ -17,6 +17,7 @@ using WireMock.ResponseBuilders;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using WireMock.Matchers;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -48,7 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
             var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => data.AccountLegalEntityId);
             _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
-
+            
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
@@ -78,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{accountId}/applications/*")
+                        .WithPath(x => x.Contains($"/accounts/{data.AccountId}/applications/") && !x.Contains("accountlegalentity"))
                         .UsingGet()
                 )
                 .RespondWith(
@@ -104,7 +105,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath(x => x.EndsWith("accountlegalentity")) // applicationid is generated in application service so will vary per request
+                      .WithPath(x =>
+                      x.Contains($"accounts/{data.AccountId}/applications") &&
+                      x.Contains("accountlegalentity")) // applicationid is generated in application service so will vary per request
                       .UsingGet()
               )
               .RespondWith(
