@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (!model.Apprenticeships.Any())
             {
-                return RedirectToAction("CannotApply", "Apply", new { accountId });
+                return RedirectToAction("CannotApplyYet", "Apply", new { accountId });
             }
 
             return View(model);
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (!model.Apprenticeships.Any())
             {
-                return RedirectToAction("CannotApply", "Apply", new { accountId });
+                return RedirectToAction("CannotApplyYet", "Apply", new { accountId });
             }
 
             return View(model);

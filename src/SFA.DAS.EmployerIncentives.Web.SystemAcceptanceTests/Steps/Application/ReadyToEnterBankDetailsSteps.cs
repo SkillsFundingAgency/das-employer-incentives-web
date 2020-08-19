@@ -43,6 +43,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
             _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
@@ -154,6 +169,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
 
             var hashedAccountId = _hashingService.HashValue(accountId);
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
             _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
@@ -184,6 +213,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var applicationId = Guid.NewGuid();
             var accountId = _fixture.Create<long>();
             var hashedAccountId = _hashingService.HashValue(accountId);
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
             _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
 
