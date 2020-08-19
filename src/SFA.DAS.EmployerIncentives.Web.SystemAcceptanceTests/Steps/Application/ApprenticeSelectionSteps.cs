@@ -15,6 +15,7 @@ using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using WireMock.Matchers;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
@@ -86,6 +87,31 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
+            _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/accounts/{accountId}/applications")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.Created)
+                       .WithHeader("Content-Type", "application/json")
+                       .WithBody(string.Empty));
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath(x => x.EndsWith("accountlegalentity")) // applicationid is generated in application service so will vary per request
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(data.AccountLegalEntityId.ToString()));
         }
 
         [When(@"the employer selects the apprentice the grant applies to")]
