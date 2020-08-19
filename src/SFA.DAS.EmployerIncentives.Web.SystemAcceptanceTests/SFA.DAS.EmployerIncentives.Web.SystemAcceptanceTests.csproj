@@ -51,6 +51,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\Application\Eligibility.feature.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Eligibility.feature</DependentUpon>
+    </Compile>
     <Compile Update="Features\Application\TermsAgreed.feature.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

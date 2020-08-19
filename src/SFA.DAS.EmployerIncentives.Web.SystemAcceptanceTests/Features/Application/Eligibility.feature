@@ -12,17 +12,17 @@ Scenario: An employer with a single organisation selects that they have eligible
 Scenario: An employer with a single organisation without any eligible apprenticeships
 	Given an employer with a single organisation applying for a grant has no eligible apprenticeships
 	When the employer specifies that they have eligible apprenticeships
-	Then the employer is informed that they cannot apply
+	Then the employer is informed that they cannot apply yet
 
 Scenario: An employer selects that they do not have eligible apprenticeships
 	Given an employer applying for a grant does not have eligible apprenticeships
 	When the employer specifies that they do not have eligible apprenticeships
-	Then the employer is informed that they cannot apply yet
+	Then the employer is informed that they cannot apply
 
 Scenario: An employer selects that they have eligible apprenticeships when they do not
 	Given an employer applying for a grant does not have eligible apprenticeships
 	When the employer specifies that they have eligible apprenticeships
-	Then the employer is informed that they cannot apply
+	Then the employer is informed that they cannot apply yet
 
 Scenario: An employer does not select whether or not they have eligible apprenticeships
 	Given an employer applying for a grant has eligible apprenticeships
