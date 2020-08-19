@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         public async Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             var applicationId = Guid.NewGuid();
-            var request = MapToPostRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
+            var request = MapToCreateApplicationRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
 
             using var response = await _client.PostAsJsonAsync($"accounts/{request.AccountId}/applications", request);
 
@@ -45,10 +45,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return MapFromGetApplicationResponse(data.Application, accountId, applicationId);
         }
 
-        public async Task Confirm(string accountId, Guid applicationId)
+        public async Task Update(Guid applicationId, string accountId, IEnumerable<string> apprenticeshipIds)
         {
-            const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
-            var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
+            var request = MapToUpdateApplicationRequest(applicationId, accountId, apprenticeshipIds);
+
+            using var response = await _client.PutAsJsonAsync($"accounts/{request.AccountId}/applications", request);
+            
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task Confirm(string accountId, Guid applicationId, string userId)
+        {
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, userId);
 
             using var response = await _client.PatchAsJsonAsync($"accounts/{request.AccountId}/applications", request);
 
@@ -65,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             return accountLegalEntityId;
         }
-
+ 
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,
@@ -85,12 +93,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             };
         }
 
-        private CreateApplicationRequest MapToPostRequest(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
+        private CreateApplicationRequest MapToCreateApplicationRequest(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             return new CreateApplicationRequest(applicationId, _hashingService.DecodeValue(accountId),
                 _hashingService.DecodeValue(accountLegalEntityId),
                 apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
         }
+
+        private UpdateApplicationRequest MapToUpdateApplicationRequest(Guid applicationId, string accountId, IEnumerable<string> apprenticeshipIds)
+        {
+            return new UpdateApplicationRequest
+            {
+                ApplicationId = applicationId,
+                AccountId = _hashingService.DecodeValue(accountId),
+                ApprenticeshipIds = apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)).ToArray()
+            };
+        }
+
         private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string user)
         {
             return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), user);

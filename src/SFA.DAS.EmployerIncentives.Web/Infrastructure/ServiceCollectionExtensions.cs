@@ -19,6 +19,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -153,6 +154,26 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
 
                 return instance.Invoke(httpClient, s);
+            });
+
+            serviceCollection.AddTransient<IEmailService>(s =>
+            {
+                var settings = s.GetService<IOptions<EmployerIncentivesApiOptions>>().Value;
+
+                var clientBuilder = new HttpClientBuilder()
+                    .WithDefaultHeaders()
+                    .WithApimAuthorisationHeader(settings)
+                    .WithLogging(s.GetService<ILoggerFactory>());
+
+                var httpClient = clientBuilder.Build();
+
+                if (!settings.ApiBaseUrl.EndsWith("/"))
+                {
+                    settings.ApiBaseUrl += "/";
+                }
+                httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
+
+                return new EmailService(httpClient);
             });
 
             return serviceCollection;

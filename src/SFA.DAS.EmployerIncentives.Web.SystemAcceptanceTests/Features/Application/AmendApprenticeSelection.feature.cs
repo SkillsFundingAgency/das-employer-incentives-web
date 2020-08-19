@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "AmendApprenticeSelection", "\tAs an employer applying for the new apprentice grant\r\n\tIf I choose to amend my p" +
                     "reviously selected eligible apprenticeships\r\n\tI want to see the these apprentice" +
-                    "s checked ", ProgrammingLanguage.CSharp, new string[] {
+                    "s checked \r\n\tAnd be able to change my previous selection", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is changing the previously selected apprenticeships", null, tagsOfScenario, argumentsOfScenario);
-#line 7
+#line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -105,16 +105,16 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 8
+#line 9
  testRunner.Given("there are eligible apprenticeships for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 9
+#line 10
  testRunner.And("a initial application has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 10
+#line 11
  testRunner.When("the employer returns to the select apprentices page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 11
+#line 12
  testRunner.Then("the employer can see the previous apprentices checked", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -130,7 +130,7 @@ this.ScenarioInitialize(scenarioInfo);
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is changing the previously selected apprenticeships, but it contains " +
                     "an additional apprentice", null, tagsOfScenario, argumentsOfScenario);
-#line 13
+#line 14
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -150,21 +150,111 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 14
+#line 15
  testRunner.Given("there are eligible apprenticeships for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 15
+#line 16
  testRunner.And("a initial application has been created and it includes an apprentice who is no lo" +
                         "nger eligible", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 16
+#line 17
  testRunner.When("the employer returns to the select apprentices page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 17
+#line 18
  testRunner.Then("the employer can see the previous apprentices checked", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 18
+#line 19
  testRunner.But("the additional apprentice is not on the list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "But ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("An employer is changing the previously selected apprenticeships and submits the a" +
+            "pplication without any apprentices selected")]
+        public virtual void AnEmployerIsChangingThePreviouslySelectedApprenticeshipsAndSubmitsTheApplicationWithoutAnyApprenticesSelected()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is changing the previously selected apprenticeships and submits the a" +
+                    "pplication without any apprentices selected", null, tagsOfScenario, argumentsOfScenario);
+#line 21
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 22
+ testRunner.Given("there are eligible apprenticeships for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 23
+ testRunner.And("a initial application has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 24
+ testRunner.When("the employer updates application with no apprentices selected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 25
+ testRunner.Then("the employer will receive an error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("An employer is changing the previously selected apprenticeships and submits the a" +
+            "pplication with apprentices selected")]
+        public virtual void AnEmployerIsChangingThePreviouslySelectedApprenticeshipsAndSubmitsTheApplicationWithApprenticesSelected()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is changing the previously selected apprenticeships and submits the a" +
+                    "pplication with apprentices selected", null, tagsOfScenario, argumentsOfScenario);
+#line 27
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 28
+ testRunner.Given("there are eligible apprenticeships for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 29
+ testRunner.And("a initial application has been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 30
+ testRunner.When("the employer updates application with apprentices selected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 31
+ testRunner.Then("the user is directed to the confirmation page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

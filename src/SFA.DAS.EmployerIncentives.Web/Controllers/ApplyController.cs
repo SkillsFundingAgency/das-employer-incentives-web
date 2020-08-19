@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -41,7 +42,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("declaration/{applicationId}")]
         public async Task<IActionResult> SubmitApplication(string accountId, Guid applicationId)
         {
-            await _applicationService.Confirm(accountId, applicationId);
+            var userId = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
+
+            await _applicationService.Confirm(accountId, applicationId, userId);
 
             return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }
