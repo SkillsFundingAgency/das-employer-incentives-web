@@ -51,13 +51,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("cannot-apply")]
-        public async Task<ViewResult> CannotApply(string accountId, bool hasTakenOnNewApprentices = false)
+        public async Task<ViewResult> CannotApply(string accountId)
         {
-            if (hasTakenOnNewApprentices)
-            {
-                return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
-            }
             return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+        }
+
+        [HttpGet]
+        [Route("cannot-apply-yet")]
+        public async Task<ViewResult> CannotApplyYet(string accountId)
+        {
+            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
         }
     }
 }
