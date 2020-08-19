@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
@@ -7,7 +6,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -18,17 +16,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IEmailService _emailService;
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
-
-        public BankDetailsController(IEmailService emailService, IApplicationService applicationService, IHashingService hashingService)
-        {
-            _emailService = emailService;
         private readonly IVerificationService _verificationService;
 
-        public BankDetailsController(IVerificationService verificationService)
+        public BankDetailsController(IVerificationService verificationService,
+            IEmailService emailService,
+            IApplicationService applicationService,
+            IHashingService hashingService)
         {
             _verificationService = verificationService;
-        }
-
+            _emailService = emailService;
             _applicationService = applicationService;
             _hashingService = hashingService;
         }
@@ -117,7 +113,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var requestContext = ControllerContext.HttpContext.Request;
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
-            var bankDetailsUrl = $"{host}/{accountId}/bankdetails/{applicationId}/add-bank-details";
+            var bankDetailsUrl = $"{host}/{accountId}/bank-details/{applicationId}/add-bank-details";
             return bankDetailsUrl;
         }
     }

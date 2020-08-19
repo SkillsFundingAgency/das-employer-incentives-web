@@ -61,8 +61,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             IdentityModelEventSource.ShowPII = true;
             services.Configure<CookiePolicyOptions>(options =>
             {
-                            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                            options.CheckConsentNeeded = context => true;
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
             services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
 
-            services.AddAuthorizationPolicies();            
+            services.AddAuthorizationPolicies();
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
             services.AddEmployerAuthentication(_configuration);
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                     options =>
                     {
                         options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));                        
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;

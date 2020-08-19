@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -29,13 +30,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private readonly TestContext _testContext;
         private readonly IHashingService _hashingService;
         private HttpResponseMessage _continueNavigationResponse;
-        private Fixture _fixture;
+        private readonly Fixture _fixture;
 
         public ReadyToEnterBankDetailsSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _hashingService = _testContext.HashingService;
-            _fixture = new Fixture();
         }
 
 
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
                       .UsingGet()
               )
               .RespondWith(
@@ -95,14 +95,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                      .WithHeader("Content-Type", "application/json")
                      .WithBody(string.Empty));
 
-            _testContext.TestDataStore.Add("HashedAccountId", hashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, hashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountId", data.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
+            var getBankingDetailsUrl = OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId).Split("?").First();
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId))
+                        .WithPath(getBankingDetailsUrl)
+                        .WithParam("hashedAccountId", data.HashedAccountId)
                         .UsingGet()
                 )
                 .RespondWith(
@@ -125,6 +127,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is requested to enter their bank details")]
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
+            _continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&return=https://localhost:5001/application-complete&data=");
         }
 

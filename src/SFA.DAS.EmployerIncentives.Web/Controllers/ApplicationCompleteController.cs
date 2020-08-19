@@ -17,6 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route(ApplicationCompleteRoute)]
         public IActionResult Confirmation()
         {
