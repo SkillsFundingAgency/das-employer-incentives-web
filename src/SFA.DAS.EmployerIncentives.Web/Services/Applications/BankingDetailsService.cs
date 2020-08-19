@@ -11,12 +11,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     public class BankingDetailsService : IBankingDetailsService
     {
         private readonly HttpClient _client;
-        private readonly ILogger _logger;
+        private readonly ILogger<BankingDetailsService> _logger;
 
-        public BankingDetailsService(HttpClient client, ILoggerFactory logger)
+        public BankingDetailsService(HttpClient client, ILogger<BankingDetailsService> logger)
         {
             _client = client;
-            _logger = logger.CreateLogger(typeof(ILogger));
+            _logger = logger;
         }
 
         public async Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId, string hashedAccountId)

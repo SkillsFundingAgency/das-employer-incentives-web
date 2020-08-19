@@ -130,7 +130,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c, s.GetRequiredService<ILoggerFactory>()));
+            serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c, s.GetRequiredService<ILogger<BankingDetailsService>>()));
 
             return serviceCollection;
         }
