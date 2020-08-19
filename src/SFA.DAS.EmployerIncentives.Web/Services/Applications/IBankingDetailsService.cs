@@ -6,6 +6,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public interface IBankingDetailsService
     {
-        Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId);
+        Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId, string hashedAccountId);
     }
 }

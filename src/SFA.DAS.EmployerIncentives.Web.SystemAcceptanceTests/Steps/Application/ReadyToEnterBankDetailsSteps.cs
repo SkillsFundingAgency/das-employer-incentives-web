@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId))
+                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId))
                         .UsingGet()
                 )
                 .RespondWith(

@@ -16,9 +16,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             _client = client;
         }
 
-        public async Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId)
+        public async Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId, string hashedAccountId)
         {
-            var url = OuterApiRoutes.GetBankingDetailsUrl(accountId, applicationId);
+            var url = OuterApiRoutes.GetBankingDetailsUrl(accountId, applicationId, hashedAccountId);
 
             var (_, data) = await _client.GetDataAsync<BankingDetailsDto>(url);
 

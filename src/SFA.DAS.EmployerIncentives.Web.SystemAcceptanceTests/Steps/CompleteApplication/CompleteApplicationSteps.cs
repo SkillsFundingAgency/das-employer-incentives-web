@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                .Given(
                     Request
                         .Create()
-                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId))
+                        .WithPath(OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId))
                         .UsingGet()
                 )
                 .RespondWith(

@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var bankingDetails = await _bankingDetailsService.GetBankingDetails(accountId, applicationId);
+            var bankingDetails = await _bankingDetailsService.GetBankingDetails(accountId, applicationId, hashedAccountId);
 
             if (bankingDetails == null) throw new ArgumentException("Requested banking details records cannot be found");
             if (bankingDetails.SignedAgreements == null || !bankingDetails.SignedAgreements.Any()) throw new ArgumentException("Requested application records are invalid");

@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             };
 
             var bankDetailsServiceMock = new Mock<IBankingDetailsService>();
-            bankDetailsServiceMock.Setup(x => x.GetBankingDetails(accountId, applicationId)).ReturnsAsync(bankDetails);
+            bankDetailsServiceMock.Setup(x => x.GetBankingDetails(accountId, applicationId, hashedAccountId)).ReturnsAsync(bankDetails);
 
             var hashingServiceMock = new Mock<IHashingService>();
             hashingServiceMock.Setup(x => x.DecodeValue(hashedAccountId)).Returns(accountId);

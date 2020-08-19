@@ -319,7 +319,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         public EmployerIncentivesApiBuilder WithBankingDetails()
         {
             var data = new TestData.Account.WithInitialApplicationAndBankingDetails();
-            var url = OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId);
+            var url = OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId);
 
             _server
                 .Given(
