@@ -54,16 +54,26 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task Confirm(string accountId, Guid applicationId)
+        public async Task Confirm(string accountId, Guid applicationId, string userId)
         {
-            const string user = "TestUserId"; // TODO: Use authenticated user https://skillsfundingagency.atlassian.net/browse/EI-191
-            var request = MapToConfirmApplicationRequest(applicationId, accountId, user);
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, userId);
 
             using var response = await _client.PatchAsJsonAsync($"accounts/{request.AccountId}/applications", request);
 
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId)
+        {
+            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}/accountlegalentity", HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var accountLegalEntityId = await JsonSerializer.DeserializeAsync<long>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return accountLegalEntityId;
+        }
+ 
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,

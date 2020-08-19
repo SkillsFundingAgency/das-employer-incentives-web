@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -36,6 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var accountId = _testDataStore.GetOrCreate("AccountId", onCreate: () => testdata.AccountId);
             _testDataStore.Add("HashedAccountId", _hashingService.HashValue(accountId));
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
             _testDataStore.Add("HashedAccountLegalEntityId", _hashingService.HashValue(testdata.LegalEntities.First().AccountLegalEntityId));
 
             var legalEntities = _testDataStore.GetOrCreate("Legalentities", onCreate: () => testdata.LegalEntities);
