@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerUpdatesApplicationWithNoApprenticesSelected()
         {
             var hashedAccountId = _hashingService.HashValue(_data.AccountId);
-            var url = $"{hashedAccountId}/apply/select-new-apprentices/{_data.ApplicationId}";
+            var url = $"{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}";
             var form = new SelectApprenticeshipsRequest();
 
             _response = await _testContext.WebsiteClient.PostAsJsonAsync(url, form);
@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerUpdatesApplicationWithApprenticesSelected()
         {
             var hashedAccountId = _hashingService.HashValue(_data.AccountId);
-            var url = $"{hashedAccountId}/apply/select-new-apprentices/{_data.ApplicationId}";
+            var url = $"{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}";
             var form = new KeyValuePair<string, string>("SelectedApprenticeships", _hashingService.HashValue(1));
             SetupEndpointForUpdateApplication();
 
@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
-            _response.Should().HaveBackLink($"/{hashedAccountId}/apply/select-new-apprentices/{model.ApplicationId}");
+            _response.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
             model.Should().HaveTitle("Confirm your apprentices");
         }
 
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
             _response.Should().HaveTitle(model.Title);
-            _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/select-new-apprentices/{_data.ApplicationId}");
+            _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
             viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
         }
