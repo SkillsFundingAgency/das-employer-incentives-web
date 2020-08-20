@@ -4,17 +4,17 @@
     {
         public CannotApplyViewModel(
             string accountId,
-            string commitmentsBaseUrl,
+            string accountsBaseUrl,
             string title = "You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021"
         ) : base(title)
         {
             AccountId = accountId;
 
-            if (!commitmentsBaseUrl.EndsWith("/"))
+            if (!accountsBaseUrl.EndsWith("/"))
             {
-                commitmentsBaseUrl += "/";
+                accountsBaseUrl += "/";
             }
-            AccountHomeUrl = $"{commitmentsBaseUrl}";
+            AccountHomeUrl = $"{accountsBaseUrl}accounts/{AccountId}/teams";
         }
 
         public string AccountId { get; }

@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("cannot-apply")]
         public async Task<ViewResult> CannotApply(string accountId)
         {
-            return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+            return View(new CannotApplyViewModel(accountId, _configuration.AccountsBaseUrl));
         }
 
         [HttpGet]
