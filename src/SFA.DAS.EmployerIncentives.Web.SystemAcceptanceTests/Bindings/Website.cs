@@ -28,13 +28,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context.WebConfigurationOptions = new WebConfigurationOptions
             {
                 AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY",
-                Hashstring = "SFA: digital apprenticeship service",
-                CommitmentsBaseUrl = $"http://{Guid.NewGuid()}",
-                AccountsBaseUrl = $"http://{Guid.NewGuid()}",
+                Hashstring = "SFA: digital apprenticeship service",                
                 RedisCacheConnectionString = "localhost"
             };
+            _context.ExternalLinksOptions = new ExternalLinksConfiguration
+            {
+                CommitmentsSiteUrl = $"http://{Guid.NewGuid()}",
+                ManageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}",
+                EmployerRecruitmentSiteUrl = $"http://{Guid.NewGuid()}"
+            };
 
-            _context.Website = new TestWebsite(_context, _context.WebConfigurationOptions, _context.EmployerIncentivesApi, hook, authHook);
+            _context.Website = new TestWebsite(_context, hook, authHook);
             _context.WebsiteClient = _context.Website.CreateClient();
             _context.HashingService = _context.Website.Services.GetService(typeof(IHashingService)) as IHashingService;
         }

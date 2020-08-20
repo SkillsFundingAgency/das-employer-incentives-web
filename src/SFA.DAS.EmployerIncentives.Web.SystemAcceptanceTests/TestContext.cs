@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public List<Claim> Claims { get; set; }
         public TestActionResult ActionResult { get; set; }
         public WebConfigurationOptions WebConfigurationOptions { get; set; }
+        public ExternalLinksConfiguration ExternalLinksOptions { get; set; }
         public CosmosDbConfigurationOptions CosmosDbConfigurationOptions { get; set; }
         
         private bool _isDisposed;
