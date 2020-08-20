@@ -4,6 +4,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
@@ -14,13 +15,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 {
     [TestFixture]
-    public class WhenGetUserAccounts
+    public class WhenGetClaims
     {
         private UserService _sut;
         private Fixture _fixture;
@@ -39,14 +41,46 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
         }
 
         [Test]
-        public async Task Then_The_AccountModels_Are_Returned()
+        public async Task Then_the_claims_list_is_empty_if_there_are_no_matching_claims()
+        {
+            // arrange
+            var userRef = _fixture.Create<Guid>();
+            var accountUsers = _fixture.Create<List<AccountUsers>>();
+
+            var expected = new List<Claim>();
+            accountUsers.ForEach(a =>
+            {
+                a.userRef = userRef;
+                a.removed = null;
+                a.role = UserRole.Viewer;
+                var hashedValue = $"HASH{a.accountId}";
+
+                _mockHashingService.Setup(m => m.HashValue(a.accountId)).Returns(hashedValue);
+            });
+
+            var documentQuery = new FakeDocumentQuery<AccountUsers>(accountUsers);
+
+            _mockAccountUsersReadOnlyRepository.Setup(m =>
+            m.CreateQuery(It.IsAny<FeedOptions>()))
+            .Returns(documentQuery);
+            
+            // act
+            var result = await _sut.GetClaims(userRef);
+
+            // assert
+            result.Count().Should().Be(0);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task Then_the_claims_list_only_contains_owner_and_transactor_claims()
         {
             // arrange
             var userRef = _fixture.Create<Guid>();
             var accountUsers = _fixture.Create<List<AccountUsers>>();
 
             int count = 1;
-            var expected = new List<UserModel>();
+            var expected = new List<Claim>();
             accountUsers.ForEach(a =>
             {
                 a.userRef = userRef;
@@ -54,28 +88,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
                 a.role = (UserRole)count;
                 var hashedValue = $"HASH{a.accountId}";
 
-                _mockHashingService.Setup(m => m.HashValue(a.accountId)).Returns(hashedValue);
                 if (a.role == UserRole.Owner || a.role == UserRole.Transactor)
                 {
-                    expected.Add(new UserModel { UserRef = userRef, AccountId = hashedValue });
+                    expected.Add(new Claim(EmployerClaimTypes.Account, hashedValue));
                 }
+                _mockHashingService.Setup(m => m.HashValue(a.accountId)).Returns(hashedValue);
                 count++;
             });
 
             var documentQuery = new FakeDocumentQuery<AccountUsers>(accountUsers);
 
-            GetUserRequest request = new GetUserRequest
-            {
-                UserRef = userRef,
-                Roles = new List<UserRole>() { UserRole.Owner, UserRole.Transactor }
-            };
-
             _mockAccountUsersReadOnlyRepository.Setup(m =>
             m.CreateQuery(It.IsAny<FeedOptions>()))
             .Returns(documentQuery);
-            
+
             // act
-            var result = await _sut.Get(request);
+            var result = await _sut.GetClaims(userRef);
 
             // assert
             result.Count().Should().Be(2);

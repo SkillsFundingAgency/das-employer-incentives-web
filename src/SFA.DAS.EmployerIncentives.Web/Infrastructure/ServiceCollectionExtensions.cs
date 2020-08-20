@@ -12,18 +12,16 @@ using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
+using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
-using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using System;
-using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Security.Claims;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {
@@ -190,13 +188,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
             if (Guid.TryParse(userIdString, out Guid userId))
             {
-                var users = await userService.Get(new GetUserRequest() { UserRef = userId, Role = UserRole.Owner });
-                if (!users.Any())
-                {
-                    return;
-                }
+                var claims = await userService.GetClaims(userId);
 
-                users.ToList().ForEach(u => ctx.Principal.Identities.First().AddClaim(new Claim(EmployerClaimTypes.Account, u.AccountId)));
+                claims.ToList().ForEach(c => ctx.Principal.Identities.First().AddClaim(c));
             }
         }
     }
