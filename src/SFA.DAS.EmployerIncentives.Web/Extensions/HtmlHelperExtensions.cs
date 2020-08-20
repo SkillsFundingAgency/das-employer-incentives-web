@@ -38,8 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
 
             headerModel.SelectMenu("Finance");
 
-            if ((html.ViewBag.IsErrorPage is bool && html.ViewBag.IsErrorPage) ||
-                (html.ViewBag.ShowNav is bool && !html.ViewBag.ShowNav))
+            if (html.ViewBag.HideNav is bool && html.ViewBag.HideNav)
             {
                 headerModel.HideMenu();
             }

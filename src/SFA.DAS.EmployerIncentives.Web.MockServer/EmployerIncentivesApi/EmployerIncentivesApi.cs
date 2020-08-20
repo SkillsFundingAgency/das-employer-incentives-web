@@ -11,12 +11,16 @@ using WireMock.Logging;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
+using System.Security.Claims;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 {
     public class EmployerIncentivesApiBuilder
     {
         private readonly WireMockServer _server;
+        private readonly List<Claim> _claims;
+
         public static EmployerIncentivesApiBuilder Create(int port)
         {
             return new EmployerIncentivesApiBuilder(port);
@@ -24,6 +28,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 
         private EmployerIncentivesApiBuilder(int port)
         {
+            _claims = new List<Claim>();
             _server = WireMockServer.StartWithAdminInterface(port);
         }
 
@@ -42,8 +47,10 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             Response.Create()
                 .WithStatusCode(HttpStatusCode.NotFound));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
-        }
+        }        
 
         public EmployerIncentivesApiBuilder WithAccountWithSingleLegalEntityWithNoEligibleApprenticeships()
         {
@@ -85,6 +92,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.NotFound));
+
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -130,6 +139,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
               Response.Create()
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
+
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -186,6 +197,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntity3, TestHelper.DefaultSerialiserSettings)));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
         }
 
@@ -231,6 +244,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
         }
 
@@ -274,6 +289,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
         }
 
@@ -305,6 +322,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
         }
 
@@ -323,13 +342,25 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
+            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
             return this;
         }
 
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
-            return new EmployerIncentivesApi(_server);
+            return new EmployerIncentivesApi(_server, _claims);
+        }
+
+        private void AddOrReplaceClaim(string type, string value)
+        {
+            var existing = _claims.SingleOrDefault(c => c.Type == type);
+            if (existing != null)
+            {
+                _claims.Remove(existing);
+            }
+            _claims.Add(new Claim(type, value));
         }
 
         private void _server_LogEntriesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -348,9 +379,12 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 #pragma warning restore S3881 // "IDisposable" should be implemented correctly
     {
         private readonly WireMockServer _server;
-        public EmployerIncentivesApi(WireMockServer server)
+        public List<Claim> Claims { get; }
+
+        public EmployerIncentivesApi(WireMockServer server, List<Claim> claims)
         {
             _server = server;
+            Claims = claims;
         }
 
         public void Dispose()
