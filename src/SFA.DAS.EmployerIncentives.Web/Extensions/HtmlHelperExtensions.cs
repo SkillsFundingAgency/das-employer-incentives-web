@@ -25,8 +25,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
                     ManageApprenticeshipsBaseUrl = externalLinks?.ManageApprenticeshipSiteUrl,
                     AuthenticationAuthorityUrl = authConfig?.BaseAddress,
                     ClientId = authConfig?.ClientId,
-                    EmployerRecruitBaseUrl = externalLinks?.EmployerRecruitmentSiteUrl,
-                    SignOutUrl = new Uri($"{requestRoot}/{hashedAccountId}/signout/"),
+                    EmployerRecruitBaseUrl = externalLinks?.EmployerRecruitmentSiteUrl,                    
+                    SignOutUrl = hashedAccountId == null ? new Uri($"{requestRoot}/signout/") : new Uri($"{requestRoot}/{hashedAccountId}/signout/"),
                     ChangeEmailReturnUrl = new Uri($"{requestRoot}{requestPath}"),
                     ChangePasswordReturnUrl = new Uri($"{requestRoot}{requestPath}")
                 },
