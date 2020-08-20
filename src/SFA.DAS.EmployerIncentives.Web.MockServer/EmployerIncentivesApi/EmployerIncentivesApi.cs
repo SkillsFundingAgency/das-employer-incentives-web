@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
@@ -268,6 +267,20 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
+                        .WithPath(x => x.Contains($"/accounts/{data.AccountId}/applications") && x.Contains("accountlegalentity"))
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(data.AccountLegalEntityId.ToString())
+                );
+
+            _server
+                .Given(
+                    Request
+                        .Create()
                         .WithPath($"/accounts/{data.AccountId}/applications")
                         .UsingPut()
                 )
@@ -330,13 +343,26 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         public EmployerIncentivesApiBuilder WithBankingDetails()
         {
             var data = new TestData.Account.WithInitialApplicationAndBankingDetails();
-            var url = OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId);
 
             _server
                 .Given(
                     Request
                         .Create()
-                        .WithPath(url)
+                        .WithPath($"/email/bank-details-reminder")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(string.Empty));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/") && x.Contains("/bankingDetails"))
+                        .WithParam("hashedAccountId", $"{data.HashedAccountId}")
                         .UsingGet()
                 )
                 .RespondWith(
