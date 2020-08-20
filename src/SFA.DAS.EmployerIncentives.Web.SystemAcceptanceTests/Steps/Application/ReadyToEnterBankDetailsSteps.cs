@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
+using AutoFixture;
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
@@ -25,11 +26,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
-        private TestData.Account.WithInitialApplicationAndBankingDetails _data;
+        private readonly TestData.Account.WithInitialApplicationAndBankingDetails _data;
+        private readonly Fixture _fixture;
 
         public ReadyToEnterBankDetailsSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
+            _fixture = new Fixture();
             _data = new TestData.Account.WithInitialApplicationAndBankingDetails();
 
             _testContext.TestDataStore.Add("HashedAccountId", _data.HashedAccountId);
@@ -47,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
                       .UsingGet()
               )
               .RespondWith(
@@ -55,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(accountLegalEntityId.ToString()));
-                      
+
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -136,6 +139,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer states that they are unable to provide bank details now")]
         public async Task WhenTheEmployerStatesThatTheyAreUnableToProvideBankDetailsNow()
         {
+            var accountLegalEntityId = _fixture.Create<long>();
             _testContext.EmployerIncentivesApi.MockServer
                .Given(
                    Request
@@ -147,7 +151,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                    Response.Create()
                        .WithStatusCode(HttpStatusCode.OK)
                        .WithHeader("Content-Type", "application/json")
-                       .WithBody(_data.AccountLegalEntityId.ToString()));
+                       .WithBody(accountLegalEntityId.ToString()));
 
             _testContext.EmployerIncentivesApi.MockServer
                .Given(
@@ -169,15 +173,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
                       .UsingGet()
               )
               .RespondWith(
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(accountLegalEntityId.ToString()));
-                      
+                      .WithBody(_data.AccountLegalEntityId.ToString()));
+
 
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
@@ -207,7 +211,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
                       .UsingGet()
               )
               .RespondWith(
@@ -215,7 +219,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(accountLegalEntityId.ToString()));
-                      
+
 
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {

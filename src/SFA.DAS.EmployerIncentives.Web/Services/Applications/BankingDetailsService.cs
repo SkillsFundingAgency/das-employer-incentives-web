@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+﻿using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -11,27 +10,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     public class BankingDetailsService : IBankingDetailsService
     {
         private readonly HttpClient _client;
-        private readonly ILogger<BankingDetailsService> _logger;
 
-        public BankingDetailsService(HttpClient client, ILogger<BankingDetailsService> logger)
+        public BankingDetailsService(HttpClient client)
         {
             _client = client;
-            _logger = logger;
         }
 
         public async Task<BankingDetailsDto> GetBankingDetails(long accountId, Guid applicationId, string hashedAccountId)
         {
             var url = OuterApiRoutes.GetBankingDetailsUrl(accountId, applicationId, hashedAccountId);
 
-            _logger.LogInformation("[BankingDetailsService] Call outer API: " + _client.BaseAddress + url);
-
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-
-            _logger.LogInformation("[BankingDetailsService] Response status code: " + response.StatusCode);
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.LogError("[BankingDetailsService] Error occurred: " + response.ReasonPhrase);
-            }
 
             response.EnsureSuccessStatusCode();
 

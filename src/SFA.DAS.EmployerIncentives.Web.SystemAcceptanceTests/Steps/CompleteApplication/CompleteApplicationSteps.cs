@@ -33,6 +33,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             _testContext.TestDataStore.Add("HashedAccountId", data.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(data.AccountLegalEntityId.ToString()));
+
             var getBankingDetailsUrl = "/" + OuterApiRoutes.GetBankingDetailsUrl(data.AccountId, data.ApplicationId, data.HashedAccountId).Split("?").First();
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
