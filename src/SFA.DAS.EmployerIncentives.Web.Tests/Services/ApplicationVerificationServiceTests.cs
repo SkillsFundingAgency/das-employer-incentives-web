@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var dataEncryptionServiceMock = new Mock<IDataEncryptionService>();
             dataEncryptionServiceMock.Setup(x => x.Encrypt("ABCD2X|000000|Bob Martin|bob@clean-code.com|3000|Jon Skeet|jon.skeet@google.com|2020-09-01T12:34:59|apps=1")).Returns(encryptedData);
 
-            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information/journey=new&return={returnUrl}&data={encryptedData.ToUrlString()}";
+            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
 
             var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, webConfigurationOptionsMock.Object);
 
