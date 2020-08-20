@@ -60,7 +60,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
+        public IActionResult AddBankDetails(string accountId, Guid applicationId)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("enter-bank-details")]
+        public async Task<IActionResult> EnterBankDetails(string accountId, Guid applicationId)
         {
             var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}/{ApplicationCompleteController.ApplicationCompleteRoute}";
             var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, applicationId, returnUrl);

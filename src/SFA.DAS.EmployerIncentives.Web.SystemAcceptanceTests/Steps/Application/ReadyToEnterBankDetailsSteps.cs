@@ -133,7 +133,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
             _continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&return=https://localhost:5001/application-complete&data=");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain($"/MLB7J9/bank-details/{_data.ApplicationId}/add-bank-details");
         }
 
         [When(@"the employer states that they are unable to provide bank details now")]
