@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();
 
-            return $"{_configuration.AchieveServiceBaseUrl}/journey=new&return={returnUrl}&data={encryptedData}";
+            return $"{_configuration.AchieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData}";
         }
 
     }
