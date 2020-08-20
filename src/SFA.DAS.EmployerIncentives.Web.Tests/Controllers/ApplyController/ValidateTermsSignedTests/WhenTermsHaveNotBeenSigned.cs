@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
     public class WhenTermsHaveNotBeenSigned
     {
         private Mock<ILegalEntitiesService> _legalEntityServiceMock;
-        private Mock<WebConfigurationOptions> _webConfigurationOptionsMock;
+        private Mock<ExternalLinksConfiguration> _externalLinksConfigurationMock;
         private ApplyOrganisationController _sut;
         private Fixture _fixture;
 
@@ -26,9 +26,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
         {
             _fixture = new Fixture();
             _legalEntityServiceMock = new Mock<ILegalEntitiesService>();
-            _webConfigurationOptionsMock = new Mock<WebConfigurationOptions>();
-            var mockOptions = new Mock<IOptions<WebConfigurationOptions>>();
-            mockOptions.Setup(x => x.Value).Returns(_webConfigurationOptionsMock.Object);
+            _externalLinksConfigurationMock = new Mock<ExternalLinksConfiguration>();
+            var mockOptions = new Mock<IOptions<ExternalLinksConfiguration>>();
+            mockOptions.Setup(x => x.Value).Returns(_externalLinksConfigurationMock.Object);
 
             _sut = new ApplyOrganisationController(_legalEntityServiceMock.Object, mockOptions.Object);
         }
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             var legalEntity = _fixture.Build<LegalEntityModel>().With(x => x.HasSignedIncentiveTerms, false).Create();
             _legalEntityServiceMock.Setup(x => x.Get(accountId, accountLegalEntityId)).ReturnsAsync(legalEntity);
 
-            _webConfigurationOptionsMock.Setup(x => x.AccountsBaseUrl).Returns(accountsBaseUrl);
+            _externalLinksConfigurationMock.Setup(x => x.ManageApprenticeshipSiteUrl).Returns(accountsBaseUrl);
 
             var result = await _sut.ValidateTermsSigned(accountId, accountLegalEntityId);
 
