@@ -76,9 +76,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("An unauthorised user is asked to log on")]
+        [NUnit.Framework.TestCaseAttribute("\"/login\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/choose-organisation\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/validate-terms-signed\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/select-apprentices\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/taken-on-new-apprentices\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/select-apprentices/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/confirm-apprentices/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/taken-on-new-apprentices\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/declaration/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply-yet\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details" +
+            "\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/add-bank-details\"" +
+            "", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/complete/need-ban" +
+            "k-details\"", null)]
         public virtual void AnUnauthorisedUserIsAskedToLogOn(string url, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
