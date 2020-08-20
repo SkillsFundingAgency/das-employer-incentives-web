@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
 
             var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
             continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
-            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information/journey=new&return=https://localhost:5001/application-complete&data=");
+            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information?journey=new&return=https%3a%2f%2flocalhost%3a5001%2fapplication-complete&data=");
         }
 
         [When(@"the employer is shown the confirmation page")]
