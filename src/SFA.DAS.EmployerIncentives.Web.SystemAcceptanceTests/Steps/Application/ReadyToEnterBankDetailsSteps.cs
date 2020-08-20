@@ -41,6 +41,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerHasConfirmedTheirApprenticeshipDetails()
         {
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -150,6 +165,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
 
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
+
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
@@ -172,6 +201,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerDoesNotConfirmWhetherTheyCanProvideBankDetailsNow()
         {
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{accountId}/applications/{applicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(accountLegalEntityId.ToString()));
+                      
 
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {

@@ -70,6 +70,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(JsonConvert.SerializeObject(_data.GetApplicationResponseWithFirstTwoApprenticesSelected, TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(_data.AccountLegalEntityId.ToString()));
         }
 
         [Given(@"a initial application has been created and it includes an apprentice who is no longer eligible")]
@@ -87,6 +100,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(JsonConvert.SerializeObject(_data.GetApplicationResponseWithFirstTwoApprenticesSelectedAndAnAdditionalApprentice, TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                  .Given(
+                      Request
+                          .Create()
+                          .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
+                          .UsingGet()
+                  )
+                  .RespondWith(
+                      Response.Create()
+                          .WithStatusCode(HttpStatusCode.OK)
+                          .WithHeader("Content-Type", "application/json")
+                          .WithBody(_data.AccountLegalEntityId.ToString()));
         }
 
         [When(@"the employer updates application with no apprentices selected")]

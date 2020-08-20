@@ -260,8 +260,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-apprentices");
         }
 
-        [Then(@"the employer is informed that they cannot apply yet")]
-        public void ThenTheEmployerIsInformedTheyCannotApplyYet()
+        [Then(@"the employer is informed that they cannot apply")]
+        public void ThenTheEmployerIsInformedTheyCannotApply()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
@@ -278,8 +278,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
         }
 
-        [Then(@"the employer is informed that they cannot apply")]
-        public void ThenTheEmployerIsInformedTheyCannotApply()
+        [Then(@"the employer is informed that they cannot apply yet")]
+        public void ThenTheEmployerIsInformedTheyCannotApplyYet()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
@@ -293,7 +293,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AddApprenticesUrl.Should().Be($"{_testContext.WebConfigurationOptions.CommitmentsBaseUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply-yet");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]
