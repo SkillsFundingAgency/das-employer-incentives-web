@@ -6,6 +6,11 @@ using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
 using SFA.DAS.HashingService;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using System.Security.Claims;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Users
 {
@@ -22,22 +27,40 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users
             _hashingService = hashingService;
         }
 
-        public async Task<UserModel> Get(GetUserRequest request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Claim>> GetClaims(Guid userRef)
         {
-            var options = new FeedOptions { EnableCrossPartitionQuery = true };
-            var acccount = await _accountUsersRepository
-                    .CreateQuery(options)
-                    .FirstOrDefaultAsync(r =>
-                        r.userRef == request.UserRef &&
-                        r.removed == null &&
-                        r.role != null && r.role.Value == request.Role);
+            var claims = new List<Claim>();
 
-            if (acccount == null)
+            var users = await Get(
+                new GetUserRequest()
+                {
+                    UserRef = userRef,
+                    Roles = new List<UserRole>() { UserRole.Owner, UserRole.Transactor }
+                });
+
+            if (!users.Any())
             {
-                return null;
+                return claims;
             }
 
-            return new UserModel { UserRef = acccount.userRef, AccountId = _hashingService.HashValue(acccount.accountId) };
+            users.ToList().ForEach(u => claims.Add(new Claim(EmployerClaimTypes.Account, u.AccountId)));
+
+            return claims;
+        }
+
+        public async Task<IEnumerable<UserModel>> Get(GetUserRequest request, CancellationToken cancellationToken = default)
+        {
+            var options = new FeedOptions { EnableCrossPartitionQuery = true };
+            var acccountUsers = await _accountUsersRepository
+                    .CreateQuery(options)
+                    .Where(r =>
+                        r.userRef == request.UserRef &&
+                        r.removed == null &&
+                        r.role != null &&
+                        request.Roles.Contains(r.role.Value))
+                    .ToListAsync();
+
+            return acccountUsers.ToUserModel(_hashingService);
         }
     }
 }

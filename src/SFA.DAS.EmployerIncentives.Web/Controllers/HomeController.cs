@@ -37,7 +37,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(new HomeViewModel(accountId));
         }
 
+        [Route("/signout")]
         [Route("{accountId}/signout")]
+        [AllowAnonymous()]
         public async Task<IActionResult> SignOut()
         {
             return SignOut(

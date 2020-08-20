@@ -13,11 +13,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
-        private readonly WebConfigurationOptions _configuration;
+        private readonly ExternalLinksConfiguration _configuration;
         private readonly IApplicationService _applicationService;
 
         public ApplyController(
-            IOptions<WebConfigurationOptions> configuration,
+            IOptions<ExternalLinksConfiguration> configuration,
             IApplicationService applicationService)
         {
             _configuration = configuration.Value;
@@ -53,14 +53,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("cannot-apply")]
         public async Task<ViewResult> CannotApply(string accountId)
         {
-            return View(new CannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+            return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [HttpGet]
         [Route("cannot-apply-yet")]
         public async Task<ViewResult> CannotApplyYet(string accountId)
         {
-            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsBaseUrl));
+            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
         }
     }
 }

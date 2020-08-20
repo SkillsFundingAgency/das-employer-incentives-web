@@ -14,23 +14,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
     public class TestWebsite : WebApplicationFactory<Startup>
     {
         private readonly TestContext _testContext;
-        private readonly TestEmployerIncentivesApi _testEmployerIncentivesApi;
         private readonly Dictionary<string, string> _appConfig;
         private readonly IHook<IActionResult> _actionResultHook;
         private readonly IHook<AuthorizationHandlerContext> _authContextHook;
-        private readonly WebConfigurationOptions _webConfigurationOptions;
         public IWebHostBuilder WebHostBuilder { get; private set; }
 
         public TestWebsite(
             TestContext testContext,
-            WebConfigurationOptions webConfigurationOptions,
-            TestEmployerIncentivesApi testEmployerIncentivesApi,
             IHook<IActionResult> actionResultHook,
             IHook<AuthorizationHandlerContext> authContextHook)
         {
             _testContext = testContext;
-            _webConfigurationOptions = webConfigurationOptions;
-            _testEmployerIncentivesApi = testEmployerIncentivesApi;
             _actionResultHook = actionResultHook;
             _authContextHook = authContextHook;
 
@@ -68,16 +62,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
                     s.Configure<WebConfigurationOptions>(o =>
                     {
-                        o.AllowedHashstringCharacters = _webConfigurationOptions.AllowedHashstringCharacters;
-                        o.Hashstring = _webConfigurationOptions.Hashstring;
-                        o.CommitmentsBaseUrl = _webConfigurationOptions.CommitmentsBaseUrl;
-                        o.AccountsBaseUrl = _webConfigurationOptions.AccountsBaseUrl;
-                        o.AchieveServiceBaseUrl = _webConfigurationOptions.AchieveServiceBaseUrl;
-                        o.DataEncryptionServiceKey = _webConfigurationOptions.DataEncryptionServiceKey;
+                        o.AllowedHashstringCharacters = _testContext.WebConfigurationOptions.AllowedHashstringCharacters;
+                        o.Hashstring = _testContext.WebConfigurationOptions.Hashstring;
+                        o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
+                        o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
+                    });
+                    s.Configure<ExternalLinksConfiguration>(o =>
+                    {
+
+                        o.ManageApprenticeshipSiteUrl = _testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl;
+                        o.CommitmentsSiteUrl = _testContext.ExternalLinksOptions.CommitmentsSiteUrl;
+                        o.EmployerRecruitmentSiteUrl = _testContext.ExternalLinksOptions.EmployerRecruitmentSiteUrl;
                     });
                     s.Configure<EmployerIncentivesApiOptions>(o =>
                       {
-                          o.ApiBaseUrl = _testEmployerIncentivesApi.BaseAddress;
+                          o.ApiBaseUrl = _testContext.EmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
                       });
                     s.Configure<CosmosDbConfigurationOptions>(o =>
@@ -85,12 +84,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.Uri = "https://localhost:8081/";
                         o.AuthKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
                     });
-                    s.Configure<ExternalLinksConfiguration>(o =>
-                    {
-                        o.EmployerRecruitmentSiteUrl = "http://localhost";
-                        o.ManageApprenticeshipSiteUrl = "http://localhost";
-                        o.CommitmentsSiteUrl = "http://localhost";
-                    });                   
                     s.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new TestActionResultFilter(_actionResultHook));

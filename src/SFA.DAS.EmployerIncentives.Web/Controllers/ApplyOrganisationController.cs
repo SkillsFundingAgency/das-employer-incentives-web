@@ -15,9 +15,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class ApplyOrganisationController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly WebConfigurationOptions _configuration;
+        private readonly ExternalLinksConfiguration _configuration;
 
-        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService, IOptions<WebConfigurationOptions> configuration)
+        public ApplyOrganisationController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
             _configuration = configuration.Value;
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("SelectApprenticeships", "ApplyApprenticeships", new { accountId, accountLegalEntityId });
             }
 
-            var viewModel = new ValidateTermsSignedViewModel(accountId, _configuration.AccountsBaseUrl);
+            var viewModel = new ValidateTermsSignedViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl);
             return View(viewModel);
         }
     }
