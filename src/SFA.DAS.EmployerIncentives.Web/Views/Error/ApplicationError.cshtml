@@ -1,15 +1,21 @@
-﻿@{
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Error.ErrorViewModel
+@{
+    ViewBag.GaData.Vpv = "/apply/error";
     ViewBag.Title = "Error";
     ViewBag.HideNav = true;
 }
 
-<main class="govuk-main-wrapper " id="main-content" role="main">
-    <div class="govuk-grid-row">
-
-        <div class="govuk-grid-column-two-thirds">
-
-            <h1 class="govuk-heading-xl">There's been an error</h1>
-
+    <main class="govuk-main-wrapper " id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l">
+                    There's been an error
+                </h1>
+                <p class="govuk-body">
+                    <a class="govuk-button" href="@Model.AccountHomeUrl">
+                        Return to account home
+                    </a>
+                </p>
+            </div>
         </div>
-    </div>
-</main> 
+    </main>
