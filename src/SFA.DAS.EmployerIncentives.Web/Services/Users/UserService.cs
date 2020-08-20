@@ -6,6 +6,8 @@ using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
 using SFA.DAS.HashingService;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Users
 {
@@ -22,22 +24,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users
             _hashingService = hashingService;
         }
 
-        public async Task<UserModel> Get(GetUserRequest request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UserModel>> Get(GetUserRequest request, CancellationToken cancellationToken = default)
         {
             var options = new FeedOptions { EnableCrossPartitionQuery = true };
-            var acccount = await _accountUsersRepository
+            var acccountUsers = await _accountUsersRepository
                     .CreateQuery(options)
-                    .FirstOrDefaultAsync(r =>
+                    .Where(r =>
                         r.userRef == request.UserRef &&
                         r.removed == null &&
-                        r.role != null && r.role.Value == request.Role);
+                        r.role != null && r.role.Value == request.Role)
+                    .ToListAsync();
 
-            if (acccount == null)
-            {
-                return null;
-            }
-
-            return new UserModel { UserRef = acccount.userRef, AccountId = _hashingService.HashValue(acccount.accountId) };
+            return acccountUsers.ToUserModel(_hashingService);
         }
     }
 }
