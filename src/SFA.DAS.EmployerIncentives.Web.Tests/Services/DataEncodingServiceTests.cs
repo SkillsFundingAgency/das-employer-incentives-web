@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using System;
-using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
@@ -27,28 +27,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
         private static string Decrypt(string ivAndData)
         {
-            string decrypted;
-            var iv = Convert.FromBase64String(ivAndData.Substring(0, 24));
-            var cipher = Convert.FromBase64String(ivAndData.Substring(24));
+            var bytes = Convert.FromBase64String(ivAndData);
+            var iv = bytes.Take(16).ToArray();
 
-            using (var aes = new AesManaged())
+            using var aes = new AesManaged
             {
-                aes.KeySize = 128;
-                aes.BlockSize = 128;
-                aes.Key = Convert.FromBase64String(TestAesKey);
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
-                aes.IV = iv;
-                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                KeySize = 128,
+                BlockSize = 128,
+                Key = Convert.FromBase64String(TestAesKey),
+                Mode = CipherMode.CBC,
+                Padding = PaddingMode.PKCS7,
+                IV = iv
+            };
+            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            var rawData = decryptor.TransformFinalBlock(bytes, 16, bytes.Length - 16);
 
-                using var ms = new MemoryStream(cipher);
-                var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
-                using var sr = new StreamReader(cs);
-
-                decrypted = sr.ReadToEnd();
-            }
-
-            return decrypted;
+            return System.Text.Encoding.UTF8.GetString(rawData);
         }
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Security
@@ -16,22 +16,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Security
 
         public string Encrypt(string raw)
         {
-            byte[] encrypted;
-            string iv;
+            using var aes = GetAes();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            var encryptedData = encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
+            var data = aes.IV.Concat(encryptedData).ToArray();
 
-            using (var aes = GetAes())
-            {
-                iv = Convert.ToBase64String(aes.IV);
-                var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-                using var ms = new MemoryStream();
-                var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
-                using (var sw = new StreamWriter(cs)) sw.Write(raw);
-
-                encrypted = ms.ToArray();
-            }
-
-            return iv + Convert.ToBase64String(encrypted);
+            return Convert.ToBase64String(data);
         }
 
         private AesManaged GetAes()
