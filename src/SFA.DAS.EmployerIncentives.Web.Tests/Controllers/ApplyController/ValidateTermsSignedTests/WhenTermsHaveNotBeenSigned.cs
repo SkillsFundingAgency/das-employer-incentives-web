@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             viewResult.Should().NotBeNull();
             var viewModel = viewResult.Model as ValidateTermsSignedViewModel;
             viewModel.AccountId.Should().Be(accountId);
-            viewModel.AccountsAgreementsUrl.Should().Be($"{accountsBaseUrl}{accountId}/agreements");
-            viewModel.AccountsHomeUrl.Should().Be($"{accountsBaseUrl}{accountId}/teams");
+            viewModel.AccountsAgreementsUrl.Should().Be($"{accountsBaseUrl}/accounts/{accountId}/agreements");
+            viewModel.AccountsHomeUrl.Should().Be($"{accountsBaseUrl}/accounts/{accountId}/teams");
         }
     }
 }

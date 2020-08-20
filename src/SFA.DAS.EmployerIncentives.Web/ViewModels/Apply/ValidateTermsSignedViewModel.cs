@@ -2,16 +2,16 @@
 {
     public class ValidateTermsSignedViewModel : ViewModel
     {
+        private readonly string _accountsBaseUrl;
+
         public ValidateTermsSignedViewModel(string accountId, string accountsBaseUrl, string title = "You need to accept the employer agreement") : base(title)
         {
             AccountId = accountId;
             _accountsBaseUrl = accountsBaseUrl;
         }
 
-        private string _accountsBaseUrl;
-
         public string AccountId { get; }
-        public string AccountsHomeUrl => $"{_accountsBaseUrl}{AccountId}/teams";
-        public string AccountsAgreementsUrl => $"{_accountsBaseUrl}{AccountId}/agreements";
+        public string AccountsHomeUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/teams";
+        public string AccountsAgreementsUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/agreements";
     }
 }
