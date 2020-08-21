@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                 $"{_testdata.HashedAccountId}/bank-details/{_testdata.ApplicationId}/enter-bank-details");
 
             var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
-            continueNavigationResponse.EnsureSuccessStatusCode();
+            continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
 
             continueNavigationResponse.RequestMessage.RequestUri.AbsolutePath.Should().Be("/service/provide-organisation-information");
             var queryParams = continueNavigationResponse.RequestMessage.RequestUri.ParseQueryString();
