@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
-using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}")]
+    [Route("{accountId}/application-complete/{applicationId}")]
     public class ApplicationCompleteController : Controller
     {
-        public const string ApplicationCompleteRoute = "application-complete";
         private readonly ExternalLinksConfiguration _configuration;
 
         public ApplicationCompleteController(IOptions<ExternalLinksConfiguration> configuration)
@@ -19,8 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        [Route("{ApplicationCompleteRoute}/{applicationId}")]
+        [Route("")]
         public IActionResult Confirmation()
         {
             var model = new ConfirmationViewModel(_configuration.ManageApprenticeshipSiteUrl);

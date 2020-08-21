@@ -6,9 +6,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
     {
         public long LegalEntityId { get; set; }
         public string VendorCode { get; set; }
-        public string ApplicantName { get; set; }
-        public string ApplicantEmail { get; set; }
+        public string SubmittedByName { get; set; }
+        public string SubmittedByEmail { get; set; }
         public decimal ApplicationValue { get; set; }
         public IEnumerable<SignedAgreementDto> SignedAgreements { get; set; }
+        public int NumberOfApprenticeships { get; set; }
     }
 }
