@@ -45,8 +45,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var email = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.EmailAddress)?.Value;
             var firstName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.GivenName)?.Value;
             var lastName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.FamilyName)?.Value;
-            
-            await _applicationService.Confirm(accountId, applicationId, email, string.Join(firstName, lastName, ""));
+
+            await _applicationService.Confirm(accountId, applicationId, email, string.Join(firstName, lastName, " "));
 
             return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }
