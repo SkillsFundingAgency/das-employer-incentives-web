@@ -54,9 +54,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task Confirm(string accountId, Guid applicationId, string userId)
+        public async Task Confirm(string accountId, Guid applicationId, string userEmail, string userName)
         {
-            var request = MapToConfirmApplicationRequest(applicationId, accountId, userId);
+            var request = MapToConfirmApplicationRequest(applicationId, accountId, userEmail, userName);
 
             using var response = await _client.PatchAsJsonAsync($"accounts/{request.AccountId}/applications", request);
 
@@ -110,9 +110,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             };
         }
 
-        private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string user)
+        private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string userEmail, string userName)
         {
-            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), user);
+            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), userEmail, userName);
         }
     }
 }
