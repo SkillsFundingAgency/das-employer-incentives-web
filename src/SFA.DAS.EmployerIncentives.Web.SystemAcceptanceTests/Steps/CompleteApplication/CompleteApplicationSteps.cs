@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
     public class CompleteApplicationSteps : StepsBase
     {
         private readonly TestContext _testContext;
+        private string _applicationCompleteUrl;
 
         public CompleteApplicationSteps(TestContext testContext) : base(testContext)
         {
@@ -66,7 +67,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
 
             var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
             continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
-            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain("/service/provide-organisation-information?journey=new&return=https%3a%2f%2flocalhost%3a5001%2fapplication-complete&data=");
+
+            _applicationCompleteUrl = $"https://localhost:5001/MLB7J9/application-complete/{data.ApplicationId}";
+            var expectedReturnUrl =
+                "/service/provide-organisation-information?journey=new&return=" +
+                _applicationCompleteUrl.ToUrlString();
+            continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain(expectedReturnUrl);
         }
 
         [When(@"the employer is shown the confirmation page")]
@@ -74,7 +80,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         {
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "/application-complete");
+                _applicationCompleteUrl);
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
             response.EnsureSuccessStatusCode();

@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             const string encryptedData = "qNgwIVvU8twX0GPjF4yHcw==Qqm35mLvFQZ9RCNQ2Ff7zee2sO4CNS0H7hN9PzKM6Cfo7U+ajB52gza8VEt0F9jnKpTxYt93HWq4xZPrdzEDZw==";
             var dataEncryptionServiceMock = new Mock<IDataEncryptionService>();
-            dataEncryptionServiceMock.Setup(x => x.Encrypt("ABCD2X|000000|Bob Martin|bob@clean-code.com|3000|Jon Skeet|jon.skeet@google.com|2020-09-01T12:34:59|apps=1")).Returns(encryptedData);
+            dataEncryptionServiceMock.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedData);
 
             var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
 
