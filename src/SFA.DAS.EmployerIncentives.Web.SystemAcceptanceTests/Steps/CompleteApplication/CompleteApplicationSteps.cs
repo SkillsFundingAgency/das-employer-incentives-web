@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         }
    
         [Given(@"given the employer has all the information required to process their bank details")]
-        public async Task GivenTheEmployerHasEnteredAllTheInformationRequiredToProcessTheirBankDetails()
+        public void GivenTheEmployerHasAllTheInformationRequiredToProcessTheirBankDetails()
         {            
             _testContext.TestDataStore.Add("HashedAccountId", _testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testdata.HashedAccountId);
@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         }
 
         [When(@"the employer provides their bank details")]
-        public async Task WhenTheEmployerIsShownTheConfirmationPage()
+        public async Task WhenTheEmployerProvidesTheirBankDetails()
         {
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         }
 
         [Then(@"the employer completes their application journey")]
-        public void ThenTheEmployerHasTheOptionToReturnToTheirAccountsPage()
+        public void ThenTheEmployerCompletesTheirApplicationJourney()
         {
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
