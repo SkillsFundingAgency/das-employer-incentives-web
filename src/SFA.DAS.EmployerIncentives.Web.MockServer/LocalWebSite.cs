@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authentication;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
+#pragma warning disable S3881 // "IDisposable" should be implemented correctly
 namespace SFA.DAS.EmployerIncentives.Web.MockServer
 {
-    public class LocalWebSite : WebApplicationFactory<Startup>
+    public class LocalWebSite : IDisposable
     {
         private readonly List<Claim> _claims;
+        private IWebHost _host;
         private readonly Dictionary<string, string> _appConfig;
 
         public LocalWebSite(List<Claim> claims)
@@ -21,15 +24,29 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
             {
                 { "EnvironmentName", "LOCAL" }
             };
-
         }
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+
+        public LocalWebSite Run()
         {
+            _host.Run();
+            return this;
+        }
+
+        public LocalWebSite Build()
+        {
+            var builder = WebHost
+                .CreateDefaultBuilder(null)
+                .UseStartup<Startup>();
+
             builder
                .ConfigureAppConfiguration(a =>
                {
                    a.Sources.Clear();
-                   a.AddInMemoryCollection(_appConfig);
+                   a.AddInMemoryCollection(new Dictionary<string, string>
+                        {
+                            { "EnvironmentName", "LOCAL" }
+                        });
+                   a.AddJsonFile("appsettings.development.json");
                });
 
             builder
@@ -40,9 +57,18 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                     {
                         return new TestAuthenticationOptions(_claims);
                     });
+                    s.AddTransient<IStartupFilter, TestAuthenticationMiddlewareStartupFilter>();
                 });
 
-            base.ConfigureWebHost(builder);
+            _host = builder.Build();
+            
+            return this;
+        }
+
+        public void Dispose()
+        {
+            _host.Dispose();
         }
     }
 }
+#pragma warning restore S3881 // "IDisposable" should be implemented correctly

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.TestHost;
-using SFA.DAS.EmployerIncentives.Web.MockServer.CosmosDb;
+﻿using SFA.DAS.EmployerIncentives.Web.MockServer.CosmosDb;
 using SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
 using System;
@@ -21,20 +20,22 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithInitialApplication()
                 .WithoutASignedAgreement()
                 .WithApplicationConfirmation()
+                .WithAccountOwnerUserId()
                 .Build();
 
             var readStore = await AccountsReadStoreBuilder.Create();
             await readStore.WithAccountForAccountOwnerUserId(new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships().AccountId);
             readStore.Build();
 
-            //var webSite = new LocalWebSite(employerIncenticesApi.Claims);
-            //var test = webSite.Server.Host;
-            //_ = webSite.CreateClient();
+            var webSite = new LocalWebSite(employerIncenticesApi.Claims)
+                .Build()
+                .Run();
 
             Console.WriteLine("Press any key to stop the servers");
             Console.ReadKey();
 
             employerIncenticesApi.Dispose();
+            webSite.Dispose();
         }
     }
 }
