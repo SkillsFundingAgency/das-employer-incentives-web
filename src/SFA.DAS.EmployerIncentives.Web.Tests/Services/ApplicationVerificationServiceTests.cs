@@ -29,11 +29,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             var bankDetails = new BankingDetailsDto
             {
-                ApplicantName = "Bob Martin",
-                ApplicantEmail = "bob@clean-code.com",
+                SubmittedByName = "Bob Martin",
+                SubmittedByEmail = "bob@clean-code.com",
                 ApplicationValue = 3000,
                 LegalEntityId = legalEntityId,
                 VendorCode = "000000",
+                NumberOfApprenticeships = 7,
                 SignedAgreements = new List<SignedAgreementDto>
                 {
                     new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59", new CultureInfo("en-GB"))}
@@ -59,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var dataEncryptionServiceMock = new Mock<IDataEncryptionService>();
             dataEncryptionServiceMock.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedData);
 
-            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
+            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}&apps=7";
 
             var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, webConfigurationOptionsMock.Object);
 

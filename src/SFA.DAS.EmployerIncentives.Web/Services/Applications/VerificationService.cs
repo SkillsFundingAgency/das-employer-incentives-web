@@ -42,8 +42,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 HashedLegalEntityId = _hashingService.HashValue(bankingDetails.LegalEntityId),
                 IncentiveAmount = bankingDetails.ApplicationValue,
                 VendorId = bankingDetails.VendorCode,
-                SubmittedByFullName = bankingDetails.ApplicantName,
-                SubmittedByEmailAddress = bankingDetails.ApplicantEmail,
+                SubmittedByFullName = bankingDetails.SubmittedByName,
+                SubmittedByEmailAddress = bankingDetails.SubmittedByEmail,
+                NumberOfApprenticeships = bankingDetails.NumberOfApprenticeships,
                 SignedAgreements = bankingDetails.SignedAgreements?.Select(x => new SignedAgreementModel
                 {
                     SignedByEmail = x.SignedByEmail,
@@ -54,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();
 
-            return $"{_configuration.AchieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData}";
+            return $"{_configuration.AchieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData}&apps={data.NumberOfApprenticeships}";
         }
 
     }

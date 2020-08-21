@@ -12,6 +12,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string VendorId { get; set; } = "00000000";
         public string SubmittedByFullName { get; set; } = "";
         public string SubmittedByEmailAddress { get; set; } = "";
+        public int NumberOfApprenticeships { get; set; }
         public decimal IncentiveAmount { get; set; }
         public string HashedAccountId { get; set; }
         public Guid ApplicationId { get; set; }
