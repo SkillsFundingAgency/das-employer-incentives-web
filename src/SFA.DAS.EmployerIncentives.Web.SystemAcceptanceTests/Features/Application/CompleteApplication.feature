@@ -5,6 +5,6 @@ As an employer applying for the new apprenticeship grant
 	So that I can complete the application journey
 
 Scenario: An employer performs the entry of their bank details and completes the application
-	Given the employer has entered all the information required to process their bank details
-	When the employer is shown the confirmation page
-	Then the employer has the option to return to their accounts page
+	Given given the employer has all the information required to process their bank details
+	When the employer provides their bank details
+	Then the employer completes their application journey

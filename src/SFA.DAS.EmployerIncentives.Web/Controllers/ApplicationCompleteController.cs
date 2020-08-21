@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
+    [Route("{accountId}")]
     public class ApplicationCompleteController : Controller
     {
         public const string ApplicationCompleteRoute = "application-complete";
@@ -18,7 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route(ApplicationCompleteRoute)]
+        [Route("{ApplicationCompleteRoute}/{applicationId}")]
         public IActionResult Confirmation()
         {
             var model = new ConfirmationViewModel(_configuration.ManageApprenticeshipSiteUrl);

@@ -31,6 +31,12 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             _claims = new List<Claim>();
             _server = WireMockServer.StartWithAdminInterface(port);
         }
+        public EmployerIncentivesApiBuilder WithAccountOwnerUserId()
+        {
+            var userId = TestData.User.AccountOwnerUserId;
+            AddOrReplaceClaim(EmployerClaimTypes.UserId, userId.ToString());
+            return this;
+        }
 
         public EmployerIncentivesApiBuilder WithAccountWithNoLegalEntities()
         {
@@ -47,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             Response.Create()
                 .WithStatusCode(HttpStatusCode.NotFound));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }        
@@ -93,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
               Response.Create()
                   .WithStatusCode(HttpStatusCode.NotFound));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -140,7 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -197,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntity3, TestHelper.DefaultSerialiserSettings)));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -244,7 +250,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -303,7 +309,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -336,7 +342,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -356,7 +362,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -398,6 +404,11 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
             return new EmployerIncentivesApi(_server, _claims);
+        }
+
+        private void AddClaim(string type, string value)
+        {
+            _claims.Add(new Claim(type, value));
         }
 
         private void AddOrReplaceClaim(string type, string value)

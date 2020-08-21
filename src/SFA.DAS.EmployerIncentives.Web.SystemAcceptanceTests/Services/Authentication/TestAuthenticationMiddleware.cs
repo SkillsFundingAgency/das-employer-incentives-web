@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authentication;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authenti
                     options.Claims,
                     "AuthenticationTypes.Federation"
                 );
-
+                
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 context.User = claimsPrincipal;
             }
