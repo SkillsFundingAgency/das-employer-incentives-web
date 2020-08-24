@@ -1,7 +1,8 @@
-﻿using System;
+﻿using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using System;
 using System.Collections.Generic;
-using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -43,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
 
                 public virtual LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}", HasSignedIncentivesTerms = true };
-                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1,  FirstName = "Adam", FullName = "Adam 1 Glover", LastName= "Glover", CourseName = "Early Years Educator Level 3" };
+                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3" };
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3" };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2" };
             }
@@ -99,7 +100,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
             public class WithInitialApplicationForASingleEntity : WithSingleLegalEntityWithEligibleApprenticeships
             {
-                public Guid ApplicationId = Guid.NewGuid();
+                public Guid ApplicationId = Guid.Parse("18073eb3-f22a-4ab3-9726-dfe99b911d53");
                 public ApplicationResponse ApplicationResponse => new ApplicationResponse
                 {
                     Application = new IncentiveApplicationDto
@@ -133,7 +134,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
-                                ApprenticeshipId = 4, 
+                                ApprenticeshipId = 4,
                                 CourseName = "Relationship Manager (Banking), Level: 6 (Standard)",
                                 LastName = "Roberts",
                                 FirstName = "Jack",
@@ -212,6 +213,23 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     TotalIncentiveAmount = 1000m
                                 }
                             }
+                        }
+                    };
+            }
+
+            public class WithInitialApplicationAndBankingDetails : WithInitialApplicationForASingleEntity
+            {
+                public BankingDetailsDto BankingDetails =>
+                    new BankingDetailsDto
+                    {
+                        LegalEntityId = AccountLegalEntityId,
+                        SubmittedByName = "Uncle Bob",
+                        VendorCode = "000000",
+                        ApplicationValue = ApplicationResponse.Application.Apprenticeships.Sum(x => x.TotalIncentiveAmount),
+                        SubmittedByEmail = "bob.martin@email.com",
+                        SignedAgreements = new List<SignedAgreementDto>
+                        {
+                            new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59")}
                         }
                     };
             }

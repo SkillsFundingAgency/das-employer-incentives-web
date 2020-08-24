@@ -64,9 +64,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     {
                         o.AllowedHashstringCharacters = _testContext.WebConfigurationOptions.AllowedHashstringCharacters;
                         o.Hashstring = _testContext.WebConfigurationOptions.Hashstring;
+                        o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
+                        o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
                     });
                     s.Configure<ExternalLinksConfiguration>(o =>
                     {
+
                         o.ManageApprenticeshipSiteUrl = _testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl;
                         o.CommitmentsSiteUrl = _testContext.ExternalLinksOptions.CommitmentsSiteUrl;
                         o.EmployerRecruitmentSiteUrl = _testContext.ExternalLinksOptions.EmployerRecruitmentSiteUrl;
