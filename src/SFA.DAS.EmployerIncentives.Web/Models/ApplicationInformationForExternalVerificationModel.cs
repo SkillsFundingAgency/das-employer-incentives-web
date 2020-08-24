@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string ToPsvString()
         {
             return string.Join("|", HashedLegalEntityId, VendorId, SubmittedByFullName, SubmittedByEmailAddress, IncentiveAmount.ToString("F2", new CultureInfo("en-GB")),
-                string.Join("|", SignedAgreements.Select(x => x.ToPsvString())));
+                string.Join("|", SignedAgreements.Select(x => x.ToPsvString())), $"apps={NumberOfApprenticeships}");
         }
     }
 }
