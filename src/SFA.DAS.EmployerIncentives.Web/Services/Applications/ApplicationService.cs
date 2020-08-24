@@ -27,7 +27,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var applicationId = Guid.NewGuid();
             var request = MapToCreateApplicationRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
 
-            using var response = await _client.PostAsJsonAsync($"accounts/{request.AccountId}/applications", request);
+            var url = OuterApiRoutes.Application.CreateApplication(request.AccountId);
+            using var response = await _client.PostAsJsonAsync(url, request);
 
             response.EnsureSuccessStatusCode();
 
@@ -36,7 +37,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId)
         {
-            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}", HttpCompletionOption.ResponseHeadersRead);
+            var url = OuterApiRoutes.Application.GetApplication(_hashingService.DecodeValue(accountId), applicationId);
+            using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
@@ -49,8 +51,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             var request = MapToUpdateApplicationRequest(applicationId, accountId, apprenticeshipIds);
 
-            using var response = await _client.PutAsJsonAsync($"accounts/{request.AccountId}/applications", request);
-            
+            var url = OuterApiRoutes.Application.UpdateApplication(request.AccountId);
+            using var response = await _client.PutAsJsonAsync(url, request);
+
             response.EnsureSuccessStatusCode();
         }
 
@@ -58,14 +61,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             var request = MapToConfirmApplicationRequest(applicationId, accountId, userEmail, userName);
 
-            using var response = await _client.PatchAsJsonAsync($"accounts/{request.AccountId}/applications", request);
+            var url = OuterApiRoutes.Application.ConfirmApplication(request.AccountId);
+            using var response = await _client.PatchAsJsonAsync(url, request);
 
             response.EnsureSuccessStatusCode();
         }
 
         public async Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId)
         {
-            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}/accountlegalentity", HttpCompletionOption.ResponseHeadersRead);
+            var url = OuterApiRoutes.Application.GetApplicationLegalEntity(_hashingService.DecodeValue(accountId), applicationId);
+            using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
@@ -73,12 +78,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             return accountLegalEntityId;
         }
- 
+
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
-                application.Apprenticeships.OrderBy(x=>x.LastName).Select(MapFromApplicationApprenticeDto));
+                application.Apprenticeships.OrderBy(x => x.LastName).Select(MapFromApplicationApprenticeDto));
         }
 
         private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
