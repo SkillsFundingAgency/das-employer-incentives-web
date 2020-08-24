@@ -1,0 +1,76 @@
+﻿@using System.Globalization
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.ApplicationConfirmationViewModel
+
+@{
+    var culture = new CultureInfo("en-GB");
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/confirm-apprentices";
+    ViewData["ZenDeskLabels"] = "ei-confirmapprentices";
+}
+
+<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                @Model.Title
+            </h1>
+
+            <div class="govuk-inset-text">
+                Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.
+            </div>
+
+            <form asp-action="DisplayDeclaration" method="post">
+                @Html.AntiForgeryToken()
+
+                <table class="govuk-table govuk-!-margin-bottom-9">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Name of apprentice</th>
+                            <th scope="col" class="govuk-table__header">Course name</th>
+                            <th scope="col" class="govuk-table__header">Payment amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var apprenticeship in Model.Apprentices)
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">@apprenticeship.DisplayName</th>
+                                <td class="govuk-table__cell">@apprenticeship.CourseName</td>
+                                <td class="govuk-table__cell">@(apprenticeship.ExpectedAmount.ToString("C0", culture))</td>
+                            </tr>
+                        }
+
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Total amount</th>
+                            <td class="govuk-table__cell"></td>
+                            <td class="govuk-table__cell">@(Model.TotalPaymentAmount.ToString("C0", culture))</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        All apprentices must have started their contract of employment between 1 August 2020 and 31 January 2021.
+                    </strong>
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Confirm
+                </button>
+
+                <p class="govuk-body">
+                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
+                        Change the apprentices you want to apply for
+                    </a>
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+</main>

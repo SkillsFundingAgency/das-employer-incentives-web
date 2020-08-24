@@ -1,57 +1,67 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System;
+using System.Threading.Tasks;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/[Controller]")]
+    [Route("{accountId}/apply")]
     public class ApplyController : Controller
     {
-        private readonly EmployerIncentivesWebConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _configuration;
+        private readonly IApplicationService _applicationService;
 
-        public ApplyController(IOptions<EmployerIncentivesWebConfiguration> configuration)
+        public ApplyController(
+            IOptions<ExternalLinksConfiguration> configuration,
+            IApplicationService applicationService)
         {
             _configuration = configuration.Value;
+            _applicationService = applicationService;
         }
 
-        [Route("")]
         [HttpGet]
-        public async Task<ViewResult> QualificationQuestion()
+        [Route("")]
+        public async Task<IActionResult> Default()
         {
-            return View(new QualificationQuestionViewModel());
+            return RedirectToAction("GetChooseOrganisation", "ApplyOrganisation");
         }
 
-        [Route("")]
+        [HttpGet]
+        [Route("declaration/{applicationId}")]
+        public async Task<ViewResult> Declaration(string accountId, Guid applicationId)
+        {
+            return View(new DeclarationViewModel(accountId, applicationId));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> QualificationQuestion(string accountId, QualificationQuestionViewModel viewModel)
+        [Route("declaration/{applicationId}")]
+        public async Task<IActionResult> SubmitApplication(string accountId, Guid applicationId)
         {
-            if (!viewModel.HasTakenOnNewApprentices.HasValue)
-            {
-                ModelState.AddModelError("HasTakenOnNewApprentices", QualificationQuestionViewModel.HasTakenOnNewApprenticesNotSelectedMessage);
-                return View(viewModel);
-            }
+            var userId = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
 
-            if (viewModel.HasTakenOnNewApprentices.Value)
-            {
-                return RedirectToAction("SelectApprenticeships", new { accountId });
-            }
+            await _applicationService.Confirm(accountId, applicationId, userId);
 
-            return RedirectToAction("CannotApply", new { accountId });
-        }
-
-        public async Task<ViewResult> SelectApprenticeships()
-        {
-            throw new NotImplementedException();
+            return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }
 
         [HttpGet]
-        [Route("CannotApply")]
-        public async Task<ViewResult> CannotApply()
+        [Route("cannot-apply")]
+        public async Task<ViewResult> CannotApply(string accountId)
         {
-            return View(new CannotApplyViewModel(_configuration.CommitmentsBaseUrl));
+            return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
+        }
+
+        [HttpGet]
+        [Route("cannot-apply-yet")]
+        public async Task<ViewResult> CannotApplyYet(string accountId)
+        {
+            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
         }
     }
 }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

@@ -3,20 +3,29 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Controllers;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
 {
     [TestFixture]
-    public class WhenNoAnswerIsSelected : ApplyControllerTestBase
+    public class WhenNoAnswerIsSelected
     {
+        private ApplyQualificationController _sut;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _sut = new Web.Controllers.ApplyQualificationController();
+        }
+
         [Test]
         public async Task Then_a_Validation_Error_Is_Displayed()
         {
             var accountId = "ABC123";
-            var viewModel = new QualificationQuestionViewModel();
+            var viewModel = new QualificationQuestionViewModel() { AccountId = accountId };
 
-            var result = await _sut.QualificationQuestion(accountId, viewModel);
+            var result = await _sut.QualificationQuestion(viewModel);
 
             var viewResult = result as ViewResult;
 

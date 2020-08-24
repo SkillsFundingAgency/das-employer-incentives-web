@@ -1,0 +1,85 @@
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
+@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/select-new-apprentices";
+    ViewData["ZenDeskLabels"] = "ei-selectapprentices";
+}
+
+<a asp-action="QualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="SelectApprenticeships" method="post">
+                @Html.AntiForgeryToken()
+
+                <partial name="ValidationSummary" />
+
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
+
+                        <p class="govuk-body">
+                            Choose from the apprentices in your apprenticeship service account with a planned start date from 1 August 2020.
+                        </p>
+                        <p class="govuk-body">
+                            You cannot view any apprentices that you've already applied for.
+                        </p>
+
+                        <div class="govuk-inset-text">
+                            You must only select apprentices who started their contract of employment with your organisation from 1 August 2020 to 31 January 2021.
+                        </div>
+
+                        <span id="new-apprenticeships-hint" class="govuk-hint">
+                            Select all that apply
+                        </span>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="new-apprenticeships-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
+                            </span>
+                        }
+                        <div class="govuk-checkboxes">
+                            @foreach (var apprenticeship in Model.Apprenticeships)
+                            {
+                                <div class="govuk-checkboxes__item">
+                                    <input
+                                        class="govuk-checkboxes__input"
+                                        id="new-apprenticeships-@apprenticeship.Id"
+                                        name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
+                                        type="checkbox"
+                                        @if(apprenticeship.Selected)
+                                        {
+                                            @Html.Raw("checked")
+                                        } 
+                                        value="@apprenticeship.Id"
+                                        aria-describedby="new-apprenticeships-item-hint" 
+                                    />
+                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
+                                        @apprenticeship.DisplayName
+                                    </label>
+                                    <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
+                                        @apprenticeship.CourseName
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+
+            </form>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,38 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.DeclarationViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/declaration";
+    ViewData["ZenDeskLabels"] = "ei-declaration";
+}
+
+<main class="govuk-main-wrapper" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                @Model.Title
+            </h1>
+
+            <p class="govuk-body">
+                You are about to submit your application for the hire a new apprentice payment.
+            </p>
+
+            <p class="govuk-body">
+                By submitting this application, you declare that:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>all the information in this application is correct</li>
+                <li>all the apprentices in this application are new employees who started their contract of employment between 1 August 2020 and 31 January 2021</li>
+                <li>you understand that your organisation must tell Education and Skills Funding Agency about any change to any of the information provided</li>
+                <li>you have read and understood the agreement</li>
+                <li>you understand that if you have provided any inaccurate or misleading information, you may have to repay any relevant hire a new apprentice payments</li>
+            </ul>
+
+            <form asp-action="SubmitApplication" asp-controller="Apply" method="post" class="form">
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Confirm and submit
+                </button>
+            </form>
+        </div>
+    </div>
+</main>

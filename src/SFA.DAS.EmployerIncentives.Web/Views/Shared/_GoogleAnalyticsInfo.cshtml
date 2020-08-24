@@ -1,0 +1,17 @@
+@using SFA.DAS.EmployerIncentives.Web.Models
+@using System.Web
+
+<script>
+    @if (ViewBag.GaData == null)
+    {
+        ViewBag.GaData = new GoogleAnalyticsData();
+    }
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+        'event': '@ViewBag.GaData.DataLoaded' || null,
+        'UserID': '@ViewBag.GaData.UserId' || null,
+        'EmployerAccountID': '@ViewBag.GaData.Acc' || null,
+        'LegalEntityID': '@ViewBag.GaData.Ale' || null,
+        'vpv': '@ViewBag.GaData.Vpv' || null 
+    });
+</script>

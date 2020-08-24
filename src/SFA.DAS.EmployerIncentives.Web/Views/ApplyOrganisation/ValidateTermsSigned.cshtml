@@ -1,0 +1,37 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.ValidateTermsSignedViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/validate-terms-signed";
+    ViewData["ZenDeskLabels"] = "ei-signagreement";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                @Model.Title
+            </h1>
+            <p class="govuk-body">
+                To apply for the hire a new apprentice payment, all employers must review and accept an agreement with the Education and Skills Funding Agency.
+            </p>
+            <p class="govuk-body">
+                The version you need to accept depends on whether you've already accepted the agreement we published on 9 January 2020. If you have:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>already accepted the 9 January 2020 agreement, you only need to accept a variation to it now</li>
+                <li>not accepted the 9 January 2020 agreement yet, you need to accept a new agreement</li>
+            </ul>
+
+            <a href="@Model.AccountsAgreementsUrl" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                View agreement
+            </a>
+
+            <p class="govuk-body">
+                <a class="govuk-link govuk-link--no-visited-state" href="@Model.AccountsHomeUrl">
+                    Return to account home
+                </a>
+            </p>
+        </div>
+    </div>
+</main>

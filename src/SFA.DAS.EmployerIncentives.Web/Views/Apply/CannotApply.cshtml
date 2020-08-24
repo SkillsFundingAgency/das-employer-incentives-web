@@ -2,21 +2,22 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/cannot-apply";
+    ViewData["ZenDeskLabels"] = "ei-noeligible";
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">
+            <h1 class="govuk-heading-l">
                 @Model.Title
             </h1>
             <p class="govuk-body">
-                You can only apply for this grant if you have new apprentices who joined your organisation after 1 August 2020.
+                You cannot apply for this payment because you do not have any new apprentices who started their contact of employment between 1 August 2020 and 31 January 2021.
             </p>
             <p class="govuk-body">
-                If you have apprentices who are eligible for this grant, you'll need to 
-                <a class="govuk-link" href="@Model.CommitmentsUrl">
-                    add them to your apprenticeship service account.
+                <a class="govuk-button" href="@Model.AccountHomeUrl">
+                    Return to account home
                 </a>
             </p>
         </div>

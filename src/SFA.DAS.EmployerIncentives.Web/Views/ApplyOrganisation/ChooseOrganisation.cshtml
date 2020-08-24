@@ -1,0 +1,52 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.ChooseOrganisationViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/choose-organisation";
+    ViewData["ZenDeskLabels"] = "ei-selectorg";
+}
+
+<a asp-action="Home" asp-controller="Home" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="ChooseOrganisation" method="post">
+                @Html.AntiForgeryToken()
+
+                <partial name="ValidationSummary" />
+
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
+                        @if (ViewData.ModelState.ContainsKey("OrganisationNotSelected") && ViewData.ModelState["OrganisationNotSelected"].Errors.Any())
+                        {
+                            <span id="changed-name-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @Model.OrganisationNotSelectedMessage
+                            </span>
+                        }
+
+                        <div class="govuk-radios">
+                            @foreach (var organisation in Model.Organisations)
+                            {
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
+                                    <label class="govuk-label govuk-radios__label" for="selected">
+                                        @organisation.Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+            </form>
+        </div>
+    </div>
+</main>

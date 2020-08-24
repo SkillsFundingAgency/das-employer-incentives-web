@@ -1,51 +1,59 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.Mvc.Extensions;
-using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.EmployerIncentives.Web.Filters;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.EmployerIncentives.Web.Authorisation;
+using SFA.DAS.EmployerIncentives.Web.Filters;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
-            var config = new ConfigurationBuilder()
+            var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
 #if DEBUG
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
+                .AddJsonFile("appsettings.development.json", true)
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
+                configBuilder.AddAzureTableStorage(options =>
+                        {
+                            options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                            options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                            options.EnvironmentName = configuration["EnvironmentName"];
+                            options.PreFixConfigurationKeys = false;
+                        }
+                    );
+
+                _configuration = configBuilder.Build();
             }
-            _configuration = config.Build();
+            else
+            {
+                _configuration = configuration;
+            }
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -53,42 +61,43 @@ namespace SFA.DAS.EmployerIncentives.Web
             IdentityModelEventSource.ShowPII = true;
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                            options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             services.AddOptions();
+            services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
+            services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
+            services.Configure<CosmosDbConfigurationOptions>(_configuration.GetSection(CosmosDbConfigurationOptions.CosmosDbConfiguration));
+            services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
+            services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
 
-            var serviceProvider = services.BuildServiceProvider();
-
-            //services.AddAuthorizationService();
+            services.AddAuthorizationPolicies();            
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
-
-            //services.AddAndConfigureEmployerAuthentication(
-                    //serviceProvider.GetService<IOptions<IdentityServerConfiguration>>(),
-                    //serviceProvider.GetService<IEmployerAccountService>());
+            services.AddEmployerAuthentication(_configuration);
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddMvc(
                     options =>
                     {
-                        options.Filters.Add(new GoogleAnalyticsFilter());
-                        options.AddAuthorization();
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));                        
+                        options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
+                        options.SuppressOutputFormatterBuffering = true;
                     })
-                .AddControllersAsServices()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddControllersAsServices();
 
             services.AddHttpsRedirection(options =>
             {
-                options.HttpsPort = _configuration["Environment"] == "LOCAL" ? 5001 : 443;
+                options.HttpsPort = _configuration["EnvironmentName"] == "LOCAL" ? 5001 : 443;
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
-            if (_configuration["Environment"] == "LOCAL" || _configuration["Environment"] == "DEV")
+            if (_configuration["EnvironmentName"] == "LOCAL" || _configuration["EnvironmentName"] == "DEV")
             {
                 services.AddDistributedMemoryCache();
             }
@@ -96,7 +105,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = _configuration["RedisCacheConnectionString"];
+                    options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:RedisCacheConnectionString");
                 });
             }
 
@@ -110,6 +119,10 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddApplicationInsightsTelemetry();
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".EmployerIncentives.AntiForgery", HttpOnly = false });
+
+            services
+                .AddHashingService()
+                .AddEmployerIncentivesService();
 
             /* if (!_environment.IsDevelopment())
             {
@@ -139,7 +152,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
