@@ -8,9 +8,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     public class ApplicationCompleteController : Controller
     {
-        private readonly WebConfigurationOptions _configuration;
+        private readonly ExternalLinksConfiguration _configuration;
 
-        public ApplicationCompleteController(IOptions<WebConfigurationOptions> configuration)
+        public ApplicationCompleteController(IOptions<ExternalLinksConfiguration> configuration)
         {
             _configuration = configuration.Value;
         }
@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("application-complete")]
         public IActionResult Confirmation()
         {
-            var model = new ConfirmationViewModel(_configuration.AccountsBaseUrl);
+            var model = new ConfirmationViewModel(_configuration.ManageApprenticeshipSiteUrl);
             return View(model);
         }
     }

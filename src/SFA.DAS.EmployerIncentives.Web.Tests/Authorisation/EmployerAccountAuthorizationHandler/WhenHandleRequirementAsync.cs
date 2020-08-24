@@ -49,7 +49,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
                 ActionDescriptor = new ActionDescriptor()
             };
 
-            _actionContext.RouteData.Values.Add("controller", "Test");
+            _actionContext.RouteData.Values.Add("controller", "TestController");
+            _actionContext.RouteData.Values.Add("action", "TestAction");
             _actionContext.RouteData.Values.Add(RouteValueKeys.AccountHashedId, _accountClaimValue);
 
             _resource = new AuthorizationFilterContext(_actionContext, new List<IFilterMetadata>());
@@ -79,10 +80,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
         }
 
         [Test]
-        public async Task Then_the_requirement_succeeds_if_the_route_is_the_home_controller()
+        public async Task Then_the_requirement_succeeds_if_the_route_is_the_home_controller_and_is_not_the_login_action()
         {
             // arrange            
             _actionContext.RouteData.Values["controller"] = "Home";
+            var context = new AuthorizationHandlerContext(_requirements, _user, _resource);
+
+            // act
+            await _sut.HandleAsync(context);
+
+            // assert
+            context.HasSucceeded.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Then_the_requirement_succeeds_is_the_home_controller_and_is_the_login_action()
+        {
+            // arrange            
+            _actionContext.RouteData.Values["controller"] = "Home";
+            _actionContext.RouteData.Values["action"] = "Login";
             var context = new AuthorizationHandlerContext(_requirements, _user, _resource);
 
             // act

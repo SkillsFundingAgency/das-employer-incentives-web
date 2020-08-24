@@ -10,6 +10,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users.Types
         public Guid userRef { get; set; }
         public long accountId { get; set; }
         public DateTime? removed { get; set; }
-        public UserRole? role { get; private set; }
+        public UserRole? role { get; set; }
     }
 }

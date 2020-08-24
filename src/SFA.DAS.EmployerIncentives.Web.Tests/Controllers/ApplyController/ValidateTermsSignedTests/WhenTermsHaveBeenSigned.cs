@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             _fixture = new Fixture();
             _legalEntityServiceMock = new Mock<ILegalEntitiesService>();
 
-            _sut = new ApplyOrganisationController(_legalEntityServiceMock.Object, Mock.Of<IOptions<WebConfigurationOptions>>());
+            _sut = new ApplyOrganisationController(_legalEntityServiceMock.Object, Mock.Of<IOptions<ExternalLinksConfiguration>>());
         }
 
         [Test]
