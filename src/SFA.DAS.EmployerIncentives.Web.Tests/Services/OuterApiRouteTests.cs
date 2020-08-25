@@ -1,7 +1,8 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Services;
 using System;
-using System.IO;
+using System.Reflection;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 {
@@ -10,11 +11,35 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
         [Test]
         public void NoOuterApiRoutesArePrefixedWithSlash()
         {
-            var pathToOuterApiRoutesFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\SFA.DAS.EmployerIncentives.Web\Services\OuterApiRoutes.cs");
+            var types = typeof(OuterApiRoutes).GetNestedTypes();
+            types.Length.Should().BeGreaterOrEqualTo(4);
 
-            var text = File.ReadAllText(pathToOuterApiRoutesFile);
+            foreach (var type in types)
+            {
+                var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 
-            text.Should().NotContainAny("\"/", "$\"/");
+                methods.Length.Should().BeGreaterOrEqualTo(1);
+
+                foreach (var method in methods)
+                {
+                    var parameterInfos = method.GetParameters();
+                    var parameters = new object[parameterInfos.Length];
+                    for (var i = 0; i < parameterInfos.Length; i++)
+                    {
+                        parameters[i] = GetDefaultValue(parameterInfos[i].GetType());
+                    }
+
+                    var result = method.Invoke(null, parameters) as string;
+                    result.Should().NotBeNullOrEmpty();
+                    result.Should().NotStartWith("/");
+                }
+            }
+
+        }
+
+        private static object GetDefaultValue(Type t)
+        {
+            return t.IsValueType ? Activator.CreateInstance(t) : null;
         }
     }
 }
