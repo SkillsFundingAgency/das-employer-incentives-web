@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
@@ -7,20 +6,24 @@ using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/bankdetails/{applicationId}")]
+    [Route("{accountId}/bank-details/{applicationId}")]
     public class BankDetailsController : Controller
     {
         private readonly IEmailService _emailService;
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
+        private readonly IVerificationService _verificationService;
 
-        public BankDetailsController(IEmailService emailService, IApplicationService applicationService, IHashingService hashingService)
+        public BankDetailsController(IVerificationService verificationService,
+            IEmailService emailService,
+            IApplicationService applicationService,
+            IHashingService hashingService)
         {
+            _verificationService = verificationService;
             _emailService = emailService;
             _applicationService = applicationService;
             _hashingService = hashingService;
@@ -57,17 +60,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public ViewResult AddBankDetails(Guid applicationId)
+        public IActionResult AddBankDetails(string accountId, Guid applicationId)
         {
             return View();
         }
 
         [HttpPost]
         [Route("enter-bank-details")]
-        public ViewResult EnterBankDetails(Guid applicationId)
+        public async Task<IActionResult> EnterBankDetails(string accountId, Guid applicationId)
         {
-            // Once integration mechanism is finalised, redirect / post to external site
-            return View();
+            var confirmationActionUrl = Url.Action("Confirmation", "ApplicationComplete", new { accountId, applicationId });
+            var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
+            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, applicationId, returnUrl);
+
+            return Redirect(achieveServiceUrl);
         }
 
         [HttpGet]
@@ -115,7 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var requestContext = ControllerContext.HttpContext.Request;
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
-            var bankDetailsUrl = $"{host}/{accountId}/bankdetails/{applicationId}/add-bank-details";
+            var bankDetailsUrl = $"{host}/{accountId}/bank-details/{applicationId}/add-bank-details";
             return bankDetailsUrl;
         }
     }

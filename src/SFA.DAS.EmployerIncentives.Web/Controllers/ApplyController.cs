@@ -42,9 +42,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("declaration/{applicationId}")]
         public async Task<IActionResult> SubmitApplication(string accountId, Guid applicationId)
         {
-            var userId = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
+            var email = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.EmailAddress)?.Value;
+            var firstName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.GivenName)?.Value;
+            var lastName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.FamilyName)?.Value;
 
-            await _applicationService.Confirm(accountId, applicationId, userId);
+            await _applicationService.Confirm(accountId, applicationId, email, string.Join(" ", firstName, lastName));
 
             return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }

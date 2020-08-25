@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using WireMock.Logging;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -31,6 +31,12 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             _claims = new List<Claim>();
             _server = WireMockServer.StartWithAdminInterface(port);
         }
+        public EmployerIncentivesApiBuilder WithAccountOwnerUserId()
+        {
+            var userId = TestData.User.AccountOwnerUserId;
+            AddOrReplaceClaim(EmployerClaimTypes.UserId, userId.ToString());
+            return this;
+        }
 
         public EmployerIncentivesApiBuilder WithAccountWithNoLegalEntities()
         {
@@ -47,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             Response.Create()
                 .WithStatusCode(HttpStatusCode.NotFound));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }        
@@ -93,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
               Response.Create()
                   .WithStatusCode(HttpStatusCode.NotFound));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -140,7 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -197,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntity3, TestHelper.DefaultSerialiserSettings)));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -244,7 +250,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -282,6 +288,20 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
+                        .WithPath(x => x.Contains($"/accounts/{data.AccountId}/applications") && x.Contains("accountlegalentity"))
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(data.AccountLegalEntityId.ToString())
+                );
+
+            _server
+                .Given(
+                    Request
+                        .Create()
                         .WithPath($"/accounts/{data.AccountId}/applications")
                         .UsingPut()
                 )
@@ -289,7 +309,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -322,7 +342,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
@@ -335,14 +355,47 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{data.AccountId}/applications/*")
+                        .WithPath($"/accounts/{data.AccountId}/applications")
                         .UsingPatch()
                 )
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK));
 
-            AddOrReplaceClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithBankingDetails()
+        {
+            var data = new TestData.Account.WithInitialApplicationAndBankingDetails();
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/email/bank-details-reminder")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(string.Empty));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/") && x.Contains("/bankingDetails"))
+                        .WithParam("hashedAccountId", $"{data.HashedAccountId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.BankingDetails, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
 
             return this;
         }
@@ -351,6 +404,11 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
             return new EmployerIncentivesApi(_server, _claims);
+        }
+
+        private void AddClaim(string type, string value)
+        {
+            _claims.Add(new Claim(type, value));
         }
 
         private void AddOrReplaceClaim(string type, string value)
