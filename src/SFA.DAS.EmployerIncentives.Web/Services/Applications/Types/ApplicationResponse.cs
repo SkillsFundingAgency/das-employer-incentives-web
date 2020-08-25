@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
+﻿namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
 {
     public class ApplicationResponse
     {

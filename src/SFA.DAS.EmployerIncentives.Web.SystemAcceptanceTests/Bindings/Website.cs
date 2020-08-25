@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
         private readonly TestContext _context;
         public Website(TestContext context)
         {
-            _context = context;           
+            _context = context;
         }
 
         [BeforeScenario(Order = 1)]
@@ -29,7 +29,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             {
                 AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY",
                 Hashstring = "SFA: digital apprenticeship service",                
-                RedisCacheConnectionString = "localhost"
+                RedisCacheConnectionString = "localhost",
+                AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information",
+                DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg=="
             };
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {

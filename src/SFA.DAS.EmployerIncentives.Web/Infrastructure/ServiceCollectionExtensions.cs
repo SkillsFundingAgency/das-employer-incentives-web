@@ -15,6 +15,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
@@ -34,7 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 options.AddPolicy(
                     PolicyNames.IsAuthenticated,
                     policy =>
-                    {              
+                    {
                         policy.Requirements.Add(new IsAuthenticatedRequirement());
                     });
 
@@ -50,8 +51,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         }
 
         public static IServiceCollection AddEmployerAuthentication(
-            this IServiceCollection serviceCollection,
-            IConfiguration configuration)
+    this IServiceCollection serviceCollection,
+    IConfiguration configuration)
         {
             serviceCollection.AddSingleton<IAuthorizationHandler, IsAuthenticatedAuthorizationHandler>();
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
@@ -110,7 +111,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
         public static IServiceCollection AddHashingService(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IHashingService>(c => {
+            serviceCollection.AddSingleton<IHashingService>(c =>
+            {
                 var settings = c.GetService<IOptions<WebConfigurationOptions>>().Value;
                 return new HashingService.HashingService(settings.AllowedHashstringCharacters, settings.Hashstring);
             });
@@ -127,6 +129,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
+            serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
 
             return serviceCollection;
         }
@@ -193,5 +196,29 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 claims.ToList().ForEach(c => ctx.Principal.Identities.First().AddClaim(c));
             }
         }
+
+        public static IServiceCollection AddDataEncryptionService(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<IDataEncryptionService>(s =>
+            {
+                var settings = s.GetService<IOptions<WebConfigurationOptions>>().Value;
+                return new DataEncryptionService(settings.DataEncryptionServiceKey);
+            });
+
+            return serviceCollection;
+        }
+
+        public static IServiceCollection AddVerificationService(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddTransient<IVerificationService>(s => new VerificationService(
+                s.GetService<IBankingDetailsService>(),
+                s.GetService<IDataEncryptionService>(),
+                s.GetService<IHashingService>(),
+                s.GetService<IOptions<WebConfigurationOptions>>().Value
+            ));
+
+            return serviceCollection;
+        }
+
     }
 }
