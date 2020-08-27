@@ -82,8 +82,10 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddMvc(
                     options =>
                     {
+#if !DEBUGNOAUTH
                         options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
                         options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
+#endif
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;
