@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
@@ -72,6 +73,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var accountLegalEntityId = await JsonSerializer.DeserializeAsync<long>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return accountLegalEntityId;
+        }
+
+        public async Task<IEnumerable<ApprenticeApplicationModel>> GetList(string accountId)
+        {
+            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications", HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var data = await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeApplicationModel>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return data;
         }
  
         private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
