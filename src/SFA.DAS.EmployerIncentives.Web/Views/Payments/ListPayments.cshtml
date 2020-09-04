@@ -14,29 +14,29 @@
 
             <h1 class="govuk-heading-l">@Model.Title</h1>
 
-            <details class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        When you'll get paid
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
-                    <p class="govuk-body">You're eligible for the first payment after the apprentice completes 90 days of their apprenticeship training and the second payment after 365 days.</p>
-                    <p class="govuk-body">Before we can make a payment, we need your training provider to confirm whether the apprentice is still on their apprenticeship. Training providers usually submit information about their apprentices at the start of every month.</p>
-                    <p class="govuk-body">We'll start making payments from January 2021. It will take longer to get your first payment for any apprentices who start their training in August 2020.</p>
-                </div>
-            </details>
+            @if (Model.Applications.Any())
+            {
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            When you'll get paid
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">You're eligible for the first payment after the apprentice completes 90 days of their apprenticeship training and the second payment after 365 days.</p>
+                        <p class="govuk-body">Before we can make a payment, we need your training provider to confirm whether the apprentice is still on their apprenticeship. Training providers usually submit information about their apprentices at the start of every month.</p>
+                        <p class="govuk-body">We'll start making payments from January 2021. It will take longer to get your first payment for any apprentices who start their training in August 2020.</p>
+                    </div>
+                </details>
 
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h2 class="govuk-fieldset__heading">
-                            Your applications
-                        </h2>
-                    </legend>
-                    <div class="govuk-tabs__panel" id="applications">
-                        @if (Model.Applications.Any())
-                        {
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h2 class="govuk-fieldset__heading">
+                                Your applications
+                            </h2>
+                        </legend>
+                        <div class="govuk-tabs__panel" id="applications">
                             <table class="govuk-table das-table--condensed das-table--responsive-wide">
                                 <thead class="govuk-table__head">
                                     <tr class="govuk-table__row">
@@ -58,14 +58,15 @@
                                     }
                                 </tbody>
                             </table>
-                        }
-                        else
-                        {
-                            <p class="govuk-body-l">No applications to display.</p>
-                        }
-                    </div>
-                </fieldset>
-            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            }
+            else
+            {
+                <p class="govuk-body">You have not applied for the hire a new apprentice payment.</p>
+                <p class="govuk-body">You can <a class="govuk-link" asp-action="Home" asp-controller="Home">apply for the payment</a> if you hire new apprentices from 1 August 2020 to 31 January 2021.</p>
+            }
         </div>
     </div>
 
