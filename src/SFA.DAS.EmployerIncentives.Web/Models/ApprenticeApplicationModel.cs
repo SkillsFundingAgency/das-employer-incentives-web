@@ -9,6 +9,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string LegalEntityName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string ApprenticeName { get { return $"{FirstName} {LastName}"; } }
         public DateTime ApplicationDate { get; set; }
         public decimal TotalIncentiveAmount { get; set; }
         public string Status { get; set; }

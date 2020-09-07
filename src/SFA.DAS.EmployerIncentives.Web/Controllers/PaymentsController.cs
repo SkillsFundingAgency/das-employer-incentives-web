@@ -2,8 +2,7 @@
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using System;
-using System.Collections.Generic;
+using SFA.DAS.EmployerIncentives.Web.Extensions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,17 +19,39 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("payment-applications")]
-        public async Task<IActionResult> ListPayments(string accountId)
+        public async Task<IActionResult> ListPayments(string accountId, string sortOrder, string sortField)
         {
+            if (string.IsNullOrWhiteSpace(sortOrder))
+            {
+                sortOrder = ApplicationsSortOrder.Ascending;
+            }
+            if (string.IsNullOrWhiteSpace(sortField))
+            {
+                sortField = ApplicationsSortField.ApprenticeName;
+            }
+
             var applications = await _applicationService.GetList(accountId);
-            var submittedApplications = applications.Where(x => x.Status == "Submitted");
+            var submittedApplications = applications.Where(x => x.Status == "Submitted").AsQueryable();
+            if (sortOrder == ApplicationsSortOrder.Descending)
+            {
+                submittedApplications = submittedApplications.OrderByDescending(sortField);
+            }
+            else
+            {
+                submittedApplications = submittedApplications.OrderBy(sortField);
+            }
 
             if (!submittedApplications.Any())
             {
                 return RedirectToAction("NoApplications");
             }
 
-            var model = new ViewApplicationsViewModel { Applications = submittedApplications };
+            var model = new ViewApplicationsViewModel 
+            { 
+                Applications = submittedApplications,                 
+                SortField = sortField 
+            };
+            model.SetSortOrder(sortField, sortOrder);
 
             return View(model);
         }

@@ -1,6 +1,9 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Applications.ViewApplicationsViewModel
+﻿@using System.Globalization
+@using SFA.DAS.EmployerIncentives.Web.Models 
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Applications.ViewApplicationsViewModel
 
 @{
+    var culture = new CultureInfo("en-GB");
     ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/payments/payment-applications";
     //TODO: replace with new ZD tag
@@ -14,37 +17,37 @@
 
             <h1 class="govuk-heading-l">@Model.Title</h1>
 
-            @* IF VRF complete and BC vendor set up complete  
-            <h2 class="govuk-heading-m">
-                You've added your organisation's bank details
-            </h2>
-            <p class="govuk-body">
-                We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
-            </p>
-            /IF VRF complete and BC vendor set up complete *@
-
-            @* IF VRF complete and in progress with BC 
-            <div class="govuk-inset-text">
+            @* IF VRF complete and BC vendor set up complete
                 <h2 class="govuk-heading-m">
-                    We're reviewing your organisation's bank details
+                    You've added your organisation's bank details
                 </h2>
                 <p class="govuk-body">
-                    We may contact someone from your organisation to verify the information you've provided.
+                    We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
                 </p>
-            </div>
-             /IF VRF complete and in progress with BC *@
+                /IF VRF complete and BC vendor set up complete *@
+
+            @* IF VRF complete and in progress with BC
+                <div class="govuk-inset-text">
+                    <h2 class="govuk-heading-m">
+                        We're reviewing your organisation's bank details
+                    </h2>
+                    <p class="govuk-body">
+                        We may contact someone from your organisation to verify the information you've provided.
+                    </p>
+                </div>
+                 /IF VRF complete and in progress with BC *@
 
 
-            @* IF no VRF 
-            <div class="das-highlight das-highlight--featured">
-                <h2 class="govuk-heading-m das-highlight--featured__title">
-                    Add your organisation's bank details
-                </h2>
-                <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0">
-                    We need your organisation's bank details, so that we can make the hire a new apprentice payment.
-                </p>
-            </div>
-             /IF no VRF *@
+            @* IF no VRF
+                <div class="das-highlight das-highlight--featured">
+                    <h2 class="govuk-heading-m das-highlight--featured__title">
+                        Add your organisation's bank details
+                    </h2>
+                    <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0">
+                        We need your organisation's bank details, so that we can make the hire a new apprentice payment.
+                    </p>
+                </div>
+                 /IF no VRF *@
 
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
@@ -61,45 +64,50 @@
         </div>
     </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <table class="govuk-table">
-                    <caption class="govuk-table__caption govuk-heading-m">
-                        Your applications
-                    </caption>
-                    <thead class="govuk-table__head">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-heading-m">
+                    Your applications
+                </caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th aria-sort="none" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(@ApplicationsSortField.ApprenticeName)">Apprentice name</a>
+                        </th>
+                        <th aria-sort="ascending" scope="col" class="govuk-table__header">
+                            <a asp-action="ListPayments" asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(@ApplicationsSortField.ApplicationDate)">Application date</a>
+                        </th>
+                        <th aria-sort="none" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(@ApplicationsSortField.TotalIncentiveAmount)">Estimated payment</a>
+                        </th>
+                        <th aria-sort="none" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.LegalEntityName)" asp-route-sortfield="@ApplicationsSortField.LegalEntityName" class="das-table__sort das-table__sort--@Model.GetSortOrder(@ApplicationsSortField.LegalEntityName)">Organisation</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var apprenticeApplication in Model.Applications)
+                    {
                         <tr class="govuk-table__row">
-                            <th aria-sort="none" scope="col" class="govuk-table__header">
-                                <a href="#" class="das-table__sort">Apprentice name</a>
-                            </th>
-                            <th aria-sort="ascending" scope="col" class="govuk-table__header">
-                                <a href="#" class="das-table__sort das-table__sort--asc">Application date</a>
-                                @* <a href="#" class="das-table__sort das-table__sort--desc">Application date</a> *@
-                            </th>
-                            <th aria-sort="none" scope="col" class="govuk-table__header">
-                                <a href="#" class="das-table__sort">Estimated payment</a>
-                            </th>
+                            <td data-label="Apprentice name" class="govuk-table__cell">
+                                @apprenticeApplication.ApprenticeName
+                            </td>
+                            <td data-label="Application date" class="govuk-table__cell">
+                                @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
+                            </td>
+                            <td data-label="Estimated payment" class="govuk-table__cell">
+                                @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
+                            </td>
+                            <td data-label="Organisation" class="govuk-table__cell">
+                                @apprenticeApplication.LegalEntityName
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @foreach (var apprenticeApplication in Model.Applications)
-                        {
-                            <tr class="govuk-table__row">
-                                <td data-label="Apprentice name" class="govuk-table__cell">
-                                    @apprenticeApplication.FirstName @apprenticeApplication.LastName
-                                </td>
-                                <td data-label="Application date" class="govuk-table__cell">
-                                    @apprenticeApplication.ApplicationDate.ToShortDateString()
-                                </td>
-                                <td data-label="Estimated payment" class="govuk-table__cell">
-                                    @apprenticeApplication.TotalIncentiveAmount
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
 
-                @* <nav role="navigation" aria-label="Pagination">
+            @* <nav role="navigation" aria-label="Pagination">
                     <div class="das-pagination__summary">
                         Showing 101 - 150 of 246 results
                     </div>
@@ -128,9 +136,9 @@
                     </ul>
                 </nav> *@
 
-            </div>
-            
         </div>
-    
+
+    </div>
+
 
 </main>
