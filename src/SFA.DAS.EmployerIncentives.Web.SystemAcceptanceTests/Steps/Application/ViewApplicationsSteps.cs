@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using System;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -185,9 +185,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as ViewApplicationsViewModel;
+            var model = viewResult.Model as NoApplicationsViewModel;
             model.Should().NotBeNull();
-            model.Applications.Count().Should().Be(0);
         }
 
         [Given(@"an employer has no applications")]

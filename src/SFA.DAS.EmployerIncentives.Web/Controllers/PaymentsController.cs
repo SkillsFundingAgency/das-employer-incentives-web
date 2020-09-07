@@ -20,12 +20,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("payment-applications")]
-        public async Task<ViewResult> ListPayments(string accountId)
+        public async Task<IActionResult> ListPayments(string accountId)
         {
             var applications = await _applicationService.GetList(accountId);
+            var submittedApplications = applications.Where(x => x.Status == "Submitted");
 
-            var model = new ViewApplicationsViewModel { Applications = applications.Where(x => x.Status == "Submitted") };
+            if (!submittedApplications.Any())
+            {
+                return RedirectToAction("NoApplications");
+            }
 
+            var model = new ViewApplicationsViewModel { Applications = submittedApplications };
+
+            return View(model);
+        }
+
+        [Route("no-applications")]
+        public ViewResult NoApplications()
+        {
+            var model = new NoApplicationsViewModel();
             return View(model);
         }
     }

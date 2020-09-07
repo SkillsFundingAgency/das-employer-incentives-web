@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 {
+    [TestFixture]
     public class WhenPaymentApplicationsAccessed
     {
         private Web.Controllers.PaymentsController _sut;
@@ -40,8 +41,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             }
             _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
 
+            // Act
             var result = await _sut.ListPayments(_accountId) as ViewResult;
 
+            // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
             viewModel.Applications.Count().Should().Be(applications.Count());
@@ -58,11 +61,48 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
 
+            // Act
             var result = await _sut.ListPayments(_accountId) as ViewResult;
 
+            // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
             viewModel.Applications.Count().Should().Be(applications.Count(x => x.Status == "Submitted"));
+        }
+
+        [Test]
+        public async Task Then_a_shutter_page_is_shown_if_no_applcations()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+
+            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+
+            // Act
+            var result = await _sut.ListPayments(_accountId) as RedirectToActionResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ActionName.Should().Be("NoApplications");
+        }
+
+        [Test]
+        public async Task Then_a_shutter_page_is_shown_if_only_applcations_are_in_progress()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
+            applications[0].Status = "InProgress";
+            applications[1].Status = "InProgress";
+
+            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+
+            // Act
+            var result = await _sut.ListPayments(_accountId) as RedirectToActionResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ActionName.Should().Be("NoApplications");
         }
     }
 }
