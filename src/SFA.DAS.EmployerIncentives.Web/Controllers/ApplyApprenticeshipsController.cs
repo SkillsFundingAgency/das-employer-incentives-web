@@ -124,6 +124,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return new SelectApprenticeshipsViewModel
             {
                 AccountId = accountId,
+                AccountLegalEntityId = application.AccountLegalEntityId,
                 Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
             };
         }
