@@ -172,14 +172,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         private static Task OnRemoteFailure(
            RemoteFailureContext ctx,
            ILoggerFactory loggerFactory)
-        {   
-            if (ctx.Failure.Message.Contains("Correlation failed"))
+        {
+            try
             {
-                var redirectUri = ctx.Properties.RedirectUri;
-                var logger = loggerFactory.CreateLogger("SFA.DAS.EmployerIncentives.Authentication");
+                if (ctx.Failure.Message.Contains("Correlation failed"))
+                {
+                    var redirectUri = ctx.Properties.RedirectUri;
+                    var logger = loggerFactory.CreateLogger("SFA.DAS.EmployerIncentives.Authentication");
 
-                logger.LogError($"Correlation failed error. Redirected from {redirectUri}");
+                    logger.LogError($"Correlation failed error. Redirected from {redirectUri}");
+                }
             }
+            catch 
+            {
+                // ignore errors
+            }
+
             return Task.CompletedTask;
         }
 
