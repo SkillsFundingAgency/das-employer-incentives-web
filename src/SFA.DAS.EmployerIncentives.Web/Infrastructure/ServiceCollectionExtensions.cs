@@ -106,6 +106,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     options.Events.OnTokenValidated = async (ctx) => await PopulateAccountsClaim(ctx, userService);
                 });
 
+            serviceCollection
+                .AddOptions<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme)
+                .Configure<ILoggerFactory>((options, loggerFactory) =>
+                {
+                    options.Events.OnRemoteFailure = async (ctx) => await OnRemoteFailure(ctx, loggerFactory);
+                });
+
             return serviceCollection;
         }
 
@@ -130,6 +137,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
+            serviceCollection.AddClient<IEmailService>((c, s) => new EmailService(c));
 
             return serviceCollection;
         }
@@ -158,27 +166,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 return instance.Invoke(httpClient, s);
             });
 
-            serviceCollection.AddTransient<IEmailService>(s =>
-            {
-                var settings = s.GetService<IOptions<EmployerIncentivesApiOptions>>().Value;
-
-                var clientBuilder = new HttpClientBuilder()
-                    .WithDefaultHeaders()
-                    .WithApimAuthorisationHeader(settings)
-                    .WithLogging(s.GetService<ILoggerFactory>());
-
-                var httpClient = clientBuilder.Build();
-
-                if (!settings.ApiBaseUrl.EndsWith("/"))
-                {
-                    settings.ApiBaseUrl += "/";
-                }
-                httpClient.BaseAddress = new Uri(settings.ApiBaseUrl);
-
-                return new EmailService(httpClient);
-            });
-
             return serviceCollection;
+        }
+
+        private static Task OnRemoteFailure(
+           RemoteFailureContext ctx,
+           ILoggerFactory loggerFactory)
+        {   
+            if (ctx.Failure.Message.Contains("Correlation failed"))
+            {
+                var redirectUri = ctx.Properties.RedirectUri;
+                var logger = loggerFactory.CreateLogger("SFA.DAS.EmployerIncentives.Authentication");
+
+                logger.LogError($"Correlation failed error. Redirected from {redirectUri}");
+            }
+            return Task.CompletedTask;
         }
 
         private static async Task PopulateAccountsClaim(
