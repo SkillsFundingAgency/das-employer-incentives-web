@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
-@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 @model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
 
 @{
@@ -8,7 +7,7 @@
     ViewData["ZenDeskLabels"] = "ei-selectapprentices";
 }
 
-<a asp-action="QualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+<a asp-action="GetQualificationQuestion" asp-controller="ApplyQualification" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -51,18 +50,12 @@
                             @foreach (var apprenticeship in Model.Apprenticeships)
                             {
                                 <div class="govuk-checkboxes__item">
-                                    <input
-                                        class="govuk-checkboxes__input"
-                                        id="new-apprenticeships-@apprenticeship.Id"
-                                        name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
-                                        type="checkbox"
-                                        @if(apprenticeship.Selected)
-                                        {
-                                            @Html.Raw("checked")
-                                        } 
-                                        value="@apprenticeship.Id"
-                                        aria-describedby="new-apprenticeships-item-hint" 
-                                    />
+                                    <input class="govuk-checkboxes__input"
+                                           id="new-apprenticeships-@apprenticeship.Id"
+                                           name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
+                                           type="checkbox"
+                                           @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
+                                           aria-describedby="new-apprenticeships-item-hint" />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
                                         @apprenticeship.DisplayName
                                     </label>
