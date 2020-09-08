@@ -180,7 +180,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     var redirectUri = ctx.Properties.RedirectUri;
                     var logger = loggerFactory.CreateLogger("SFA.DAS.EmployerIncentives.Authentication");
 
-                    logger.LogError($"Correlation failed error. Redirected from {redirectUri}");
+                    logger.LogError(ctx.Failure, $"Correlation failed error when redirecting from {redirectUri}");
                 }
             }
             catch 
