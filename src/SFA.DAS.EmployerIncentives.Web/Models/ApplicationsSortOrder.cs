@@ -5,6 +5,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
     {
         public static string Ascending = "asc";
         public static string Descending = "desc";
-        public static string None = "";
+        public static string None = "none";
     }
 }

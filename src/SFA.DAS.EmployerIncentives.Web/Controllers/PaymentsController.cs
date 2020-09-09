@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(sortOrder))
             {
-                sortOrder = ApplicationsSortOrder.Ascending;
+                sortOrder = ApplicationsSortOrder.None;
             }
             if (string.IsNullOrWhiteSpace(sortField))
             {
@@ -46,10 +46,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("NoApplications");
             }
 
-            var model = new ViewApplicationsViewModel 
-            { 
-                Applications = submittedApplications,                 
-                SortField = sortField 
+            var model = new ViewApplicationsViewModel
+            {
+                Applications = submittedApplications,
+                SortField = sortField
             };
             model.SetSortOrder(sortField, sortOrder);
 

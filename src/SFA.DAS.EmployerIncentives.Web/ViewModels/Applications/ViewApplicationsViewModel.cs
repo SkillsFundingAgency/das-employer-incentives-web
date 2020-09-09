@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
     {
         private Dictionary<string, string> _fieldSortOrders;
 
-        public ViewApplicationsViewModel() : base ("Your hire a new apprentice payment applications")
+        public ViewApplicationsViewModel() : base("Your hire a new apprentice payment applications")
         {
         }
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             };
 
             _fieldSortOrders[fieldName] = sortOrder;
-            
+
         }
 
         public string GetSortOrder(string fieldName)
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             var sortOrder = _fieldSortOrders[fieldName];
             if (string.IsNullOrWhiteSpace(sortOrder))
             {
-                return ApplicationsSortOrder.Ascending;
+                return ApplicationsSortOrder.None;
             }
 
             return sortOrder;
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
         public string SortField { get; set; }
 
         public string ToggleSortOrder(string fieldName)
-        { 
+        {
             var sortOrder = GetSortOrder(fieldName);
             if (String.IsNullOrWhiteSpace(sortOrder))
             {
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
                 return "desc";
             }
 
-            return "asc";            
+            return "asc";
         }
     }
 }
