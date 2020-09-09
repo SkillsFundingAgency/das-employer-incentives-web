@@ -41,6 +41,17 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             return sortOrder;
         }
 
+        public string GetAriaSortOrder(string fieldName)
+        {
+            var sortOrder = _fieldSortOrders[fieldName];
+            if (sortOrder == ApplicationsSortOrder.None)
+            {
+                return sortOrder;
+            }
+
+            return $"{sortOrder.ToLower()}ending";
+        }
+
         public string SortField { get; set; }
 
         public string ToggleSortOrder(string fieldName)

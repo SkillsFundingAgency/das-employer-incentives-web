@@ -71,16 +71,16 @@
                 </caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th aria-sort="@Model.GetSortOrder(@ApplicationsSortField.ApprenticeName)ending" scope="col" class="govuk-table__header">
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice name</a>
                         </th>
-                        <th aria-sort="@Model.GetSortOrder(@ApplicationsSortField.ApplicationDate)ending" scope="col" class="govuk-table__header">
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application date</a>
                         </th>
-                        <th aria-sort="@Model.GetSortOrder(@ApplicationsSortField.TotalIncentiveAmount)ending" scope="col" class="govuk-table__header">
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated payment</a>
                         </th>
-                        <th aria-sort="@Model.GetSortOrder(@ApplicationsSortField.LegalEntityName)ending" scope="col" class="govuk-table__header">
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.LegalEntityName)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.LegalEntityName)" asp-route-sortfield="@ApplicationsSortField.LegalEntityName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.LegalEntityName)">Organisation</a>
                         </th>
                     </tr>
