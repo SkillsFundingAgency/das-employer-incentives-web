@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(sortOrder))
             {
-                sortOrder = ApplicationsSortOrder.None;
+                sortOrder = ApplicationsSortOrder.Ascending;
             }
             if (string.IsNullOrWhiteSpace(sortField))
             {
