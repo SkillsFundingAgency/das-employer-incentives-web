@@ -3,7 +3,9 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.HashingService;
 using System;
 using System.Threading.Tasks;
 
@@ -15,13 +17,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly ExternalLinksConfiguration _configuration;
         private readonly IApplicationService _applicationService;
+        private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly IHashingService _hashingService;
 
         public ApplyController(
             IOptions<ExternalLinksConfiguration> configuration,
-            IApplicationService applicationService)
+            IApplicationService applicationService,
+            ILegalEntitiesService legalEntitiesService,
+            IHashingService hashingService)
         {
             _configuration = configuration.Value;
             _applicationService = applicationService;
+            _legalEntitiesService = legalEntitiesService;
+            _hashingService = hashingService;
         }
 
         [HttpGet]
@@ -48,7 +56,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             await _applicationService.Confirm(accountId, applicationId, email, string.Join(" ", firstName, lastName));
 
-            return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
+            var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
+
+            var legalEntity = await _legalEntitiesService.Get(accountId, _hashingService.HashValue(accountLegalEntityId));
+
+            if (String.IsNullOrEmpty(legalEntity.VrfCaseStatus))
+            {
+                return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
+            }
+            else
+            {
+                return RedirectToAction("Confirmation", "ApplicationComplete");
+            }
+            
         }
 
         [HttpGet]
