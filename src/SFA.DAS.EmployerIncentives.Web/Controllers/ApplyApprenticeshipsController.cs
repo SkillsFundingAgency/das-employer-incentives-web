@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
@@ -15,20 +16,31 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
+        private readonly ILogger<ApplyApprenticeshipsController> _logger;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
-            IApplicationService applicationService)
+            IApplicationService applicationService,
+            ILogger<ApplyApprenticeshipsController> logger)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
+            _logger = logger;
         }
 
         [HttpGet]
         [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
         {
+            _logger.LogInformation("SelectApprenticeships start");
+
             var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
+            _logger.LogInformation($"GetInitialSelectApprenticeshipsViewModel completed");
+
+            if (model == null)
+            {
+                _logger.LogInformation("Model is null");
+            }
 
             if (!model.Apprenticeships.Any())
             {
