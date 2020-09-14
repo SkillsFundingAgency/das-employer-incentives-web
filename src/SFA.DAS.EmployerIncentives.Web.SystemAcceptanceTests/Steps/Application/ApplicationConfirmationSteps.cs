@@ -2,13 +2,14 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
@@ -23,7 +24,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private HttpResponseMessage _continueNavigationResponse;
         private readonly TestData.Account.WithInitialApplicationForASingleEntity _testData;
         private Fixture _fixture;
-
 
         public ApplicationConfirmationSteps(TestContext testContext) : base(testContext)
         {
@@ -75,6 +75,23 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer understands and confirms the declaration")]
         public async Task WhenTheEmployerUnderstandsAndConfirmsTheDeclaration()
         {
+            var application = _fixture.Create<IncentiveApplicationDto>();
+            application.BankDetailsRequired = true;
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                      .WithParam("includeApprenticeships", MatchBehaviour.AcceptOnMatch, ignoreCase: true, "false")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(application)));
+
             var url = $"{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}/";
             var formData = new KeyValuePair<string, string>();
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, formData);
@@ -95,53 +112,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             viewResult.AccountId.Should().Be(_testData.HashedAccountId);
             viewResult.ApplicationId.Should().Be(_testData.ApplicationId);
-        }
-
-        [When(@"the employer has not submitted bank details")]
-        public void WhenTheEmployerHasNotSubmittedBankDetails()
-        {
-            var legalEntityWithoutVrfStatus = _fixture.Create<LegalEntityDto>();
-            legalEntityWithoutVrfStatus.VrfCaseStatus = null;
-
-            _testContext.EmployerIncentivesApi.MockServer
-              .Given(
-                  Request
-                      .Create()
-                      .WithPath($"/accounts/{_testData.AccountId}/legalentities/{_testData.AccountLegalEntityId}")
-                      .UsingGet()
-              )
-              .RespondWith(
-                  Response.Create()
-                      .WithStatusCode(HttpStatusCode.OK)
-                      .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(legalEntityWithoutVrfStatus)));
-        }
-
-        [When(@"the employer has previously submitted bank details")]
-        public void WhenTheEmployerHasPreviouslySubmittedBankDetails()
-        {
-            var legalEntityWithVrfStatus = _fixture.Create<LegalEntityDto>();
-            legalEntityWithVrfStatus.VrfCaseStatus = "To Process";
-
-            _testContext.EmployerIncentivesApi.MockServer
-              .Given(
-                  Request
-                      .Create()
-                      .WithPath($"/accounts/{_testData.AccountId}/legalentities/{_testData.AccountLegalEntityId}")
-                      .UsingGet()
-              )
-              .RespondWith(
-                  Response.Create()
-                      .WithStatusCode(HttpStatusCode.OK)
-                      .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(legalEntityWithVrfStatus)));
-        }
-
-        [Then(@"the employer is shown confirmation that the application is complete")]
-        public void ThenTheEmployerIsShownConfirmationThatTheApplicationIsComplete()
-        {
-            var expectedUrl = $"/{_testData.HashedAccountId}/application-complete/{_testData.ApplicationId}";
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(expectedUrl);
         }
 
     }

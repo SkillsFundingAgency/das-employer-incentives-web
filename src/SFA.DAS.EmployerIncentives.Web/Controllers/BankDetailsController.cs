@@ -36,8 +36,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("need-bank-details")]
-        public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
+        public async Task<IActionResult> BankDetailsConfirmation(string accountId, Guid applicationId)
         {
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+
+            if (!application.BankDetailsRequired)
+            {
+                return RedirectToAction("Confirmation", "ApplicationComplete");
+            }
+
             return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
         }
 
