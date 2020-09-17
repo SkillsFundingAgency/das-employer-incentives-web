@@ -75,17 +75,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer understands and confirms the declaration")]
         public async Task WhenTheEmployerUnderstandsAndConfirmsTheDeclaration()
         {
+
             var application = _fixture.Create<IncentiveApplicationDto>();
             application.BankDetailsRequired = true;
+            var response = new ApplicationResponse { Application = application };
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
                       .Create()
-                      .WithPath(x => x.Contains($"accounts/{_testData.AccountId}")
-                      && x.Contains($"applications/{_testData.ApplicationId}"))
-                     // && x.Contains("includeApprenticeships=False"))
-                      //.WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                      .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
                       .WithParam("includeApprenticeships", new ExactMatcher("False"))
                       .UsingGet()
               )
@@ -93,7 +92,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(application)));
+                      .WithBody(JsonConvert.SerializeObject(response)));
 
             var url = $"{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}/";
             var formData = new KeyValuePair<string, string>();
