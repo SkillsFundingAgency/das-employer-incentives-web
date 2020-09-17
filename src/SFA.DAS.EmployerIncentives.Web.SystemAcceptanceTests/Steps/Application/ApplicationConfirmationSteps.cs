@@ -82,8 +82,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
-                      .WithParam("includeApprenticeships", MatchBehaviour.AcceptOnMatch, ignoreCase: true, "false")
+                      .WithPath(x => x.Contains($"accounts/{_testData.AccountId}")
+                      && x.Contains($"applications/{_testData.ApplicationId}"))
+                     // && x.Contains("includeApprenticeships=False"))
+                      //.WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
                       .UsingGet()
               )
               .RespondWith(

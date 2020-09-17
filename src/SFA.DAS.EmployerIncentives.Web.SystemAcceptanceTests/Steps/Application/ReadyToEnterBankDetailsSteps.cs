@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=false")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=False")
                       .UsingGet()
               )
               .RespondWith(
@@ -292,7 +292,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=false")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=False")
                       .UsingGet()
               )
               .RespondWith(
@@ -312,7 +312,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
               .Given(
                   Request
                       .Create()
-                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=false")
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}?includeApprenticeships=False")
                       .UsingGet()
               )
               .RespondWith(
