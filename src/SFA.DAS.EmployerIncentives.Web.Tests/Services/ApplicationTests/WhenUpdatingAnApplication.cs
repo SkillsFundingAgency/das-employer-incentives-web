@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
         }
 
         [Test]
-        public async Task Then_The_Request_Throws_An_Exception_If_It_Gets_None_200_Response()
+        public void Then_The_Request_Throws_An_Exception_If_It_Gets_None_200_Response()
         {
             SetupFakeResponse(HttpStatusCode.Forbidden);
 
