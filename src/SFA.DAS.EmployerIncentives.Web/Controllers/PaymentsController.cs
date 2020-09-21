@@ -32,19 +32,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var applications = await _applicationService.GetList(accountId);
             var submittedApplications = applications.Where(x => x.Status == "Submitted").AsQueryable();
-            if (sortOrder == ApplicationsSortOrder.Descending)
-            {
-                submittedApplications = submittedApplications.OrderByDescending(sortField);
-            }
-            else
-            {
-                submittedApplications = submittedApplications.OrderBy(sortField);
-            }
 
             if (!submittedApplications.Any())
             {
                 return RedirectToAction("NoApplications");
             }
+
+            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
 
             var model = new ViewApplicationsViewModel
             {
@@ -61,6 +55,34 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var model = new NoApplicationsViewModel();
             return View(model);
+        }
+
+        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications)
+        {
+            if (sortOrder == ApplicationsSortOrder.Descending)
+            {
+                if (sortField != ApplicationsSortField.ApprenticeName)
+                {
+                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ApprenticeName);
+                }
+                else
+                {
+                    submittedApplications = submittedApplications.OrderByDescending(sortField);
+                }
+            }
+            else
+            {
+                if (sortField != ApplicationsSortField.ApprenticeName)
+                {
+                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ApprenticeName);
+                }
+                else
+                {
+                    submittedApplications = submittedApplications.OrderBy(sortField);
+                }
+            }
+
+            return submittedApplications;
         }
     }
 }
