@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     options.Cookie.Name = CookieNames.AuthCookie;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.SlidingExpiration = true;
-                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SameSite = SameSiteMode.None;
                 })
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
