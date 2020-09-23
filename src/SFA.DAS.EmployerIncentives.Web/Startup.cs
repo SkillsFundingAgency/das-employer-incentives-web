@@ -59,12 +59,8 @@ namespace SFA.DAS.EmployerIncentives.Web
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true;
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+
+            services.ConfigureNonBreakingSameSiteCookies();
 
             services.AddOptions();
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
@@ -152,6 +148,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 services.AddHealthChecks();
             }
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -191,6 +188,8 @@ namespace SFA.DAS.EmployerIncentives.Web
                     await next();
                 }
             });
+
+            app.UseCookiePolicy();
             app.UseAuthentication();
 
             if (!_environment.IsDevelopment())
