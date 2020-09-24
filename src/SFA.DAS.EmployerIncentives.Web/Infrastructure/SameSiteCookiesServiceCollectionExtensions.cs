@@ -39,8 +39,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                
-                options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+
+                options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.OnAppendCookie = cookieContext =>
                     CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
                 options.OnDeleteCookie = cookieContext =>
