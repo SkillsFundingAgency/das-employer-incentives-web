@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var accountLegalEntityId = _fixture.Create<long>();
 
             var application = _fixture.Create<IncentiveApplicationDto>();
-            application.BankDetailsRequired = true;
+            application.BankDetailsRequired = false;
             var response = new ApplicationResponse { Application = application };
 
             _testContext.EmployerIncentivesApi.MockServer
