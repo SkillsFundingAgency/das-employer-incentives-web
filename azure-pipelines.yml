@@ -4,6 +4,8 @@ trigger:
     include:
       - "*"
 
+pr: none
+
 workspace:
   clean: all
 
@@ -18,8 +20,6 @@ variables:
 
 pool:
   name: "DAS - Continuous Integration"
-  demands:
-    - Agent.OS -equals Linux
 
 resources:
   repositories:
