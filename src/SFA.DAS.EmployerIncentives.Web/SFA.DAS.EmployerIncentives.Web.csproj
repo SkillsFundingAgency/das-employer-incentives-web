@@ -23,4 +23,8 @@
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
 </Project>
