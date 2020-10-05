@@ -54,8 +54,9 @@ namespace SFA.DAS.EmployerIncentives.Web
             else
             {
                 _configuration = configuration;
-                logger.LogInformation("Startup _configuration", _configuration);
             }
+
+            logger.LogInformation("CDN url from _configuration", _configuration["cdn:url"]);
         }
 
         public void ConfigureServices(IServiceCollection services)
