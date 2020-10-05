@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment, ILogger<Startup> logger)
         {
             _environment = environment;
             var configBuilder = new ConfigurationBuilder()
@@ -54,6 +54,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             else
             {
                 _configuration = configuration;
+                logger.LogInformation("Startup _configuration", _configuration);
             }
         }
 
@@ -156,7 +157,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
