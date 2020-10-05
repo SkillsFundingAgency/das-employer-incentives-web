@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 _configuration = configuration;
             }
 
-            logger.LogInformation("CDN url from _configuration", _configuration["cdn:url"]);
+            // logger.LogInformation("CDN url from _configuration", _configuration["cdn:url"]);
         }
 
         public void ConfigureServices(IServiceCollection services)
