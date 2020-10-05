@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerIncentives.Web
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
             var configBuilder = new ConfigurationBuilder()
@@ -55,8 +55,6 @@ namespace SFA.DAS.EmployerIncentives.Web
             {
                 _configuration = configuration;
             }
-
-            // logger.LogInformation("CDN url from _configuration", _configuration["cdn:url"]);
         }
 
         public void ConfigureServices(IServiceCollection services)
