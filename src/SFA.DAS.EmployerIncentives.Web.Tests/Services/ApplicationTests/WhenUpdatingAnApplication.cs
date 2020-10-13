@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.HashingService;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 {
@@ -59,14 +58,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
         public async Task Then_The_Request_Is_Sent_To_The_Correct_End_Point()
         {
             SetupFakeResponse(HttpStatusCode.Accepted);
-            
+
             await _sut.Update(_applicationId, _accountHashedId, _apprenticeshipHashedIds);
 
             VerifyEndpointForApplicationUpdate($"/accounts/{_accountId}/applications");
         }
 
         [Test]
-        public async Task Then_The_Request_Throws_An_Exception_If_It_Gets_None_200_Response()
+        public void Then_The_Request_Throws_An_Exception_If_It_Gets_None_200_Response()
         {
             SetupFakeResponse(HttpStatusCode.Forbidden);
 
@@ -81,7 +80,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
             await _sut.Update(_applicationId, _accountHashedId, _apprenticeshipHashedIds);
 
             var body = await _httpClientHandlerFake.LastRequestMessage.Content.ReadAsStringAsync();
-            var request = JsonSerializer.Deserialize<UpdateApplicationRequest>(body, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+            var request = JsonSerializer.Deserialize<UpdateApplicationRequest>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             request.Should().NotBeNull();
             request.AccountId.Should().Be(_accountId);
