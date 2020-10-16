@@ -35,9 +35,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return applicationId;
         }
 
-        public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId)
+        public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true)
         {
-            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}", HttpCompletionOption.ResponseHeadersRead);
+            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications/{applicationId}?includeApprenticeships={includeApprenticeships}", HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
@@ -90,7 +90,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
-                application.Apprenticeships.OrderBy(x=>x.LastName).Select(MapFromApplicationApprenticeDto));
+                application.Apprenticeships.OrderBy(x=>x.LastName).Select(MapFromApplicationApprenticeDto),
+                application.BankDetailsRequired);
         }
 
         private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)

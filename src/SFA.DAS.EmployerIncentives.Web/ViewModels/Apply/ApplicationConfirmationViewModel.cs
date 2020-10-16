@@ -14,13 +14,16 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public List<ApplicationApprenticeship> Apprentices { get; } 
 
-        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices) : base("Confirm your apprentices")
+        public bool BankDetailsRequired { get; set; }
+
+        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired) : base("Confirm your apprentices")
         {
             ApplicationId = applicationId;
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             Apprentices = apprentices.ToList();
             TotalPaymentAmount = Apprentices.Sum(x => x.ExpectedAmount);
+            BankDetailsRequired = bankDetailsRequired;
         }
 
         public class ApplicationApprenticeship
