@@ -18,9 +18,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
                 return $"accounts/{accountId}/applications";
             }
 
-            public static string GetApplication(in long accountId, Guid applicationId)
+            public static string GetApplication(in long accountId, Guid applicationId, bool includeApprenticeships)
             {
-                return $"accounts/{accountId}/applications/{applicationId}";
+                return $"accounts/{accountId}/applications/{applicationId}?includeApprenticeships={includeApprenticeships}";
             }
 
             public static string UpdateApplication(in long accountId)

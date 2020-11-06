@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
@@ -17,22 +19,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
         private readonly IVerificationService _verificationService;
+        private ExternalLinksConfiguration _configuration;
 
         public BankDetailsController(IVerificationService verificationService,
             IEmailService emailService,
             IApplicationService applicationService,
-            IHashingService hashingService)
+            IHashingService hashingService,
+            IOptions<ExternalLinksConfiguration> configuration)
         {
             _verificationService = verificationService;
             _emailService = emailService;
             _applicationService = applicationService;
             _hashingService = hashingService;
+            _configuration = configuration.Value;
         }
 
         [HttpGet]
         [Route("need-bank-details")]
-        public ViewResult BankDetailsConfirmation(string accountId, Guid applicationId)
+        public async Task<IActionResult> BankDetailsConfirmation(string accountId, Guid applicationId)
         {
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+
+            if (!application.BankDetailsRequired)
+            {
+                return RedirectToAction("Confirmation", "ApplicationComplete");
+            }
+
             return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
         }
 
@@ -80,7 +92,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("complete/need-bank-details")]
         public ViewResult NeedBankDetails(Guid applicationId)
         {
-            return View();
+            var model = new NeedBankDetailsViewModel { AccountHomeUrl = _configuration.ManageApprenticeshipSiteUrl };
+            return View(model);
         }
 
         private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)

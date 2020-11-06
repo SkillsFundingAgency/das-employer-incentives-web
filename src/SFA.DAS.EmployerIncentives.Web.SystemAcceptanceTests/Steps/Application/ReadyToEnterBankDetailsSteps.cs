@@ -4,6 +4,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
@@ -23,6 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
         private const string NeedBankDetailsUrl = "/complete/need-bank-details";
+        private const string ApplicationCompleteUrl = "/application-complete";
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
@@ -45,6 +48,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
             var accountLegalEntityId = _fixture.Create<long>();
+
+            var application = _fixture.Create<IncentiveApplicationDto>();
+            application.BankDetailsRequired = false;
+            var response = new ApplicationResponse { Application = application };
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(response)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -262,6 +283,56 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var emailRequests = _testContext.EmployerIncentivesApi.MockServer.FindLogEntries(Request.Create().WithPath($"/email/bank-details-reminder").UsingPost());
             emailRequests.Should().HaveCount(1);
+        }
+
+        [When(@"the employer has not previously supplied bank details")]
+        public void WhenTheEmployerHasNotPreviouslySuppliedBankDetails()
+        {
+            var application = _fixture.Create<IncentiveApplicationDto>();
+            application.BankDetailsRequired = true;
+            var response = new ApplicationResponse { Application = application };
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(response)));
+        }
+
+        [When(@"the employer has already provided bank details")]
+        public void WhenTheEmployerHasAlreadyProvidedBankDetails()
+        {
+            var application = _fixture.Create<IncentiveApplicationDto>();
+            application.BankDetailsRequired = false;
+            var response = new ApplicationResponse { Application = application };
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(response)));
+        }
+
+        [Then(@"the employer is shown the application complete page")]
+        public void ThenTheEmployerIsShownTheApplicationCompletePage()
+        {
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain(ApplicationCompleteUrl);
         }
 
     }

@@ -1,0 +1,22 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Applications.NoApplicationsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/payments/no-applications";
+    ViewData["ZenDeskLabels"] = "ei-no-applications";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <h1 class="govuk-heading-l">@Model.Title</h1>
+
+            <p class="govuk-body">You have not applied for the hire a new apprentice payment.</p>
+            <p class="govuk-body">You can <a class="govuk-link" asp-action="Home" asp-controller="Home">apply for the payment</a> if you hire new apprentices from 1 August 2020 to 31 January 2021.</p>
+
+        </div>
+    </div>
+
+
+</main>

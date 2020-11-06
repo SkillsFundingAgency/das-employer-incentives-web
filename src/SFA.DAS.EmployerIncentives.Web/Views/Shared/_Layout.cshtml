@@ -3,9 +3,8 @@
 <html lang="en" class="govuk-template ">
 <head>
 
-    @Html.Partial("_GoogleAnalyticsInfo")
-    @Html.Partial("_GoogleTagManager")
-
+    <partial name="_GoogleAnalyticsInfo" />
+    <partial name="_GoogleTagManager" />
     <partial name="_ZenDeskWidget" />
 
     <meta charset="utf-8" />
@@ -21,8 +20,16 @@
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
 
     <!--[if !IE 8]><!-->
-    <link href="/css/main.css" rel="stylesheet" />
+        <link href="/css/main.css" rel="stylesheet" />
     <!--<![endif]-->
+    <!--[if IE 8]>
+        <link href="/govuk-frontend/all-ie8.css" rel="stylesheet" />
+    <![endif]-->
+    <!--[if lt IE 9]>
+        <script src="/html5-shiv/html5shiv.js"></script>
+    <![endif]-->
+
+     <link href="/stylesheets/application.css" rel="stylesheet" no-cdn />
 
     <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
 </head>
@@ -42,9 +49,8 @@
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    @Html.Partial("_CookieBanner", Html.GetCookieBannerViewModel())
-
-    @Html.Partial("_Header", Html.GetHeaderViewModel())
+    @await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())
+    @await Html.PartialAsync("_Header", Html.GetHeaderViewModel())
 
     <div class="govuk-phase-banner govuk-width-container">
         <p class="govuk-phase-banner__content">
@@ -52,7 +58,7 @@
                 beta
             </strong>
             <span class="govuk-phase-banner__text">
-                This is a new service – your <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback/">feedback</a> will help us to improve it.
+                This is a new service – your <a href="https://www.smartsurvey.co.uk/s/HANAIP" class="govuk-link" rel="noreferrer noopener" target="_blank">feedback</a> will help us to improve it.
             </span>
         </p>
     </div>
@@ -60,7 +66,8 @@
     <div class="govuk-width-container">
         @RenderBody()
     </div>
-    @Html.Partial("_Footer", Html.GetFooterViewModel())    
+
+    @await Html.PartialAsync("_Footer", Html.GetFooterViewModel())    
 
     <script src="/libs/govuk-frontend/all.js"></script>
     <script src="/libs/jquery/jquery.min.js"></script>
