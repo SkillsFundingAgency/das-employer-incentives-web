@@ -21,7 +21,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
         public async Task<IEnumerable<LegalEntityModel>> Get(string accountId)
         {
             var id = _hashingService.DecodeValue(accountId);
-            using var response = await _client.GetAsync($"accounts/{id}/legalentities", HttpCompletionOption.ResponseHeadersRead);
+            var url = OuterApiRoutes.LegalEntities.GetLegalEntities(id);
+
+            using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -38,8 +40,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
         public async Task<LegalEntityModel> Get(string hashedAccountId, string hashedAccountLegalEntityId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var accountLegalEntityIdId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
-            using var response = await _client.GetAsync($"accounts/{accountId}/legalentities/{accountLegalEntityIdId}", HttpCompletionOption.ResponseHeadersRead);
+            var accountLegalEntityId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
+            var url = OuterApiRoutes.LegalEntities.GetLegalEntity(accountId, accountLegalEntityId);
+
+            using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {

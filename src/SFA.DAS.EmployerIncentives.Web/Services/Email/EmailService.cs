@@ -15,14 +15,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Email
 
         public async Task SendBankDetailsRequiredEmail(SendBankDetailsEmailRequest request)
         {
-            var response = await _client.PostAsJsonAsync($"email/bank-details-required", request);
+            var response = await _client.PostAsJsonAsync(OuterApiRoutes.Email.SendBankDetailsRequiredEmail(), request);
 
             response.EnsureSuccessStatusCode();
         }
 
         public async Task SendBankDetailsReminderEmail(SendBankDetailsEmailRequest request)
         {
-            var response = await _client.PostAsJsonAsync($"email/bank-details-reminder", request);
+            var response = await _client.PostAsJsonAsync(OuterApiRoutes.Email.SendBankDetailsReminderEmail(), request);
 
             response.EnsureSuccessStatusCode();
         }

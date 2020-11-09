@@ -1,17 +1,20 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Error.ErrorViewModel
 @{
     ViewBag.GaData.Vpv = "/apply/page-access-denied";
-    ViewBag.Title = "Access denied";
+    ViewBag.Title = "Your account does not have the right access";
     ViewBag.HideNav = true;
 }
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">
-                Access denied
+                Your account does not have the right access
             </h1>
             <p class="govuk-body">
-                Your account does not have sufficient privileges
+                You need to contact an account owner from your organisation to change what you can do in your account.
+            </p>
+            <p class="govuk-body">
+                To apply for the hire a new apprentice payment or change your organisation's bank details, you must be able to 'add apprentices and view information'.
             </p>
             <p class="govuk-body">
                 <a class="govuk-button" href="@Model.AccountHomeUrl">
