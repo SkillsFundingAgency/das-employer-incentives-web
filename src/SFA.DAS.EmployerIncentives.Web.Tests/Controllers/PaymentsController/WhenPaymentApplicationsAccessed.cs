@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
     public class WhenPaymentApplicationsAccessed
     {
         private Web.Controllers.PaymentsController _sut;
-        private Mock<IApplicationService> _service;
+        private Mock<IApplicationService> _applicationService;
+        private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Fixture _fixture;
         private string _accountId;
+        private string _accountLegalEntityId;
         private string _sortOrder;
         private string _sortField;
 
         [SetUp]
         public void Arrange()
         {
-            _service = new Mock<IApplicationService>();
-            _sut = new Web.Controllers.PaymentsController(_service.Object);
+            _applicationService = new Mock<IApplicationService>();
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object);
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
+            _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
             _sortField = ApplicationsSortField.ApprenticeName;
         }
@@ -44,7 +49,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             {
                 application.Status = "Submitted";
             }
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as ViewResult;
@@ -64,7 +72,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[2].Status = "Submitted";
             applications[4].Status = "Submitted";
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as ViewResult;
@@ -81,7 +92,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as RedirectToActionResult;
@@ -100,7 +114,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[0].Status = "InProgress";
             applications[1].Status = "InProgress";
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as RedirectToActionResult;
@@ -124,7 +141,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].FirstName = "Freda";
             applications[1].LastName = "Johnson";
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, orderByText, orderByText) as ViewResult;
@@ -149,7 +169,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, ApplicationsSortOrder.Descending, ApplicationsSortField.ApplicationDate) as ViewResult;
@@ -174,7 +197,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
 
-            _service.Setup(x => x.GetList(_accountId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.ListPayments(_accountId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApplicationDate) as ViewResult;
