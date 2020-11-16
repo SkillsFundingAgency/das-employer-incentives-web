@@ -80,9 +80,6 @@
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated payment</a>
                         </th>
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.LegalEntityName)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.LegalEntityName)" asp-route-sortfield="@ApplicationsSortField.LegalEntityName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.LegalEntityName)">Organisation</a>
-                        </th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -97,9 +94,6 @@
                             </td>
                             <td data-label="Estimated payment" class="govuk-table__cell">
                                 @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
-                            </td>
-                            <td data-label="Organisation" class="govuk-table__cell">
-                                @apprenticeApplication.LegalEntityName
                             </td>
                         </tr>
                     }

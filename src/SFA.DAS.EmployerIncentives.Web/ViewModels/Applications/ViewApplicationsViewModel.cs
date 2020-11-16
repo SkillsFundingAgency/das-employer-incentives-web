@@ -1,6 +1,4 @@
-﻿
-using SFA.DAS.EmployerIncentives.Web.Models;
-using SFA.DAS.NLog.Targets.Redis.DotNetCore;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using System;
 using System.Collections.Generic;
 
@@ -22,8 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             {
                 { ApplicationsSortField.ApplicationDate, ApplicationsSortOrder.None },
                 { ApplicationsSortField.ApprenticeName, ApplicationsSortOrder.None },
-                { ApplicationsSortField.TotalIncentiveAmount, ApplicationsSortOrder.None },
-                { ApplicationsSortField.LegalEntityName, ApplicationsSortOrder.None }
+                { ApplicationsSortField.TotalIncentiveAmount, ApplicationsSortOrder.None }
             };
 
             _fieldSortOrders[fieldName] = sortOrder;
