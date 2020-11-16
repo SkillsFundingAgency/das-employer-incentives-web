@@ -88,7 +88,7 @@
                     }
                 }
             }
-        },        
+        },
         {
             "apiVersion": "2017-05-10",
             "name": "app-insights",
@@ -141,7 +141,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-v2.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -158,45 +158,49 @@
                         "value": "[parameters('sharedFrontEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
-                        "value": [
-                            {
-                                "name": "ConfigurationStorageConnectionString",
-                                "value": "[parameters('configurationStorageConnectionString')]"
-                            },
-                            {
-                                "name": "EnvironmentName",
-                                "value": "[parameters('environmentName')]"
-                            },
-                            {
-                                "name": "Environment",
-                                "value": "[parameters('environmentName')]"
-                            },
-                            {
-                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference('app-insights').outputs.InstrumentationKey.value]"
-                            },
-                            {
-                                "name": "ASPNETCORE_ENVIRONMENT",
-                                "value": "[toUpper(parameters('environmentName'))]"
-                            },
-                            {
-                                "name": "ConfigNames",
-                                "value": "[parameters('configNames')]"
-                            },
-                            {
-                                "name": "Version",
-                                "value": "[parameters('version')]"
-                            }
-                        ]
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "EnvironmentName",
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "Environment",
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference('app-insights').outputs.InstrumentationKey.value]"
+                                },
+                                {
+                                    "name": "ASPNETCORE_ENVIRONMENT",
+                                    "value": "[toUpper(parameters('environmentName'))]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[parameters('configNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "[parameters('version')]"
+                                }
+                            ]
+                        }
                     },
                     "appServiceConnectionStrings": {
-                        "value": [
-                            {
-                                "name": "Redis",
-                                "connectionString": "[parameters('loggingRedisConnectionString')]",
-                                "type": "Custom"
-                            }
-                        ]
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "Redis",
+                                    "connectionString": "[parameters('loggingRedisConnectionString')]",
+                                    "type": "Custom"
+                                }
+                            ]
+                        }
                     },
                     "customHostName": {
                         "value": "[parameters('customHostname')]"
