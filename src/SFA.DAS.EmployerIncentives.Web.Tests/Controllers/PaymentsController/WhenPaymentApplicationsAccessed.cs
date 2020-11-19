@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -78,7 +78,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -98,7 +98,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as RedirectToActionResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as RedirectToActionResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -120,7 +120,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, _sortOrder, _sortField) as RedirectToActionResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as RedirectToActionResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -147,7 +147,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, orderByText, orderByText) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApprenticeName) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -175,7 +175,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, ApplicationsSortOrder.Descending, ApplicationsSortField.ApplicationDate) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Descending, ApplicationsSortField.ApplicationDate) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -203,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPayments(_accountId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApplicationDate) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApplicationDate) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();

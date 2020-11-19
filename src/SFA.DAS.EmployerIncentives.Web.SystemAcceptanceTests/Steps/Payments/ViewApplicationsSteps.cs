@@ -3,7 +3,6 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 {
     [Binding]
     [Scope(Feature = "ViewApplications")]
@@ -24,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private readonly TestContext _testContext;
         private Fixture _fixture;
         private TestData.Account.WithInitialApplicationForASingleEntity _testData;
-
+        
         public ViewApplicationsSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
@@ -54,23 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));                   
-            
-            var legalEntities = new List<LegalEntityModel> 
-            {
-                new LegalEntityModel { AccountId = _testData.AccountId.ToString(), AccountLegalEntityId =_testData.AccountLegalEntityId.ToString() }
-            };
-            _testContext.EmployerIncentivesApi.MockServer
-                 .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentities")
-                        .UsingGet()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(legalEntities)));
+                        .WithBody(JsonConvert.SerializeObject(applications)));                             
 
         }
 
@@ -79,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"{_testData.HashedAccountId}/payments/payment-applications");
+                $"{_testData.HashedAccountId}/payments/{_testData.HashedAccountLegalEntityId}/payment-applications");
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
         }
@@ -227,6 +210,28 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(applications)));
+        }
+
+        [Given(@"an employer account has multiple legal entities")]
+        public void GivenAnEmployerAccountHasMultipleLegalEntities()
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            var legalEntities = new List<LegalEntityModel>
+            {
+                new LegalEntityModel { AccountId = _testData.AccountId.ToString(), AccountLegalEntityId =_testData.AccountLegalEntityId.ToString() },
+                new LegalEntityModel { AccountId = _testData.AccountId.ToString(), AccountLegalEntityId = _fixture.Create<string>() }
+            };
+            _testContext.EmployerIncentivesApi.MockServer
+                 .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentities")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(legalEntities)));
         }
 
     }
