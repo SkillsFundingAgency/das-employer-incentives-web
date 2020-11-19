@@ -47,25 +47,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerHasConfirmedTheirApprenticeshipDetails()
         {
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
-            var accountLegalEntityId = _fixture.Create<long>();
-
-            var application = _fixture.Create<IncentiveApplicationDto>();
-            application.BankDetailsRequired = false;
-            var response = new ApplicationResponse { Application = application };
-
-            _testContext.EmployerIncentivesApi.MockServer
-              .Given(
-                  Request
-                      .Create()
-                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
-                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
-                      .UsingGet()
-              )
-              .RespondWith(
-                  Response.Create()
-                      .WithStatusCode(HttpStatusCode.OK)
-                      .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(response)));
+            var accountLegalEntityId = _fixture.Create<long>();                       
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -292,6 +274,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             application.BankDetailsRequired = true;
             var response = new ApplicationResponse { Application = application };
 
+            _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
@@ -314,6 +297,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             application.BankDetailsRequired = false;
             var response = new ApplicationResponse { Application = application };
 
+            _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
