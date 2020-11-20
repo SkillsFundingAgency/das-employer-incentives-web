@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
@@ -12,6 +7,11 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using SFA.DAS.HashingService;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -189,6 +189,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Apprenticeships.First(x => x.Id == _hashingService.HashValue(1)).Selected.Should().BeTrue();
             model.Apprenticeships.First(x => x.Id == _hashingService.HashValue(2)).Selected.Should().BeTrue();
             model.Apprenticeships.First(x => x.Id == _hashingService.HashValue(3)).Selected.Should().BeFalse();
+
+            model.AccountId.Should().Be(_data.HashedAccountId);
+            model.AccountLegalEntityId.Should().Be(_data.HashedAccountLegalEntityId);
+
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/taken-on-new-apprentices");
+
         }
 
         [Then(@"the additional apprentice is not on the list")]

@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.WebUtilities;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
@@ -24,13 +22,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 
         public async Task<IEnumerable<ApprenticeshipModel>> Get(ApprenticesQuery query)
         {
-            var queryParams = new Dictionary<string, string>()
-            {
-                {"accountid", _hashingService.DecodeValue(query.AccountId).ToString()},
-                {"accountlegalentityid", _hashingService.DecodeValue(query.AccountLegalEntityId).ToString()}
-            };
-
-            var url = QueryHelpers.AddQueryString("apprenticeships", queryParams);
+            var url = OuterApiRoutes.Apprenticeships.GetApprenticeships(_hashingService.DecodeValue(query.AccountId),
+                _hashingService.DecodeValue(query.AccountLegalEntityId));
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 

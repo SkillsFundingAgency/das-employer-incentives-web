@@ -1,11 +1,15 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
+using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
@@ -19,12 +23,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
         private readonly TestData.Account.WithInitialApplicationForASingleEntity _testData;
+        private Fixture _fixture;
 
         public ApplicationConfirmationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+            _fixture = new Fixture();
         }
 
         [Given(@"an employer applying for a grant is asked to agree a declaration")]
@@ -69,6 +75,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer understands and confirms the declaration")]
         public async Task WhenTheEmployerUnderstandsAndConfirmsTheDeclaration()
         {
+
+            var application = _fixture.Create<IncentiveApplicationDto>();
+            application.BankDetailsRequired = true;
+            var response = new ApplicationResponse { Application = application };
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(response)));
+
             var url = $"{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}/";
             var formData = new KeyValuePair<string, string>();
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, formData);

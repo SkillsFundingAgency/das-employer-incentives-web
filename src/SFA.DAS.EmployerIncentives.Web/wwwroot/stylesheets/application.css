@@ -1,0 +1,20 @@
+.das-highlight--featured {
+    background-color: #005ea5;
+}
+
+.das-highlight--featured__title,
+.das-highlight--featured__body {
+    color: #fff;
+}
+
+.das-table__sort--asc,
+.das-table__sort--desc {
+    padding-left: 20px;
+}
+
+@media (min-width: 40.0625em) {
+    .das-table__sort--asc:after,
+    .das-table__sort--desc:after {
+        margin-top: -2px;
+    }
+}
