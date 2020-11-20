@@ -6,6 +6,7 @@ using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -85,6 +86,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var decodedAccountId = _hashingService.DecodeValue(accountId);
             var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
             using var response = await _client.GetAsync($"accounts/{decodedAccountId}/legalentity/{decodedAccountLegalEntityId}/applications", HttpCompletionOption.ResponseHeadersRead);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new List<ApprenticeApplicationModel>();
+            }
 
             response.EnsureSuccessStatusCode();
 
