@@ -14,40 +14,44 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
 
-            <h1 class="govuk-heading-l">@Model.Title</h1>
+            <h1 class="govuk-heading-xl">
+                @Model.Title
+            </h1>
 
             @* IF VRF complete and BC vendor set up complete
                 <h2 class="govuk-heading-m">
-                You've added your organisation's bank details
+                    You've added your organisation's bank details
                 </h2>
                 <p class="govuk-body">
-                We've confirmed the bank details you added during your hire a new apprentice payment application. You do not
-                need to do anything else.
+                    We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
                 </p>
-                /IF VRF complete and BC vendor set up complete *@
+            /IF VRF complete and BC vendor set up complete *@
 
             @* IF VRF complete and in progress with BC
                 <div class="govuk-inset-text">
-                <h2 class="govuk-heading-m">
-                We're reviewing your organisation's bank details
-                </h2>
-                <p class="govuk-body">
-                We may contact someone from your organisation to verify the information you've provided.
-                </p>
+                    <h2 class="govuk-heading-m">
+                        We're reviewing your organisation's bank details
+                    </h2>
+                    <p class="govuk-body">
+                        We may contact someone from your organisation to verify the information you've provided.
+                    </p>
                 </div>
-                /IF VRF complete and in progress with BC *@
+            /IF VRF complete and in progress with BC *@
 
 
             @* IF no VRF
                 <div class="das-highlight das-highlight--featured">
-                <h2 class="govuk-heading-m das-highlight--featured__title">
-                Add your organisation's bank details
-                </h2>
-                <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0">
-                We need your organisation's bank details, so that we can make the hire a new apprentice payment.
-                </p>
+                    <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
+                        Add your organisation's bank details
+                    </h2>
+                    <p class="govuk-body das-highlight--featured__body">
+                        We need your organisation's bank details, so that we can make the hire a new apprentice payment.
+                    </p>
+                    <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
+                        <a class="govuk-link das-link--white" href="#">Add bank details</a>
+                    </p>
                 </div>
-                /IF no VRF *@
+            /IF no VRF *@
 
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
@@ -56,15 +60,21 @@
                     </span>
                 </summary>
                 <div class="govuk-details__text">
-                    <p class="govuk-body">You'll receive the first payment after the apprentice completes 90 days of
+                    <p class="govuk-body">
+                        You'll receive the first payment after the apprentice completes 90 days of
                         their apprenticeship training and the second payment after 365 days. Your training provider will
                         confirm the apprenticeship start date and we'll add 90 days to the last calendar day of the
-                        month.</p>
-                    <p class="govuk-body">We make payments on the 14th working day of each month, starting from January
+                        month.
+                    </p>
+                    <p class="govuk-body">
+                        We make payments on the 14th working day of each month, starting from January
                         2021. It will take longer to get your first payment for any apprentices who start their training
-                        in August or September.</p>
-                    <p class="govuk-body">For example, if your training provider confirms an apprentice started their
-                        apprenticeship training on:</p>
+                        in August or September.
+                    </p>
+                    <p class="govuk-body">
+                        For example, if your training provider confirms an apprentice started their
+                        apprenticeship training on:
+                    </p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
                             1 September 2020 - we'll make the first payment on 14 January 2021
@@ -77,8 +87,7 @@
             </details>
 
             <p class="govuk-body">
-                <a href="https://help.apprenticeships.education.gov.uk/hc/en-gb#contact-us" class="govuk-link">Contact
-                    us</a> to cancel an application.
+                <a href="https://help.apprenticeships.education.gov.uk/hc/en-gb#contact-us" class="govuk-link">Contact us</a> to cancel an application.
             <p>
         </div>
     </div>
@@ -86,31 +95,25 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-heading-m">
+                <caption class="govuk-table__caption govuk-visually-hidden">
                     Your applications
                 </caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col"
-                            class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)"
-                                asp-route-sortfield="@ApplicationsSortField.ApprenticeName"
-                                class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice
-                                name</a>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice
+                                name
+                            </a>
                         </th>
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col"
-                            class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)"
-                                asp-route-sortfield="@ApplicationsSortField.ApplicationDate"
-                                class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application
-                                date</a>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application
+                                date
+                            </a>
                         </th>
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col"
-                            class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)"
-                                asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount"
-                                class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated
-                                payment</a>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated
+                                payment
+                            </a>
                         </th>
                     </tr>
                 </thead>
@@ -132,35 +135,37 @@
                 </tbody>
             </table>
 
-            @* <nav role="navigation" aria-label="Pagination">
+            @* 
+            <nav role="navigation" aria-label="Pagination">
                 <div class="das-pagination__summary">
-                Showing 101 - 150 of 246 results
+                    Showing 101 - 150 of 246 results
                 </div>
                 <ul class="das-pagination">
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Previous page">Previous</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Page 1">1</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Page 2">2</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link current" href="#0" aria-current="true" aria-label="Page 3, current
-                page">3</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Page 4">4</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Page 5">5</a>
-                </li>
-                <li class="das-pagination__item">
-                <a class="das-pagination__link" href="#0" aria-label="Next page">Next</a>
-                </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Previous page">Previous</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 1">1</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 2">2</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link current" href="#0" aria-current="true" aria-label="Page 3, current
+                    page">3</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 4">4</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 5">5</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Next page">Next</a>
+                    </li>
                 </ul>
-                </nav> *@
+            </nav> 
+            *@
 
         </div>
 
