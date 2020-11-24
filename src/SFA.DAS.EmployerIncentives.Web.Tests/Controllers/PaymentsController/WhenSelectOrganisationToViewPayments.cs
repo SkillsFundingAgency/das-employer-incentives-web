@@ -8,6 +8,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
+using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Web.Controllers.PaymentsController _sut;
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IHashingService> _hashingService;
         private Fixture _fixture;
         private string _accountId;
 
@@ -27,7 +29,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         {
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object);
+            _hashingService = new Mock<IHashingService>();
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object);
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
         }

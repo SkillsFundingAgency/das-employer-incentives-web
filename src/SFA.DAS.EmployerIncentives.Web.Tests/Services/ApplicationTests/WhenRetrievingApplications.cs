@@ -57,17 +57,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
                 _fixture.Create<ApprenticeApplicationModel>(),
                 _fixture.Create<ApprenticeApplicationModel>()
             };
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applicationList, BankDetailsStatus = BankDetailsStatus.InProgress };
 
             _httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK)
             { 
-                Content = new ObjectContent<IEnumerable<ApprenticeApplicationModel>>(applicationList, new JsonMediaTypeFormatter(), "application/json")
+                Content = new ObjectContent<GetApplicationsModel>(getApplicationsResponse, new JsonMediaTypeFormatter(), "application/json")
             };
 
             _httpClientHandlerFake.ExpectedResponseMessage = _httpResponseMessage;
 
             var response = await _sut.GetList(_accountId, _accountLegalEntityId);
 
-            response.Count().Should().Be(2);
+            response.ApprenticeApplications.Count().Should().Be(2);
         }
 
         [Test]
@@ -79,7 +80,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 
             var response = await _sut.GetList(_accountId, _accountLegalEntityId);
 
-            response.Count().Should().Be(0);
+            response.ApprenticeApplications.Count().Should().Be(0);
         }
     }
 }

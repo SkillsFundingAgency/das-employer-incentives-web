@@ -1,6 +1,8 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 {
@@ -66,5 +68,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
             return "asc";
         }
+
+        public BankDetailsStatus BankDetailsStatus { get; set; }
+
+        public string AddBankDetailsLink { get; set; }
     }
 }

@@ -39,7 +39,8 @@
             /IF VRF complete and in progress with BC *@
 
 
-            @* IF no VRF
+            @if(Model.BankDetailsStatus == BankDetailsStatus.NotSupplied) 
+            { 
                 <div class="das-highlight das-highlight--featured">
                     <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
                         Add your organisation's bank details
@@ -48,11 +49,11 @@
                         We need your organisation's bank details, so that we can make the hire a new apprentice payment.
                     </p>
                     <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
-                        <a class="govuk-link das-link--white" href="#">Add bank details</a>
+                        <a class="govuk-link das-link--white" href="@Model.AddBankDetailsLink">Add bank details</a>
                     </p>
                 </div>
-            /IF no VRF *@
-
+            }
+               
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">

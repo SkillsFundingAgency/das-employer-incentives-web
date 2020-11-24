@@ -1,15 +1,12 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
@@ -104,6 +101,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 _fixture.Create<ApprenticeApplicationModel>()
             };
             applications[0].Status = "Submitted";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -115,7 +113,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
 
         }
 

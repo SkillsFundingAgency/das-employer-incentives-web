@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return accountLegalEntityId;
         }
 
-        public async Task<IEnumerable<ApprenticeApplicationModel>> GetList(string accountId, string accountLegalEntityId)
+        public async Task<GetApplicationsModel> GetList(string accountId, string accountLegalEntityId)
         {
             var decodedAccountId = _hashingService.DecodeValue(accountId);
             var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
@@ -89,12 +89,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                return new List<ApprenticeApplicationModel>();
+                return new GetApplicationsModel 
+                {
+                    BankDetailsStatus = BankDetailsStatus.NotSupplied, 
+                    ApprenticeApplications = new List<ApprenticeApplicationModel>() 
+                };
             }
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeApplicationModel>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationsModel>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return data;
         }

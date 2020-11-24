@@ -6,6 +6,8 @@ using SFA.DAS.EmployerIncentives.Web.Extensions;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using System.Collections.Generic;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -14,11 +16,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly IHashingService _hashingService;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService)
+        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, IHashingService hashingService)
         {
             _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
+            _hashingService = hashingService;
         }
 
         [Route("payment-applications")]
@@ -46,8 +50,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 sortField = ApplicationsSortField.ApprenticeName;
             }
 
-            var applications = await _applicationService.GetList(accountId, accountLegalEntityId);
-            var submittedApplications = applications.Where(x => x.Status == "Submitted").AsQueryable();
+            var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
+            var submittedApplications = getApplicationsResponse.ApprenticeApplications.Where(x => x.Status == "Submitted").AsQueryable();
 
             if (!submittedApplications.Any())
             {
@@ -59,7 +63,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var model = new ViewApplicationsViewModel
             {
                 Applications = submittedApplications,
-                SortField = sortField
+                SortField = sortField,
+                BankDetailsStatus = getApplicationsResponse.BankDetailsStatus,
+                AddBankDetailsLink = CreateAddBankDetailsLink(submittedApplications)
             };
             model.SetSortOrder(sortField, sortOrder);
 
@@ -127,6 +133,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             return submittedApplications;
+        }
+
+        private string CreateAddBankDetailsLink(IEnumerable<ApprenticeApplicationModel> applications)
+        {
+            var application = applications.OrderBy(x => x.ApplicationDate).FirstOrDefault();
+            var requestContext = ControllerContext.HttpContext.Request;
+            var host = $"{requestContext.Scheme}://{requestContext.Host}";
+            var hashedAccountId = _hashingService.HashValue(application.AccountId);
+            var bankDetailsUrl = $"{host}/{hashedAccountId}/bank-details/{application.ApplicationId}/add-bank-details";
+            return bankDetailsUrl;
         }
     }
 }

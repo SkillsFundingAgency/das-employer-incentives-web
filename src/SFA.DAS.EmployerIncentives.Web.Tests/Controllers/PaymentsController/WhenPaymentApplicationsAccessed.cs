@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
+using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Web.Controllers.PaymentsController _sut;
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IHashingService> _hashingService;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -31,12 +34,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         {
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object);
+            _hashingService = new Mock<IHashingService>();
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
             _sortField = ApplicationsSortField.ApprenticeName;
+            _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns(_fixture.Create<string>());
         }
 
         [Test]
@@ -49,7 +60,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             {
                 application.Status = "Submitted";
             }
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -71,8 +83,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(5));
             applications[2].Status = "Submitted";
             applications[4].Status = "Submitted";
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -91,8 +104,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         {
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -113,8 +127,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
             applications[0].Status = "InProgress";
             applications[1].Status = "InProgress";
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -140,8 +155,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].Status = "Submitted";
             applications[1].FirstName = "Freda";
             applications[1].LastName = "Johnson";
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -168,8 +184,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[0].ApplicationDate = new DateTime(2020, 09, 01);
             applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -196,8 +213,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[0].ApplicationDate = new DateTime(2020, 09, 01);
             applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applications);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);

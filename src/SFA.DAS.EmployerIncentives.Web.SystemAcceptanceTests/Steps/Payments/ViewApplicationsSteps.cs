@@ -38,6 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 _fixture.Create<ApprenticeApplicationModel>()
             };
             applications[0].Status = "Submitted";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.Completed };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -53,7 +54,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));                             
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));                             
 
         }
 
@@ -87,6 +88,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             };
             applications[0].Status = "Submitted";
             applications[1].Status = "Submitted";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -102,7 +104,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
         [Then(@"the employer is shown submitted applications")]
@@ -124,6 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             applications[1].Status = "Submitted";
             applications[2].Status = "Submitted";
             applications[3].Status = "InProgress";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -139,7 +142,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
         [Then(@"the employer is shown only submitted applications")]
@@ -163,6 +166,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             };
             applications[0].Status = "InProgress";
             applications[1].Status = "InProgress";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -178,7 +182,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
         [Then(@"the employer is shown no applications")]
@@ -194,7 +198,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         public void GivenAnEmployerHasNoApplications()
         {
             var applications = new List<ApprenticeApplicationModel>();
-
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
@@ -209,7 +213,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
         [Given(@"an employer account has multiple legal entities")]
