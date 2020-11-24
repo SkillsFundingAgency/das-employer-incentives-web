@@ -22,7 +22,7 @@
                                 @Model.Title
                             </h1>
                         </legend>
-                        @if (ViewData.ModelState.ContainsKey("OrganisationNotSelected") && ViewData.ModelState["OrganisationNotSelected"].Errors.Any())
+                        @if (!ViewData.ModelState.IsValid)
                         {
                             <span id="changed-name-error" class="govuk-error-message">
                                 <span class="govuk-visually-hidden">Error:</span> @Model.OrganisationNotSelectedMessage
