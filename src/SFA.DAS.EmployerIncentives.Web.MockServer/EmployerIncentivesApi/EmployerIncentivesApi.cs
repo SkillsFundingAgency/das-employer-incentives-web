@@ -214,7 +214,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             var data = new TestData.Account.WithPreviousApplicationsForFirstLegalEntity();
 
             var applications = new List<ApprenticeApplicationModel> { data.Application1, data.Application2, data.Application3 };
-
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
             _server
                 .Given(
                     Request
@@ -225,7 +225,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(applications)));
+                        .WithBody(JsonConvert.SerializeObject(getApplicationsResponse)));
 
             AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
