@@ -35,8 +35,8 @@
                                 @foreach (var organisation in Model.LegalEntities)
                                 {
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
-                                        <label class="govuk-label govuk-radios__label" for="selected">
+                                        <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
+                                        <label class="govuk-label govuk-radios__label" for="@organisation.AccountLegalEntityId">
                                             @organisation.Name
                                         </label>
                                     </div>
