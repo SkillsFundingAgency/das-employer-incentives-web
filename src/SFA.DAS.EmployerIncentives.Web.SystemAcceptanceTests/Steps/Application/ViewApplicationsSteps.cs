@@ -3,8 +3,8 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         }
 
         [Then(@"the employer is shown submitted applications")]
-        public async Task ThenTheEmployerIsShownSubmittedApplications()
+        public void ThenTheEmployerIsShownSubmittedApplications()
         {
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
