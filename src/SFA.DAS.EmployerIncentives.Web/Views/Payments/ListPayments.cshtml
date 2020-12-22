@@ -123,7 +123,8 @@
                     {
                         <tr class="govuk-table__row">
                             <td data-label="Apprentice name" class="govuk-table__cell">
-                                @apprenticeApplication.ApprenticeName
+                                @apprenticeApplication.ApprenticeName<br/>
+                                ULN: @apprenticeApplication.ULN
                             </td>
                             <td data-label="Application date" class="govuk-table__cell">
                                 @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
