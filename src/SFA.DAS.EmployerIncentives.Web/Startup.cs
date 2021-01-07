@@ -125,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 .AddEmployerIncentivesService()
                 .AddDataEncryptionService()
                 .AddVerificationService()
-                ;
+                .AddDataProtection(_configuration);
 
             /* if (!_environment.IsDevelopment())
             {
