@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
 using SFA.DAS.HashingService;
 using SFA.DAS.Http;
+using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -167,6 +169,28 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             });
 
             return serviceCollection;
+        }
+
+        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (configuration["EnvironmentName"] != "LOCAL" && configuration["EnvironmentName"] != "DEV")
+            {
+                var webConfig = configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration).Get<WebConfigurationOptions>();
+
+                if (webConfig != null && !string.IsNullOrEmpty(webConfig.DataProtectionKeysDatabase)
+                                      && !string.IsNullOrEmpty(webConfig.RedisCacheConnectionString))
+                {
+                    var redisConnectionString = webConfig.RedisCacheConnectionString;
+                    var dataProtectionKeysDatabase = webConfig.DataProtectionKeysDatabase;
+
+                    var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
+
+                    services.AddDataProtection()
+                        .SetApplicationName("das-employer-incentives-web")
+                        .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+                }
+            }
+            return services;
         }
 
         private static Task OnRemoteFailure(

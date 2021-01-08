@@ -47,7 +47,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerHasConfirmedTheirApprenticeshipDetails()
         {
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
-            var accountLegalEntityId = _fixture.Create<long>();                       
+            var accountLegalEntityId = _fixture.Create<long>();
+
+            var application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, false).Create();
+            var response = new ApplicationResponse { Application = application };
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                      .WithParam("includeApprenticeships", new ExactMatcher("False"))
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(response)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -270,8 +287,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer has not previously supplied bank details")]
         public void WhenTheEmployerHasNotPreviouslySuppliedBankDetails()
         {
-            var application = _fixture.Create<IncentiveApplicationDto>();
-            application.BankDetailsRequired = true;
+            var application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, true).Create();
             var response = new ApplicationResponse { Application = application };
 
             _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
@@ -293,8 +309,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer has already provided bank details")]
         public void WhenTheEmployerHasAlreadyProvidedBankDetails()
         {
-            var application = _fixture.Create<IncentiveApplicationDto>();
-            application.BankDetailsRequired = false;
+            var application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, false).Create();
             var response = new ApplicationResponse { Application = application };
 
             _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
