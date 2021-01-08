@@ -6,6 +6,7 @@ using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -80,13 +81,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return accountLegalEntityId;
         }
 
-        public async Task<IEnumerable<ApprenticeApplicationModel>> GetList(string accountId)
+        public async Task<GetApplicationsModel> GetList(string accountId, string accountLegalEntityId)
         {
-            using var response = await _client.GetAsync($"accounts/{_hashingService.DecodeValue(accountId)}/applications", HttpCompletionOption.ResponseHeadersRead);
+            var decodedAccountId = _hashingService.DecodeValue(accountId);
+            var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
+            using var response = await _client.GetAsync($"accounts/{decodedAccountId}/legalentity/{decodedAccountLegalEntityId}/applications", HttpCompletionOption.ResponseHeadersRead);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new GetApplicationsModel 
+                {
+                    BankDetailsStatus = BankDetailsStatus.NotSupplied, 
+                    ApprenticeApplications = new List<ApprenticeApplicationModel>() 
+                };
+            }
 
             response.EnsureSuccessStatusCode();
 
-            var data = await JsonSerializer.DeserializeAsync<IEnumerable<ApprenticeApplicationModel>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var data = await JsonSerializer.DeserializeAsync<GetApplicationsModel>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return data;
         }

@@ -13,6 +13,7 @@ using WireMock.ResponseBuilders;
 using WireMock.Server;
 using System.Security.Claims;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 {
@@ -202,6 +203,29 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntity3, TestHelper.DefaultSerialiserSettings)));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithPreviousApplications()
+        {
+            var data = new TestData.Account.WithPreviousApplicationsForFirstLegalEntity();
+
+            var applications = new List<ApprenticeApplicationModel> { data.Application1, data.Application2, data.Application3 };
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentity/{data.AccountLegalEntityId1}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplicationsResponse)));
 
             AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 

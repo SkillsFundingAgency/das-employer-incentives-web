@@ -26,10 +26,16 @@
     <PackageReference Include="WireMock.Net" Version="1.2.14" />
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Application\ViewApplications.feature">
+    <SpecFlowFeatureFiles Update="Features\Payments\ChooseOrganisation.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ChooseOrganisation.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Payments\ViewApplications.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
     </SpecFlowFeatureFiles>
@@ -53,7 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Features\Application\ViewApplications.feature.cs">
+    <Compile Update="Features\Payments\ChooseOrganisation.feature.cs">
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Update="Features\Payments\ViewApplications.feature.cs">
       <DependentUpon>ViewApplications.feature</DependentUpon>
     </Compile>
     <Compile Update="Features\Application\Eligibility.feature.cs">

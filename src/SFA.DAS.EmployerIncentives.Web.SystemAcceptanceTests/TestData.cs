@@ -1,4 +1,6 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+﻿using Microsoft.OData.Edm;
+using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System;
 using System.Collections.Generic;
@@ -65,6 +67,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public long AccountLegalEntityId3 => 40003;
                 public string HashedAccountLegalEntityId3 => "VKD7X7";
                 public LegalEntityDto LegalEntity3 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId3, LegalEntityName = $"Organisation {AccountLegalEntityId3}", HasSignedIncentivesTerms = true };
+            }
+
+            public class WithPreviousApplicationsForFirstLegalEntity : WithMultipleLegalEntitiesWithEligibleApprenticeships
+            {
+                public ApprenticeApplicationModel Application1 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 09, 01), ApplicationId = Guid.NewGuid(), FirstName = "Jane", LastName = "Doe", Status = "Submitted", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 900004567};
+                public ApprenticeApplicationModel Application2 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 08, 14), ApplicationId = Guid.NewGuid(), FirstName = "Robert", LastName = "Smith", Status = "Submitted", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9565565665 };
+                public ApprenticeApplicationModel Application3 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 05), ApplicationId = Guid.NewGuid(), FirstName = "Andrew", LastName = "Digby-Jones", Status = "Submitted", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968575765 };
             }
 
             public class WithMultipleLegalEntitiesWithEligibleApprenticeships

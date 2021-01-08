@@ -290,6 +290,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, true).Create();
             var response = new ApplicationResponse { Application = _application };
 
+            _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
@@ -311,6 +312,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, false).Create();
             var response = new ApplicationResponse { Application = _application };
 
+            _testContext.EmployerIncentivesApi.MockServer.ResetMappings();
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
                   Request
