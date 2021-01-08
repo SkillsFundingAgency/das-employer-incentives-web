@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
             var accountLegalEntityId = _fixture.Create<long>();
 
-            var application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, false).Create();
+            var application = _fixture.Build<IncentiveApplicationDto>().With(p => p.BankDetailsRequired, true).Create();
             var response = new ApplicationResponse { Application = application };
 
             _testContext.EmployerIncentivesApi.MockServer
