@@ -10,11 +10,25 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public ChooseOrganisationViewModel() : base("Choose organisation")
         {
+
+        }
+
+        public ChooseOrganisationViewModel(string accountsBaseUrl, string accountId) : base("Choose organisation")
+        {
+            AccountId = accountId;
+            if (!accountsBaseUrl.EndsWith("/"))
+            {
+                accountsBaseUrl += "/";
+            }
+            AccountHomeUrl = $"{accountsBaseUrl}accounts/{AccountId}/teams";
         }
 
         public string AccountId { get; set; }
         public IEnumerable<LegalEntityModel> LegalEntities { get; set; }
 
         public string Selected { get; set; }
+
+        public string AccountHomeUrl { get; set; }
+
     }
 }

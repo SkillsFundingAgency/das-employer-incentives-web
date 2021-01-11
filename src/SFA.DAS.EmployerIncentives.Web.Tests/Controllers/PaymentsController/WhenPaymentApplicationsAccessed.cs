@@ -2,8 +2,10 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
@@ -23,6 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IHashingService> _hashingService;
+        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -35,7 +38,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object)
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {

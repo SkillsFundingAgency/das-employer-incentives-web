@@ -2,8 +2,10 @@
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
@@ -21,8 +23,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IHashingService> _hashingService;
+        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
+        private string _manageAccountsUrl;
 
         [SetUp]
         public void Arrange()
@@ -30,9 +34,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object);
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
+            _manageAccountsUrl = _fixture.Create<string>();
+
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object);
         }
 
         [Test]
@@ -70,9 +77,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         public async Task Then_the_payments_are_shown_for_the_selected_account_organisation()
         {
             var accountLegalEntityId = _fixture.Create<string>();
-            var model = new ChooseOrganisationViewModel 
+            var model = new ChooseOrganisationViewModel(_manageAccountsUrl, _accountId)
             { 
-                AccountId = _accountId,
                 Selected = accountLegalEntityId
             };
 

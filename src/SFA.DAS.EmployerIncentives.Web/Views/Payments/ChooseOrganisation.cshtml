@@ -6,6 +6,8 @@
     ViewData["ZenDeskLabels"] = "ei-chooseorganisation";
 }
 
+<a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
+
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
@@ -44,7 +46,8 @@
                             </div>
                         </fieldset>
                     </div>
-
+                    @Html.HiddenFor(x => x.AccountHomeUrl)
+                    @Html.HiddenFor(x => x.AccountId)
                     <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                         Continue
                     </button>
