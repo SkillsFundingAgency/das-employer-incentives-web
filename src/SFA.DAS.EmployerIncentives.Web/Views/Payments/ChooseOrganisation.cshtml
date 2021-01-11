@@ -34,7 +34,7 @@
                             }
 
                             <div class="govuk-radios">
-                                @foreach (var organisation in Model.LegalEntities)
+                                @foreach (var organisation in Model.LegalEntities.OrderBy(x => x.Name))
                                 {
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
