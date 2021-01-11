@@ -8,6 +8,11 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
     {
         public string LegalEntityNotSelectedMessage => "Select an organisation";
 
+        public ChooseOrganisationViewModel() : base("Choose organisation")
+        {
+
+        }
+
         public ChooseOrganisationViewModel(string accountsBaseUrl, string accountId) : base("Choose organisation")
         {
             AccountId = accountId;
