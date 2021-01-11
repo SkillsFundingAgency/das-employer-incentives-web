@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using System.Collections.Generic;
 using SFA.DAS.HashingService;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -17,12 +19,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IHashingService _hashingService;
+        private readonly ExternalLinksConfiguration _configuration;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, IHashingService hashingService)
+        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
+                                  IHashingService hashingService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
             _hashingService = hashingService;
+            _configuration = configuration.Value;
         }
 
         [Route("payment-applications")]
@@ -84,7 +89,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ChooseOrganisation(string accountId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var model = new ChooseOrganisationViewModel { AccountId = accountId, LegalEntities = legalEntities };
+            var model = new ChooseOrganisationViewModel(_configuration.ManageApprenticeshipSiteUrl, accountId) 
+            { 
+                LegalEntities = legalEntities 
+            };
             return View(model);
         }
 
