@@ -1,0 +1,11 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.Models.PaymentStatusModel
+
+@if (Model != null)
+{
+    @if (Model.LearnerMatchNotFound)
+    {
+        <p class="govuk-body govuk-!-margin-bottom-0">Training provider needs to confirm they have started their apprenticeship.</p>
+    }
+}
+
+

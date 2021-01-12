@@ -111,28 +111,32 @@
                                 date
                             </a>
                         </th>
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated
-                                payment
-                            </a>
+                        <th scope="col" class="govuk-table__header">
+                            First payment
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Second payment
                         </th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     @foreach (var apprenticeApplication in Model.Applications)
                     {
-                        <tr class="govuk-table__row">
-                            <td data-label="Apprentice name" class="govuk-table__cell">
-                                <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
-                                <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p> 
-                            </td>
-                            <td data-label="Application date" class="govuk-table__cell">
-                                @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
-                            </td>
-                            <td data-label="Estimated payment" class="govuk-table__cell">
-                                @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
-                            </td>
-                        </tr>
+                    <tr class="govuk-table__row">
+                        <td data-label="Apprentice name" class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
+                            <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p>
+                        </td>
+                        <td data-label="Application date" class="govuk-table__cell">
+                            @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
+                        </td>
+                        <td data-label="First payment" class="govuk-table__cell">
+                            <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
+                        </td>
+                        <td data-label="Second payment" class="govuk-table__cell">
+                            <partial name="_PaymentStatus" for="@apprenticeApplication.SecondPaymentStatus" />
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
