@@ -16,15 +16,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/payments")]
     public class PaymentsController : Controller
     {
-        private readonly IApplicationService _applicationService;
+        private readonly IApprenticeshipIncentiveService _apprenticeshipIncentiveService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IHashingService _hashingService;
         private readonly ExternalLinksConfiguration _configuration;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
+        public PaymentsController(IApprenticeshipIncentiveService apprenticeshipIncentiveService, ILegalEntitiesService legalEntitiesService, 
                                   IHashingService hashingService, IOptions<ExternalLinksConfiguration> configuration)
         {
-            _applicationService = applicationService;
+            _apprenticeshipIncentiveService = apprenticeshipIncentiveService;
             _legalEntitiesService = legalEntitiesService;
             _hashingService = hashingService;
             _configuration = configuration.Value;
@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 sortField = ApplicationsSortField.ApprenticeName;
             }
 
-            var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
+            var getApplicationsResponse = await _apprenticeshipIncentiveService.GetList(accountId, accountLegalEntityId);
             var submittedApplications = getApplicationsResponse.ApprenticeApplications.Where(x => x.Status == "Submitted").AsQueryable();
 
             if (!submittedApplications.Any())
