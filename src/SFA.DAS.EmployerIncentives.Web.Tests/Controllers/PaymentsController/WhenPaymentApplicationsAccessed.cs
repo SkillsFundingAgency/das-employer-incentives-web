@@ -60,10 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(5));
-            foreach(var application in applications)
-            {
-                application.Status = "Submitted";
-            }
+
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
             _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
@@ -77,30 +74,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
             viewModel.Applications.Count().Should().Be(applications.Count());
-        }
-
-        [Test]
-        public async Task Then_the_view_contains_summary_for_only_submitted_applications()
-        {
-            // Arrange
-            var applications = new List<ApprenticeApplicationModel>();
-            applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(5));
-            applications[2].Status = "Submitted";
-            applications[4].Status = "Submitted";
-            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
-
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
-
-            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
-            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
-            // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
-
-            // Assert
-            var viewModel = result.Model as ViewApplicationsViewModel;
-            viewModel.Should().NotBeNull();
-            viewModel.Applications.Count().Should().Be(applications.Count(x => x.Status == "Submitted"));
         }
 
         [Test]
@@ -123,29 +96,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             result.ActionName.Should().Be("NoApplications");
         }
 
-        [Test]
-        public async Task Then_a_shutter_page_is_shown_if_only_applcations_are_in_progress()
-        {
-            // Arrange
-            var applications = new List<ApprenticeApplicationModel>();
-            applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
-            applications[0].Status = "InProgress";
-            applications[1].Status = "InProgress";
-            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
-
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
-
-            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
-            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
-            // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as RedirectToActionResult;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.ActionName.Should().Be("NoApplications");
-        }
-
         [TestCase(null)]
         [TestCase("")]
         public async Task Then_the_default_sort_order_is_ascending_by_apprentice_name(string orderByText)
@@ -153,10 +103,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
-            applications[0].Status = "Submitted";
             applications[0].FirstName = "Steve";
             applications[0].LastName = "Jones";
-            applications[1].Status = "Submitted";
             applications[1].FirstName = "Freda";
             applications[1].LastName = "Johnson";
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
@@ -184,9 +132,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
-            applications[0].Status = "Submitted";
             applications[0].ApplicationDate = new DateTime(2020, 09, 01);
-            applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
@@ -213,9 +159,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(2));
-            applications[0].Status = "Submitted";
             applications[0].ApplicationDate = new DateTime(2020, 09, 01);
-            applications[1].Status = "Submitted";
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 

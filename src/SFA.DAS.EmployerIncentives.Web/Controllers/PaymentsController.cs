@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             var getApplicationsResponse = await _apprenticeshipIncentiveService.GetList(accountId, accountLegalEntityId);
-            var submittedApplications = getApplicationsResponse.ApprenticeApplications.Where(x => x.Status == "Submitted").AsQueryable();
+            var submittedApplications = getApplicationsResponse.ApprenticeApplications.AsQueryable();
 
             if (!submittedApplications.Any())
             {
