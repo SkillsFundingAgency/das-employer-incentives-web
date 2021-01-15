@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
@@ -70,7 +71,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 Applications = submittedApplications,
                 SortField = sortField,
                 BankDetailsStatus = getApplicationsResponse.BankDetailsStatus,
-                AddBankDetailsLink = CreateAddBankDetailsLink(submittedApplications)
+                AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId)
             };
             model.SetSortOrder(sortField, sortOrder);
 
@@ -143,13 +144,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return submittedApplications;
         }
 
-        private string CreateAddBankDetailsLink(IEnumerable<ApprenticeApplicationModel> applications)
+        private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
         {
-            var application = applications.OrderBy(x => x.ApplicationDate).FirstOrDefault();
             var requestContext = ControllerContext.HttpContext.Request;
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
-            var hashedAccountId = _hashingService.HashValue(application.AccountId);
-            var bankDetailsUrl = $"{host}/{hashedAccountId}/bank-details/{application.ApplicationId}/add-bank-details";
+            var bankDetailsUrl = $"{host}/{accountId}/bank-details/{firstSubmittedApplicationId}/add-bank-details";
             return bankDetailsUrl;
         }
     }

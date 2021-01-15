@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var applications = new List<ApprenticeApplicationModel>();
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(5));
 
-            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = Guid.NewGuid()};
             _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
             viewModel.Applications.Count().Should().Be(applications.Count());
+            viewModel.AddBankDetailsLink.Should().Be($":///{_accountId}/bank-details/{getApplicationsResponse.FirstSubmittedApplicationId}/add-bank-details");
         }
 
         [Test]
