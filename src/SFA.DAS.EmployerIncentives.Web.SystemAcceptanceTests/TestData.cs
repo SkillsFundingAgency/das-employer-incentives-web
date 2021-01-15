@@ -1,5 +1,4 @@
-﻿using Microsoft.OData.Edm;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System;
@@ -72,8 +71,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
             public class WithPreviousApplicationsForFirstLegalEntity : WithMultipleLegalEntitiesWithEligibleApprenticeships
             {
                 public ApprenticeApplicationModel Application1 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 09, 01), ApplicationId = Guid.NewGuid(), FirstName = "Jane", LastName = "Doe", Status = "Submitted", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 900004567, FirstPaymentStatus = new PaymentStatusModel { LearnerMatchNotFound = true } };
-                public ApprenticeApplicationModel Application2 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 08, 14), ApplicationId = Guid.NewGuid(), FirstName = "Robert", LastName = "Smith", Status = "Submitted", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9565565665 };
-                public ApprenticeApplicationModel Application3 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 05), ApplicationId = Guid.NewGuid(), FirstName = "Andrew", LastName = "Digby-Jones", Status = "Submitted", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968575765 };
+                public ApprenticeApplicationModel Application2 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 08, 14), ApplicationId = Guid.NewGuid(), FirstName = "Robert", LastName = "Smith", Status = "Submitted", TotalIncentiveAmount = 2500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9565565665, FirstPaymentStatus = new PaymentStatusModel { PaymentAmount = 1500, PaymentDate = DateTime.Parse("20-01-2021") }, SecondPaymentStatus = new PaymentStatusModel { PaymentAmount = 1000, PaymentDate = DateTime.Parse("18-11-2021") } };
+                public ApprenticeApplicationModel Application3 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 05), ApplicationId = Guid.NewGuid(), FirstName = "Andrew", LastName = "Digby-Jones", Status = "Submitted", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968575765, FirstPaymentStatus = new PaymentStatusModel { PaymentAmount = 750, PaymentDate = DateTime.Parse("18-02-2021") }, SecondPaymentStatus = new PaymentStatusModel { PaymentAmount = 750, PaymentDate = DateTime.Parse("18-11-2021") } };
             }
 
             public class WithMultipleLegalEntitiesWithEligibleApprenticeships

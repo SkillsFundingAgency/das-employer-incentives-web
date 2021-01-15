@@ -1,10 +1,21 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.Models.PaymentStatusModel
+﻿@using System.Globalization
+@model SFA.DAS.EmployerIncentives.Web.Models.PaymentStatusModel
+@{
+    var culture = new CultureInfo("en-GB");
+}
+
 
 @if (Model != null)
 {
     @if (Model.LearnerMatchNotFound)
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Training provider needs to confirm they have started their apprenticeship.</p>
+    }
+    else
+    {
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Estimated</p>
+        <p class="govuk-body govuk-!-margin-bottom-0">@Model.PaymentDate?.ToString("MMMM yyyy", culture)</p>
+        <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">@Model.PaymentAmount?.ToString("C", culture)</p>
     }
 }
 
