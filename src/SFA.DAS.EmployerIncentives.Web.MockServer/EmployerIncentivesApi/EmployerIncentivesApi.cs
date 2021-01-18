@@ -14,6 +14,7 @@ using WireMock.Server;
 using System.Security.Claims;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 {
@@ -419,6 +420,82 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 .RespondWith(
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(data.BankingDetails, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithCreateApplication()
+        {
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
+            _server
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithBody(string.Empty)
+                       .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                       .UsingPatch()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithBody(string.Empty)
+                       .WithStatusCode(HttpStatusCode.OK));
+
+            var applicationResponse = new ApplicationResponse 
+            {
+                Application = new IncentiveApplicationDto
+                {
+                    AccountLegalEntityId = 123,
+                    BankDetailsRequired = true,
+                    Apprenticeships = new List<IncentiveApplicationApprenticeshipDto>
+                    {
+                        new IncentiveApplicationApprenticeshipDto
+                        {
+                            ApprenticeshipId = 1234,
+                            CourseName = "Early Years Educator Level 3",
+                            FirstName = "Adam",
+                            LastName = "Glover",
+                            TotalIncentiveAmount = 2000m,
+                            PlannedStartDate = new DateTime(2020, 9, 1)
+                        }
+                    }
+                }
+            };
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(applicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications") && x.Contains("accountlegalentity"))
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody("123")
                         .WithStatusCode(HttpStatusCode.OK));
 
             return this;
