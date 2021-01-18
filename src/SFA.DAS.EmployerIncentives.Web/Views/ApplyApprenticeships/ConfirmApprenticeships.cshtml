@@ -28,7 +28,7 @@
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header">Name of apprentice</th>
-                            <th scope="col" class="govuk-table__header">Course name</th>
+                            <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
                             <th scope="col" class="govuk-table__header">Payment amount</th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table__header">@apprenticeship.DisplayName</th>
-                                <td class="govuk-table__cell">@apprenticeship.CourseName</td>
+                                <td class="govuk-table__cell">@apprenticeship.StartDate.ToString("MMMM yyyy")</td>
                                 <td class="govuk-table__cell">@(apprenticeship.ExpectedAmount.ToString("C0", culture))</td>
                             </tr>
                         }

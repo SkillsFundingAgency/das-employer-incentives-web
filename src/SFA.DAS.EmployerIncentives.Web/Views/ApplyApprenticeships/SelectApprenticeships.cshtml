@@ -59,6 +59,9 @@
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
                                         @apprenticeship.DisplayName
                                     </label>
+                                    <span id="apprenticeship-start-date-hint" class="govuk-hint govuk-checkboxes__hint">
+                                        @apprenticeship.StartDate.ToString("MMMM yyyy") (apprenticeship start date)
+                                    </span>
                                     <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
                                         @apprenticeship.CourseName
                                     </span>

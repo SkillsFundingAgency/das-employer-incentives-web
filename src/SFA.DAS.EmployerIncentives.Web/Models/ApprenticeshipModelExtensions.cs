@@ -14,7 +14,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 Id = hashingService.HashValue(x.ApprenticeshipId),
                 LastName = x.LastName,
                 FirstName = x.FirstName,
-                CourseName = x.CourseName
+                CourseName = x.CourseName,
+                StartDate = x.StartDate
             });
         }
     }
