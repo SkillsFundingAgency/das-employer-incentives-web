@@ -264,6 +264,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsInformedTheyCannotApply()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
@@ -282,6 +283,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsInformedTheyCannotApplyYet()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 

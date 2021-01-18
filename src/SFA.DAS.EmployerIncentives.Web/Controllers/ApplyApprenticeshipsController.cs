@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, form.AccountLegalEntityId, applicationId });
+                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
@@ -85,18 +85,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, string accountLegalEntityId, Guid applicationId)
+        [Route("confirm-apprentices/{applicationId}")]
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
         {
             var model = await _applicationService.Get(accountId, applicationId);
             return View(model);
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, string accountLegalEntityId, Guid applicationId)
+        [Route("confirm-apprentices/{applicationId}")]
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
         {
-            return RedirectToAction("Declaration", "Apply", new { accountId, accountLegalEntityId, applicationId });
+            return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
