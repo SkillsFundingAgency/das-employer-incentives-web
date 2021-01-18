@@ -102,18 +102,23 @@
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice
-                                name
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">
+                                Apprentice name
+                            </a>
+                        </th>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.CourseName)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.CourseName)" asp-route-sortfield="@ApplicationsSortField.CourseName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.CourseName)">
+                                Course
                             </a>
                         </th>
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application
-                                date
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">
+                                Application date
                             </a>
                         </th>
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated
-                                payment
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">
+                                Estimated payment
                             </a>
                         </th>
                     </tr>
@@ -121,18 +126,21 @@
                 <tbody class="govuk-table__body">
                     @foreach (var apprenticeApplication in Model.Applications)
                     {
-                        <tr class="govuk-table__row">
-                            <td data-label="Apprentice name" class="govuk-table__cell">
-                                <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
-                                <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p> 
-                            </td>
-                            <td data-label="Application date" class="govuk-table__cell">
-                                @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
-                            </td>
-                            <td data-label="Estimated payment" class="govuk-table__cell">
-                                @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
-                            </td>
-                        </tr>
+                    <tr class="govuk-table__row">
+                        <td data-label="Apprentice name" class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
+                            <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p>
+                        </td>
+                        <td data-label="Course" class="govuk-table__cell">
+                            @apprenticeApplication.CourseName
+                        </td>
+                        <td data-label="Application date" class="govuk-table__cell">
+                            @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
+                        </td>
+                        <td data-label="Estimated payment" class="govuk-table__cell">
+                            @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
