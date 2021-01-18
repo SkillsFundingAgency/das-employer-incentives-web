@@ -34,7 +34,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("{accountId}")]
         public async Task<IActionResult> Home(string accountId)
         {
-            return View(new HomeViewModel(accountId));
+            return RedirectToAction("GetChooseOrganisation", "ApplyOrganisation");
+        }
+
+        [Route("{accountId}/{accountLegalEntityId}")]
+        public async Task<IActionResult> Start(string accountId, string accountLegalEntityId)
+        {
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId));
         }
 
         [Route("/signout")]

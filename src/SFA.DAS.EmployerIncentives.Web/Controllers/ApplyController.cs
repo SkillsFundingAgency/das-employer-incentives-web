@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/apply")]
+    [Route("{accountId}/{accountLegalEntityId}/apply")]
     public class ApplyController : Controller
     {
         private readonly ExternalLinksConfiguration _configuration;
@@ -33,14 +33,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("declaration/{applicationId}")]
-        public async Task<ViewResult> Declaration(string accountId, Guid applicationId)
+        public async Task<ViewResult> Declaration(string accountId, string accountLegalEntityId, Guid applicationId)
         {
             return View(new DeclarationViewModel(accountId, applicationId));
         }
 
         [HttpPost]
         [Route("declaration/{applicationId}")]
-        public async Task<IActionResult> SubmitApplication(string accountId, Guid applicationId)
+        public async Task<IActionResult> SubmitApplication(string accountId, string accountLegalEntityId, Guid applicationId)
         {
             var email = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.EmailAddress)?.Value;
             var firstName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.GivenName)?.Value;
@@ -53,14 +53,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("cannot-apply")]
-        public async Task<ViewResult> CannotApply(string accountId)
+        public async Task<ViewResult> CannotApply(string accountId, string accountLegalEntityId)
         {
             return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [HttpGet]
         [Route("cannot-apply-yet")]
-        public async Task<ViewResult> CannotApplyYet(string accountId)
+        public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
             return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
         }

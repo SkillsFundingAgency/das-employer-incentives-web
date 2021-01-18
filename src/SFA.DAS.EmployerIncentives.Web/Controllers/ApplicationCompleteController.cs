@@ -5,7 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/application-complete/{applicationId}")]
+    [Route("{accountId}/{accountLegalEntityId}/application-complete/{applicationId}")]
     public class ApplicationCompleteController : Controller
     {
         private readonly ExternalLinksConfiguration _configuration;
