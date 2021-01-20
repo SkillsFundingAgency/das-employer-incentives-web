@@ -132,11 +132,11 @@
                             <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
                             <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p>
                         </td>
-                        <td data-label="Application date" class="govuk-table__cell">
-                            @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
-                        </td>
                         <td data-label="Course" class="govuk-table__cell">
                             @apprenticeApplication.CourseName
+                        </td>
+                        <td data-label="Application date" class="govuk-table__cell">
+                            @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
                         </td>
                         <td data-label="First payment" class="govuk-table__cell">
                             <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
