@@ -56,14 +56,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
-            var submittedApplications = getApplicationsResponse.ApprenticeApplications.Where(x => x.Status == "Submitted").AsQueryable();
-
-            if (!submittedApplications.Any())
+            
+            if (!getApplicationsResponse.ApprenticeApplications.Any())
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
 
-            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
+            var submittedApplications = SortApplications(sortOrder, sortField, getApplicationsResponse.ApprenticeApplications.AsQueryable());
 
             var model = new ViewApplicationsViewModel
             {
