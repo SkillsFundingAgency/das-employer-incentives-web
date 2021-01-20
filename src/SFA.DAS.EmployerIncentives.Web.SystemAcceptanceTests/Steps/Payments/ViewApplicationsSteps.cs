@@ -37,7 +37,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             {
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.Completed };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
@@ -86,8 +85,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 _fixture.Create<ApprenticeApplicationModel>(),
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
-            applications[1].Status = "Submitted";
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
@@ -115,74 +112,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var model = viewResult.Model as ViewApplicationsViewModel;
             model.Should().NotBeNull();
             model.Applications.Count().Should().Be(2);
-        }
-
-        [Given(@"an employer has submitted and in progress applications")]
-        public void GivenAnEmployerHasSubmittedAndInProgressApplications()
-        {
-            var applications = new List<ApprenticeApplicationModel>();
-            applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(4));
-            applications[0].Status = "Submitted";
-            applications[1].Status = "Submitted";
-            applications[2].Status = "Submitted";
-            applications[3].Status = "InProgress";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
-
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
-            _testContext.EmployerIncentivesApi.MockServer
-                .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
-                        .UsingGet()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
-        }
-
-        [Then(@"the employer is shown only submitted applications")]
-        public void ThenTheEmployerIsShownOnlySubmittedApplications()
-        {
-            var viewResult = _testContext.ActionResult.LastViewResult;
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as ViewApplicationsViewModel;
-            model.Should().NotBeNull();
-            model.Applications.Count().Should().Be(3);
-        }
-
-
-        [Given(@"an employer has in progress applications")]
-        public void GivenAnEmployerHasInProgressApplications()
-        {
-            var applications = new List<ApprenticeApplicationModel>
-            {
-                _fixture.Create<ApprenticeApplicationModel>(),
-                _fixture.Create<ApprenticeApplicationModel>()
-            };
-            applications[0].Status = "InProgress";
-            applications[1].Status = "InProgress";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
-
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
-            _testContext.EmployerIncentivesApi.MockServer
-                .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
-                        .UsingGet()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
         [Then(@"the employer is shown no applications")]

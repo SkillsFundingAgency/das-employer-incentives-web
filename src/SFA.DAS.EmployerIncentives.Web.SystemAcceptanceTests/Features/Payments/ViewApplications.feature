@@ -14,16 +14,6 @@ Given an employer has multiple submitted applications
 	When the employer views their applications
 	Then the employer is shown submitted applications
 
-Scenario: An employer has submitted and in progress apprentice applications
-Given an employer has submitted and in progress applications
-	When the employer views their applications
-	Then the employer is shown only submitted applications
-
-Scenario: An employer has only in progress apprentice applications
-Given an employer has in progress applications
-	When the employer views their applications
-	Then the employer is shown no applications
-
 Scenario: An employer has no apprentice applications
 Given an employer has no applications
 	When the employer views their applications

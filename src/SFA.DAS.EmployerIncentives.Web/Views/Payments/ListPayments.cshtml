@@ -102,13 +102,18 @@
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice
-                                name
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">
+                                Apprentice name
+                            </a>
+                        </th>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.CourseName)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.CourseName)" asp-route-sortfield="@ApplicationsSortField.CourseName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.CourseName)">
+                                Course
                             </a>
                         </th>
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application
-                                date
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">
+                                Application date
                             </a>
                         </th>
                         <th scope="col" class="govuk-table__header">
@@ -129,6 +134,9 @@
                         </td>
                         <td data-label="Application date" class="govuk-table__cell">
                             @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
+                        </td>
+                        <td data-label="Course" class="govuk-table__cell">
+                            @apprenticeApplication.CourseName
                         </td>
                         <td data-label="First payment" class="govuk-table__cell">
                             <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />

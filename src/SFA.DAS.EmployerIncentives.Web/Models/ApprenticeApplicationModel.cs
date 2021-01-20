@@ -5,7 +5,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
     public class ApprenticeApplicationModel
     {
         public long AccountId { get; set; }
-        public Guid ApplicationId { get; set; }
         public string LegalEntityName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,5 +15,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string Status { get; set; }
         public PaymentStatusModel FirstPaymentStatus { get; set; }
         public PaymentStatusModel SecondPaymentStatus { get; set; }
+        public string CourseName { get; set; }
     }
 }
