@@ -142,7 +142,7 @@
                             <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
                         </td>
                         <td data-label="Second payment" class="govuk-table__cell">
-                            @if (!apprenticeApplication.FirstPaymentStatus.HasPaymentErrorStatus)
+                            @if (!apprenticeApplication.FirstPaymentStatus.ShowPaymentStatus)
                             {
                                 <partial name="_PaymentStatus" for="@apprenticeApplication.SecondPaymentStatus" />
                             }
