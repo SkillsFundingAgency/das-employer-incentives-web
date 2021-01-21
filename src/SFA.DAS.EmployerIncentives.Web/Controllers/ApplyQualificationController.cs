@@ -8,14 +8,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/apply")]
     public class ApplyQualificationController : Controller
     {
-        [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
+        [Route("{accountLegalEntityId}/eligible-apprentices")]
         [HttpGet]
         public async Task<IActionResult> GetQualificationQuestion(QualificationQuestionViewModel viewModel)
         {
             return View("QualificationQuestion", viewModel);
         }
 
-        [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
+        [Route("{accountLegalEntityId}/eligible-apprentices")]
         [HttpPost]
         public async Task<IActionResult> QualificationQuestion(QualificationQuestionViewModel viewModel)
         {

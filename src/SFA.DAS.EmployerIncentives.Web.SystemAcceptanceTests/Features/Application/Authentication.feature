@@ -15,10 +15,10 @@ Scenario Outline: An unauthorised user is asked to log on
     | "/VBKBLD/apply/choose-organisation"                                                         |
     | "/VBKBLD/apply/MLP7DD/validate-terms-signed"                                                |
     | "/VBKBLD/apply/MLP7DD/select-apprentices"                                                   |
-    | "/VBKBLD/apply/MLP7DD/taken-on-new-apprentices"                                             |
+    | "/VBKBLD/apply/MLP7DD/eligible-apprentices"                                             |
     | "/VBKBLD/apply/select-apprentices/fd0f5a2d-b45b-4a73-8750-ddd167b270c3"                     |
     | "/VBKBLD/apply/confirm-apprentices/fd0f5a2d-b45b-4a73-8750-ddd167b270c3"                    |
-    | "/VBKBLD/apply/MLP7DD/taken-on-new-apprentices"                                             |
+    | "/VBKBLD/apply/MLP7DD/eligible-apprentices"                                             |
     | "/VBKBLD/apply/declaration/fd0f5a2d-b45b-4a73-8750-ddd167b270c3"                            |
     | "/VBKBLD/apply/cannot-apply"                                                                |
     | "/VBKBLD/apply/cannot-apply-yet"                                                            |
