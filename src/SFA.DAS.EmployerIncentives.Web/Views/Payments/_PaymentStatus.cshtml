@@ -6,6 +6,11 @@
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Training provider needs to confirm they have started their apprenticeship.</p>
     }
+    @if (Model.HasDataLock)
+    {
+        <strong class="govuk-tag govuk-tag--red">Payment issue</strong>
+        <p class="govuk-body govuk-!-margin-bottom-0">Contact your training provider to check that your information matches</p>
+    }
 }
 
 
