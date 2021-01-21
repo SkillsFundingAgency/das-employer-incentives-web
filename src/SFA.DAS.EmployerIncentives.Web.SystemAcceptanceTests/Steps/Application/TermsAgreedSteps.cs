@@ -145,7 +145,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Select the apprentices you want to apply for");
+            model.Should().HaveTitle("Which apprentices do you want to apply for?");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 

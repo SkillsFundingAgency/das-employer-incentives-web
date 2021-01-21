@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 {
     public class SelectApprenticeshipsViewModel : ViewModel
     {
-        public const string SelectApprenticeshipsMessage = "Select the apprentices you want to apply for";
+        public const string SelectApprenticeshipsMessage = "Which apprentices do you want to apply for?";
 
         public SelectApprenticeshipsViewModel() : base(SelectApprenticeshipsMessage) { }
 
