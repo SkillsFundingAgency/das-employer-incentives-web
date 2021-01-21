@@ -61,7 +61,7 @@
                                            @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
                                            aria-describedby="apprenticeship-course-name-hint apprenticeship-start-date-hint" />
                                     <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
-                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">@apprenticeship.Id</span>
+                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Uln)</span>
                                     </label>
                                     <span id="apprenticeship-start-date-hint" class="govuk-hint govuk-checkboxes__hint govuk-!-margin-bottom-0">
                                         @apprenticeship.StartDate.ToString("MMMM yyyy")

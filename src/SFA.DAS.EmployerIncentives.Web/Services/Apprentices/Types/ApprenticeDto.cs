@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types
         public string LastName { get; set; }
         public string CourseName { get; set; }
         public DateTime StartDate { get; set; }
+        public long Uln { get; set; }
     }
 }

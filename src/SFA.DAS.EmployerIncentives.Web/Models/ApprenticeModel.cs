@@ -11,5 +11,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public DateTime StartDate { get; set; }
         public string DisplayName => $"{FirstName} {LastName}";
         public bool Selected { get; set; }
+        public long Uln { get; set; }
     }
 }

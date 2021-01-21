@@ -15,7 +15,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 LastName = x.LastName,
                 FirstName = x.FirstName,
                 CourseName = x.CourseName,
-                StartDate = x.StartDate
+                StartDate = x.StartDate,
+                Uln = x.Uln
             });
         }
     }
