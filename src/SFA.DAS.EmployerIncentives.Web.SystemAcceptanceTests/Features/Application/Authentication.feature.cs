@@ -35,8 +35,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Authentication", "\tIn order to prevent unauthoried access\r\n\tAs a system\r\n\tI want to only allow auth" +
-                    "orised access", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Authentication", "\tIn order to prevent unauthoried access\n\tAs a system\n\tI want to only allow author" +
+                    "ised access", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/confirm-apprentices/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/eligible-apprentices\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/declaration/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
-        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/no-eligible-apprentices\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply-yet\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details" +

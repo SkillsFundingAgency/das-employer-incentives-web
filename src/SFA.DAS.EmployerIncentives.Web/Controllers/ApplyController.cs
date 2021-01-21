@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("cannot-apply")]
+        [Route("no-eligible-apprentices")]
         public async Task<ViewResult> CannotApply(string accountId)
         {
             return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));

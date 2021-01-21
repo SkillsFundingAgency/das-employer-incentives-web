@@ -276,7 +276,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/no-eligible-apprentices");
         }
 
         [Then(@"the employer is informed that they cannot apply yet")]
