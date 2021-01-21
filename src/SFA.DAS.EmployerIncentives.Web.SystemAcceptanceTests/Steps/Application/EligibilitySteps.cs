@@ -271,7 +271,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021");
+            model.Should().HaveTitle("You do not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
 
