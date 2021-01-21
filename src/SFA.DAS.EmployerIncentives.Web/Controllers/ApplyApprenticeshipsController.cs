@@ -104,12 +104,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId, bool newAgreementRequired)
         {
+            if(newAgreementRequired)
+                return RedirectToAction("NewAgreementRequired", new { accountId, applicationId });
+
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("accept-new-agreement/{applicationId}")]
         public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
         {
