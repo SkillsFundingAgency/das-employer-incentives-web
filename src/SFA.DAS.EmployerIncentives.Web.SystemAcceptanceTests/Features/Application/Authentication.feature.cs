@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/MLP7DD/eligible-apprentices\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/declaration/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/no-eligible-apprentices\"", null)]
-        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply-yet\"", null)]
+        [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/cannot-apply\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3\"", null)]
         [NUnit.Framework.TestCaseAttribute("\"/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details" +
             "\"", null)]

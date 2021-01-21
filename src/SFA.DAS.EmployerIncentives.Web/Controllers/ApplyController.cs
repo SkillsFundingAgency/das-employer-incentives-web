@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("cannot-apply-yet")]
+        [Route("cannot-apply")]
         public async Task<ViewResult> CannotApplyYet(string accountId)
         {
             return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
