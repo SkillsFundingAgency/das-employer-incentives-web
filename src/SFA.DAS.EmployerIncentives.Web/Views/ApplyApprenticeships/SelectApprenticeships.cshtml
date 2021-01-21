@@ -18,7 +18,7 @@
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
+                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint new-apprenticeships-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
@@ -59,16 +59,16 @@
                                            name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
                                            type="checkbox"
                                            @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
-                                           aria-describedby="apprenticeship-course-name-hint apprenticeship-start-date-hint" />
-                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
-                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">@apprenticeship.Id</span>
+                                           aria-describedby="apprenticeship-start-date-hint apprenticeship-course-name-hint" />
+                                    <label class="govuk-label govuk-checkboxes__label govuk-!-padding-bottom-0" for="new-apprenticeships-@apprenticeship.Id">
+                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Id)</span>
                                     </label>
-                                    <span id="apprenticeship-start-date-hint" class="govuk-hint govuk-checkboxes__hint govuk-!-margin-bottom-0">
+                                    <div id="apprenticeship-start-date-hint" class="govuk-checkboxes__hint govuk-!-margin-bottom-0">
                                         @apprenticeship.StartDate.ToString("MMMM yyyy")
-                                    </span>
-                                    <span id="apprenticeship-course-name-hint" class="govuk-hint govuk-checkboxes__hint">
+                                    </div>
+                                    <div id="apprenticeship-course-name-hint" class="govuk-checkboxes__hint">
                                         @apprenticeship.CourseName
-                                    </span>
+                                    </div>
                                 </div>
                             }
                         </div>
