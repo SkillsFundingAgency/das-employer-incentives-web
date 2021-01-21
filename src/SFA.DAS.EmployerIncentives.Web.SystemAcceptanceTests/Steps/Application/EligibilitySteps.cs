@@ -308,7 +308,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?");
+            model.Should().HaveTitle("Do you have apprentices who are eligible for the payment?");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
