@@ -5,7 +5,7 @@
         public CannotApplyViewModel(
             string accountId,
             string accountsBaseUrl,
-            string title = "You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021"
+            string title = "You do not have any eligible apprentices"
         ) : base(title)
         {
             AccountId = accountId;
