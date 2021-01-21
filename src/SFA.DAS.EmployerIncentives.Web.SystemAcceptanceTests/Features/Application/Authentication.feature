@@ -21,7 +21,7 @@ Scenario Outline: An unauthorised user is asked to log on
     | "/VBKBLD/apply/MLP7DD/eligible-apprentices"                                             |
     | "/VBKBLD/apply/declaration/fd0f5a2d-b45b-4a73-8750-ddd167b270c3"                            |
     | "/VBKBLD/apply/no-eligible-apprentices"                                                                |
-    | "/VBKBLD/apply/cannot-apply-yet"                                                            |
+    | "/VBKBLD/apply/cannot-apply"                                                            |
     | "/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3"                            |
     | "/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details"          |
     | "/VBKBLD/apply/bankdetails/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/add-bank-details"           |

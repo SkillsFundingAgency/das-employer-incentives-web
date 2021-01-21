@@ -295,7 +295,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AddApprenticesUrl.Should().Be($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply-yet");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]
