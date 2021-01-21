@@ -39,8 +39,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
         public async Task<LegalEntityModel> Get(string hashedAccountId, string hashedAccountLegalEntityId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
             var accountLegalEntityId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
+            return await Get(hashedAccountId, accountLegalEntityId);
+        }
+
+        public async Task<LegalEntityModel> Get(string hashedAccountId, long accountLegalEntityId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
             var url = OuterApiRoutes.LegalEntities.GetLegalEntity(accountId, accountLegalEntityId);
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);

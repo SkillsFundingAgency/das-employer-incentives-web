@@ -21,7 +21,7 @@
                 Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.
             </div>
 
-            <form asp-action="DisplayDeclaration" method="post">
+            <form asp-action="@Model.ConfirmAction" method="post">
                 @Html.AntiForgeryToken()
 
                 <table class="govuk-table govuk-!-margin-bottom-9">

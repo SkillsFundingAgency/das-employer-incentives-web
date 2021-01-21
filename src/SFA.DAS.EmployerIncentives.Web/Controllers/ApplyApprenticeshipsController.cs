@@ -6,6 +6,10 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -15,13 +19,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
+        private readonly ILegalEntitiesService _legalEntityService;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
-            IApplicationService applicationService)
+            IApplicationService applicationService,
+            ILegalEntitiesService legalEntityService,
+            IOptions<ExternalLinksConfiguration> configuration)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
+            _legalEntityService = legalEntityService;
+            _configuration = configuration.Value;
         }
 
         [HttpGet]
@@ -99,6 +109,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
 
+        [HttpPost]
+        [Route("accept-new-agreement/{applicationId}")]
+        public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
+        {
+            var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
+            var legalEntity = await _legalEntityService.Get(accountId, accountLegalEntityId);
+            var viewModel = new NewAgreementRequiredViewModel(legalEntity.Name, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
+            return View(viewModel);
+        }
+
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
         {
             var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
@@ -114,6 +134,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, bool showSelected = true)
         {
             var application = await _applicationService.Get(accountId, applicationId);
+
             var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
 
             if (showSelected)
