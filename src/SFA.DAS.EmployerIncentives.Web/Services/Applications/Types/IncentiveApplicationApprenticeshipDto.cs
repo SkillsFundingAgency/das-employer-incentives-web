@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
         public string CourseName { get; set; }
         public decimal TotalIncentiveAmount { get; set; }
         public DateTime PlannedStartDate { get; set; }
+        public long Uln { get; set; }
     }
 }

@@ -467,7 +467,8 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                             FirstName = "Adam",
                             LastName = "Glover",
                             TotalIncentiveAmount = 2000m,
-                            PlannedStartDate = new DateTime(2020, 9, 1)
+                            PlannedStartDate = new DateTime(2020, 9, 1),
+                            Uln = 12345678
                         }
                     }
                 }

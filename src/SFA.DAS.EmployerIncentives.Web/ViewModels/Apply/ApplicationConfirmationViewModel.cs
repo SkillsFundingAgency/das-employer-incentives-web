@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             public string CourseName { get; set; }
             public DateTime StartDate { get; set; }
             public decimal ExpectedAmount { get; set; }
+            public long Uln { get; set; }
         }
     }
 }
