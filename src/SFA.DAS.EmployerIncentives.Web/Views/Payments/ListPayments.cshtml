@@ -19,28 +19,29 @@
             </h1>
 
             @* IF VRF complete and BC vendor set up complete
-                <h2 class="govuk-heading-m">
-                    You've added your organisation's bank details
-                </h2>
-                <p class="govuk-body">
-                    We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
-                </p>
-            /IF VRF complete and BC vendor set up complete *@
+            <h2 class="govuk-heading-m">
+                You've added your organisation's bank details
+            </h2>
+            <p class="govuk-body">
+                We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
+            </p>
+        /IF VRF complete and BC vendor set up complete *@
 
-            @* IF VRF complete and in progress with BC
+            @if (Model.BankDetailsStatus == BankDetailsStatus.InProgress)
+            {
                 <div class="govuk-inset-text">
                     <h2 class="govuk-heading-m">
                         We're reviewing your organisation's bank details
                     </h2>
                     <p class="govuk-body">
-                        We may contact someone from your organisation to verify the information you've provided.
+                        We may contact someone from your organisation to verify the information you've provided. We cannot make any payments until we've completed the review.
                     </p>
                 </div>
-            /IF VRF complete and in progress with BC *@
+            }
 
 
-            @if(Model.BankDetailsStatus == BankDetailsStatus.NotSupplied) 
-            { 
+            @if (Model.BankDetailsStatus == BankDetailsStatus.NotSupplied)
+            {
                 <div class="das-highlight das-highlight--featured">
                     <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
                         Add your organisation's bank details
@@ -53,7 +54,7 @@
                     </p>
                 </div>
             }
-               
+
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
