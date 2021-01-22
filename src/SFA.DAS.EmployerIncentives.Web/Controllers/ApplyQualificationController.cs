@@ -32,6 +32,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return RedirectToAction("CannotApply", "Apply", new { viewModel.AccountId });
         }
+
+        [HttpGet]
+        [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
+        public async Task<IActionResult> Redirect()
+        {
+            return RedirectToActionPermanent("GetQualificationQuestion");
+        }
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

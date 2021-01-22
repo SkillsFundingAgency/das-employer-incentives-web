@@ -64,6 +64,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
         }
+
+        [HttpGet]
+        [Route("cannot-apply-yet")]
+        public async Task<IActionResult> Redirect()
+        {
+            return RedirectToActionPermanent("CannotApplyYet");
+        }
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
