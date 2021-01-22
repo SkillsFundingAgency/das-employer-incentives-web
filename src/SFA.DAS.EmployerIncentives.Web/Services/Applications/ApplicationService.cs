@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
                 application.Apprenticeships.OrderBy(x => x.LastName).Select(MapFromApplicationApprenticeDto),
-                application.BankDetailsRequired);
+                application.BankDetailsRequired, application.NewAgreementRequired);
         }
 
         private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
