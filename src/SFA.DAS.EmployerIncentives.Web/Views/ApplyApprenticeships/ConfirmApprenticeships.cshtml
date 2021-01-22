@@ -23,6 +23,7 @@
 
             <form asp-action="DisplayDeclaration" method="post">
                 @Html.AntiForgeryToken()
+                @Html.Hidden("newAgreementRequired", @Model.NewAgreementRequired)
 
                 <table class="govuk-table govuk-!-margin-bottom-9">
                     <thead class="govuk-table__head">
