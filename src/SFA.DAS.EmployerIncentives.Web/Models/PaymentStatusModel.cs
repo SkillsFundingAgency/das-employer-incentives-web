@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         {
             get
             {
-                return LearnerMatchFound || HasDataLock || InLearning;
+                return !LearnerMatchFound || HasDataLock || !InLearning;
             }
         }
     }
