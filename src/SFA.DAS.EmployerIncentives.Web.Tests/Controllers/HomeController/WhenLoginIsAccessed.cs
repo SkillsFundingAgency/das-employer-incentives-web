@@ -1,8 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -16,14 +20,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
     {
         private Web.Controllers.HomeController _sut;
         private ClaimsIdentity _claimsIdentity;
+        private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
 
         [SetUp]
         public void SetUp()
         {            
             _claimsIdentity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(_claimsIdentity);
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
 
-            _sut = new Web.Controllers.HomeController
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {

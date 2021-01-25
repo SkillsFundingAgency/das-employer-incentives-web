@@ -32,7 +32,7 @@
                 We'll make the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days.
             </p>
             <p class="govuk-body">
-                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process. 
+                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
             </p>
             <p class="govuk-body">
                 We'll need your organisation's bank details, so that we can pay your organisation directly.
@@ -57,7 +57,7 @@
             <p class="govuk-body">
                 You can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
             </p>
-            
+
             <h2 class="govuk-heading-m">Before you start</h2>
             <p class="govuk-body">
                 You'll need:
@@ -66,6 +66,17 @@
                 <li>to add the apprentices you want to apply for to the apprenticeship service account</li>
                 <li>your organisation's bank details (someone else from your organisation can add them later)</li>
             </ul>
+
+            @if (Model.NewAgreementRequired)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        If you're applying for apprentices with a start date from 1 February 2021, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
+                    </strong>
+                </div>
+            }
 
             <a href="/@Model.AccountId/apply/@Model.AccountLegalEntityId/eligible-apprentices" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now
