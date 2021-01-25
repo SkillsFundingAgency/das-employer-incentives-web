@@ -1,5 +1,4 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Applications.ChooseOrganisationViewModel
-
 @{
     ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/payments/choose-organisation";
@@ -9,50 +8,47 @@
 <a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <form asp-action="ChooseOrganisation" method="post">
+                @Html.AntiForgeryToken()
 
-            <div class="govuk-grid-column-two-thirds">
-                <form asp-action="ChooseOrganisation" method="post">
-                    @Html.AntiForgeryToken()
+                <partial name="ValidationSummary" />
 
-                    <partial name="ValidationSummary" />
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
 
-                    <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-fieldset__heading">
-                                    @Model.Title
-                                </h1>
-                            </legend>
-                            @if (!ViewData.ModelState.IsValid)
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="choose-organisation-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @Model.LegalEntityNotSelectedMessage
+                            </span>
+                        }
+
+                        <div class="govuk-radios">
+                            @foreach (var organisation in Model.LegalEntities.OrderBy(x => x.Name))
                             {
-                                <span id="choose-organisation-error" class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span> @Model.LegalEntityNotSelectedMessage
-                                </span>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
+                                    <label class="govuk-label govuk-radios__label" for="@organisation.AccountLegalEntityId">
+                                        @organisation.Name
+                                    </label>
+                                </div>
                             }
-
-                            <div class="govuk-radios">
-                                @foreach (var organisation in Model.LegalEntities.OrderBy(x => x.Name))
-                                {
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
-                                        <label class="govuk-label govuk-radios__label" for="selected">
-                                            @organisation.Name
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
-                    @Html.HiddenFor(x => x.AccountHomeUrl)
-                    @Html.HiddenFor(x => x.AccountId)
-                    <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
-                        Continue
-                    </button>
-                </form>
-            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                @Html.HiddenFor(x => x.AccountHomeUrl)
+                @Html.HiddenFor(x => x.AccountId)
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+            </form>
         </div>
     </div>
 </main>
