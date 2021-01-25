@@ -69,6 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 Applications = submittedApplications,
                 SortField = sortField,
+                ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
                 ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
                 AddBankDetailsLink = CreateAddBankDetailsLink(submittedApplications)
             };

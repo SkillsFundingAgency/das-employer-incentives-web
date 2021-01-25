@@ -27,7 +27,7 @@
             </p>
         /IF VRF complete and BC vendor set up complete *@
 
-            @if (Model.BankDetailsStatus == BankDetailsStatus.InProgress)
+            @if (Model.ShowBankDetailsInReview)
             {
                 <div class="govuk-inset-text">
                     <h2 class="govuk-heading-m">
@@ -38,7 +38,6 @@
                     </p>
                 </div>
             }
-
 
             @if(Model.ShowAddBankDetailsCalltoAction)
             {
