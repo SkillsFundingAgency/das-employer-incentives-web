@@ -262,6 +262,18 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                         .WithBody(JsonConvert.SerializeObject(data.LegalEntity1, TestHelper.DefaultSerialiserSettings)));
 
             _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId2}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(data.LegalEntity2, TestHelper.DefaultSerialiserSettings)));
+
+            _server
               .Given(
                       Request
                       .Create()
