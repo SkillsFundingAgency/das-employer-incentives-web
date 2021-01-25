@@ -1,6 +1,9 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -12,6 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
     {
         private readonly HttpClient _client;
         private readonly IHashingService _hashingService;
+
         public LegalEntitiesService(HttpClient client, IHashingService hashingService)
         {
             _client = client;
@@ -39,8 +43,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
         public async Task<LegalEntityModel> Get(string hashedAccountId, string hashedAccountLegalEntityId)
         {
-            var accountLegalEntityId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
-            return await Get(hashedAccountId, accountLegalEntityId);
+            try
+            {
+                var accountLegalEntityId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
+                return await Get(hashedAccountId, accountLegalEntityId);
+            }
+            catch (IndexOutOfRangeException) // hashed id contains invalid characters
+            {
+                return null;
+            }
         }
 
         public async Task<LegalEntityModel> Get(string hashedAccountId, long accountLegalEntityId)

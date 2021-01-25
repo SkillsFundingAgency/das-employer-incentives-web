@@ -54,8 +54,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> Start(string accountId, string accountLegalEntityId)
         {
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            var newAgreementRequired = (legalEntity.SignedAgreementVersion.HasValue && legalEntity.SignedAgreementVersion != NewAgreementVersion);
-            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity.Name, newAgreementRequired, _configuration.ManageApprenticeshipSiteUrl));
+            var newAgreementRequired = (legalEntity != null && legalEntity.SignedAgreementVersion.HasValue && legalEntity.SignedAgreementVersion != NewAgreementVersion);
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, newAgreementRequired, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [Route("/signout")]
