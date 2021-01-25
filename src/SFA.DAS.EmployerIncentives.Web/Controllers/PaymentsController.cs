@@ -1,16 +1,15 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Extensions;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.EmployerIncentives.Web.Extensions;
+using SFA.DAS.HashingService;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using System.Collections.Generic;
-using SFA.DAS.HashingService;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -57,6 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             var getApplicationsResponse = await _apprenticeshipIncentiveService.GetList(accountId, accountLegalEntityId);
+
             var submittedApplications = getApplicationsResponse.ApprenticeApplications.AsQueryable();
 
             if (!submittedApplications.Any())

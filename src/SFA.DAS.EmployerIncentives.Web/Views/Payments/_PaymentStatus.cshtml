@@ -1,4 +1,9 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.Models.PaymentStatusModel
+﻿@using System.Globalization
+@model SFA.DAS.EmployerIncentives.Web.Models.PaymentStatusModel
+
+@{
+    var culture = new CultureInfo("en-GB");
+}
 
 @if (Model != null)
 {
@@ -18,6 +23,12 @@
     @if (Model.PausePayments)
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Application paused</p>
+    }
+    @if (Model.PaymentSent)
+    {
+        <p class="govuk-body govuk-!-margin-bottom-0">@(Model.PaymentSentIsEstimated ? "Estimated" : "Payment sent")</p>
+        <p class="govuk-body govuk-!-margin-bottom-0">@(Model.PaymentDate.HasValue ? Model.PaymentDate.Value.ToString("d MMMM yyyy", culture) : "")</p>
+        <p class="govuk-body govuk-!-margin-bottom-0">@(Model.PaymentAmount.HasValue ? Model.PaymentAmount.Value.ToString("C0", culture) : "")</p>
     }
 }
 
