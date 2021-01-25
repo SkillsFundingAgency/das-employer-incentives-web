@@ -16,15 +16,16 @@
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset">
+                    <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
                             </h1>
                         </legend>
+
                         @if (!ViewData.ModelState.IsValid)
                         {
-                            <span id="changed-name-error" class="govuk-error-message">
+                            <span id="choose-organisation-error" class="govuk-error-message">
                                 <span class="govuk-visually-hidden">Error:</span> @Model.OrganisationNotSelectedMessage
                             </span>
                         }
@@ -34,7 +35,7 @@
                             {
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="@organisation.AccountLegalEntityId" asp-for="Selected" name="Selected" type="radio" value="@organisation.AccountLegalEntityId">
-                                    <label class="govuk-label govuk-radios__label" for="selected">
+                                    <label class="govuk-label govuk-radios__label" for="@organisation.AccountLegalEntityId">
                                         @organisation.Name
                                     </label>
                                 </div>
