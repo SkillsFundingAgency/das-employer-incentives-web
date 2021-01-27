@@ -123,22 +123,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 if (sortField != ApplicationsSortField.ApprenticeName)
                 {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ApprenticeName);
+                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
                 }
                 else
                 {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField);
+                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN);
                 }
             }
             else
             {
                 if (sortField != ApplicationsSortField.ApprenticeName)
                 {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ApprenticeName);
+                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
                 }
                 else
                 {
-                    submittedApplications = submittedApplications.OrderBy(sortField);
+                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN);
                 }
             }
 

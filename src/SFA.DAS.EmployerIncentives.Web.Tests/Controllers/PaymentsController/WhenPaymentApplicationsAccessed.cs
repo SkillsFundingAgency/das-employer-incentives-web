@@ -180,5 +180,44 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             modelApplications[0].ApplicationDate.Should().Be(applications[1].ApplicationDate);
             modelApplications[1].ApplicationDate.Should().Be(applications[0].ApplicationDate);
         }
+
+        [Test]
+        public async Task Then_applications_are_sorted_by_sort_field_and_then_by_name_and_ULN()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(3));   
+            applications[0].ULN = 999;
+            applications[0].CourseName = "Engineering";
+            applications[0].FirstName = "Adam";
+            applications[0].LastName = "Smith";
+            applications[1].ULN = 444;
+            applications[1].CourseName = "Manufacturing";
+            applications[0].FirstName = "Shauna";
+            applications[0].LastName = "Smith";
+            applications[2].ULN = 222;
+            applications[2].CourseName = "Engineering";
+            applications[0].FirstName = "Adam";
+            applications[0].LastName = "Smith";
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.CourseName) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            var modelApplications = viewModel.Applications.ToArray();
+            modelApplications[0].ULN.Should().Be(applications[2].ULN);
+            modelApplications[1].ULN.Should().Be(applications[0].ULN);
+            modelApplications[2].ULN.Should().Be(applications[1].ULN);
+        }
     }
 }
