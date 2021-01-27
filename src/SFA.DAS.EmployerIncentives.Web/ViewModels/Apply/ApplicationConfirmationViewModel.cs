@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public bool BankDetailsRequired { get; }
         public bool NewAgreementRequired { get; }
 
-        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired) : base("Confirm your apprentices")
+        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired) : base("Confirm apprentices")
         {
             ApplicationId = applicationId;
             AccountId = accountId;
@@ -35,7 +35,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string CourseName { get; set; }
+            public DateTime StartDate { get; set; }
             public decimal ExpectedAmount { get; set; }
+            public long Uln { get; set; }
         }
     }
 }

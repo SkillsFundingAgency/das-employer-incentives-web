@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.RouteValues;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +11,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
 {
     public class EmployerAccountAuthorizationHandler : AuthorizationHandler<EmployerAccountRequirement>
     {
+        private readonly WebConfigurationOptions _configuration;
+
+        public EmployerAccountAuthorizationHandler(IOptions<WebConfigurationOptions> configuration)
+        {
+            _configuration = configuration.Value;
+        }
+
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, EmployerAccountRequirement requirement)
         {
             var isAuthorised = await IsEmployerAuthorised(context);
@@ -23,6 +32,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
             if (!(context.Resource is AuthorizationFilterContext mvcContext))
             {
                 return Task.FromResult(false);
+            }
+
+            if (_configuration.AchieveServiceBaseUrl.Contains(mvcContext.HttpContext.Request.Host.ToString()))
+            {
+                return Task.FromResult(true);
             }
 
             if (mvcContext.RouteData.Values["controller"].Equals("Home") &&

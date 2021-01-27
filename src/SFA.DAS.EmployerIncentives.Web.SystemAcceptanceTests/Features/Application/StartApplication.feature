@@ -7,14 +7,9 @@ Feature: StartApplication
 Scenario: An employer with a single organisation starts an application
 	Given an employer with a single organisation wants to apply for a grant
 	When the employer applies for the grant
-	Then the employer is informed that they need to specify whether or not they have eligible apprenticeships
+	Then the employer is shown the application preamble
 
 Scenario: An employer with a multiple organisations starts an application
 	Given an employer with a multiple organisations wants to apply for a grant
 	When the employer applies for the grant
-	Then the employer is asked to choose the organisation
-
-Scenario: An employer without any organisations starts an application
-	Given an employer without any organisations wants to apply for a grant
-	When the employer applies for the grant
-	Then the employer is informed that they cannot apply
+	Then the employer is informed that they need to select an organisation

@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
-                $"{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices")
+                $"{hashedAccountId}/apply/{hashedAccountLegalEntityId}/eligible-apprentices")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                 {
@@ -145,12 +145,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Select the apprentices you want to apply for");
+            model.Should().HaveTitle("Which apprentices do you want to apply for?");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
+            response.Should().HaveBackLink($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/eligible-apprentices");
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/select-apprentices");
         }
 

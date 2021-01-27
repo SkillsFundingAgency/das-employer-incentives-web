@@ -18,7 +18,7 @@
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint">
+                    <fieldset class="govuk-fieldset" aria-describedby="new-apprenticeships-hint new-apprenticeships-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
@@ -26,14 +26,18 @@
                         </legend>
 
                         <p class="govuk-body">
-                            Choose from the apprentices in your apprenticeship service account with a planned start date from 1 August 2020.
+                            We're showing the apprentices in the account with a start date from August 2020 to March 2021. We're not showing any apprentices that have an application.
                         </p>
                         <p class="govuk-body">
-                            You cannot view any apprentices that you've already applied for.
+                            Only select new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
                         </p>
 
-                        <div class="govuk-inset-text">
-                            You must only select apprentices who started their contract of employment with your organisation from 1 August 2020 to 31 January 2021.
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                Do not select existing employees who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                            </strong>
                         </div>
 
                         <span id="new-apprenticeships-hint" class="govuk-hint">
@@ -55,13 +59,16 @@
                                            name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
                                            type="checkbox"
                                            @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
-                                           aria-describedby="new-apprenticeships-item-hint" />
-                                    <label class="govuk-label govuk-checkboxes__label" for="new-apprenticeships-@apprenticeship.Id">
-                                        @apprenticeship.DisplayName
+                                           aria-describedby="apprenticeship-start-date-hint apprenticeship-course-name-hint" />
+                                    <label class="govuk-label govuk-checkboxes__label govuk-!-padding-bottom-0" for="new-apprenticeships-@apprenticeship.Id">
+                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Uln)</span>
                                     </label>
-                                    <span id="new-apprenticeships-item-hint" class="govuk-hint govuk-checkboxes__hint">
+                                    <div id="apprenticeship-start-date-hint" class="govuk-checkboxes__hint govuk-!-margin-bottom-0">
+                                        @apprenticeship.StartDate.ToString("MMMM yyyy")
+                                    </div>
+                                    <div id="apprenticeship-course-name-hint" class="govuk-checkboxes__hint">
                                         @apprenticeship.CourseName
-                                    </span>
+                                    </div>
                                 </div>
                             }
                         </div>

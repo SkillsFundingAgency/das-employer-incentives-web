@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var legalEntities = await _legalEntitiesService.Get(viewModel.AccountId);
             if (legalEntities.Count() == 1)
             {
-                return RedirectToAction("GetQualificationQuestion", "ApplyQualification", new { viewModel.AccountId, accountLegalEntityId = legalEntities.First().AccountLegalEntityId });
+                return RedirectToAction("Start", "Home", new { viewModel.AccountId, accountLegalEntityId = legalEntities.First().AccountLegalEntityId });
             }
             if (legalEntities.Count() > 1)
             {
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!string.IsNullOrEmpty(viewModel.Selected))
             {
-                return RedirectToAction("QualificationQuestion", "ApplyQualification", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
+                return RedirectToAction("Start", "Home", new { viewModel.AccountId, accountLegalEntityId = viewModel.Selected });
             }
 
             viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));

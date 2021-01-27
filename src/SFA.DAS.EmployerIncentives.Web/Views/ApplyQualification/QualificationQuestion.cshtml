@@ -1,7 +1,7 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.QualificationQuestionViewModel
 @{
     ViewData["Title"] = Model.Title;
-    ViewBag.GaData.Vpv = "/apply/taken-on-new-apprentices";
+    ViewBag.GaData.Vpv = "/apply/eligible-apprentices";
     ViewData["ZenDeskLabels"] = "ei-eligibleapprentices";
 }
 
@@ -16,14 +16,17 @@
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-                    <fieldset class="govuk-fieldset" aria-describedby="HasTakenOnNewApprentices-hint">
+                    <fieldset class="govuk-fieldset" aria-describedby="HasTakenOnNewApprentices-hint HasTakenOnNewApprentices-hint-2">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
                             </h1>
                         </legend>
                         <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
-                            You can only apply for new employees who joined your organisation between 1 August 2020 and 31 January 2021.
+                            You cannot apply for an existing employee who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                        </span>
+                        <span id="HasTakenOnNewApprentices-hint-2" class="govuk-hint">
+                            You can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
                         </span>
 
                         @if (ViewData.ModelState.ContainsKey(nameof(Model.HasTakenOnNewApprentices)) && ViewData.ModelState[nameof(Model.HasTakenOnNewApprentices)].Errors.Any())

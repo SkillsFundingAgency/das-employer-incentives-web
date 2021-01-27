@@ -23,6 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithAccountOwnerUserId()
                 .WithBankingDetails()
                 .WithPreviousApplications()
+                .WithCreateApplication()
                 .Build();
 
             var readStore = await AccountsReadStoreBuilder.Create();

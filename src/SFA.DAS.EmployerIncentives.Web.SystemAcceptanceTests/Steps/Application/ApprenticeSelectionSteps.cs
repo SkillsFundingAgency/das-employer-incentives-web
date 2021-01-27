@@ -147,6 +147,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
 
             var viewResult = _testContext.ActionResult.LastViewResult;
@@ -154,7 +155,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
-            model.Should().HaveTitle("Confirm your apprentices");
+            model.Should().HaveTitle("Confirm apprentices");
         }
 
         [Then(@"the employer is informed that they haven't selected an apprentice")]

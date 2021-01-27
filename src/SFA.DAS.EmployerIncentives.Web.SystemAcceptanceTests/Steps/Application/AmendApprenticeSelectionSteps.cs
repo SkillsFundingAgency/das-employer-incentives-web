@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
             _response.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
-            model.Should().HaveTitle("Confirm your apprentices");
+            model.Should().HaveTitle("Confirm apprentices");
         }
 
         [Then(@"the employer will receive an error")]
@@ -193,7 +193,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountId.Should().Be(_data.HashedAccountId);
             model.AccountLegalEntityId.Should().Be(_data.HashedAccountLegalEntityId);
 
-            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/taken-on-new-apprentices");
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/eligible-apprentices");
 
         }
 

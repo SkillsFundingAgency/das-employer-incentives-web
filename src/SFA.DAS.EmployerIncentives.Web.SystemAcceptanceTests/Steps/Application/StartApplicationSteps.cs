@@ -4,6 +4,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -120,6 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerAppliesForTheGrant()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
 
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
@@ -134,29 +136,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }
 
-        [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]
-        public void ThenTheEmployerIsInformedThatTheyNeedToSpecifyWhetherOrNotTheyHaveEligibleApprenticeships()
+        [Then(@"the employer is informed that they need to select an organisation")]
+        public void ThenTheEmployerIsInformedThatTheyNeedToChooseTheOrganisationTheyAreApplyingFor()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-            var response = _testDataStore.Get<HttpResponseMessage>("Response");
-            var viewResult = _testContext.ActionResult.LastViewResult;
-
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as QualificationQuestionViewModel;
-            model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?");
-            model.AccountId.Should().Be(hashedAccountId);
-
-            response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}");
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
-        }
-
-        [Then(@"the employer is asked to choose the organisation")]
-        public void ThenTheEmployerIsAskedToChooseTheOrganisation()
-        {
-            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
@@ -171,22 +155,22 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/choose-organisation");
         }
 
-        [Then(@"the employer is informed that they cannot apply")]
-        public void ThenTheEmployerIsInformedThatTheyCannotApply()
+        [Then(@"the employer is shown the application preamble")]
+        public void ThenTheEmployerIsInformedThatTheyNeedToSpecifyWhetherOrNotTheyHaveEligibleApprenticeships()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as CannotApplyViewModel;
+            var model = viewResult.Model as HomeViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You can only apply for apprentices who started their contract of employment between 1 August 2020 and 31 January 2021");
             model.AccountId.Should().Be(hashedAccountId);
-            model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
 
-            response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}");
         }
+
     }
 }

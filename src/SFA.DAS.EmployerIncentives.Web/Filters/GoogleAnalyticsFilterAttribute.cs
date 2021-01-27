@@ -33,15 +33,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
 
             var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaimTypes.UserId))?.Value;
             var hashedAccountId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(EmployerClaimTypes.Account))?.Value;
-                    
-            if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue)
+                                
+            if (context.RouteData.Values.TryGetValue("accountLegalEntityId", out var accountLegalEntityId))
+            {
+                hashedAccountLegalEntityId = accountLegalEntityId.ToString();
+            }
+            else if (context.RouteData.Values.TryGetValue("accountId", out accountIdRouteValue)
                 && context.RouteData.Values.TryGetValue("applicationId", out applicationIdRouteValue))
             {
                 hashedAccountLegalEntityId = GetAccountLegalEntityIdFromApplication(context, accountIdRouteValue, applicationIdRouteValue);
-            }
-            else if (context.RouteData.Values.TryGetValue("accountLegalEntityId", out var accountLegalEntityId))
-            {
-                hashedAccountLegalEntityId = accountLegalEntityId.ToString();
             }
 
             return new GoogleAnalyticsData
