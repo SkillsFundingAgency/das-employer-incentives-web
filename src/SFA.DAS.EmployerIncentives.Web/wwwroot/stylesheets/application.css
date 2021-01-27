@@ -39,6 +39,14 @@
   }
 }
 
-.das-table--fixed {
-  table-layout: fixed;
+@media (min-width: 40.0625em) {
+  .das-table--fixed {
+    table-layout: fixed;
+  }
+
+  .das-table--fixed .govuk-table__body tr th,
+  .das-table--fixed .govuk-table__body tr td {
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
 }
