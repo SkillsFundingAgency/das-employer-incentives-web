@@ -11,12 +11,12 @@
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Training provider needs to confirm they have started their apprenticeship</p>
     }
-    @if (Model.HasDataLock)
+    @if (Model.LearnerMatchFound && Model.HasDataLock)
     {
         <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-3">Payment issue</strong>
         <p class="govuk-body govuk-!-margin-bottom-0">Contact your training provider to check that your information matches</p>
     }
-    @if (!Model.InLearning)
+    @if (Model.LearnerMatchFound && !Model.InLearning)
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Apprenticeship paused or stopped</p>
     }
