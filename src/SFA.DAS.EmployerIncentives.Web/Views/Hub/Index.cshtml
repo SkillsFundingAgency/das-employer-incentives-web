@@ -23,15 +23,30 @@ else
             </h1>
 
             <p class="govuk-body govuk-!-margin-bottom-6">
-                Apply for the payment and view @Model.OrganisationName’s applications.
+                Apply for the payment and view @Model.OrganisationName's applications.
             </p>
         </div>
     </div>
 
-    <hr class="govuk-section-break govuk-section-break--visible das-section-break--heavy-grey govuk-!-margin-bottom-9">
+    <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+
+            @* CONDITIONAL BANK DETAILS PANEL - START *@
+            <div class="das-highlight das-highlight--featured govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
+                    Add @Model.OrganisationName's bank details
+                </h2>
+                <p class="govuk-body das-highlight--featured__body">
+                    We'll need @Model.OrganisationName's bank details, so that we can send any hire a new apprentice payments.
+                </p>
+                <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
+                    <a class="govuk-link das-link--white" href="#">Add bank details</a>
+                </p>
+            </div> 
+            @* CONDITIONAL BANK DETAILS PANEL - END *@
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m">
