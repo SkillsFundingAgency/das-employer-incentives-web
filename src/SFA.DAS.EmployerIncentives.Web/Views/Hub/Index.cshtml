@@ -1,6 +1,16 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.HubPageViewModel
- 
-<a href="#" class="govuk-back-link">Back</a>
+@{ 
+    ViewData["Title"] = Model.Title;
+}
+
+@if (Model.HasMultipleLegalEntities)
+{
+    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+}
+else
+{ 
+    <a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
+}
 
 <main class="govuk-main-wrapper" id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -9,7 +19,7 @@
                 @Model.OrganisationName
             </span>
             <h1 class="govuk-heading-xl">
-                Hire a new apprentice payment
+                @Model.Title
             </h1>
 
             <p class="govuk-body govuk-!-margin-bottom-6">
@@ -22,9 +32,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
             <div class="govuk-grid-row">
-
                 <div class="govuk-grid-column-one-half">
                     <h3 class="govuk-heading-m">
                         <a
@@ -41,7 +49,6 @@
                         You can apply for the payment if @Model.OrganisationName hires new apprentices from 1 August 2020 to 31 March 2021
                     </p>
                 </div>
-
                 <div class="govuk-grid-column-one-half">
                     <h3 class="govuk-heading-m">
                         <a
@@ -59,7 +66,32 @@
                     </p>
                 </div>
             </div>
-
         </div>
     </div>
+
+    @* 
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h3 class="govuk-heading-m">
+                        <a
+                            asp-controller="#"
+                            asp-action="#"
+                            asp-route-accountid="#"
+                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                            class="govuk-link govuk-link--no-visited-state"
+                        >
+                            Amend details
+                        </a>
+                    </h3>
+                    <p class="govuk-body">
+                        Amend details...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    *@
+
 </main>
