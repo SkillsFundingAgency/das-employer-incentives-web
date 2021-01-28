@@ -34,16 +34,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
         private Guid _userId;
         private List<Claim> _claims;
         private string _accountClaimValue;
-        private Mock<IOptions<WebConfigurationOptions>> _configuration;
 
         [SetUp]
         public void SetUp()
         {
             _userId = Guid.NewGuid();
             _accountClaimValue = Guid.NewGuid().ToString();
-            _configuration = new Mock<IOptions<WebConfigurationOptions>>();                        
-            var config = new WebConfigurationOptions { AchieveServiceBaseUrl = "https://test-url.com" };
-            _configuration.Setup(x => x.Value).Returns(config);
 
             _requirements = new List<IAuthorizationRequirement>
             {
@@ -72,7 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
             _identity = new ClaimsIdentity(_claims);
             _user = new ClaimsPrincipal(_identity);
 
-            _sut = new EmployerAccountAuthorizationHandler(_configuration.Object);
+            _sut = new EmployerAccountAuthorizationHandler();
         }
 
         [Test]
