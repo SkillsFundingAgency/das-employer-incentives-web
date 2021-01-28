@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -8,22 +11,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HubController : Controller
     {
         private ILegalEntitiesService _legalEntitiesService;
+        private ExternalLinksConfiguration _configuration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService)
+        public HubController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
+            _configuration = configuration.Value;
         }
 
         [Route("{accountId}/{accountLegalEntityId}/hire-new-apprentice-payment")]
         public async Task<IActionResult> Index(string accountId, string accountLegalEntityId)
         {
-            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
+            var legalEntities = await _legalEntitiesService.Get(accountId);
+            var selectedLegalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
 
-            var model = new HubPageViewModel
+            var model = new HubPageViewModel(_configuration.ManageApprenticeshipSiteUrl, accountId)
             {
-                AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                OrganisationName = legalEntity?.Name
+                OrganisationName = selectedLegalEntity?.Name,
+                HasMultipleLegalEntities = legalEntities.Count() > 1
             };
 
             return View(model);

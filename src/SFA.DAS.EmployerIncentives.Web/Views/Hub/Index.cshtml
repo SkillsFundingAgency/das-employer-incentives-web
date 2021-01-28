@@ -1,34 +1,43 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.HubPageViewModel
- 
-    <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <span class="govuk-caption-xl">@Model.OrganisationName</span>
+@if (Model.HasMultipleLegalEntities)
+{
+    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+}
+else
+{ 
+    <a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
+}
 
-                <h1 class="govuk-heading-xl">Hire a new apprentice payment</h1>
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
-                <p class="govuk-body govuk-!-margin-bottom-6">Apply for the payment and view @Model.OrganisationName’s applications.</p>
-                <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <span class="govuk-caption-xl">@Model.OrganisationName</span>
 
-            </div>
+            <h1 class="govuk-heading-xl">Hire a new apprentice payment</h1>
+
+            <p class="govuk-body govuk-!-margin-bottom-6">Apply for the payment and view @Model.OrganisationName’s applications.</p>
+            <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">
+
         </div>
+    </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
-                <div class="cards govuk-!-margin-top-8">
-                    <div class="card">
-                        <h3 class="govuk-heading-m"><a asp-controller="Home" asp-action="Start" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-link">Apply for the hire a new apprentice payment</a></h3>
-                        <p>You can apply for the payment if @Model.OrganisationName hires new apprentices from 1 August 2020 to 31 March 2021</p>
-                    </div>
-                    <div class="card">
-                        <h3 class="govuk-heading-m"><a asp-controller="Payments" asp-action="ListPaymentsForLegalEntity" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-link">View applications</a></h3>
-                        <p>View @Model.OrganisationName's applications and estimated payments.</p>
-                    </div>
-
+            <div class="cards govuk-!-margin-top-8">
+                <div class="card">
+                    <h3 class="govuk-heading-m"><a asp-controller="Home" asp-action="Start" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-link">Apply for the hire a new apprentice payment</a></h3>
+                    <p>You can apply for the payment if @Model.OrganisationName hires new apprentices from 1 August 2020 to 31 March 2021</p>
                 </div>
+                <div class="card">
+                    <h3 class="govuk-heading-m"><a asp-controller="Payments" asp-action="ListPaymentsForLegalEntity" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-link">View applications</a></h3>
+                    <p>View @Model.OrganisationName's applications and estimated payments.</p>
+                </div>
+
             </div>
         </div>
+    </div>
 
-    </main>
+</main>
