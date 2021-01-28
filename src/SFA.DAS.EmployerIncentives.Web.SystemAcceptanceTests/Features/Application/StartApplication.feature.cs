@@ -111,7 +111,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 10
- testRunner.Then("the employer is shown the application preamble", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the employer is shown the EI hub", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

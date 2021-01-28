@@ -7,7 +7,7 @@ Feature: SelectOrganisation
 Scenario: An employer with multiple legal entities and eligible apprenticeships selects a legal entity
 	Given an employer applying for a grant has multiple legal entities with eligible apprenticeships
 	When the employer selects the legal entity the application is for
-	Then the employer is presented with the preamble
+	Then the employer is presented with the EI hub
 
 Scenario: An employer does not select a legal entity
 	Given an employer applying for a grant has multiple legal entities with eligible apprenticeships
