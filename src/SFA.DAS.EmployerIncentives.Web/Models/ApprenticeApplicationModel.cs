@@ -16,5 +16,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public PaymentStatusModel FirstPaymentStatus { get; set; }
         public PaymentStatusModel SecondPaymentStatus { get; set; }
         public string CourseName { get; set; }
+
+        public bool ShowSecondPaymentStatus => FirstPaymentStatus != null && !FirstPaymentStatus.ShowPaymentStatus;
     }
 }
