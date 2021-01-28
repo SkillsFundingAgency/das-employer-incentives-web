@@ -34,11 +34,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation
                 return Task.FromResult(false);
             }
 
-            if (_configuration.AchieveServiceBaseUrl.Contains(mvcContext.HttpContext.Request.Host.ToString()))
-            {
-                return Task.FromResult(true);
-            }
-
             if (mvcContext.RouteData.Values["controller"].Equals("Home") &&
                 mvcContext.RouteData.Values["action"].Equals("Login")
                 )
