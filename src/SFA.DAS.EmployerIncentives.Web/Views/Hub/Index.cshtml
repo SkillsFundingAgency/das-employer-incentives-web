@@ -1,4 +1,7 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.HubPageViewModel
+@{ 
+    ViewData["Title"] = Model.Title;
+}
 
 @if (Model.HasMultipleLegalEntities)
 {
@@ -15,7 +18,7 @@ else
         <div class="govuk-grid-column-full">
             <span class="govuk-caption-xl">@Model.OrganisationName</span>
 
-            <h1 class="govuk-heading-xl">Hire a new apprentice payment</h1>
+            <h1 class="govuk-heading-xl">@Model.Title</h1>
 
             <p class="govuk-body govuk-!-margin-bottom-6">Apply for the payment and view @Model.OrganisationName’s applications.</p>
             <hr class="das-section-break das-section-break--l das-section-break--heavy-grey">

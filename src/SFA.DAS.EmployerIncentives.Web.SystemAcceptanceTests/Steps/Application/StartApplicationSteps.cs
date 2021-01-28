@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
@@ -162,7 +163,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
+
+            response.Should().HaveTitle("Hire a new apprentice payment");
             response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+
         }
 
     }
