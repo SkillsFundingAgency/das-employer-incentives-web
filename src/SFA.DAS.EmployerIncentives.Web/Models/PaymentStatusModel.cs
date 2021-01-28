@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         {
             get
             {
-                return !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || PaymentSent;
+                return !LearnerMatchFound || HasDataLock || !InLearning || PausePayments;
             }
         }
     }
