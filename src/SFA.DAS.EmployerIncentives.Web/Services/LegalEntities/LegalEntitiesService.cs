@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
             }
             catch (IndexOutOfRangeException) // hashed id contains invalid characters
             {
-                return null;
+                return await Task.FromResult(new LegalEntityModel { AccountId = hashedAccountId, AccountLegalEntityId = hashedAccountId });
             }
         }
 
