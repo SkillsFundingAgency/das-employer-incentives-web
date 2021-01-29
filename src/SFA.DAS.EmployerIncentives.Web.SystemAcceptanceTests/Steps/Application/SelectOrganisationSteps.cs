@@ -6,6 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;

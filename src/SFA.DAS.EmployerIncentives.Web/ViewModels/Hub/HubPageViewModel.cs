@@ -1,5 +1,5 @@
 ﻿
-namespace SFA.DAS.EmployerIncentives.Web.ViewModels
+namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Hub
 {
     public class HubPageViewModel : ViewModel
     {
