@@ -1,4 +1,4 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.HubPageViewModel
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Hub.HubPageViewModel
 @{ 
     ViewData["Title"] = Model.Title;
 }
@@ -40,7 +40,7 @@ else
                             asp-action="Start"
                             asp-route-accountid="@Model.AccountId"
                             asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                            class="govuk-link govuk-link--no-visited-state"
+                            class="govuk-link govuk-link--no-visited-state hub-apply-link"
                         >
                             Apply for the hire a new apprentice payment
                         </a>
@@ -56,7 +56,7 @@ else
                             asp-action="ListPaymentsForLegalEntity"
                             asp-route-accountid="@Model.AccountId"
                             asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                            class="govuk-link govuk-link--no-visited-state"
+                            class="govuk-link govuk-link--no-visited-state hub-payments-link"
                         >
                             View applications
                         </a>

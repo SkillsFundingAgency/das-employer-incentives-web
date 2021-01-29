@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Application
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Hub
 {
     using TechTalk.SpecFlow;
     using System;
@@ -20,9 +20,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("StartApplication")]
+    [NUnit.Framework.DescriptionAttribute("HomePage")]
     [NUnit.Framework.CategoryAttribute("employerIncentivesApi")]
-    public partial class StartApplicationFeature
+    public partial class HomePageFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -30,14 +30,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         private string[] _featureTags = new string[] {
                 "employerIncentivesApi"};
         
-#line 1 "StartApplication.feature"
+#line 1 "HomePage.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "StartApplication", "\tAs an employer applying for the new apprenticeship grant\r\n\tI want to be able to " +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "HomePage", "\tAs an employer applying for the new apprenticeship grant\r\n\tI want to be able to " +
                     "start an application\r\n\tSo that I can get the apprenticeship grant", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
             testRunner.OnFeatureStart(featureInfo);
@@ -78,12 +78,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Applicat
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with a single organisation starts an application")]
-        public virtual void AnEmployerWithASingleOrganisationStartsAnApplication()
+        [NUnit.Framework.DescriptionAttribute("An employer with a single organisation visits the home page")]
+        public virtual void AnEmployerWithASingleOrganisationVisitsTheHomePage()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a single organisation starts an application", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a single organisation visits the home page", null, tagsOfScenario, argumentsOfScenario);
 #line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -105,10 +105,10 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 8
- testRunner.Given("an employer with a single organisation wants to apply for a grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with a single organisation wants to view the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 9
- testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the employer visits the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 10
  testRunner.Then("the employer is shown the EI hub", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -118,12 +118,12 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with a multiple organisations starts an application")]
-        public virtual void AnEmployerWithAMultipleOrganisationsStartsAnApplication()
+        [NUnit.Framework.DescriptionAttribute("An employer with a multiple organisations visits the home page")]
+        public virtual void AnEmployerWithAMultipleOrganisationsVisitsTheHomePage()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a multiple organisations starts an application", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a multiple organisations visits the home page", null, tagsOfScenario, argumentsOfScenario);
 #line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -145,10 +145,10 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 13
- testRunner.Given("an employer with a multiple organisations wants to apply for a grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with a multiple organisations wants to view the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 14
- testRunner.When("the employer applies for the grant", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the employer visits the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 15
  testRunner.Then("the employer is informed that they need to select an organisation", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

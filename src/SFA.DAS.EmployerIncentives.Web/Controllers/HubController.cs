@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using System.Linq;
 using System.Threading.Tasks;
 
