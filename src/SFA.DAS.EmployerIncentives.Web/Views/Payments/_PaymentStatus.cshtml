@@ -24,7 +24,7 @@
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Application paused</p>
     }
-    @if (Model.PaymentSent || Model.PaymentSentIsEstimated && Model.LearnerMatchFound && !Model.PausePayments && Model.InLearning)
+    @if ((Model.PaymentSent || Model.PaymentSentIsEstimated) && Model.LearnerMatchFound && !Model.PausePayments && Model.InLearning && !Model.HasDataLock)
     {
         <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@(Model.PaymentSentIsEstimated ? "Estimated" : "Payment sent")</p>
         <p class="govuk-body govuk-!-margin-bottom-0">@(Model.PaymentDate.HasValue ? Model.PaymentDate.Value.ToString("MMMM yyyy", culture) : "")</p>
