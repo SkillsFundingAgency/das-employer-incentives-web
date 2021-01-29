@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using System.Linq;
@@ -11,11 +13,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HubController : Controller
     {
         private ILegalEntitiesService _legalEntitiesService;
+        private IApplicationService _applicationService;
         private ExternalLinksConfiguration _configuration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
+            _applicationService = applicationService;
             _configuration = configuration.Value;
         }
 
@@ -31,6 +35,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 OrganisationName = selectedLegalEntity?.Name,
                 HasMultipleLegalEntities = legalEntities.Count() > 1
             };
+
+            var applications = await _applicationService.GetList(accountId, accountLegalEntityId);
+            if (applications.ApprenticeApplications.Any())
+            {
+                model.ShowBankDetailsRequired = applications.BankDetailsStatus == BankDetailsStatus.NotSupplied;
+                //model.BankDetailsApplicationId = applications.FirstSubmittedApplicationId;
+            }
 
             return View(model);
         }

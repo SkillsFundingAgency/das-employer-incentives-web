@@ -43,30 +43,33 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
 
-            @* CONDITIONAL BANK DETAILS PANEL - START *@
-            <div class="das-highlight das-highlight--featured govuk-!-margin-top-0 govuk-!-margin-bottom-6">
-                <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
-                    Add @Model.OrganisationName's bank details
-                </h2>
-                <p class="govuk-body das-highlight--featured__body">
-                    We'll need @Model.OrganisationName's bank details, so that we can send any hire a new apprentice payments.
-                </p>
-                <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
-                    <a class="govuk-link das-link--white" href="#">Add bank details</a>
-                </p>
-            </div> 
-            @* CONDITIONAL BANK DETAILS PANEL - END *@
+            @if (Model.ShowBankDetailsRequired)
+            {
+                <div class="das-highlight das-highlight--featured govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+                    <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
+                        Add @Model.OrganisationName's bank details
+                    </h2>
+                    <p class="govuk-body das-highlight--featured__body">
+                        We'll need @Model.OrganisationName's bank details, so that we can send any hire a new apprentice payments.
+                    </p>
+                    <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
+                        <a class="govuk-link das-link--white hub-bank-details-link" 
+                           asp-controller="BankDetails" 
+                           asp-action="AddBankDetails" 
+                           asp-route-accountid="@Model.AccountId"
+                           asp-route-applicationid="@Model.BankDetailsApplicationId">Add bank details</a>
+                    </p>
+                </div>
+            }
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m">
-                        <a
-                            asp-controller="Home"
-                            asp-action="Start"
-                            asp-route-accountid="@Model.AccountId"
-                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                            class="govuk-link govuk-link--no-visited-state hub-apply-link"
-                        >
+                        <a asp-controller="Home"
+                           asp-action="Start"
+                           asp-route-accountid="@Model.AccountId"
+                           asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                           class="govuk-link govuk-link--no-visited-state hub-apply-link">
                             Apply for the hire a new apprentice payment
                         </a>
                     </h2>
@@ -76,13 +79,11 @@ else
                 </div>
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m">
-                        <a
-                            asp-controller="Payments"
-                            asp-action="ListPaymentsForLegalEntity"
-                            asp-route-accountid="@Model.AccountId"
-                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                            class="govuk-link govuk-link--no-visited-state hub-payments-link"
-                        >
+                        <a asp-controller="Payments"
+                           asp-action="ListPaymentsForLegalEntity"
+                           asp-route-accountid="@Model.AccountId"
+                           asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                           class="govuk-link govuk-link--no-visited-state hub-payments-link">
                             View applications
                         </a>
                     </h2>
