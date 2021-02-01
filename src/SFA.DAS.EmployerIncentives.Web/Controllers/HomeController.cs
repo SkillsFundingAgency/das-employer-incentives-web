@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
@@ -14,14 +15,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("/")]
     public class HomeController : Controller
     {
-        [Route("")]            
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+        [Route("")]
         [AllowAnonymous()]
         public async Task<IActionResult> AnonymousHome()
-        {            
+        {
             return RedirectToAction("login");
         }
 
-        [Route("/login")]        
+        [Route("/login")]
         public async Task<IActionResult> Login()
         {
             if (User.HasClaim(c => c.Type.Equals(EmployerClaimTypes.Account)))
@@ -34,6 +41,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("{accountId}")]
         public async Task<IActionResult> Home(string accountId)
         {
+            _logger.LogInformation("[HomeController] Logged in with AccountId: {accountId}", accountId);
+            _logger.LogInformation("[HomeController] Logged in with AccountId: {AccountId}", new { AccountId = accountId });
+
             return View(new HomeViewModel(accountId));
         }
 

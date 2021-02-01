@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
@@ -19,11 +17,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
 
         [SetUp]
         public void SetUp()
-        {            
+        {
             _claimsIdentity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(_claimsIdentity);
 
-            _sut = new Web.Controllers.HomeController
+            _sut = new Web.Controllers.HomeController(null)
             {
                 ControllerContext = new ControllerContext()
                 {
