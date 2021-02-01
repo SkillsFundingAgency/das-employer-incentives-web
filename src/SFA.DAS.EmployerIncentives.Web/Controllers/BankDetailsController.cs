@@ -96,6 +96,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Route("change-bank-details")]
+        public async Task<IActionResult> AmendBankDetails(string accountId, Guid applicationId)
+        {
+            return View();
+        }
+
         private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)
         {
             var bankDetailsUrl = CreateAddBankDetailsUrl(accountId, applicationId);
