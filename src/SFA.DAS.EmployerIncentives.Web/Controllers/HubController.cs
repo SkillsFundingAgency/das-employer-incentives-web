@@ -36,14 +36,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 HasMultipleLegalEntities = legalEntities.Count() > 1
             };
 
-            var applications = await _applicationService.GetList(accountId, accountLegalEntityId);
-            if (applications.ApprenticeApplications.Any())
+            // this will need to be refactored when EI-797 merged in
+            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
+            if (applicationsResponse.ApprenticeApplications.Any())
             {
-                model.ShowBankDetailsRequired = applications.BankDetailsStatus == BankDetailsStatus.NotSupplied;
-                //model.BankDetailsApplicationId = applications.FirstSubmittedApplicationId;
+                model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
+                model.BankDetailsApplicationId = applicationsResponse.ApprenticeApplications.OrderBy(x => x.ApplicationDate).First().ApplicationId;
             }
+            // this will need to be refactored when EI-797 merged in
 
             return View(model);
+        }
+
+        private static bool BankDetailsRequired(GetApplicationsModel applications)
+        {
+            return applications.BankDetailsStatus == BankDetailsStatus.NotSupplied || applications.BankDetailsStatus == BankDetailsStatus.Rejected;
         }
     }
 }

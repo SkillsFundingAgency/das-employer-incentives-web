@@ -41,6 +41,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(_legalEntities);
 
             _applicationService = new Mock<IApplicationService>();
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = BankDetailsStatus.Completed,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = "https://manage-apprentices.com" };
@@ -83,6 +89,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             model.Should().NotBeNull();
             model.OrganisationName.Should().Be(_legalEntities[0].Name);
             model.HasMultipleLegalEntities.Should().BeTrue();
+            model.AccountId.Should().Be(_accountId);
+            model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+        }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_viewmodel_reflects_that_the_account_holder_needs_to_provide_bank_details(BankDetailsStatus status)
+        {
+            // Arrange
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = status,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationName.Should().Be(_legalEntities[0].Name);
+            model.ShowBankDetailsRequired.Should().BeTrue();
+            model.BankDetailsApplicationId.Should().NotBeEmpty();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
         }
