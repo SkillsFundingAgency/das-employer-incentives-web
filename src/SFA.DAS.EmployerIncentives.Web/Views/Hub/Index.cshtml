@@ -24,16 +24,15 @@ else
 
             <p class="govuk-body govuk-!-margin-bottom-6">
 
-                @* CONDITIONAL BANK DETAILS BODY TEXT - START *@
-                @if (true) {
-                    <text>Apply for the payment and view @Model.OrganisationName's applications.</text>
-                }
-                else
+                @if (Model.ShowBankDetailsRequired)
                 {
                     <text>Apply for the payment, view @Model.OrganisationName's applications and add bank details.</text>
                 }
-                @* CONDITIONAL BANK DETAILS BODY TEXT - END *@
-                
+                else
+                {
+                    <text>Apply for the payment and view @Model.OrganisationName's applications.</text>
+                }
+
             </p>
         </div>
     </div>
