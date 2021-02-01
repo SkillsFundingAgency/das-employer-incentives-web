@@ -10,6 +10,7 @@ And the employer has previously supplied their bank details
 When the employer accesses the hub page
 Then they are presented with a link to apply for the employer incentive
 And they are presented with a link to view previous applications
+And they are presented with a link to change their bank details
 And the back link goes to the manage apprenticeships page
 
 Scenario: An employer with a multiple legal entities visits the EI hub page

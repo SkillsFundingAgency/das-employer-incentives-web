@@ -198,7 +198,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             var accountId = _testDataStore.Get<string>("HashedAccountId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveLink(".hub-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
+            response.Should().HaveLink(".hub-add-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
         }
+
+        [Then(@"they are presented with a link to change their bank details")]
+        public void ThenTheyArePresentedWithALinkToChangeTheirBankDetails()
+        {
+            var accountId = _testDataStore.Get<string>("HashedAccountId");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+
+            response.Should().HaveLink(".hub-amend-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/change-bank-details");
+        }
+
     }
 }
