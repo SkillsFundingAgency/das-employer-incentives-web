@@ -60,6 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
             var accountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, accountId);
             var url = $"{accountId}/{accountLegalEntityId}/hire-new-apprentice-payment";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
