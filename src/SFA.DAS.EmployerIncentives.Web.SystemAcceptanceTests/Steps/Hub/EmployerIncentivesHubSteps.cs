@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             _testDataStore.Add<HttpResponseMessage>("Response", response);
         }
 
-        [Then(@"they are presented with a link to apply for the employer incentive")]
+        [Then(@"they can apply for the employer incentive")]
         public void ThenTheyArePresentedWithALinkToApplyForTheEmployerIncentive()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveLink(".hub-apply-link", $"/{accountId}/{accountLegalEntityId}");
         }
 
-        [Then(@"they are presented with a link to view previous applications")]
+        [Then(@"they can view previous applications")]
         public void ThenTheyArePresentedWithALinkToViewPreviousApplications()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -192,7 +192,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveBackLink($"/{accountId}/apply/choose-organisation");
         }
 
-        [Then(@"they are presented with a banner link prompting them to enter their bank details")]
+        [Then(@"they are prompted to enter their bank details")]
         public void ThenTheyArePresentedWithABannerLinkPromptingThemToEnterTheirBankDetails()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
