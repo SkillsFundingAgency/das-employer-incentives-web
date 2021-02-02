@@ -114,10 +114,10 @@ testRunner.And("the employer has previously supplied their bank details", ((stri
 testRunner.When("the employer accesses the hub page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 11
-testRunner.Then("they are presented with a link to apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("they can apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 12
-testRunner.And("they are presented with a link to view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they can view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 13
 testRunner.And("the back link goes to the manage apprenticeships page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -163,10 +163,10 @@ testRunner.And("the employer has previously supplied their bank details", ((stri
 testRunner.When("the employer accesses the hub page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 19
-testRunner.Then("they are presented with a link to apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("they can apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 20
-testRunner.And("they are presented with a link to view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they can view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 21
 testRunner.And("the back link goes to the choose organisation page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -212,13 +212,13 @@ testRunner.And("the employer has not yet supplied bank details", ((string)(null)
 testRunner.When("the employer accesses the hub page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 27
-testRunner.Then("they are presented with a link to apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("they can apply for the employer incentive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 28
-testRunner.And("they are presented with a link to view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they can view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 29
-testRunner.And("they are presented with a banner link prompting them to enter their bank details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they are prompted to enter their bank details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
