@@ -201,7 +201,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveLink(".hub-add-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
         }
 
-        [Then(@"they are presented with a link to change their bank details")]
+        [Then(@"they can change their bank details")]
         public void ThenTheyArePresentedWithALinkToChangeTheirBankDetails()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
