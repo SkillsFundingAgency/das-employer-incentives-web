@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
@@ -19,18 +20,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
         private readonly IVerificationService _verificationService;
+        private readonly ILegalEntitiesService _legalEntitiesService;
         private ExternalLinksConfiguration _configuration;
 
         public BankDetailsController(IVerificationService verificationService,
             IEmailService emailService,
             IApplicationService applicationService,
             IHashingService hashingService,
+            ILegalEntitiesService legalEntitiesService,
             IOptions<ExternalLinksConfiguration> configuration)
         {
             _verificationService = verificationService;
             _emailService = emailService;
             _applicationService = applicationService;
             _hashingService = hashingService;
+            _legalEntitiesService = legalEntitiesService;
             _configuration = configuration.Value;
         }
 
@@ -100,7 +104,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("change-bank-details")]
         public async Task<IActionResult> AmendBankDetails(string accountId, Guid applicationId)
         {
-            return View();
+            var application = await _applicationService.Get(accountId, applicationId, false);
+            var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
+            var model = new AmendBankDetailsViewModel($"Change {legalEntity.Name}'s bank details", accountId, applicationId, legalEntity.Name);
+            return View(model);
         }
 
         private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)
