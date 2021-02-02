@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveLink(".hub-payments-link", $"/{accountId}/payments/{accountLegalEntityId}/payment-applications");
         }
 
-        [Then(@"the back link goes to the manage apprenticeships page")]
+        [Then(@"they can navigate back to the manage apprenticeships page")]
         public void ThenTheBackLinkGoesToTheManageApprenticeshipsPage()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -183,7 +183,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                         .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
 
-        [Then(@"the back link goes to the choose organisation page")]
+        [Then(@"they can navigate back to the choose organisation page")]
         public void ThenTheBackLinkGoesToTheChooseOrganisationPage()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");

@@ -120,7 +120,7 @@ testRunner.Then("they can apply for the employer incentive", ((string)(null)), (
 testRunner.And("they can view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 13
-testRunner.And("the back link goes to the manage apprenticeships page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they can navigate back to the manage apprenticeships page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -169,7 +169,7 @@ testRunner.Then("they can apply for the employer incentive", ((string)(null)), (
 testRunner.And("they can view previous applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 21
-testRunner.And("the back link goes to the choose organisation page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("they can navigate back to the choose organisation page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
