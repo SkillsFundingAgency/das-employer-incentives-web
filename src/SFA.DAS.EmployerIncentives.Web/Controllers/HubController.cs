@@ -13,10 +13,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HubController : Controller
     {
         private ILegalEntitiesService _legalEntitiesService;
-        private IApplicationService _applicationService;
+        private IApprenticeshipIncentiveService _applicationService;
         private ExternalLinksConfiguration _configuration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, IOptions<ExternalLinksConfiguration> configuration)
+        public HubController(ILegalEntitiesService legalEntitiesService, IApprenticeshipIncentiveService applicationService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
             _applicationService = applicationService;
@@ -36,14 +36,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 HasMultipleLegalEntities = legalEntities.Count() > 1
             };
 
-            // this will need to be refactored when EI-797 merged in
             var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
             if (applicationsResponse.ApprenticeApplications.Any())
             {
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
-                model.BankDetailsApplicationId = applicationsResponse.ApprenticeApplications.OrderBy(x => x.ApplicationDate).First().ApplicationId;
+                model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
             }
-            // this will need to be refactored when EI-797 merged in
 
             return View(model);
         }
