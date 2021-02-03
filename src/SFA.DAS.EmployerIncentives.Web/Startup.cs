@@ -66,6 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddNLog();
             services.AddOptions();
             services.Configure<WebConfigurationOptions>(_configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
             services.Configure<EmployerIncentivesApiOptions>(_configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));

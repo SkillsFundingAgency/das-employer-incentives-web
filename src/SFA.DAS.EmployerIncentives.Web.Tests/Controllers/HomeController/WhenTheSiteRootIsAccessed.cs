@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         [SetUp]
         public void SetUp()
         {
-            _sut = new Web.Controllers.HomeController();
+            _sut = new Web.Controllers.HomeController(null);
         }
 
         [Test]
