@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using NLog.Extensions.Logging;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
@@ -207,7 +208,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     logger.LogError(ctx.Failure, $"Correlation failed error when redirecting from {redirectUri}");
                 }
             }
-            catch 
+            catch
             {
                 // ignore errors
             }
@@ -254,5 +255,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             return serviceCollection;
         }
 
+        public static IServiceCollection AddNLog(this IServiceCollection serviceCollection)
+        {
+            var nLogConfiguration = new NLogConfiguration();
+
+            serviceCollection.AddLogging((options) =>
+            {
+                options.AddFilter(typeof(Startup).Namespace, LogLevel.Information);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddNLog(new NLogProviderOptions
+                {
+                    CaptureMessageTemplates = true,
+                    CaptureMessageProperties = true
+                });
+                options.AddConsole();
+
+                nLogConfiguration.ConfigureNLog();
+            });
+
+            return serviceCollection;
+        }
     }
 }
