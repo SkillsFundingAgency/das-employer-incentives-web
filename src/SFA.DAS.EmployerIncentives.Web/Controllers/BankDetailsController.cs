@@ -106,8 +106,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var application = await _applicationService.Get(accountId, applicationId, false);
             var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
-            var model = new AmendBankDetailsViewModel($"Change {legalEntity.Name}'s bank details", accountId, applicationId, legalEntity.Name);
+            var model = new AmendBankDetailsViewModel($"Change {legalEntity.Name}'s bank details", accountId, application.AccountLegalEntityId, applicationId, legalEntity.Name);
             return View(model);
+        }
+
+        [HttpPost]
+        [Route("change-bank-details")]
+        public async Task<IActionResult> AmendBankDetails(AmendBankDetailsViewModel model)
+        {
+            var confirmationActionUrl = Url.Action("Index", "Hub", new { model.AccountId, model.AccountLegalEntityId });
+            var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
+            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(model.AccountId, model.ApplicationId, returnUrl);
+
+            return Redirect(achieveServiceUrl);
         }
 
         private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)

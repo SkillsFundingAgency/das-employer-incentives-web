@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             _configuration = configuration;
         }
 
-        public async Task<string> BuildAchieveServiceUrl(string hashedAccountId, Guid applicationId, string returnUrl)
+        public async Task<string> BuildAchieveServiceUrl(string hashedAccountId, Guid applicationId, string returnUrl, bool isNew = true)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var data = new ApplicationInformationForExternalVerificationModel
             {
                 ApplicationId = applicationId,
-                IsNew = true,
+                IsNew = isNew,
                 HashedAccountId = hashedAccountId,
                 HashedLegalEntityId = _hashingService.HashValue(bankingDetails.LegalEntityId),
                 IncentiveAmount = bankingDetails.ApplicationValue,
@@ -55,7 +55,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();
 
-            return $"{_configuration.AchieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData}";
+            var journeyType = "new";
+            if (!isNew)
+            {
+                journeyType = "amend";
+            }
+
+            return $"{_configuration.AchieveServiceBaseUrl}?journey={journeyType}&return={returnUrl.ToUrlString()}&data={encryptedData}";
         }
 
     }
