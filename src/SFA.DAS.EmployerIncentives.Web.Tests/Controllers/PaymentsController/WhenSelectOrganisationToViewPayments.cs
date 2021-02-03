@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
     public class WhenSelectOrganisationToViewPayments
     {
         private Web.Controllers.PaymentsController _sut;
-        private Mock<IApplicationService> _applicationService;
+        private Mock<IApprenticeshipIncentiveService> _apprenticeshipIncentiveService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IHashingService> _hashingService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         [SetUp]
         public void Arrange()
         {
-            _applicationService = new Mock<IApplicationService>();
+            _apprenticeshipIncentiveService = new Mock<IApprenticeshipIncentiveService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _accountId = _fixture.Create<string>();
             _manageAccountsUrl = _fixture.Create<string>();
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object);
+            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object);
         }
 
         [Test]
