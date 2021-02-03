@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 {
@@ -22,7 +20,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             {
                 { ApplicationsSortField.ApplicationDate, ApplicationsSortOrder.None },
                 { ApplicationsSortField.ApprenticeName, ApplicationsSortOrder.None },
-                { ApplicationsSortField.TotalIncentiveAmount, ApplicationsSortOrder.None }
+                { ApplicationsSortField.TotalIncentiveAmount, ApplicationsSortOrder.None },
+                { ApplicationsSortField.CourseName, ApplicationsSortOrder.None }
             };
 
             _fieldSortOrders[fieldName] = sortOrder;
@@ -69,7 +68,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             return "asc";
         }
 
-        public BankDetailsStatus BankDetailsStatus { get; set; }
+        public bool ShowBankDetailsInReview { get; set; }
+        public bool ShowAddBankDetailsCalltoAction { get; set; }
 
         public string AddBankDetailsLink { get; set; }
     }

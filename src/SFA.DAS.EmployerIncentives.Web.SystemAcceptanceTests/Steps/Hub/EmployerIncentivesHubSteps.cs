@@ -136,9 +136,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             {
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
-            applications[0].ApplicationId = _applicationId;
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.Completed };
+            
+            var getApplications = new GetApplicationsModel
+            { 
+                ApprenticeApplications = applications, 
+                BankDetailsStatus = BankDetailsStatus.Completed,
+                FirstSubmittedApplicationId = _applicationId
+            };
 
             var testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testData.HashedAccountId);
@@ -163,9 +167,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             {
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
-            applications[0].ApplicationId = _applicationId;
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
+
+            var getApplications = new GetApplicationsModel 
+            {
+                ApprenticeApplications = applications, 
+                BankDetailsStatus = BankDetailsStatus.NotSupplied,
+                FirstSubmittedApplicationId = _applicationId
+            };
 
             var testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testData.HashedAccountId);
