@@ -9,6 +9,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
     {
         private Web.Controllers.HubController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IApplicationService> _applicationService;
+        private Mock<IApprenticeshipIncentiveService> _applicationService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
@@ -40,11 +41,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(_legalEntities);
 
-            _applicationService = new Mock<IApplicationService>();
+            _applicationService = new Mock<IApprenticeshipIncentiveService>();
             var applicationsResponse = new GetApplicationsModel
             {
                 BankDetailsStatus = BankDetailsStatus.Completed,
-                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList()
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
             };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
@@ -101,7 +103,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var applicationsResponse = new GetApplicationsModel
             {
                 BankDetailsStatus = status,
-                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList()
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
             };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
@@ -126,7 +129,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var applicationsResponse = new GetApplicationsModel
             {
                 BankDetailsStatus = BankDetailsStatus.Completed,
-                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList()
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
             };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 

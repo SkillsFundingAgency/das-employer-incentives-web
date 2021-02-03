@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.Models
 {
@@ -6,5 +7,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
     {
         public IEnumerable<ApprenticeApplicationModel> ApprenticeApplications { get; set; }
         public BankDetailsStatus BankDetailsStatus { get; set; }
+        public Guid? FirstSubmittedApplicationId { get; set; }
     }
 }
