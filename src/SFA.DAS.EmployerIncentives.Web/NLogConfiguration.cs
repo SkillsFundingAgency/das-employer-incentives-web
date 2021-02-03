@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 Name = "RedisLog",
                 AppName = appName,
                 EnvironmentKeyName = "EnvironmentName",
-                ConnectionStringName = "LoggingRedisConnectionString",
+                ConnectionStringName = "RedisCacheConnectionString",
                 IncludeAllProperties = true,
                 Layout = "${message}"
             };
