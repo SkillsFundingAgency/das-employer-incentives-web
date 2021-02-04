@@ -100,7 +100,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             {
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
 
             _testContext.EmployerIncentivesApi.MockServer
