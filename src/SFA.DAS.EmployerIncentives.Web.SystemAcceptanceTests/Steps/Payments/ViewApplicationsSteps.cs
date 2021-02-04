@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -23,41 +24,37 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         private readonly TestContext _testContext;
         private Fixture _fixture;
         private TestData.Account.WithInitialApplicationForASingleEntity _testData;
-        private HttpResponseMessage _response;
+        private Guid _testApplicationId;        
 
         public ViewApplicationsSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _fixture = new Fixture();
+            _testApplicationId = Guid.NewGuid();
         }
 
         [Given(@"an employer has a single submitted application")]
         public void GivenAnEmployerHasASingleSubmittedApplication()
         {
-            var applications = new List<ApprenticeApplicationModel>
-            {
-                _fixture.Create<ApprenticeApplicationModel>()
-            };
-            applications[0].Status = "Submitted";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.Completed };
+            AnEmployerHasASingleSubmittedApplication(_testApplicationId);
+        }        
+        
+        [Given(@"an employer with accepted bank details has a single submitted application")]
+        public void GivenAnEmployerWithAcceptedBankDetailsHasASingleSubmittedApplication()
+        {
+            AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.Completed);
+        }
 
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+        [Given(@"an employer without bank details has a single submitted application")]
+        public void GivenAnEmployerWithoutBankDetailsHasASingleSubmittedApplication()
+        {
+            AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.NotSupplied);
+        }
 
-            _testContext.EmployerIncentivesApi.MockServer
-                .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
-                        .UsingGet()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));                             
-
+        [Given(@"an employer with vrf rejected status has a single submitted application")]
+        public void GivenAnEmployerWithVrfRejectedStatusHasASingleSubmittedApplication()
+        {
+            AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.Rejected);
         }
 
         [When(@"the employer views their applications")]
@@ -67,7 +64,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 HttpMethod.Get,
                 $"{_testData.HashedAccountId}/payments/{_testData.HashedAccountLegalEntityId}/payment-applications");
 
-            _response = await _testContext.WebsiteClient.SendAsync(request);
+            var response = await _testContext.WebsiteClient.SendAsync(request);
+
+            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () =>
+            {
+                return response;
+            });
         }
 
         [Then(@"the employer is shown a single submitted application")]
@@ -81,7 +83,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
-            _response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has multiple submitted applications")]
@@ -92,8 +95,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 _fixture.Create<ApprenticeApplicationModel>(),
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            applications[0].Status = "Submitted";
-            applications[1].Status = "Submitted";
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
@@ -125,7 +126,24 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
-            _response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+        }
+
+        [Then(@"the add bank details call to action is shown")]
+        public void ThenTheAddBankDetailsCalltoActionIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+
+            response.Should().HaveLink($"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
+        }
+
+        [Then(@"the add bank details call to action is not shown")]
+        public void ThenTheAddBankDetailsCalltoActionIsNotShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+
+            response.Should().NotHaveLink($"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
         }
 
         [Given(@"an employer has submitted and in progress applications")]
@@ -168,7 +186,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
-            _response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has in progress applications")]
@@ -211,7 +230,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
-            _response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has no applications")]
@@ -259,5 +279,34 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                         .WithBody(JsonConvert.SerializeObject(legalEntities)));
         }
 
+        private void AnEmployerHasASingleSubmittedApplication(Guid applicationId, BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.AccountId, _testData.AccountId)
+                .Create()
+            };
+            applications[0].Status = "Submitted";
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = bankDetailsStatus, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+
+        }
     }
 }

@@ -29,7 +29,7 @@
             </p>
         /IF VRF complete and BC vendor set up complete *@
 
-            @if (Model.BankDetailsStatus == BankDetailsStatus.InProgress)
+            @if (Model.ShowBankDetailsInReview)
             {
                 <div class="govuk-inset-text">
                     <h2 class="govuk-heading-m">
@@ -41,8 +41,7 @@
                 </div>
             }
 
-
-            @if (Model.BankDetailsStatus == BankDetailsStatus.NotSupplied)
+            @if(Model.ShowAddBankDetailsCalltoAction)
             {
                 <div class="das-highlight das-highlight--featured">
                     <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
@@ -98,44 +97,59 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <table class="govuk-table">
+            <table class="govuk-table das-table--fixed das-table--responsive">
                 <caption class="govuk-table__caption govuk-visually-hidden">
                     Your applications
                 </caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">Apprentice
-                                name
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">
+                                Apprentice name
+                            </a>
+                        </th>
+                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.CourseName)" scope="col" class="govuk-table__header">
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.CourseName)" asp-route-sortfield="@ApplicationsSortField.CourseName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.CourseName)">
+                                Course
                             </a>
                         </th>
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApplicationDate)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">Application
-                                date
+                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApplicationDate)" asp-route-sortfield="@ApplicationsSortField.ApplicationDate" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApplicationDate)">
+                                Application date
                             </a>
                         </th>
-                        <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.TotalIncentiveAmount)" scope="col" class="govuk-table__header">
-                            <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.TotalIncentiveAmount)" asp-route-sortfield="@ApplicationsSortField.TotalIncentiveAmount" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.TotalIncentiveAmount)">Estimated
-                                payment
-                            </a>
+                        <th scope="col" class="govuk-table__header">
+                            First payment
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Second payment
                         </th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     @foreach (var apprenticeApplication in Model.Applications)
                     {
-                        <tr class="govuk-table__row">
-                            <td data-label="Apprentice name" class="govuk-table__cell">
-                                <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
-                                <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p> 
-                            </td>
-                            <td data-label="Application date" class="govuk-table__cell">
-                                @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
-                            </td>
-                            <td data-label="Estimated payment" class="govuk-table__cell">
-                                @apprenticeApplication.TotalIncentiveAmount.ToString("C0", culture)
-                            </td>
-                        </tr>
+                    <tr class="govuk-table__row">
+                        <td data-label="Apprentice name" class="govuk-table__cell">
+                            <p class="govuk-body govuk-!-margin-bottom-0">@apprenticeApplication.ApprenticeName</p>
+                            <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0 ">ULN: @apprenticeApplication.ULN</p>
+                        </td>
+                        <td data-label="Course" class="govuk-table__cell">
+                            @apprenticeApplication.CourseName
+                        </td>
+                        <td data-label="Application date" class="govuk-table__cell">
+                            @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
+                        </td>
+                        <td data-label="First payment" class="govuk-table__cell">
+                            <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
+                        </td>
+                        <td data-label="Second payment" class="govuk-table__cell">
+                            @if (apprenticeApplication.ShowSecondPaymentStatus)
+                            {
+                                <partial name="_PaymentStatus" for="@apprenticeApplication.SecondPaymentStatus" />
+                            }
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
