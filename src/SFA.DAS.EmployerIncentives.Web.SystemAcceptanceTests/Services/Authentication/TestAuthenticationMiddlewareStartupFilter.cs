@@ -10,7 +10,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authenti
         {
             return builder =>
             {
-                builder.UseMiddleware<TestAuthenticationMiddleware>();
+                builder.UseMiddleware<TestAuthenticationMiddlewareForAchieveService>();
+                builder.UseMiddleware<TestAuthenticationMiddleware>();                
                 next(builder);
             };
         }

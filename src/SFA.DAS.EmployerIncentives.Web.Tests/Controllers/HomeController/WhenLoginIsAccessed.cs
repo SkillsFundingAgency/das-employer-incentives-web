@@ -1,12 +1,14 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
@@ -15,15 +17,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
     public class WhenLoginIsAccessed
     {
         private Web.Controllers.HomeController _sut;
+        private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private ClaimsIdentity _claimsIdentity;
 
         [SetUp]
         public void SetUp()
-        {            
+        {
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _claimsIdentity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(_claimsIdentity);
 
-            _sut = new Web.Controllers.HomeController
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
