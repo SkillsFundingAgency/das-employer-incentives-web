@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 {
@@ -51,7 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
             _httpClient = new HttpClient(_httpClientHandlerFake);
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
-            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object, Mock.Of<ILogger<ApplicationService>>());
         }
 
         [Test]

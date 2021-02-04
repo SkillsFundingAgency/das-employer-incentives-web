@@ -48,13 +48,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             await _applicationService.Confirm(accountId, applicationId, email, string.Join(" ", firstName, lastName));
 
-            return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });            
+            return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });
         }
 
         [HttpGet]
         [Route("cannot-apply")]
         public async Task<ViewResult> CannotApply(string accountId)
         {
+
             return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
 

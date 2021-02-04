@@ -137,7 +137,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
+            serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>(),
+                s.GetRequiredService<ILogger<ApplicationService>>()));
             serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
             serviceCollection.AddClient<IEmailService>((c, s) => new EmailService(c));
@@ -208,7 +209,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     logger.LogError(ctx.Failure, $"Correlation failed error when redirecting from {redirectUri}");
                 }
             }
-            catch 
+            catch
             {
                 // ignore errors
             }

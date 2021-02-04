@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+﻿using Microsoft.Extensions.Logging;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
@@ -15,11 +16,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     {
         private readonly HttpClient _client;
         private readonly IHashingService _hashingService;
+        private readonly ILogger<ApplicationService> _logger;
 
-        public ApplicationService(HttpClient client, IHashingService hashingService)
+        public ApplicationService(HttpClient client, IHashingService hashingService, ILogger<ApplicationService> logger)
         {
             _client = client;
             _hashingService = hashingService;
+            _logger = logger;
+
+            _logger.LogInformation("[TEST] Today is {dayOfWeek}", DateTime.Today.DayOfWeek);
+            _logger.LogInformation("[TEST] Today is {dayOfWeek}", DateTime.Today.DayOfWeek.ToString());
         }
 
         public async Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
@@ -37,6 +43,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true)
         {
+            _logger.LogInformation($"[TEST] Calling GetApplication with AccountId: {accountId}, ApplicationId: {applicationId}, includeApprenticeships: {includeApprenticeships}",
+                accountId, applicationId, includeApprenticeships);
+
             var url = OuterApiRoutes.Application.GetApplication(_hashingService.DecodeValue(accountId), applicationId, includeApprenticeships);
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
