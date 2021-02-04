@@ -10,8 +10,10 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
     {
         private Dictionary<string, string> _fieldSortOrders;
 
-        public ViewApplicationsViewModel() : base("Your hire a new apprentice payment applications")
+        public ViewApplicationsViewModel(string accountId, string accountLegalEntityId) : base("Your hire a new apprentice payment applications")
         {
+            AccountId = accountId;
+            AccountLegalEntityId = accountLegalEntityId;
         }
 
         public IEnumerable<ApprenticeApplicationModel> Applications { get; set; }
@@ -68,6 +70,11 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
             return "asc";
         }
+
+        public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
+
+        public string BackLinkUrl => $"{AccountId}/{AccountLegalEntityId}/hire-new-apprentice-payment";
 
         public BankDetailsStatus BankDetailsStatus { get; set; }
 

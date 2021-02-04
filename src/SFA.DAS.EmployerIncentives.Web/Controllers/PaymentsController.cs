@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
 
-            var model = new ViewApplicationsViewModel
+            var model = new ViewApplicationsViewModel(accountId, accountLegalEntityId)
             {
                 Applications = submittedApplications,
                 SortField = sortField,
@@ -78,9 +78,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("{accountLegalEntityId}/no-applications")]
-        public ViewResult NoApplications()
+        public ViewResult NoApplications(string accountId, string accountLegalEntityId)
         {
-            var model = new NoApplicationsViewModel();
+            var model = new NoApplicationsViewModel(accountId, accountLegalEntityId);
             return View(model);
         }
 
