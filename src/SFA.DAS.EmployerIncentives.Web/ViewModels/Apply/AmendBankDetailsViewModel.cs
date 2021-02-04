@@ -9,6 +9,11 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public Guid ApplicationId { get; set; }
         public string OrganisationName { get; set; }
 
+        public AmendBankDetailsViewModel() : base("Change your organisaton's bank details")
+        {
+
+        }
+
         public AmendBankDetailsViewModel(string title, string accountId, string accountLegalEntityId, Guid applicationId, string organisationName) : base(title)
         {
             AccountId = accountId;
