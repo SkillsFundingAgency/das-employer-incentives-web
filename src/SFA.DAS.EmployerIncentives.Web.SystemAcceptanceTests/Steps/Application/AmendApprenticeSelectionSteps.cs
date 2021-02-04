@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
             _response.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
-            model.Should().HaveTitle("Confirm apprentices");
+            model.Should().HaveTitle("Confirm your apprentices");
         }
 
         [Then(@"the employer will receive an error")]
