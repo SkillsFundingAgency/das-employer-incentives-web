@@ -11,8 +11,5 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public string AccountId { get; set; }
         public string AccountLegalEntityId { get; set; }
-
-        public string BackLinkUrl => $"{AccountId}/{AccountLegalEntityId}/hire-new-apprentice-payment";
-
     }
 }

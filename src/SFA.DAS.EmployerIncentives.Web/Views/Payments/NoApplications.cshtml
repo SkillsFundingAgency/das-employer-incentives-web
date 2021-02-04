@@ -5,7 +5,7 @@
     ViewData["ZenDeskLabels"] = "ei-no-applications";
 }
 
-<a href="/@Model.BackLinkUrl" class="govuk-back-link">Back</a>
+<a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
