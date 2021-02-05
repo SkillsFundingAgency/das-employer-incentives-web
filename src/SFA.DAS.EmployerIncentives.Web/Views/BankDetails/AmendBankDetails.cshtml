@@ -22,6 +22,7 @@
             <form asp-action="AmendBankDetails" method="post">
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.AccountId)
+            @Html.HiddenFor(x => x.AccountLegalEntityId)
             @Html.HiddenFor(x => x.ApplicationId)
 
             <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">

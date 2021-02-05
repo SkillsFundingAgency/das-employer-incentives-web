@@ -7,5 +7,6 @@
         public string LegalEntityName { get; set; }
         public bool HasSignedIncentivesTerms { get; set; }
         public string VrfCaseStatus { get; set; }
+        public string VrfVendorId { get; set; }
     }
 }
