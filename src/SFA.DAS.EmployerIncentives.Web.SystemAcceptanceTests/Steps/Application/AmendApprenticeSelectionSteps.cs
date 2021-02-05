@@ -173,7 +173,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _response.Should().HaveTitle(model.Title);
             _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             model.Should().HaveTitle("Which apprentices do you want to apply for?");
-            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
+            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }
 
         [Then(@"the employer can see the previous apprentices checked")]

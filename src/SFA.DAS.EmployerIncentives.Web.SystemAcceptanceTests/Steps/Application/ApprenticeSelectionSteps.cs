@@ -173,7 +173,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().HaveTitle("Which apprentices do you want to apply for?");
             model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
             model.AccountId.Should().Be(hashedAccountId);
-            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
+            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }
     }
 }
