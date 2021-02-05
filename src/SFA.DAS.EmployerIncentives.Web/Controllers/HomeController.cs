@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +17,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("/")]
     public class HomeController : Controller
     {
+        private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly ExternalLinksConfiguration _configuration;
+
+        public HomeController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        {
+            _legalEntitiesService = legalEntitiesService;
+            _configuration = configuration.Value;
+        }
+
         [Route("")]            
         [AllowAnonymous()]
         public async Task<IActionResult> AnonymousHome()
@@ -40,7 +52,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("{accountId}/{accountLegalEntityId}")]
         public async Task<IActionResult> Start(string accountId, string accountLegalEntityId)
         {
-            return View("Home", new HomeViewModel(accountId, accountLegalEntityId));
+            var legalEntities = await _legalEntitiesService.Get(accountId);
+            var hasMultipleLegalEntities = legalEntities.Count() > 1;
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, hasMultipleLegalEntities, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [Route("/signout")]

@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -20,21 +21,28 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
         public async Task<IEnumerable<LegalEntityModel>> Get(string accountId)
         {
-            var id = _hashingService.DecodeValue(accountId);
-            var url = OuterApiRoutes.LegalEntities.GetLegalEntities(id);
+            try
+            {
+                var id = _hashingService.DecodeValue(accountId);
+                var url = OuterApiRoutes.LegalEntities.GetLegalEntities(id);
 
-            using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new List<LegalEntityModel>();
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return data.ToLegalEntityModel(_hashingService);
+            }
+            catch (IndexOutOfRangeException) // invalid hashed id
             {
                 return new List<LegalEntityModel>();
             }
-
-            response.EnsureSuccessStatusCode();
-
-            var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            return data.ToLegalEntityModel(_hashingService);
         }
 
         public async Task<LegalEntityModel> Get(string hashedAccountId, string hashedAccountLegalEntityId)
