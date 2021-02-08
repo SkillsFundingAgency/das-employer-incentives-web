@@ -5,11 +5,12 @@
         public CannotApplyViewModel(
             string accountId,
             string accountsBaseUrl,
-            string title = "You do not have any eligible apprentices"
+            string title,
+            string organisationName
         ) : base(title)
         {
             AccountId = accountId;
-
+            OrganisationName = organisationName;
             if (!accountsBaseUrl.EndsWith("/"))
             {
                 accountsBaseUrl += "/";
@@ -20,5 +21,6 @@
         public string AccountId { get; }
         public string AccountHomeUrl { get; }
         public string AddApprenticesUrl { get; set; }
+        public string OrganisationName { get; set; }
     }
 }
