@@ -147,6 +147,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsAskedToConfirmTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().StartWith($"/{hashedAccountId}/apply/confirm-apprentices/");
 
             var viewResult = _testContext.ActionResult.LastViewResult;
@@ -169,10 +170,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveTitle(model.Title);
             _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices");
-            model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            model.Should().HaveTitle("Which apprentices do you want to apply for?");
             model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
             model.AccountId.Should().Be(hashedAccountId);
-            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
+            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }
     }
 }

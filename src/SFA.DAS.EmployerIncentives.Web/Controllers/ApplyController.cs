@@ -52,17 +52,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("cannot-apply")]
+        [Route("no-eligible-apprentices")]
         public async Task<ViewResult> CannotApply(string accountId)
         {
             return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [HttpGet]
-        [Route("cannot-apply-yet")]
+        [Route("cannot-apply")]
         public async Task<ViewResult> CannotApplyYet(string accountId)
         {
             return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
+        }
+
+        [HttpGet]
+        [Route("cannot-apply-yet")]
+        public async Task<IActionResult> Redirect()
+        {
+            return RedirectToActionPermanent("CannotApplyYet");
         }
     }
 }

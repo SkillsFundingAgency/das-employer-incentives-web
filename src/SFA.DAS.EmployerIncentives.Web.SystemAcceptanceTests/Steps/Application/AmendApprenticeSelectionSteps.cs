@@ -172,8 +172,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             _response.Should().HaveTitle(model.Title);
             _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
-            model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
+            model.Should().HaveTitle("Which apprentices do you want to apply for?");
+            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }
 
         [Then(@"the employer can see the previous apprentices checked")]
@@ -193,7 +193,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountId.Should().Be(_data.HashedAccountId);
             model.AccountLegalEntityId.Should().Be(_data.HashedAccountLegalEntityId);
 
-            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/taken-on-new-apprentices");
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/eligible-apprentices");
 
         }
 

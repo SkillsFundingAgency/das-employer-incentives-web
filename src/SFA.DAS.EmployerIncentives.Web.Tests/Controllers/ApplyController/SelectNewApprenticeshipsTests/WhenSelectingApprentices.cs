@@ -10,9 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.SelectNewApprenticeshipsTests
 {
@@ -47,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(_applicationId);
 
-            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object);
+            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>());
 
             _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
@@ -56,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         [Test]
         public void Then_page_title_is_set()
         {
-            _model.Title.Should().Be(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            _model.Title.Should().Be("Which apprentices do you want to apply for?");
         }
 
         [Test]

@@ -84,7 +84,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return new ApplicationConfirmationViewModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
                 application.Apprenticeships.OrderBy(x => x.LastName).Select(MapFromApplicationApprenticeDto),
-                application.BankDetailsRequired);
+                application.BankDetailsRequired, application.NewAgreementRequired);
         }
 
         private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
@@ -95,7 +95,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 CourseName = apprentice.CourseName,
                 FirstName = apprentice.FirstName,
                 LastName = apprentice.LastName,
-                ExpectedAmount = apprentice.TotalIncentiveAmount
+                ExpectedAmount = apprentice.TotalIncentiveAmount,
+                StartDate = apprentice.PlannedStartDate,
+                Uln = apprentice.Uln
             };
         }
 

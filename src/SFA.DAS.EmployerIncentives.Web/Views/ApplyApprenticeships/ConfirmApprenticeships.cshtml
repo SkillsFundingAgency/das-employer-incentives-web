@@ -17,60 +17,61 @@
                 @Model.Title
             </h1>
 
-            <div class="govuk-inset-text">
-                Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.
-            </div>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
+                @{
+                    var pluraliseApprentice = Model.Apprentices.Count() == 1 ? "apprentice" : "apprentices";
+                } 
+                @Model.Apprentices.Count() @pluraliseApprentice
+            </h2>
+            <p class="govuk-body">
+                @(Model.TotalPaymentAmount.ToString("C0", culture)) estimated total payment
+            </p>
 
             <form asp-action="DisplayDeclaration" method="post">
                 @Html.AntiForgeryToken()
+                @Html.Hidden("newAgreementRequired", @Model.NewAgreementRequired)
 
-                <table class="govuk-table govuk-!-margin-bottom-9">
+                <table class="govuk-table govuk-!-margin-bottom-3">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header">Name of apprentice</th>
-                            <th scope="col" class="govuk-table__header">Course name</th>
-                            <th scope="col" class="govuk-table__header">Payment amount</th>
+                            <th scope="col" class="govuk-table__header">Apprentice</th>
+                            <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                            <th scope="col" class="govuk-table__header">Course</th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                         @foreach (var apprenticeship in Model.Apprentices)
                         {
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table__header">@apprenticeship.DisplayName</th>
+                                <th scope="row" class="govuk-table__header">
+                                    @apprenticeship.DisplayName
+                                    <p class="govuk-body govuk-!-font-weight-regular das-!-color-dark-grey govuk-!-margin-bottom-0">ULN: @apprenticeship.Uln</p>
+                                </th>
+                                <td class="govuk-table__cell">@apprenticeship.StartDate.ToString("MMMM yyyy")</td>
                                 <td class="govuk-table__cell">@apprenticeship.CourseName</td>
-                                <td class="govuk-table__cell">@(apprenticeship.ExpectedAmount.ToString("C0", culture))</td>
                             </tr>
                         }
-
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">Total amount</th>
-                            <td class="govuk-table__cell"></td>
-                            <td class="govuk-table__cell">@(Model.TotalPaymentAmount.ToString("C0", culture))</td>
-                        </tr>
-
                     </tbody>
                 </table>
+
+                <p class="govuk-body govuk-!-margin-bottom-6">
+                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
+                        Change which apprentices you want to apply for
+                    </a>
+                </p>
 
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        All apprentices must have started their contract of employment between 1 August 2020 and 31 January 2021.
+                        All apprentices must have joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
                     </strong>
                 </div>
 
                 <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Confirm
                 </button>
-
-                <p class="govuk-body">
-                    <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
-                        Change the apprentices you want to apply for
-                    </a>
-                </p>
-
             </form>
-
         </div>
     </div>
 </main>

@@ -1,14 +1,17 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.RouteValues;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
 using SFA.DAS.HashingService;
@@ -31,12 +34,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
         private Guid _userId;
         private List<Claim> _claims;
         private string _accountClaimValue;
+        private Mock<IOptions<WebConfigurationOptions>> _configuration;
 
         [SetUp]
         public void SetUp()
         {
             _userId = Guid.NewGuid();
             _accountClaimValue = Guid.NewGuid().ToString();
+            _configuration = new Mock<IOptions<WebConfigurationOptions>>();                        
+            var config = new WebConfigurationOptions { AchieveServiceBaseUrl = "https://test-url.com" };
+            _configuration.Setup(x => x.Value).Returns(config);
 
             _requirements = new List<IAuthorizationRequirement>
             {
@@ -54,7 +61,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
             _actionContext.RouteData.Values.Add(RouteValueKeys.AccountHashedId, _accountClaimValue);
 
             _resource = new AuthorizationFilterContext(_actionContext, new List<IFilterMetadata>());
-            
+            var mvcContext = _resource as AuthorizationFilterContext;
+            mvcContext.HttpContext.Request.Host = new HostString("https://employer-incentives.gov.uk");
+
             _claims = new List<Claim>
             {
                 new Claim(EmployerClaimTypes.UserId, _userId.ToString()),
@@ -63,7 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountAuth
             _identity = new ClaimsIdentity(_claims);
             _user = new ClaimsPrincipal(_identity);
 
-            _sut = new EmployerAccountAuthorizationHandler();
+            _sut = new EmployerAccountAuthorizationHandler(_configuration.Object);
         }
 
         [Test]

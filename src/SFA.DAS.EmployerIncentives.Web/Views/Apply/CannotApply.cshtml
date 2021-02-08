@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
-    ViewBag.GaData.Vpv = "/apply/cannot-apply";
+    ViewBag.GaData.Vpv = "/apply/no-eligible-apprentices";
     ViewData["ZenDeskLabels"] = "ei-noeligible";
 }
 
@@ -13,7 +13,7 @@
                 @Model.Title
             </h1>
             <p class="govuk-body">
-                You cannot apply for this payment because you do not have any new apprentices who started their contact of employment between 1 August 2020 and 31 January 2021.
+                You can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
             </p>
             <p class="govuk-body">
                 <a class="govuk-button" href="@Model.AccountHomeUrl">

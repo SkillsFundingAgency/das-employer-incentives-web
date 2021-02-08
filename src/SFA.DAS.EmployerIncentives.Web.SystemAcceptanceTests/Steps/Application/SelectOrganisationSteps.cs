@@ -4,6 +4,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }
 
-        [Then(@"the employer is asked if they have any eligible apprenticeships")]
+        [Then(@"the employer is presented with the preamble")]
         public void ThenTheEmployerIsAskedIfTheyHaveAnyEligibleApprenticeships()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
@@ -125,15 +126,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as QualificationQuestionViewModel;
+            var model = viewResult.Model as HomeViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Have you taken on new apprentices who started their contract of employment between 1 August 2020 and 31 January 2021?");
-            model.AccountId.Should().Be(hashedAccountId);
-            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
-
-            response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}");
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedAccountLegalEntityId}/taken-on-new-apprentices");
+            
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}");
         }
 
         [Then(@"the employer is informed that a legal entity needs to be selected")]
