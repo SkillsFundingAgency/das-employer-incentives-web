@@ -8,11 +8,13 @@
         public string ManageApprenticeshipSiteUrl { get; }
 
         public string AccountHomeUrl { get; }
+        public string OrganisationName { get; }
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, bool hasMultipleLegalEntities, string manageApprenticeshipSiteUrl)
+        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool hasMultipleLegalEntities, string manageApprenticeshipSiteUrl)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
+            OrganisationName = organisationName;
             HasMultipleLegalEntities = hasMultipleLegalEntities;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))

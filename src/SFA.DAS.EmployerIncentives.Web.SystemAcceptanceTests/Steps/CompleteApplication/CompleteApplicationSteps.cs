@@ -62,6 +62,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(_testdata.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+           .Given(
+                   Request
+                   .Create()
+                   .WithPath($"/accounts/{_testdata.AccountId}/legalentities")
+                   .UsingGet()
+                   )
+               .RespondWith(
+             Response.Create()
+               .WithStatusCode(HttpStatusCode.OK)
+               .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [When(@"the employer provides their bank details")]
