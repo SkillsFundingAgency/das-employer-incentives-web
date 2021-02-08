@@ -8,6 +8,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
@@ -49,7 +50,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
                 SignedAgreementVersion = 4,
                 Name = "Organisation Name"
             };
-            _legalEntitiesService.Setup(x => x.Get(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
+            var legalEntities = new List<LegalEntityModel> { legalEntity };
+
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.Start(_accountId, _accountLegalEntityId);
@@ -76,7 +79,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
                 SignedAgreementVersion = 5,
                 Name = "Organisation Name"
             };
-            _legalEntitiesService.Setup(x => x.Get(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
+            var legalEntities = new List<LegalEntityModel> { legalEntity };
+
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.Start(_accountId, _accountLegalEntityId);
@@ -101,7 +106,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
                 SignedAgreementVersion = null,
                 Name = "Organisation Name"
             };
-            _legalEntitiesService.Setup(x => x.Get(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
+            var legalEntities = new List<LegalEntityModel> { legalEntity };
+
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
             var result = await _sut.Start(_accountId, _accountLegalEntityId);

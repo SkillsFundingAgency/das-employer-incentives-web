@@ -1,30 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Extensions;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.EmployerIncentives.Web.Extensions;
+using SFA.DAS.HashingService;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using System.Collections.Generic;
-using SFA.DAS.HashingService;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/payments")]
     public class PaymentsController : Controller
     {
-        private readonly IApplicationService _applicationService;
+        private readonly IApprenticeshipIncentiveService _apprenticeshipIncentiveService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IHashingService _hashingService;
         private readonly ExternalLinksConfiguration _configuration;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
+        public PaymentsController(IApprenticeshipIncentiveService apprenticeshipIncentiveService, ILegalEntitiesService legalEntitiesService, 
                                   IHashingService hashingService, IOptions<ExternalLinksConfiguration> configuration)
         {
-            _applicationService = applicationService;
+            _apprenticeshipIncentiveService = apprenticeshipIncentiveService;
             _legalEntitiesService = legalEntitiesService;
             _hashingService = hashingService;
             _configuration = configuration.Value;
@@ -55,12 +55,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 sortField = ApplicationsSortField.ApprenticeName;
             }
 
-            var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
-            var submittedApplications = getApplicationsResponse.ApprenticeApplications.Where(x => x.Status == "Submitted").AsQueryable();
+            var getApplicationsResponse = await _apprenticeshipIncentiveService.GetList(accountId, accountLegalEntityId);
+
+            var submittedApplications = getApplicationsResponse.ApprenticeApplications.AsQueryable();
 
             if (!submittedApplications.Any())
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
+            }
+
+            //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
+            foreach (var apprenticeApplicationModel in submittedApplications)
+            {
+                if(apprenticeApplicationModel.FirstPaymentStatus != null)
+                    apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
+
+                if(apprenticeApplicationModel.SecondPaymentStatus != null)
+                    apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
             }
 
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
@@ -69,8 +80,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 Applications = submittedApplications,
                 SortField = sortField,
-                BankDetailsStatus = getApplicationsResponse.BankDetailsStatus,
-                AddBankDetailsLink = CreateAddBankDetailsLink(submittedApplications)
+                ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
+                ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
+                AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId)
             };
             model.SetSortOrder(sortField, sortOrder);
 
@@ -121,35 +133,33 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 if (sortField != ApplicationsSortField.ApprenticeName)
                 {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ApprenticeName);
+                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
                 }
                 else
                 {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField);
+                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN);
                 }
             }
             else
             {
                 if (sortField != ApplicationsSortField.ApprenticeName)
                 {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ApprenticeName);
+                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
                 }
                 else
                 {
-                    submittedApplications = submittedApplications.OrderBy(sortField);
+                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN);
                 }
             }
 
             return submittedApplications;
         }
 
-        private string CreateAddBankDetailsLink(IEnumerable<ApprenticeApplicationModel> applications)
+        private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
         {
-            var application = applications.OrderBy(x => x.ApplicationDate).FirstOrDefault();
             var requestContext = ControllerContext.HttpContext.Request;
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
-            var hashedAccountId = _hashingService.HashValue(application.AccountId);
-            var bankDetailsUrl = $"{host}/{hashedAccountId}/bank-details/{application.ApplicationId}/add-bank-details";
+            var bankDetailsUrl = $"{host}/{accountId}/bank-details/{firstSubmittedApplicationId}/add-bank-details";
             return bankDetailsUrl;
         }
     }

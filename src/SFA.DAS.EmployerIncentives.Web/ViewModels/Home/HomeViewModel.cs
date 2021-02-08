@@ -8,16 +8,27 @@
         public string AccountLegalEntityId { get; }
         public string OrganisationName { get; }
         public bool NewAgreementRequired { get; }
-        
-        public string AccountsAgreementsUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/agreements";
+        public bool HasMultipleLegalEntities { get; }
+        public string ManageApprenticeshipSiteUrl { get; }
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool newAgreementRequired, string accountsBaseUrl)
+        public string AccountHomeUrl { get; }
+        
+        public string AccountsAgreementsUrl => $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
+
+        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool hasMultipleLegalEntities, bool newAgreementRequired, string manageApprenticeshipSiteUrl)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             OrganisationName = organisationName;
             NewAgreementRequired = newAgreementRequired;
-            _accountsBaseUrl = accountsBaseUrl;
+            ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
+            HasMultipleLegalEntities = hasMultipleLegalEntities;
+            if (!ManageApprenticeshipSiteUrl.EndsWith("/"))
+            {
+                ManageApprenticeshipSiteUrl += "/";
+            }
+            AccountHomeUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
         }
+
     }
 }

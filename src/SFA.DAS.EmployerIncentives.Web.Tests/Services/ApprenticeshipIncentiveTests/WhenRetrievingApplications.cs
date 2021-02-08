@@ -1,4 +1,10 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Moq;
@@ -6,16 +12,8 @@ using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.HashingService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
+namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveTests
 {
     [TestFixture]
     public class WhenRetrievingApplications
@@ -26,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
         private HttpResponseMessage _httpResponseMessage;
         private string _accountId;
         private string _accountLegalEntityId;
-        private ApplicationService _sut;
+        private ApprenticeshipIncentiveService _sut;
         private Fixture _fixture;
         private string _baseUrl = "http://www.someurl.com";
 
@@ -46,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
             _httpClient = new HttpClient(_httpClientHandlerFake);
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
-            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApprenticeshipIncentiveService(_httpClient, _hashingServiceMock.Object);
         }
 
         [Test]
