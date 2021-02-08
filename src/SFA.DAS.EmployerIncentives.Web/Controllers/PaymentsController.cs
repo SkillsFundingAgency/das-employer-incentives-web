@@ -67,8 +67,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
             foreach (var apprenticeApplicationModel in submittedApplications)
             {
-                apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
-                apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
+                if(apprenticeApplicationModel.FirstPaymentStatus != null)
+                    apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
+
+                if(apprenticeApplicationModel.SecondPaymentStatus != null)
+                    apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
             }
 
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
