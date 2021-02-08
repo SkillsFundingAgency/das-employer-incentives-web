@@ -13,5 +13,16 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public List<OrganisationViewModel> Organisations { get; set; }
 
         public string Selected { get; set; }
+
+        public string AccountHomeUrl { get; set; }
+
+        public void SetManageAccountsUrl(string accountsBaseUrl)
+        {
+            if (!accountsBaseUrl.EndsWith("/"))
+            {
+                accountsBaseUrl += "/";
+            }
+            AccountHomeUrl = $"{accountsBaseUrl}accounts/{AccountId}/teams";
+        }
     }
 }

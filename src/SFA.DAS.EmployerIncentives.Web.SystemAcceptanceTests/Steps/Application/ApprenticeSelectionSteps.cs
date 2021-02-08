@@ -155,7 +155,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
-            model.Should().HaveTitle("Confirm apprentices");
+            model.Should().HaveTitle("Confirm your apprentices");
         }
 
         [Then(@"the employer is informed that they haven't selected an apprentice")]
@@ -170,10 +170,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveTitle(model.Title);
             _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices");
-            model.Should().HaveTitle(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            model.Should().HaveTitle("Which apprentices do you want to apply for?");
             model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
             model.AccountId.Should().Be(hashedAccountId);
-            viewResult.Should().ContainError(model.FirstCheckboxId, model.Title);
+            viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }
     }
 }
