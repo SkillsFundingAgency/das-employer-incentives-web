@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         [Test]
         public void Then_page_title_is_set()
         {
-            _model.Title.Should().Be(SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
+            _model.Title.Should().Be("Which apprentices do you want to apply for?");
         }
 
         [Test]

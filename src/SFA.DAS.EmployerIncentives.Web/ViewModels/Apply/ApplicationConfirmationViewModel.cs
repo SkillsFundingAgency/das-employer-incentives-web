@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public bool BankDetailsRequired { get; }
         public bool NewAgreementRequired { get; }
 
-        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired) : base("Confirm apprentices")
+        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired) : base("Confirm your apprentices")
         {
             ApplicationId = applicationId;
             AccountId = accountId;
