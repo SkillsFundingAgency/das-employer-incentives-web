@@ -4,6 +4,14 @@
     ViewBag.GaData.Vpv = "employer-incentives-start-page";
     ViewData["ZenDeskLabels"] = "ei-start";
 }
+@if (Model.HasMultipleLegalEntities)
+{
+    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+}
+else
+{
+    <a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
+}
 
 <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
@@ -34,7 +42,7 @@
                 We'll make the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days.
             </p>
             <p class="govuk-body">
-                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process. 
+                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
             </p>
             <p class="govuk-body">
                 We'll need your organisation's bank details, so that we can pay your organisation directly.
@@ -59,7 +67,7 @@
             <p class="govuk-body">
                 You can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
             </p>
-            
+
             <h2 class="govuk-heading-m">Before you start</h2>
             <p class="govuk-body">
                 You'll need:

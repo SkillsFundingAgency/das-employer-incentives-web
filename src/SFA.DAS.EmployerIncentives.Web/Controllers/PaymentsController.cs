@@ -64,6 +64,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
 
+            //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
+            foreach (var apprenticeApplicationModel in submittedApplications)
+            {
+                if(apprenticeApplicationModel.FirstPaymentStatus != null)
+                    apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
+
+                if(apprenticeApplicationModel.SecondPaymentStatus != null)
+                    apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
+            }
+
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
 
             var model = new ViewApplicationsViewModel(accountId, accountLegalEntityId)

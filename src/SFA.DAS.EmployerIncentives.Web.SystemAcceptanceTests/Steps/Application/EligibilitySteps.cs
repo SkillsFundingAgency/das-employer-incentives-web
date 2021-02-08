@@ -302,6 +302,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsInformedTheyNeedToSelectAnOption()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
@@ -312,7 +313,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveBackLink($"/{hashedAccountId}");
+            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}");
         }
     }
 }
