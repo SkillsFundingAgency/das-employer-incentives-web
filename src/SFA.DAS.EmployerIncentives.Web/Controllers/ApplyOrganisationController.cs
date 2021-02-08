@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (legalEntities.Count() > 1)
             {
                 viewModel.AddOrganisations(legalEntities);
+                viewModel.SetManageAccountsUrl(_configuration.ManageApprenticeshipSiteUrl);
                 return View("ChooseOrganisation", viewModel);
             }
 

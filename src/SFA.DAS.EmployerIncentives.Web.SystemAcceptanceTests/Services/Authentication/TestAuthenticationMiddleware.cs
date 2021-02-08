@@ -16,12 +16,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authenti
         public async Task InvokeAsync(HttpContext context, ITestAuthenticationOptions options)
         {
             if (options.Claims?.Count > 0)
-            {
+            {                
                 var claimsIdentity = new ClaimsIdentity(
                     options.Claims,
                     "AuthenticationTypes.Federation"
                 );
-                
+
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 context.User = claimsPrincipal;
             }
