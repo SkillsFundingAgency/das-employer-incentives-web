@@ -1,7 +1,10 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
@@ -23,11 +26,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
     {
         private readonly TestContext _testContext;
         private readonly TestData.Account.WithInitialApplicationAndBankingDetails _testdata;
+        private readonly Fixture _fixture;
 
         public CompleteApplicationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testdata = new TestData.Account.WithInitialApplicationAndBankingDetails();
+            _fixture = new Fixture();
         }
    
         [Given(@"given the employer has all the information required to process their bank details")]
@@ -35,6 +40,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         {            
             _testContext.TestDataStore.Add("HashedAccountId", _testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testdata.HashedAccountId);
+
+            var application = _fixture.Create<ApplicationResponse>();
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(application)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
