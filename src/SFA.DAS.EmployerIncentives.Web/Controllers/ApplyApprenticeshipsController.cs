@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using SFA.DAS.EmployerIncentives.Web.Models;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -96,8 +97,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("confirm-apprentices/{applicationId}")]
         public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
         {
-            var model = await _applicationService.Get(accountId, applicationId);
-            return View(model);
+            var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -150,6 +151,31 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountLegalEntityId = application.AccountLegalEntityId,
                 Apprenticeships = apprenticeships.OrderBy(a => a.LastName),
                 OrganisationName = legalEntityName
+            };
+        }
+
+
+        private async Task<ApplicationConfirmationViewModel> GetConfirmApprenticeshipViewModel(string accountId, Guid applicationId)
+        {
+            var application = await _applicationService.Get(accountId, applicationId);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+
+            var apprenticeships = application.Apprentices.Select(MapFromApplicationApprenticeDto);
+            return new ApplicationConfirmationViewModel(applicationId, accountId, application.AccountLegalEntityId,
+                                                        apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
+        }
+
+        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
+        {
+            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            {
+                ApprenticeshipId = apprentice.ApprenticeshipId,
+                CourseName = apprentice.CourseName,
+                FirstName = apprentice.FirstName,
+                LastName = apprentice.LastName,
+                ExpectedAmount = apprentice.ExpectedAmount,
+                StartDate = apprentice.StartDate,
+                Uln = apprentice.Uln
             };
         }
     }

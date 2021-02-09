@@ -20,7 +20,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string Title => "Confirm your apprentices";
 
         public string OrganisationName { get; set; }
-        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired) 
+        public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, 
+            IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired, string organisationName) 
         {
             ApplicationId = applicationId;
             AccountId = accountId;
@@ -29,6 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             TotalPaymentAmount = Apprentices.Sum(x => x.ExpectedAmount);
             BankDetailsRequired = bankDetailsRequired;
             NewAgreementRequired = newAgreementRequired;
+            OrganisationName = organisationName;
         }
 
         public class ApplicationApprenticeship

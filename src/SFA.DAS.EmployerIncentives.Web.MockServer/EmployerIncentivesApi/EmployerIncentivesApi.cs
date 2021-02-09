@@ -456,7 +456,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             {
                 Application = new IncentiveApplicationDto
                 {
-                    AccountLegalEntityId = 123,
+                    AccountLegalEntityId = data.AccountLegalEntityId1,
                     BankDetailsRequired = true,
                     Apprenticeships = new List<IncentiveApplicationApprenticeshipDto>
                     {
