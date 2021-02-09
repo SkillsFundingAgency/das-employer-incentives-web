@@ -15,24 +15,22 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    public class ApplyApprenticeshipsController : Controller
+    public class ApplyApprenticeshipsController : ControllerBase
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
-        private readonly ILegalEntitiesService _legalEntityService;
         private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
-            IOptions<ExternalLinksConfiguration> configuration)
+            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
-            _legalEntityService = legalEntityService;
             _configuration = configuration.Value;
-        }
+        } 
 
         [HttpGet]
         [Route("{accountLegalEntityId}/select-apprentices")]
@@ -116,21 +114,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("accept-new-agreement/{applicationId}")]
         public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
         {
-            var accountLegalEntityId = await _applicationService.GetApplicationLegalEntity(accountId, applicationId);
-            var legalEntity = await _legalEntityService.Get(accountId, accountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntity.Name, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
+            var application = await _applicationService.Get(accountId, applicationId);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
             return View(viewModel);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
         {
             var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
-
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
             return new SelectApprenticeshipsViewModel
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
+                Apprenticeships = apprenticeships.OrderBy(a => a.LastName),
+                OrganisationName = legalEntityName
             };
         }
 
@@ -144,12 +143,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 apprenticeships.ForEach(x => x.Selected = application.Apprentices.Any(a => a.ApprenticeshipId == x.Id));
             }
-
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             return new SelectApprenticeshipsViewModel
             {
                 AccountId = accountId,
                 AccountLegalEntityId = application.AccountLegalEntityId,
-                Apprenticeships = apprenticeships.OrderBy(a => a.LastName)
+                Apprenticeships = apprenticeships.OrderBy(a => a.LastName),
+                OrganisationName = legalEntityName
             };
         }
     }
