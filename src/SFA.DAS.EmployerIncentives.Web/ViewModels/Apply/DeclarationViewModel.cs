@@ -11,10 +11,11 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public string OrganisationName { get; set; }
 
-        public DeclarationViewModel(string accountId, Guid applicationId)
+        public DeclarationViewModel(string accountId, Guid applicationId, string organisationName)
         {
             AccountId = accountId;
             ApplicationId = applicationId;
+            OrganisationName = organisationName;
         }
     }
 }

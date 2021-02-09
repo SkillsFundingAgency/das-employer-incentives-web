@@ -39,7 +39,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("declaration/{applicationId}")]
         public async Task<ViewResult> Declaration(string accountId, Guid applicationId)
         {
-            return View(new DeclarationViewModel(accountId, applicationId));
+            var application = await _applicationService.Get(accountId, applicationId);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            return View(new DeclarationViewModel(accountId, applicationId, legalEntityName));
         }
 
         [HttpPost]
