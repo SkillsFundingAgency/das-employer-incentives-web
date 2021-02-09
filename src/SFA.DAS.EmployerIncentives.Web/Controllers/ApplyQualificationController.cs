@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Threading.Tasks;
 
@@ -6,12 +7,20 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    public class ApplyQualificationController : Controller
+    public class ApplyQualificationController : ControllerBase
     {
+        public ApplyQualificationController(ILegalEntitiesService legalEntitiesService) : base(legalEntitiesService)
+        {
+        }
+
         [Route("{accountLegalEntityId}/eligible-apprentices")]
         [HttpGet]
-        public async Task<IActionResult> GetQualificationQuestion(QualificationQuestionViewModel viewModel)
+        public async Task<IActionResult> GetQualificationQuestion(string accountId, string accountLegalEntityId)
         {
+            var viewModel = new QualificationQuestionViewModel 
+            {
+                OrganisationName = await GetLegalEntityName(accountId, accountLegalEntityId)
+            };
             return View("QualificationQuestion", viewModel);
         }
 

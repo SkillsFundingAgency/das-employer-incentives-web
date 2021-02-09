@@ -2,12 +2,16 @@
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class DeclarationViewModel : ViewModel
+    public class DeclarationViewModel : IViewModel
     {
         public string AccountId { get; }
         public Guid ApplicationId { get; }
 
-        public DeclarationViewModel(string accountId, Guid applicationId) : base("Declaration")
+        public string Title => "Declaration";
+
+        public string OrganisationName { get; set; }
+
+        public DeclarationViewModel(string accountId, Guid applicationId)
         {
             AccountId = accountId;
             ApplicationId = applicationId;

@@ -1,10 +1,10 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class ValidateTermsSignedViewModel : ViewModel
+    public class ValidateTermsSignedViewModel : IViewModel
     {
         private readonly string _accountsBaseUrl;
 
-        public ValidateTermsSignedViewModel(string accountId, string accountsBaseUrl, string title = "You need to accept the employer agreement") : base(title)
+        public ValidateTermsSignedViewModel(string accountId, string accountsBaseUrl)
         {
             AccountId = accountId;
             _accountsBaseUrl = accountsBaseUrl;
@@ -13,5 +13,9 @@
         public string AccountId { get; }
         public string AccountsHomeUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/teams";
         public string AccountsAgreementsUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/agreements";
+
+        public string Title => "You need to accept the employer agreement";
+
+        public string OrganisationName { get; set; }
     }
 }

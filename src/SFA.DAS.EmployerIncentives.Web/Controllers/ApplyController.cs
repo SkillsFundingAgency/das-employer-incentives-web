@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    public class ApplyController : Controller
+    public class ApplyController : ControllerBase
     {
         private readonly ExternalLinksConfiguration _configuration;
         private readonly IApplicationService _applicationService;
@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public ApplyController(
             IOptions<ExternalLinksConfiguration> configuration,
             IApplicationService applicationService,
-            ILegalEntitiesService legalEntitiesService)
+            ILegalEntitiesService legalEntitiesService) : base(legalEntitiesService)
         {
             _configuration = configuration.Value;
             _applicationService = applicationService;
@@ -59,22 +59,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("{accountLegalEntityId}/no-eligible-apprentices")]
         public async Task<ViewResult> CannotApply(string accountId, string accountLegalEntityId)
         {
-            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            var title = $"{legalEntity?.Name} does not have any eligible apprentices";
-            if (String.IsNullOrWhiteSpace(legalEntity?.Name)) // no legal entities associated with the account
-            {
-                title = $"Your organisation does not have any eligible apprentices";
-            }
-            return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl, title, legalEntity?.Name));
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl) { OrganisationName = legalEntityName };
+            return View(model);
         }
 
         [HttpGet]
         [Route("{accountLegalEntityId}/cannot-apply")]
         public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
-            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            var title = $"{legalEntity?.Name} cannot apply for this payment";
-            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, title, legalEntity?.Name));
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl) { OrganisationName = legalEntityName };
+            return View(model);
         }
 
         [HttpGet]

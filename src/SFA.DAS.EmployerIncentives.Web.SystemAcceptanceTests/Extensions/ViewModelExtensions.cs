@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
 {
     public static class AssertionsExtensions
     {
-        public static ViewModelAssertions Should(this ViewModel instance)
+        public static ViewModelAssertions Should(this IViewModel instance)
         {
             return new ViewModelAssertions(instance);
         }

@@ -1,6 +1,6 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Home.HomeViewModel
 @{
-    ViewData["Title"] = "Apply for the hire a new apprentice payment";
+    ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "employer-incentives-start-page";
     ViewData["ZenDeskLabels"] = "ei-start";
 }
@@ -17,7 +17,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">
-                Apply for the hire a new apprentice payment
+                @Model.Title
             </h1>
             <p class="govuk-body">
                 The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.

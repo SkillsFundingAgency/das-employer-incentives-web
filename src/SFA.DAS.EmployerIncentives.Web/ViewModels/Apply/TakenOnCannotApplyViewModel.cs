@@ -2,7 +2,7 @@
 {
     public class TakenOnCannotApplyViewModel : CannotApplyViewModel
     {
-        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string title, string organisationName) : base(accountId, commitmentsBaseUrl, title, organisationName)
+        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl) : base(accountId, commitmentsBaseUrl)
         {
             if (!commitmentsBaseUrl.EndsWith("/"))
             {
@@ -10,5 +10,7 @@
             }
             AddApprenticesUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/inform";
         }
+
+        public new string Title => $"{OrganisationName} does not have any eligible apprentices";
     }
 }
