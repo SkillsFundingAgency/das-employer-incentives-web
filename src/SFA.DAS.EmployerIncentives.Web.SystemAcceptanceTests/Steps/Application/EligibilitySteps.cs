@@ -38,6 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
            .Given(
@@ -85,6 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
            .Given(
@@ -131,7 +133,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
-            _testDataStore.Add("LegalEntity", testdata.LegalEntities.First());
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
             .Given(

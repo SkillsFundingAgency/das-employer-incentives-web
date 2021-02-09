@@ -14,7 +14,7 @@
         public string AccountsHomeUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/teams";
         public string AccountsAgreementsUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/agreements";
 
-        public string Title => "You need to accept the employer agreement";
+        public string Title => $"{OrganisationName} needs to accept the employer agreement";
 
         public string OrganisationName { get; set; }
     }
