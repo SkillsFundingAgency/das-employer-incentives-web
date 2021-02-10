@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public string AddBankDetailsLink { get; set; }
 
-        public string Title => "Your hire a new apprentice payment applications";
+        public string Title => "Hire a new apprentice payment applications";
 
         public string OrganisationName { get; set; }
     }

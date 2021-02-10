@@ -63,6 +63,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
+            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
 
             //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
             foreach (var apprenticeApplicationModel in submittedApplications)
@@ -82,7 +83,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 SortField = sortField,
                 ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
                 ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
-                AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId)
+                AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId),
+                OrganisationName = legalEntity?.Name
             };
             model.SetSortOrder(sortField, sortOrder);
 
