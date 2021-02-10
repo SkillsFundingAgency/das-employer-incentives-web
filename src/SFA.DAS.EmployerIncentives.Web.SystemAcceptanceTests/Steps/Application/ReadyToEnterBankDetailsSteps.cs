@@ -267,7 +267,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.ViewData.ModelState.ErrorCount.Should().Be(1);
             viewResult.ViewData.ModelState.ContainsKey(nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)).Should().BeTrue();
             viewResult.ViewData.ModelState[nameof(BankDetailsConfirmationViewModel.CanProvideBankDetails)]
-                .Errors.First().ErrorMessage.Should().Be(BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+                .Errors.First().ErrorMessage.Should().Be(new BankDetailsConfirmationViewModel().CanProvideBankDetailsNotSelectedMessage);
         }
 
         [Then(@"the employer is sent an email reminding them to supply their bank details to complete the application")]

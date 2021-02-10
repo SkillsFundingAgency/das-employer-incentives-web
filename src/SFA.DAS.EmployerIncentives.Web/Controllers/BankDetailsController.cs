@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/bank-details/{applicationId}")]
-    public class BankDetailsController : Controller
+    public class BankDetailsController : ControllerBase
     {
         private readonly IEmailService _emailService;
         private readonly IApplicationService _applicationService;
@@ -25,7 +26,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             IEmailService emailService,
             IApplicationService applicationService,
             IHashingService hashingService,
-            IOptions<ExternalLinksConfiguration> configuration)
+            ILegalEntitiesService legalEntitiesService,
+            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntitiesService)
         {
             _verificationService = verificationService;
             _emailService = emailService;
@@ -44,8 +46,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("Confirmation", "ApplicationComplete");
             }
-
-            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId, OrganisationName = legalEntityName });
         }
 
         [HttpPost]
@@ -54,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
             {
-                ModelState.AddModelError("CanProvideBankDetails", BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+                ModelState.AddModelError("CanProvideBankDetails", viewModel.CanProvideBankDetailsNotSelectedMessage);
                 return View(viewModel);
             }
 
