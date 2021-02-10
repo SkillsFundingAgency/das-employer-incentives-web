@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             legalEntities[0].AccountId = _accountId;
             legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
+            
             // Act
             var viewResult = await _sut.Start(_accountId, _accountLegalEntityId) as ViewResult;
 
