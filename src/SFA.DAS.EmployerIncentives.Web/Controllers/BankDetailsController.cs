@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("add-bank-details")]
         public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             var model = new AddBankDetailsViewModel { OrganisationName = legalEntityName };
             return View(model);

@@ -109,7 +109,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmationViewModel;
             model.Should().NotBeNull();
-            model.AccountsUrl.Should().NotBeNullOrEmpty();
+            model.AccountId.Should().Be(_testdata.HashedAccountId);
+            model.AccountLegalEntityId.Should().Be(_testdata.HashedAccountLegalEntityId);
         }
     }
 }
