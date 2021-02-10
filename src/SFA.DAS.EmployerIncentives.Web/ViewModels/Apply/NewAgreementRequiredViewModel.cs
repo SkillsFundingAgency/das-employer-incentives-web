@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             _accountsBaseUrl = accountsBaseUrl;
             AccountId = accountId;
             ApplicationId = applicationId;
+            OrganisationName = organisationName;
         }
     }
 }
