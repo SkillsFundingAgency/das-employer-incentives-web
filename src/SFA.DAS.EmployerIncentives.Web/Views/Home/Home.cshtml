@@ -75,6 +75,17 @@ else
                 <li>your organisation's bank details (someone else from your organisation can add them later)</li>
             </ul>
 
+            @if (Model.NewAgreementRequired)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        If you're applying for apprentices with a start date from <span class="das-no-wrap">1 February 2021</span>, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
+                    </strong>
+                </div>
+            }
+
             <a href="/@Model.AccountId/apply/@Model.AccountLegalEntityId/eligible-apprentices" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now
                 <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
