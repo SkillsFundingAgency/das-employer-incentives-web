@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 // redirect to interstitial page
                 await SendBankDetailsReminderEmail(viewModel.AccountId, viewModel.ApplicationId);
-                return RedirectToAction("AddBankDetails");
+                return RedirectToAction("AddBankDetails", new { accountId = viewModel.AccountId, applicationId = viewModel.ApplicationId });
             }
 
             // redirect to need bank details page
