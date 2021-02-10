@@ -90,9 +90,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("{accountLegalEntityId}/no-applications")]
-        public ViewResult NoApplications()
+        public async Task<IActionResult> NoApplications(string accountId, string accountLegalEntityId)
         {
-            var model = new NoApplicationsViewModel();
+            var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
+            var model = new NoApplicationsViewModel 
+            { 
+                OrganisationName = legalEntity?.Name, 
+                AccountId = accountId, 
+                AccountLegalEntityId = accountLegalEntityId 
+            };
             return View(model);
         }
 
