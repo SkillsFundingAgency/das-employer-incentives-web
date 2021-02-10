@@ -74,9 +74,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public IActionResult AddBankDetails(string accountId, Guid applicationId)
+        public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
         {
-            return View();
+            var application = await _applicationService.Get(accountId, applicationId);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            var model = new AddBankDetailsViewModel { OrganisationName = legalEntityName };
+            return View(model);
         }
 
         [HttpPost]
