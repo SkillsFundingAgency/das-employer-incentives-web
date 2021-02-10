@@ -6,7 +6,6 @@
 
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
-        public string OrganisationName { get; }
         public bool NewAgreementRequired { get; }
         public bool HasMultipleLegalEntities { get; }
         public string ManageApprenticeshipSiteUrl { get; }
@@ -26,7 +25,7 @@
             OrganisationName = organisationName;
             NewAgreementRequired = newAgreementRequired;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
-            OrganisationName = organisationName;
+            HasMultipleLegalEntities = hasMultipleLegalEntities;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))
             {
                 ManageApprenticeshipSiteUrl += "/";
