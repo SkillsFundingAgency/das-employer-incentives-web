@@ -4,9 +4,11 @@
     {
         public CannotApplyViewModel(
             string accountId,
-            string accountsBaseUrl)
+            string accountsBaseUrl,
+            string organisationName)
         {
             AccountId = accountId;
+            OrganisationName = organisationName;
             if (!accountsBaseUrl.EndsWith("/"))
             {
                 accountsBaseUrl += "/";

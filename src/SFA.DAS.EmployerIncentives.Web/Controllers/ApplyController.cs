@@ -16,7 +16,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly ExternalLinksConfiguration _configuration;
         private readonly IApplicationService _applicationService;
-        private readonly ILegalEntitiesService _legalEntitiesService;
 
         public ApplyController(
             IOptions<ExternalLinksConfiguration> configuration,
@@ -25,7 +24,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             _configuration = configuration.Value;
             _applicationService = applicationService;
-            _legalEntitiesService = legalEntitiesService;
         }
 
         [HttpGet]
@@ -62,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<ViewResult> CannotApply(string accountId, string accountLegalEntityId)
         {
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
-            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl) { OrganisationName = legalEntityName };
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
             return View(model);
         }
 
@@ -71,7 +69,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
-            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl) { OrganisationName = legalEntityName };
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
             return View(model);
         }
 

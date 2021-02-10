@@ -2,7 +2,7 @@
 {
     public class TakenOnCannotApplyViewModel : CannotApplyViewModel
     {
-        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl) : base(accountId, commitmentsBaseUrl)
+        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string accountsBaseUrl, string organisationName) : base(accountId, accountsBaseUrl, organisationName)
         {
             if (!commitmentsBaseUrl.EndsWith("/"))
             {
