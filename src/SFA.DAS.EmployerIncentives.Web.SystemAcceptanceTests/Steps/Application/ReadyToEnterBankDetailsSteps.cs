@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
         private const string NeedBankDetailsUrl = "/complete/need-bank-details";
-        private const string ApplicationCompleteUrl = "/application-complete";
+        private const string ApplicationCompleteUrl = "/application-saved";
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
@@ -111,6 +111,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithBody(_data.AccountLegalEntityId.ToString()));
 
             _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                      .UsingGet()
+              )
+              .RespondWith(
+                  Response.Create()
+                      .WithStatusCode(HttpStatusCode.OK)
+                      .WithHeader("Content-Type", "application/json")
+                      .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                      .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
              .Given(
                  Request
                      .Create()
@@ -153,7 +167,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsRedirectedToTheEnterBankDetailsPage()
         {
             _continueNavigationResponse.StatusCode.Should().NotBe(HttpStatusCode.InternalServerError);
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain($"/MLB7J9/bank-details/{_data.ApplicationId}/add-bank-details");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Contain($"/{_data.HashedAccountId}/bank-details/{_data.ApplicationId}/add-bank-details");
         }
 
         [When(@"the employer states that they are unable to provide bank details now")]

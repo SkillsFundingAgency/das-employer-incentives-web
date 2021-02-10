@@ -226,13 +226,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-
+            var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
                 $"{hashedAccountId}/apply/{hashedAccountLegalEntityId}/eligible-apprentices")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                 {
+                    new KeyValuePair<string, string>("OrganisationName", testdata.LegalEntities.First().LegalEntityName)
                 })
             };
 
@@ -297,9 +298,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as TakenOnCannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle($"{legalEntity.LegalEntityName} cannot apply for this payment");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
-            model.AddApprenticesUrl.Should().Be($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
+            model.AddApprenticesUrl.Should().Contain($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/cannot-apply");
@@ -317,7 +318,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle($"Does {legalEntity.LegalEntityName} organisation have apprentices who are eligible for the payment?");
+            model.Should().HaveTitle($"Does {legalEntity.LegalEntityName} have apprentices who are eligible for the payment?");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);

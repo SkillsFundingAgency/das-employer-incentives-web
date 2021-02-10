@@ -49,6 +49,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(_testdata.AccountLegalEntityId.ToString()));
 
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(_testdata.ApplicationResponse, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
             var getBankingDetailsUrl = "/" + OuterApiRoutes.Application.GetBankingDetailsUrl(_testdata.AccountId, _testdata.ApplicationId, _testdata.HashedAccountId).Split("?").First();
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -92,7 +106,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             queryParams.Should().Contain("return");
             queryParams["journey"].Should().Be("new");
             var returnUri = new Uri(HttpUtility.UrlDecode(queryParams["return"]));
-            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/application-complete/{_testdata.ApplicationId}");
+            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/complete/{_testdata.ApplicationId}/application-saved");
 
             request = new HttpRequestMessage(
                 HttpMethod.Get,
