@@ -28,6 +28,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _claimsIdentity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(_claimsIdentity);
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
 
             _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object)
             {

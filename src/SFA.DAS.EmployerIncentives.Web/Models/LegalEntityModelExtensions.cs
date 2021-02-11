@@ -21,7 +21,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 Name = dto.LegalEntityName,
                 HasSignedIncentiveTerms = dto.HasSignedIncentivesTerms,
                 VrfCaseStatus = dto.VrfCaseStatus,
-                VrfVendorId = dto.VrfVendorId
+                VrfVendorId = dto.VrfVendorId,
+                SignedAgreementVersion = dto.SignedAgreementVersion
             };
         }
     }

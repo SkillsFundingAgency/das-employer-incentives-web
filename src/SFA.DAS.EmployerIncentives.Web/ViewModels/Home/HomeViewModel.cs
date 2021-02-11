@@ -2,24 +2,33 @@
 {
     public class HomeViewModel
     {
+        private readonly string _accountsBaseUrl;
+
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
+        public string OrganisationName { get; }
+        public bool NewAgreementRequired { get; }
         public bool HasMultipleLegalEntities { get; }
         public string ManageApprenticeshipSiteUrl { get; }
 
         public string AccountHomeUrl { get; }
+        
+        public string AccountsAgreementsUrl => $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, bool hasMultipleLegalEntities, string manageApprenticeshipSiteUrl)
+        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool hasMultipleLegalEntities, bool newAgreementRequired, string manageApprenticeshipSiteUrl)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
-            HasMultipleLegalEntities = hasMultipleLegalEntities;
+            OrganisationName = organisationName;
+            NewAgreementRequired = newAgreementRequired;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
-            if (!manageApprenticeshipSiteUrl.EndsWith("/"))
+            HasMultipleLegalEntities = hasMultipleLegalEntities;
+            if (!ManageApprenticeshipSiteUrl.EndsWith("/"))
             {
-                manageApprenticeshipSiteUrl += "/";
+                ManageApprenticeshipSiteUrl += "/";
             }
-            AccountHomeUrl = $"{manageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            AccountHomeUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
         }
+
     }
 }
