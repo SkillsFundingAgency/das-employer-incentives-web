@@ -79,7 +79,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(accountLegalEntityId.ToString()));
 
-
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
         }
@@ -136,6 +135,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(_data.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+             .Given(
+                 Request
+                     .Create()
+                     .WithPath($"/accounts/{_data.AccountId}/legalentities/{_data.AccountLegalEntityId}")
+                     .UsingGet()
+             )
+             .RespondWith(
+                 Response.Create()
+                     .WithStatusCode(HttpStatusCode.OK)
+                     .WithHeader("Content-Type", "application/json")
+                     .WithBody(JsonConvert.SerializeObject(_data.LegalEntity)));
 
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
             var request = new HttpRequestMessage(HttpMethod.Post, url)

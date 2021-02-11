@@ -42,6 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var data = new ApplicationInformationForExternalVerificationModel
             {
                 ApplicationId = applicationId,
+                LegalEntityName = legalEntity.Name,
                 IsNew = !amendBankDetails,
                 HashedAccountId = hashedAccountId,
                 HashedLegalEntityId = _hashingService.HashValue(bankingDetails.LegalEntityId),
@@ -61,7 +62,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             if (amendBankDetails)
             {
                 data.VendorId = legalEntity.VrfVendorId;
-                data.LegalEntityName = legalEntity.Name;
             }
 
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();

@@ -52,6 +52,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             hashingServiceMock.Setup(x => x.HashValue(legalEntityId)).Returns(hashedLegalEntityId);
 
             var legalEntitiesServiceMock = new Mock<ILegalEntitiesService>();
+            var legalEntity = new LegalEntityModel
+            {
+                AccountId = hashedAccountId,
+                AccountLegalEntityId = hashedAccountLegalEntityId,
+                Name = "Legal Entity",
+                VrfVendorId = "ABC123"
+            };
+            legalEntitiesServiceMock.Setup(x => x.Get(hashedAccountId, hashedAccountLegalEntityId)).ReturnsAsync(legalEntity);
 
             var webConfigurationOptionsMock = new Mock<WebConfigurationOptions>();
             const string achieveServiceBaseUrl = "https://dfeuat.achieveservice.com/service/provide-organisation-information";

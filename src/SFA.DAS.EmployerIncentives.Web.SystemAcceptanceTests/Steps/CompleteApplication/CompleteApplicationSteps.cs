@@ -41,8 +41,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             _testContext.TestDataStore.Add("HashedAccountId", _testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testdata.HashedAccountId);
 
-            var application = _fixture.Create<ApplicationResponse>();
-
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
@@ -53,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(application)));
+                        .WithBody(JsonConvert.SerializeObject(_testdata.ApplicationResponse)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -81,6 +79,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(_testdata.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+             .Given(
+                 Request
+                     .Create()
+                     .WithPath($"/accounts/{_testdata.AccountId}/legalentities/{_testdata.AccountLegalEntityId}")
+                     .UsingGet()
+             )
+             .RespondWith(
+                 Response.Create()
+                     .WithStatusCode(HttpStatusCode.OK)
+                     .WithHeader("Content-Type", "application/json")
+                     .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntity)));
         }
 
         [When(@"the employer provides their bank details")]
