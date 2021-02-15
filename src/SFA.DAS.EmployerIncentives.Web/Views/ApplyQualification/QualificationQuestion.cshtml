@@ -23,10 +23,10 @@
                             </h1>
                         </legend>
                         <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
-                            @Model.OrganisationName cannot apply for an existing employee who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                            @Model.OrganisationName cannot apply for an existing employee who joined their organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
                         </span>
                         <span id="HasTakenOnNewApprentices-hint-2" class="govuk-hint">
-                            @Model.OrganisationName can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
+                            @Model.OrganisationName can only apply for new apprentices who joined their organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
                         </span>
 
                         @if (ViewData.ModelState.ContainsKey(nameof(Model.HasTakenOnNewApprentices)) && ViewData.ModelState[nameof(Model.HasTakenOnNewApprentices)].Errors.Any())
