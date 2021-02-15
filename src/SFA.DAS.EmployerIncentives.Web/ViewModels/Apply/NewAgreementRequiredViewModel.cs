@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public string AccountsAgreementsUrl => $"{_accountsBaseUrl}/accounts/{AccountId}/agreements";
 
-        public string Title => $"{OrganisationName} needs to accept a new employer agreement";
+        public string Title => $"{OrganisationName} needs to accept the new employer agreement";
 
         public string OrganisationName { get; set; }
 
