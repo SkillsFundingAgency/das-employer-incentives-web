@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public bool BankDetailsRequired { get; }
         public bool NewAgreementRequired { get; }
 
-        public string Title => "Confirm your apprentices";
+        public string Title => "Confirm apprentices";
 
         public string OrganisationName { get; set; }
         public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, 
