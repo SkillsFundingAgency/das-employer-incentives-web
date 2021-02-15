@@ -11,6 +11,6 @@
             AddApprenticesUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/inform";
         }
 
-        public new string Title => $"{OrganisationName} does not have any eligible apprentices";
+        public new string Title => $"{OrganisationName} cannot apply for this payment";
     }
 }
