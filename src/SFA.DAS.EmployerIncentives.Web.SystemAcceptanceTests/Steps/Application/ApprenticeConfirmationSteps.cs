@@ -135,7 +135,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as NewAgreementRequiredViewModel;
             model.Should().NotBeNull();
-            model.Title.Should().Be($"{_testData.LegalEntity.LegalEntityName} needs to accept a new employer agreement");
+            model.Title.Should().Be($"{_testData.LegalEntity.LegalEntityName} needs to accept the new employer agreement");
             model.ApplicationId.Should().Be(_testData.ApplicationId);
             model.AccountId.Should().Be(_testData.HashedAccountId);
         }
