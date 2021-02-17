@@ -14,7 +14,7 @@
         <div class="govuk-grid-column-two-thirds">
             <form asp-action="SelectApprenticeships" method="post">
                 @Html.AntiForgeryToken()
-
+                @Html.HiddenFor(x => x.OrganisationName)
                 <partial name="ValidationSummary" />
 
                 <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
@@ -29,14 +29,14 @@
                             We're showing the apprentices in the account with a start date from August 2020 to March 2021. We're not showing any apprentices that have an application.
                         </p>
                         <p class="govuk-body">
-                            Only select new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
+                            Only select new apprentices who joined @Model.OrganisationName from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
                         </p>
 
                         <div class="govuk-warning-text">
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
                                 <span class="govuk-warning-text__assistive">Warning</span>
-                                Do not select existing employees who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                                Do not select existing employees who joined @Model.OrganisationName before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
                             </strong>
                         </div>
 

@@ -1,6 +1,6 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Home.HomeViewModel
 @{
-    ViewData["Title"] = "Apply for the hire a new apprentice payment";
+    ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "employer-incentives-start-page";
     ViewData["ZenDeskLabels"] = "ei-start";
 }
@@ -11,7 +11,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">
-                Apply for the hire a new apprentice payment
+                @Model.Title
             </h1>
             <p class="govuk-body">
                 The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
@@ -37,27 +37,27 @@
                 Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
             </p>
             <p class="govuk-body">
-                We'll need your organisation's bank details, so that we can pay your organisation directly.
+                We'll need @Model.OrganisationName's bank details, so that we can pay them directly.
             </p>
 
             <h2 class="govuk-heading-m">
                 What you can use the payment for
             </h2>
             <p class="govuk-body">
-                You can use the payment for anything to support your organisation's costs.
+                @Model.OrganisationName can use the payment for anything to support your organisation's costs.
             </p>
             <p class="govuk-body">
-                The payment is different to the apprenticeship levy and you can use it to pay for recruiting and employing new apprentices.
+                The payment is different to the apprenticeship levy and @Model.OrganisationName can use it to pay for recruiting and employing new apprentices.
             </p>
 
             <h2 class="govuk-heading-m">
                 Eligibility
             </h2>
             <p class="govuk-body">
-                You cannot apply for an existing employee who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                @Model.OrganisationName cannot apply for an existing employee who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
             </p>
             <p class="govuk-body">
-                You can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
+                @Model.OrganisationName can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
             </p>
 
             <h2 class="govuk-heading-m">Before you start</h2>
@@ -66,8 +66,19 @@
             </p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>to add the apprentices you want to apply for to the apprenticeship service account</li>
-                <li>your organisation's bank details (someone else from your organisation can add them later)</li>
+                <li>@Model.OrganisationName's bank details (someone else from @Model.OrganisationName can add them later)</li>
             </ul>
+
+            @if (Model.NewAgreementRequired)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        If you're applying for apprentices with a start date from <span class="das-no-wrap">1 February 2021</span>, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
+                    </strong>
+                </div>
+            }
 
             <a href="/@Model.AccountId/apply/@Model.AccountLegalEntityId/eligible-apprentices" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now

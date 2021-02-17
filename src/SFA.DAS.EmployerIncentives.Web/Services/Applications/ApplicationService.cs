@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
@@ -35,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return applicationId;
         }
 
-        public async Task<ApplicationConfirmationViewModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true)
+        public async Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true)
         {
             var url = OuterApiRoutes.Application.GetApplication(_hashingService.DecodeValue(accountId), applicationId, includeApprenticeships);
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -79,17 +80,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return accountLegalEntityId;
         }
 
-        private ApplicationConfirmationViewModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
+        private ApplicationModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
-            return new ApplicationConfirmationViewModel(applicationId, accountId,
+            return new ApplicationModel(applicationId, accountId,
                 _hashingService.HashValue(application.AccountLegalEntityId),
                 application.Apprenticeships.OrderBy(x => x.LastName).Select(MapFromApplicationApprenticeDto),
                 application.BankDetailsRequired, application.NewAgreementRequired);
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
+        private ApplicationApprenticeshipModel MapFromApplicationApprenticeDto(IncentiveApplicationApprenticeshipDto apprentice)
         {
-            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            return new ApplicationApprenticeshipModel
             {
                 ApprenticeshipId = _hashingService.HashValue(apprentice.ApprenticeshipId),
                 CourseName = apprentice.CourseName,

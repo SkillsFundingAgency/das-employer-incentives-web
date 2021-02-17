@@ -1,13 +1,20 @@
 ﻿
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete
 {
-    public class ConfirmationViewModel : ViewModel
+    public class ConfirmationViewModel : IViewModel
     {
-        public ConfirmationViewModel(string accountsUrl, string title = "Application complete") : base(title)
+        public ConfirmationViewModel(string accountId, string accountLegalEntityId, string organisationName)
         {
-            AccountsUrl = accountsUrl;
+            AccountId = accountId;
+            AccountLegalEntityId = accountLegalEntityId;
+            OrganisationName = organisationName;
         }
 
-        public string AccountsUrl { get; }
+        public string Title => "Application saved";
+
+        public string OrganisationName { get; set; }
+
+        public string AccountId { get; }
+        public string AccountLegalEntityId { get; }
     }
 }

@@ -21,22 +21,22 @@
             </h1>
 
             @* IF VRF complete and BC vendor set up complete
-                    <h2 class="govuk-heading-m">
-                        You've added your organisation's bank details
-                    </h2>
-                    <p class="govuk-body">
-                        We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
-                    </p>
-                /IF VRF complete and BC vendor set up complete *@
+            <h2 class="govuk-heading-m">
+                You've added your organisation's bank details
+            </h2>
+            <p class="govuk-body">
+                We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
+            </p>
+            /IF VRF complete and BC vendor set up complete *@
 
             @if (Model.ShowBankDetailsInReview)
             {
-                <div class="govuk-inset-text">
-                    <h2 class="govuk-heading-m">
-                        We're reviewing your organisation's bank details
+                <div class="das-highlight">
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
+                        We're reviewing @Model.OrganisationName's bank details
                     </h2>
-                    <p class="govuk-body">
-                        We may contact someone from your organisation to verify the information you've provided. We cannot make any payments until we've completed the review.
+                    <p class="govuk-body govuk-!-margin-bottom-0">
+                        We cannot make any payments until we've verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.
                     </p>
                 </div>
             }
@@ -45,45 +45,52 @@
             {
                 <div class="das-highlight das-highlight--featured">
                     <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
-                        Add your organisation's bank details
+                        Add @Model.OrganisationName's bank details
                     </h2>
                     <p class="govuk-body das-highlight--featured__body">
-                        We need your organisation's bank details, so that we can make the hire a new apprentice payment.
+                        We cannot make any payments until we've received and verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.
                     </p>
                     <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
                         <a class="govuk-link das-link--white" href="@Model.AddBankDetailsLink">Add bank details</a>
                     </p>
                 </div>
             }
-
+            <p class="govuk-body">
+                We'll send the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days. The training provider needs to confirm to ESFA when an apprentice is ready for each payment.
+            </p>
+            <p class="govuk-body">
+                Payments are sent by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
+            </p>
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        When you'll get paid
+                        Why we might send the payment after the estimated date
                     </span>
                 </summary>
                 <div class="govuk-details__text">
                     <p class="govuk-body">
-                        You'll receive the first payment after the apprentice completes 90 days of
-                        their apprenticeship training and the second payment after 365 days. Your training provider will
-                        confirm the apprenticeship start date and we'll add 90 days to the last calendar day of the
-                        month.
-                    </p>
-                    <p class="govuk-body">
-                        We make payments on the 14th working day of each month, starting from January
-                        2021. It will take longer to get your first payment for any apprentices who start their training
-                        in August or September.
-                    </p>
-                    <p class="govuk-body">
-                        For example, if your training provider confirms an apprentice started their
-                        apprenticeship training on:
+                        We might send the payment after the estimated date if the training provider:
                     </p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            <span class="das-no-wrap">1 September 2020</span> - we'll make the first payment on <span class="das-no-wrap">14 January 2021</span>
+                            does not submit their information on time
                         </li>
                         <li>
-                            <span class="das-no-wrap">4 January 2021</span> - we'll make the first payment on <span class="das-no-wrap">14 April 2021</span>
+                            gives us information that does not match what is in the apprenticeship service account (also known as a 'data lock')
+                        </li>
+                        <li>
+                            changes an apprentice's start date
+                        </li>
+                    </ul>
+                    <p class="govuk-body">
+                        We also might send the payment after the estimated date if:
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            @Model.OrganisationName does not add their bank details or if we have not confirmed them
+                        </li>
+                        <li>
+                            an apprentice takes a break in learning
                         </li>
                     </ul>
                 </div>

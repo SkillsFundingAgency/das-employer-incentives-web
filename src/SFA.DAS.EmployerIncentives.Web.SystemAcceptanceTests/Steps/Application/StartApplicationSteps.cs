@@ -62,6 +62,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
              Response.Create()
                  .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
                  .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/accounts/{testdata.AccountId}/legalentities/{testdata.LegalEntities.First().AccountLegalEntityId}")
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First()))
+                  .WithStatusCode(HttpStatusCode.OK));
         }
 
         [Given(@"an employer with a multiple organisations wants to apply for a grant")]
