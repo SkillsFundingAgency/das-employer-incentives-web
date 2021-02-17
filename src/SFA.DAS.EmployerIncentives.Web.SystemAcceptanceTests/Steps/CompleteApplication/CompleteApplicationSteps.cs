@@ -68,6 +68,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                         .WithHeader("Content-Type", "application/json")
                         .WithBody(_testdata.AccountLegalEntityId.ToString()));
 
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(_testdata.ApplicationResponse, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
             var getBankingDetailsUrl = "/" + OuterApiRoutes.Application.GetBankingDetailsUrl(_testdata.AccountId, _testdata.ApplicationId, _testdata.HashedAccountId).Split("?").First();
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -81,6 +95,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                     Response.Create()
                         .WithBody(JsonConvert.SerializeObject(_testdata.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+           .Given(
+                   Request
+                   .Create()
+                   .WithPath($"/accounts/{_testdata.AccountId}/legalentities")
+                   .UsingGet()
+                   )
+               .RespondWith(
+             Response.Create()
+               .WithStatusCode(HttpStatusCode.OK)
+               .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [When(@"the employer provides their bank details")]
@@ -99,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             queryParams.Should().Contain("return");
             queryParams["journey"].Should().Be("new");
             var returnUri = new Uri(HttpUtility.UrlDecode(queryParams["return"]));
-            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/application-complete/{_testdata.ApplicationId}");
+            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/complete/{_testdata.ApplicationId}/application-saved");
 
             request = new HttpRequestMessage(
                 HttpMethod.Get,
@@ -116,7 +142,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmationViewModel;
             model.Should().NotBeNull();
-            model.AccountsUrl.Should().NotBeNullOrEmpty();
+            model.AccountId.Should().Be(_testdata.HashedAccountId);
+            model.AccountLegalEntityId.Should().Be(_testdata.HashedAccountLegalEntityId);
         }
     }
 }

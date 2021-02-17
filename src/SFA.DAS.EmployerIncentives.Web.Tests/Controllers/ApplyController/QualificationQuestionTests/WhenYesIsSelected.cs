@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.QualificationQuestionTests
@@ -10,13 +12,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
     [TestFixture]
     public class WhenYesIsSelected
     {
+        private Mock<ILegalEntitiesService> _legalEntitiesService;
         private ApplyQualificationController _sut;
 
         [SetUp]
         public void SetUp()
         {
-            _sut = new Web.Controllers.ApplyQualificationController();
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
+            _sut = new Web.Controllers.ApplyQualificationController(_legalEntitiesService.Object);
         }
+
 
         [Test]
         public async Task Then_The_Agreement_Is_Checked_When_Eligible_Apprenticeships_Exist()

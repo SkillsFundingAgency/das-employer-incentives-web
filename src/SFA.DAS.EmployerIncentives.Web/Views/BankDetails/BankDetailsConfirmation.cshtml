@@ -13,15 +13,15 @@
         <div class="govuk-grid-column-two-thirds">
             <form asp-action="BankDetailsConfirmation" method="post">
                 @Html.AntiForgeryToken()
-
+                @Html.HiddenFor(x => x.OrganisationName)
                 <partial name="ValidationSummary" />
 
-                <h1 class="govuk-heading-l">We need your organisation's bank details</h1>
+                <h1 class="govuk-heading-l">We need @Model.OrganisationName's bank details</h1>
                 <p class="govuk-body">You must add your organisation's bank details, so that we can make the hire a new apprentice payment.</p>
-                <p class="govuk-body">You'll need to give us your organisation's:</p>
+                <p class="govuk-body">You'll need to give us @Model.OrganisationName's:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>legal name, registered address and contact details</li>
-                    <li>Companies House number (if your organisation has one)</li>
+                    <li>Companies House number (if @Model.OrganisationName has one)</li>
                     <li>remittance email address</li>
                     <li>finance director or finance lead's contact details</li>
                     <li>bank account details</li>
@@ -31,11 +31,11 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h2 class="govuk-fieldset__heading">
-                                Can you add your organisation's bank details now?
+                                Can you add @Model.OrganisationName's bank details now?
                             </h2>
                         </legend>
 
-                        <p class="govuk-body">If you do not have these details, someone else from your organisation can add them later.</p>
+                        <p class="govuk-body">If you do not have these details, someone else from @Model.OrganisationName can add them later.</p>
         
                         @if (ViewData.ModelState.ContainsKey(nameof(Model.CanProvideBankDetails)) && ViewData.ModelState[nameof(Model.CanProvideBankDetails)].Errors.Any())
                         {
