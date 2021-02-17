@@ -41,8 +41,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         {
             // Arrange
             var legalEntities = _fixture.CreateMany<LegalEntityModel>(3).ToList();
+            legalEntities[0].AccountId = _accountId;
+            legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
+            
             // Act
             var viewResult = await _sut.Start(_accountId, _accountLegalEntityId) as ViewResult;
 
@@ -60,6 +62,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         {
             // Arrange
             var legalEntities = _fixture.CreateMany<LegalEntityModel>(1).ToList();
+            legalEntities[0].AccountId = _accountId;
+            legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act

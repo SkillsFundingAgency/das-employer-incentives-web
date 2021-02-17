@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
 using System.Threading.Tasks;
@@ -11,14 +12,15 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    public class ApplyController : Controller
+    public class ApplyController : ControllerBase
     {
         private readonly ExternalLinksConfiguration _configuration;
         private readonly IApplicationService _applicationService;
 
         public ApplyController(
             IOptions<ExternalLinksConfiguration> configuration,
-            IApplicationService applicationService)
+            IApplicationService applicationService,
+            ILegalEntitiesService legalEntitiesService) : base(legalEntitiesService)
         {
             _configuration = configuration.Value;
             _applicationService = applicationService;
@@ -35,7 +37,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("declaration/{applicationId}")]
         public async Task<ViewResult> Declaration(string accountId, Guid applicationId)
         {
-            return View(new DeclarationViewModel(accountId, applicationId));
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            return View(new DeclarationViewModel(accountId, applicationId, legalEntityName));
         }
 
         [HttpPost]
@@ -52,17 +56,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("no-eligible-apprentices")]
-        public async Task<ViewResult> CannotApply(string accountId)
+        [Route("{accountLegalEntityId}/no-eligible-apprentices")]
+        public async Task<ViewResult> CannotApply(string accountId, string accountLegalEntityId)
         {
-            return View(new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
+            return View(model);
         }
 
         [HttpGet]
-        [Route("cannot-apply")]
-        public async Task<ViewResult> CannotApplyYet(string accountId)
+        [Route("{accountLegalEntityId}/cannot-apply")]
+        public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
-            return View(new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl));
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
+            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
+            return View(model);
         }
 
         [HttpGet]

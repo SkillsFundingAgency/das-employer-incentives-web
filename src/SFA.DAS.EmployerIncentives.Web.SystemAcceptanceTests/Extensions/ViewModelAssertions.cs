@@ -5,9 +5,9 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
 {
-    public class ViewModelAssertions : ReferenceTypeAssertions<ViewModel, ViewModelAssertions>
+    public class ViewModelAssertions : ReferenceTypeAssertions<IViewModel, ViewModelAssertions>
     {
-        public ViewModelAssertions(ViewModel instance)
+        public ViewModelAssertions(IViewModel instance)
         {
             Subject = instance;
         }
