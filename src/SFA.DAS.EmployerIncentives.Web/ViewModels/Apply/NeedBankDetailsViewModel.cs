@@ -1,12 +1,12 @@
 ﻿
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class NeedBankDetailsViewModel : ViewModel
+    public class NeedBankDetailsViewModel : IViewModel
     {
-        public NeedBankDetailsViewModel() : base("We need your organisation's bank details")
-        {
-        }
-
         public string AccountHomeUrl { get; set; }
+
+        public string Title => "We need your organisation's bank details";
+
+        public string OrganisationName { get; set; }
     }
 }

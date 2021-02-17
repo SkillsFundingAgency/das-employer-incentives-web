@@ -1,15 +1,14 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class CannotApplyViewModel : ViewModel
+    public class CannotApplyViewModel : IViewModel
     {
         public CannotApplyViewModel(
             string accountId,
             string accountsBaseUrl,
-            string title = "You do not have any eligible apprentices"
-        ) : base(title)
+            string organisationName)
         {
             AccountId = accountId;
-
+            OrganisationName = organisationName;
             if (!accountsBaseUrl.EndsWith("/"))
             {
                 accountsBaseUrl += "/";
@@ -20,5 +19,9 @@
         public string AccountId { get; }
         public string AccountHomeUrl { get; }
         public string AddApprenticesUrl { get; set; }
+
+        public string Title => $"{OrganisationName} does not have any eligible apprentices";
+
+        public string OrganisationName { get; set; }
     }
 }

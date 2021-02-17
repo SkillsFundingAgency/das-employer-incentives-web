@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 {
-    public class SelectApprenticeshipsViewModel : ViewModel
+    public class SelectApprenticeshipsViewModel : IViewModel
     {
         public const string SelectApprenticeshipsMessage = "Select which apprentices you want to apply for";
-
-        public SelectApprenticeshipsViewModel() : base("Which apprentices do you want to apply for?") { }
 
         public string AccountId { get; set; }
 
@@ -18,5 +16,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 
         public string FirstCheckboxId => $"new-apprenticeships-{Apprenticeships.FirstOrDefault()?.Id}";
 
+        public string Title => "Which apprentices do you want to apply for?";
+
+        public string OrganisationName { get; set; }
     }
 }

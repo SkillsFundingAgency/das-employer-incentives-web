@@ -4,13 +4,9 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 {
-    public class ViewApplicationsViewModel : ViewModel
+    public class ViewApplicationsViewModel : IViewModel
     {
         private Dictionary<string, string> _fieldSortOrders;
-
-        public ViewApplicationsViewModel() : base("Your hire a new apprentice payment applications")
-        {
-        }
 
         public IEnumerable<ApprenticeApplicationModel> Applications { get; set; }
 
@@ -72,5 +68,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
         public bool ShowAddBankDetailsCalltoAction { get; set; }
 
         public string AddBankDetailsLink { get; set; }
+
+        public string Title => "Hire a new apprentice payment applications";
+
+        public string OrganisationName { get; set; }
     }
 }

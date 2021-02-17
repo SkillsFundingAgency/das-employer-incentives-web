@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View("ChooseOrganisation", viewModel);
             }
 
-            return RedirectToAction("CannotApply", "Apply",  new { viewModel.AccountId});
+            return RedirectToAction("CannotApply", "Apply",  new { viewModel.AccountId });
         }
 
         [HttpPost]
@@ -72,7 +72,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("SelectApprenticeships", "ApplyApprenticeships", new { accountId, accountLegalEntityId });
             }
 
-            var viewModel = new ValidateTermsSignedViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl);
+            var viewModel = new ValidateTermsSignedViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl)
+            {
+                OrganisationName = legalEntity?.Name
+            };
             return View(viewModel);
         }
     }
