@@ -1,25 +1,37 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
 {
-    public class HomeViewModel
+    public class HomeViewModel : IViewModel
     {
+        private readonly string _accountsBaseUrl;
+
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
+        public bool NewAgreementRequired { get; }
         public bool HasMultipleLegalEntities { get; }
         public string ManageApprenticeshipSiteUrl { get; }
 
         public string AccountHomeUrl { get; }
+        
+        public string AccountsAgreementsUrl => $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, bool hasMultipleLegalEntities, string manageApprenticeshipSiteUrl)
+        public string Title => "Apply for the hire a new apprentice payment";
+
+        public string OrganisationName { get; set; }
+
+        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool hasMultipleLegalEntities, bool newAgreementRequired, string manageApprenticeshipSiteUrl)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
-            HasMultipleLegalEntities = hasMultipleLegalEntities;
+            OrganisationName = organisationName;
+            NewAgreementRequired = newAgreementRequired;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
+            HasMultipleLegalEntities = hasMultipleLegalEntities;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))
             {
-                manageApprenticeshipSiteUrl += "/";
+                ManageApprenticeshipSiteUrl += "/";
             }
-            AccountHomeUrl = $"{manageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            AccountHomeUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
         }
+
     }
 }

@@ -13,6 +13,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -179,6 +180,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(_testData.LegalEntity, TestHelper.DefaultSerialiserSettings)));
+
         }
     }
 }

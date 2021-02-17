@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -83,6 +84,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -160,12 +162,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var legalEntity = _testDataStore.Get<LegalEntityDto>("LegalEntity");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ValidateTermsSignedViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You need to accept the employer agreement");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} needs to accept the employer agreement");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
