@@ -2,19 +2,20 @@
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class AmendBankDetailsViewModel : ViewModel
+    public class AmendBankDetailsViewModel : IViewModel
     {
         public string AccountId { get; set; }
         public string AccountLegalEntityId { get; set; }
         public Guid ApplicationId { get; set; }
         public string OrganisationName { get; set; }
 
-        public AmendBankDetailsViewModel() : base("Change your organisaton's bank details")
-        {
+        public string Title => $"Change {OrganisationName}'s bank details";
 
+        public AmendBankDetailsViewModel()
+        {
         }
 
-        public AmendBankDetailsViewModel(string title, string accountId, string accountLegalEntityId, Guid applicationId, string organisationName) : base(title)
+        public AmendBankDetailsViewModel(string accountId, string accountLegalEntityId, Guid applicationId, string organisationName) 
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;

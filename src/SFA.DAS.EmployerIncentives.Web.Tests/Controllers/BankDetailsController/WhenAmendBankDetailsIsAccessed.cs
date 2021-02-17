@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         public async Task Then_the_amend_bank_details_view_is_populated_with_the_organisation_name_and_application_details()
         {
             // Arrange
-            var application = _fixture.Create<ApplicationConfirmationViewModel>();
+            var application = _fixture.Create<ApplicationModel>();
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId)).ReturnsAsync(legalEntity);
@@ -79,13 +79,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         public async Task Then_the_redirect_to_the_achieve_service_is_generated_for_the_amend_vendor_journey()
         {
             // Arrange
-            var application = _fixture.Create<ApplicationConfirmationViewModel>();
+            var application = _fixture.Create<ApplicationModel>();
             _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            var legalEntity = _fixture.Create<LegalEntityModel>();
 
             var achieveServiceUrl = _fixture.Create<string>();
             _verificationService.Setup(x => x.BuildAchieveServiceUrl(_accountId, _accountLegalEntityId, _applicationId, It.IsAny<string>(), true)).ReturnsAsync(achieveServiceUrl);
 
-            var model = new AmendBankDetailsViewModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId, ApplicationId = _applicationId };
+            var model = new AmendBankDetailsViewModel(_accountId, _accountLegalEntityId, _applicationId, legalEntity.Name);
 
             // Act
             var redirectResult = await _sut.AmendBankDetails(model) as RedirectResult;

@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var application = await _applicationService.Get(accountId, applicationId, false);
             var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
-            var model = new AmendBankDetailsViewModel($"Change {legalEntity.Name}'s bank details", accountId, application.AccountLegalEntityId, applicationId, legalEntity.Name);
+            var model = new AmendBankDetailsViewModel(accountId, application.AccountLegalEntityId, applicationId, legalEntity.Name);
             return View(model);
         }
 

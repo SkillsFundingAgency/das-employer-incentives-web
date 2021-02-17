@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         public async Task Then_the_redirect_to_the_achieve_service_is_generated_for_the_new_vendor_journey()
         {
             // Arrange
-            var application = _fixture.Create<ApplicationConfirmationViewModel>();
+            var application = _fixture.Create<ApplicationModel>();
             _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
 
             var achieveServiceUrl = _fixture.Create<string>();
