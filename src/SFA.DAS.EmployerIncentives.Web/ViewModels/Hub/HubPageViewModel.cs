@@ -1,7 +1,7 @@
 ﻿
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Hub
 {
-    public class HubPageViewModel : ViewModel
+    public class HubPageViewModel : IViewModel
     {
         public string AccountId { get; set; }
         public string AccountLegalEntityId { get; set; }
@@ -9,7 +9,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Hub
         public bool HasMultipleLegalEntities { get; set; }
         public string AccountHomeUrl { get; set; }
 
-        public HubPageViewModel(string accountsBaseUrl, string accountId, string title = "Hire a new apprentice payment") : base(title)
+        public string Title => "Hire a new apprentice payment";
+
+        public HubPageViewModel(string accountsBaseUrl, string accountId)
         {
             AccountId = accountId;
             if (!accountsBaseUrl.EndsWith("/"))
