@@ -8,5 +8,6 @@
         public bool HasSignedIncentiveTerms { get; set; }
         public string VrfCaseStatus { get; set; }
         public long? SignedAgreementVersion { get; set; }
+        public string VrfVendorId { get; set; }
     }
 }
