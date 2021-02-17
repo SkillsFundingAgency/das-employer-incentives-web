@@ -1,25 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
+using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/application-complete/{applicationId}")]
-    public class ApplicationCompleteController : Controller
+    [Route("{accountId}/complete/{applicationId}")]
+    public class ApplicationCompleteController : ControllerBase
     {
-        private readonly ExternalLinksConfiguration _configuration;
+        private readonly IApplicationService _applicationService;
 
-        public ApplicationCompleteController(IOptions<ExternalLinksConfiguration> configuration)
+        public ApplicationCompleteController(ILegalEntitiesService legalEntitiesService,
+                                             IApplicationService applicationService)
+            : base(legalEntitiesService)
         {
-            _configuration = configuration.Value;
+            _applicationService = applicationService;
         }
 
         [HttpGet]
-        [Route("")]
-        public IActionResult Confirmation()
+        [Route("application-saved")]
+        public async Task<IActionResult> Confirmation(string accountId, Guid applicationId)
         {
-            var model = new ConfirmationViewModel(_configuration.ManageApprenticeshipSiteUrl);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            var model = new ConfirmationViewModel(accountId, application.AccountLegalEntityId, legalEntityName);
             return View(model);
         }
     }

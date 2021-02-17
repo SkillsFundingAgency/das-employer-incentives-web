@@ -1,19 +1,17 @@
-﻿
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 {
-    public class ChooseOrganisationViewModel : ViewModel
+    public class ChooseOrganisationViewModel : IViewModel
     {
         public string LegalEntityNotSelectedMessage => "Select an organisation";
 
-        public ChooseOrganisationViewModel() : base("Choose organisation")
+        public ChooseOrganisationViewModel()
         {
 
         }
-
-        public ChooseOrganisationViewModel(string accountsBaseUrl, string accountId) : base("Choose organisation")
+        public ChooseOrganisationViewModel(string accountsBaseUrl, string accountId)
         {
             AccountId = accountId;
             if (!accountsBaseUrl.EndsWith("/"))
@@ -30,5 +28,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public string AccountHomeUrl { get; set; }
 
+        public string Title => "Choose organisation";
+
+        public string OrganisationName { get; set; }
     }
 }

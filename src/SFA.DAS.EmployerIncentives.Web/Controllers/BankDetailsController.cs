@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/bank-details/{applicationId}")]
-    public class BankDetailsController : Controller
+    public class BankDetailsController : ControllerBase
     {
         private readonly IEmailService _emailService;
         private readonly IApplicationService _applicationService;
@@ -25,7 +26,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             IEmailService emailService,
             IApplicationService applicationService,
             IHashingService hashingService,
-            IOptions<ExternalLinksConfiguration> configuration)
+            ILegalEntitiesService legalEntitiesService,
+            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntitiesService)
         {
             _verificationService = verificationService;
             _emailService = emailService;
@@ -44,8 +46,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("Confirmation", "ApplicationComplete");
             }
-
-            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId });
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            return View(new BankDetailsConfirmationViewModel { AccountId = accountId, ApplicationId = applicationId, OrganisationName = legalEntityName });
         }
 
         [HttpPost]
@@ -54,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!viewModel.CanProvideBankDetails.HasValue)
             {
-                ModelState.AddModelError("CanProvideBankDetails", BankDetailsConfirmationViewModel.CanProvideBankDetailsNotSelectedMessage);
+                ModelState.AddModelError("CanProvideBankDetails", viewModel.CanProvideBankDetailsNotSelectedMessage);
                 return View(viewModel);
             }
 
@@ -62,7 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 // redirect to interstitial page
                 await SendBankDetailsReminderEmail(viewModel.AccountId, viewModel.ApplicationId);
-                return RedirectToAction("AddBankDetails");
+                return RedirectToAction("AddBankDetails", new { accountId = viewModel.AccountId, applicationId = viewModel.ApplicationId });
             }
 
             // redirect to need bank details page
@@ -72,9 +74,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("add-bank-details")]
-        public IActionResult AddBankDetails(string accountId, Guid applicationId)
+        public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
         {
-            return View();
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            var model = new AddBankDetailsViewModel { OrganisationName = legalEntityName };
+            return View(model);
         }
 
         [HttpPost]
