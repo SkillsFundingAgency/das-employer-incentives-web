@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -37,6 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
            .Given(
@@ -84,6 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
            .Given(
@@ -130,6 +133,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
             _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntity", testdata.LegalEntity);
 
             _testContext.EmployerIncentivesApi.MockServer
             .Given(
@@ -222,13 +226,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-
+            var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
                 $"{hashedAccountId}/apply/{hashedAccountLegalEntityId}/eligible-apprentices")
             {
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
                 {
+                    new KeyValuePair<string, string>("OrganisationName", testdata.LegalEntities.First().LegalEntityName)
                 })
             };
 
@@ -265,18 +270,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var legalEntity = _testDataStore.Get<LegalEntityDto>("LegalEntity");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You do not have any eligible apprentices");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/no-eligible-apprentices");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/no-eligible-apprentices");
         }
 
         [Then(@"the employer is informed that they cannot apply yet")]
@@ -284,18 +290,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var legalEntity = _testDataStore.Get<LegalEntityDto>("LegalEntity");
+
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as TakenOnCannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("You cannot apply for this payment");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
-            model.AddApprenticesUrl.Should().Be($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
+            model.AddApprenticesUrl.Should().Contain($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/cannot-apply");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/cannot-apply");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]
@@ -304,12 +312,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var legalEntity = _testDataStore.Get<LegalEntityDto>("LegalEntity");
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle("Do you have apprentices who are eligible for the payment?");
+            model.Should().HaveTitle($"Does {legalEntity.LegalEntityName} have apprentices who are eligible for the payment?");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);

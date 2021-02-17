@@ -16,32 +16,29 @@
 
             <h2 class="govuk-heading-m">What happens next</h2>
             <p class="govuk-body">
-                You're eligible for the first payment after the apprentice completes 90 days of their apprenticeship training and the second payment after 365 days.
+                We cannot make any payments until we've received and verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.
             </p>
             <p class="govuk-body">
-                Before we can make a payment, we need your training provider to confirm whether the apprentice is still on their apprenticeship. Training providers usually submit information about their apprentices at the start of every month.
+                You can add the bank details:
             </p>
-            <p class="govuk-body">
-                We'll start making payments from January 2021. It will take longer to get your first payment for any apprentices who start their training in August 2020.
-            </p>
-            <p class="govuk-body">
-                We'll use your organisation's bank details to make your payment. You do not need to do anything else.
-            </p>
-
-            <h2 class="govuk-heading-m">Changes to your payment</h2>
-            <p class="govuk-body">
-                Your payment amount may change if an apprentice has their 25th birthday before they start their apprenticeship.
-            </p>
-            <p class="govuk-body">We cannot make your payment if:</p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>an apprentice is on a break in learning</li>
-                <li>an apprentice's contract of employment ends before they complete 90 or 365 days of their apprenticeship</li>
-                <li>the training provider does not confirm that the apprentice has started their apprenticeship</li>
-                <li>the apprentice started their contract of employment before <span class="das-no-wrap">1 August 2020</span></li>
+                <li>using the link we've sent to your email address</li>
+                <li>in the 'hire a new apprentice payment applications' section of the apprenticeship service account</li>
             </ul>
+            <h2 class="govuk-heading-m">After we've verified your bank details</h2>
+            <p class="govuk-body">
+                We'll make the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days. The training provider needs to confirm to ESFA when an apprentice is ready for each payment.
+            </p>
+            <p class="govuk-body">
+                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
+            </p>
+            <h2 class="govuk-heading-m">Your applications</h2>
+            <p class="govuk-body">
+                You can view applications and estimated payment dates in the apprenticeship service account.
+            </p>
 
-            <a href="@Model.AccountsUrl" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-                Return to account home
+            <a asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId"  role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                View applications
             </a>
 
             <p class="govuk-body">

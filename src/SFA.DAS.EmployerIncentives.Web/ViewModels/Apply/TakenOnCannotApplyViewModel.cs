@@ -2,7 +2,7 @@
 {
     public class TakenOnCannotApplyViewModel : CannotApplyViewModel
     {
-        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string title = "You cannot apply for this payment") : base(accountId, commitmentsBaseUrl, title)
+        public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string accountsBaseUrl, string organisationName) : base(accountId, accountsBaseUrl, organisationName)
         {
             if (!commitmentsBaseUrl.EndsWith("/"))
             {
@@ -10,5 +10,7 @@
             }
             AddApprenticesUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/inform";
         }
+
+        public new string Title => $"{OrganisationName} cannot apply for this payment";
     }
 }
