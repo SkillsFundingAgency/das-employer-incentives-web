@@ -10,6 +10,10 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
+using SFA.DAS.EmployerIncentives.Web.Models;
+using System.Collections.Generic;
+using AutoFixture;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
 {
@@ -19,11 +23,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testDataStore;
+        private readonly Fixture _fixture;
+        private Guid _applicationId;
 
         public EmployerIncentivesHubSteps(TestContext testContext) : base (testContext)
         {
             _testContext = testContext;
             _testDataStore = testContext.TestDataStore;
+            _fixture = new Fixture();
+            _applicationId = Guid.NewGuid();
         }
 
         [Given(@"an employer has a single legal entity in their account")]
@@ -52,6 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
             var accountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, accountId);
             var url = $"{accountId}/{accountLegalEntityId}/hire-new-apprentice-payment";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -61,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             _testDataStore.Add<HttpResponseMessage>("Response", response);
         }
 
-        [Then(@"they are presented with a link to apply for the employer incentive")]
+        [Then(@"they can apply for the employer incentive")]
         public void ThenTheyArePresentedWithALinkToApplyForTheEmployerIncentive()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -80,7 +89,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveLink(".hub-apply-link", $"/{accountId}/{accountLegalEntityId}");
         }
 
-        [Then(@"they are presented with a link to view previous applications")]
+        [Then(@"they can view previous applications")]
         public void ThenTheyArePresentedWithALinkToViewPreviousApplications()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -90,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveLink(".hub-payments-link", $"/{accountId}/payments/{accountLegalEntityId}/payment-applications");
         }
 
-        [Then(@"the back link goes to the manage apprenticeships page")]
+        [Then(@"they can navigate back to the manage apprenticeships page")]
         public void ThenTheBackLinkGoesToTheManageApprenticeshipsPage()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -120,7 +129,69 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
-        [Then(@"the back link goes to the choose organisation page")]
+        [Given(@"the employer has previously supplied their bank details")]
+        public void GivenTheEmployerHasPreviouslySuppliedTheirBankDetails()
+        {
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Create<ApprenticeApplicationModel>()
+            };
+            
+            var getApplications = new GetApplicationsModel
+            { 
+                ApprenticeApplications = applications, 
+                BankDetailsStatus = BankDetailsStatus.Completed,
+                FirstSubmittedApplicationId = _applicationId
+            };
+
+            var testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testData.HashedAccountId);
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testData.AccountId}/legalentity/{testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        [Given(@"the employer has not yet supplied bank details")]
+        public void GivenTheEmployerHasNotYetSuppliedBankDetails()
+        {
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Create<ApprenticeApplicationModel>()
+            };
+
+            var getApplications = new GetApplicationsModel 
+            {
+                ApprenticeApplications = applications, 
+                BankDetailsStatus = BankDetailsStatus.NotSupplied,
+                FirstSubmittedApplicationId = _applicationId
+            };
+
+            var testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testData.HashedAccountId);
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testData.AccountId}/legalentity/{testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        [Then(@"they can navigate back to the choose organisation page")]
         public void ThenTheBackLinkGoesToTheChooseOrganisationPage()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
@@ -129,5 +200,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             response.Should().HaveBackLink($"/{accountId}/apply/choose-organisation");
         }
 
+        [Then(@"they are prompted to enter their bank details")]
+        public void ThenTheyArePresentedWithABannerLinkPromptingThemToEnterTheirBankDetails()
+        {
+            var accountId = _testDataStore.Get<string>("HashedAccountId");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+
+            response.Should().HaveLink(".hub-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
+        }
     }
 }

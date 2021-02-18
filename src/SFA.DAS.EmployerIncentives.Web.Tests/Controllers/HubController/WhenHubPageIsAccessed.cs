@@ -6,8 +6,10 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
     {
         private Web.Controllers.HubController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IApprenticeshipIncentiveService> _applicationService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
@@ -38,11 +41,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(_legalEntities);
 
+            _applicationService = new Mock<IApprenticeshipIncentiveService>();
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = BankDetailsStatus.Completed,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = "https://manage-apprentices.com" };
             _configuration.Setup(x => x.Value).Returns(config);
 
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _configuration.Object);
         }
 
         [Test]
@@ -79,6 +91,33 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             model.Should().NotBeNull();
             model.OrganisationName.Should().Be(_legalEntities[0].Name);
             model.HasMultipleLegalEntities.Should().BeTrue();
+            model.AccountId.Should().Be(_accountId);
+            model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+        }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_viewmodel_reflects_that_the_account_holder_needs_to_provide_bank_details(BankDetailsStatus status)
+        {
+            // Arrange
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = status,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationName.Should().Be(_legalEntities[0].Name);
+            model.ShowBankDetailsRequired.Should().BeTrue();
+            model.BankDetailsApplicationId.Should().NotBeEmpty();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
         }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using System.Linq;
@@ -11,11 +13,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HubController : Controller
     {
         private ILegalEntitiesService _legalEntitiesService;
+        private IApprenticeshipIncentiveService _applicationService;
         private ExternalLinksConfiguration _configuration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public HubController(ILegalEntitiesService legalEntitiesService, IApprenticeshipIncentiveService applicationService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
+            _applicationService = applicationService;
             _configuration = configuration.Value;
         }
 
@@ -32,7 +36,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 HasMultipleLegalEntities = legalEntities.Count() > 1
             };
 
+            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
+            if (applicationsResponse.ApprenticeApplications.Any())
+            {
+                model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
+                model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
+            }
+
             return View(model);
+        }
+
+        private static bool BankDetailsRequired(GetApplicationsModel applications)
+        {
+            return applications.BankDetailsStatus == BankDetailsStatus.NotSupplied || applications.BankDetailsStatus == BankDetailsStatus.Rejected;
         }
     }
 }
