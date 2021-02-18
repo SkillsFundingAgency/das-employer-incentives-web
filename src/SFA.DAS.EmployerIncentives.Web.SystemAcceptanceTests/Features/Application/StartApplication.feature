@@ -7,7 +7,7 @@ Feature: StartApplication
 Scenario: An employer with a single organisation starts an application
 	Given an employer with a single organisation wants to apply for a grant
 	When the employer applies for the grant
-	Then the employer is shown the application preamble
+	Then the employer is shown the EI hub
 
 Scenario: An employer with a multiple organisations starts an application
 	Given an employer with a multiple organisations wants to apply for a grant

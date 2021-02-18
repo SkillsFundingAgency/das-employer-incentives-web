@@ -129,19 +129,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }
 
-        [Then(@"the employer is presented with the preamble")]
+        [Then(@"the employer is presented with the EI hub")]
         public void ThenTheEmployerIsAskedIfTheyHaveAnyEligibleApprenticeships()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
-            var viewResult = _testContext.ActionResult.LastViewResult;
-
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as HomeViewModel;
-            model.Should().NotBeNull();
             
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Then(@"the employer is informed that a legal entity needs to be selected")]

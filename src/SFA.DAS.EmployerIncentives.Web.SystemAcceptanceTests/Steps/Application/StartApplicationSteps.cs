@@ -167,21 +167,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/choose-organisation");
         }
 
-        [Then(@"the employer is shown the application preamble")]
+        [Then(@"the employer is shown the EI hub")]
         public void ThenTheEmployerIsInformedThatTheyNeedToSpecifyWhetherOrNotTheyHaveEligibleApprenticeships()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
-            var viewResult = _testContext.ActionResult.LastViewResult;
 
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as HomeViewModel;
-            model.Should().NotBeNull();
-            model.AccountId.Should().Be(hashedAccountId);
-            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
-
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
     }
