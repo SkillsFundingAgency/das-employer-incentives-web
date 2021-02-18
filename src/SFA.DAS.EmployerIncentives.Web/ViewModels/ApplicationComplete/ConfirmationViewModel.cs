@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete
             AccountsUrl = accountsUrl;
         }
 
-        public string Title => "Application saved";
+        public string Title => "Application complete";
 
         public string OrganisationName { get; set; }
 
