@@ -1,3 +1,97 @@
-﻿
-<h1>Hire a new apprentice payment</h1>
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Hub.HubPageViewModel
+@{ 
+    ViewData["Title"] = Model.Title;
+}
 
+@if (Model.HasMultipleLegalEntities)
+{
+    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+}
+else
+{ 
+    <a href="@Model.AccountHomeUrl" class="govuk-back-link">Back</a>
+}
+
+<main class="govuk-main-wrapper" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <span class="govuk-caption-xl">
+                @Model.OrganisationName
+            </span>
+            <h1 class="govuk-heading-xl">
+                @Model.Title
+            </h1>
+
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                Apply for the payment and view @Model.OrganisationName’s applications.
+            </p>
+        </div>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--visible das-section-break--heavy-grey govuk-!-margin-bottom-9">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-m">
+                        <a
+                            asp-controller="Home"
+                            asp-action="Start"
+                            asp-route-accountid="@Model.AccountId"
+                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                            class="govuk-link govuk-link--no-visited-state hub-apply-link"
+                        >
+                            Apply for the hire a new apprentice payment
+                        </a>
+                    </h2>
+                    <p class="govuk-body">
+                        You can apply for the payment if @Model.OrganisationName hires new apprentices from 1 August 2020 to 31 March 2021
+                    </p>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-m">
+                        <a
+                            asp-controller="Payments"
+                            asp-action="ListPaymentsForLegalEntity"
+                            asp-route-accountid="@Model.AccountId"
+                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                            class="govuk-link govuk-link--no-visited-state hub-payments-link"
+                        >
+                            View applications
+                        </a>
+                    </h2>
+                    <p class="govuk-body">
+                        View @Model.OrganisationName's applications and estimated payments.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* 
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-m">
+                        <a
+                            asp-controller="#"
+                            asp-action="#"
+                            asp-route-accountid="#"
+                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                            class="govuk-link govuk-link--no-visited-state"
+                        >
+                            Amend details
+                        </a>
+                    </h2>
+                    <p class="govuk-body">
+                        Amend details...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    *@
+
+</main>

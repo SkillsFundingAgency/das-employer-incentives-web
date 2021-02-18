@@ -3,8 +3,9 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,22 +14,22 @@ using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
 {
     [Binding]
-    [Scope(Feature = "StartApplication")]
-    public class StartApplicationSteps : StepsBase
+    [Scope(Feature = "HomePage")]
+    public class HomePageSteps : StepsBase
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testDataStore;
 
-        public StartApplicationSteps(TestContext testContext) : base(testContext)
+        public HomePageSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testDataStore = _testContext.TestDataStore;
         }
 
-        [Given(@"an employer with a single organisation wants to apply for a grant")]
+        [Given(@"an employer with a single organisation wants to view the home page")]
         public void GivenAnEmployerWithASingleOrganisationWantsToApplyForAGrant()
         {
             var testdata = new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships();
@@ -75,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .WithStatusCode(HttpStatusCode.OK));
         }
 
-        [Given(@"an employer with a multiple organisations wants to apply for a grant")]
+        [Given(@"an employer with a multiple organisations wants to view the home page")]
         public void GivenAnEmployerWithAMultipleOrganisationsWantsToApplyForAGrant()
         {
             var testdata = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
@@ -110,26 +111,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                  .WithStatusCode(HttpStatusCode.OK));
         }
 
-        [Given(@"an employer without any organisations wants to apply for a grant")]
-        public void GivenAnEmployerWithoutAnyOrganisationsWantsToApplyForAGrant()
-        {
-            var testdata = new TestData.Account.WithNoLegalEntites();
-            _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
-
-            _testContext.EmployerIncentivesApi.MockServer
-           .Given(
-                   Request
-                   .Create()
-                   .WithPath($"/accounts/{testdata.AccountId}/legalentities")
-                   .UsingGet()
-                   )
-               .RespondWith(
-             Response.Create()
-               .WithStatusCode(HttpStatusCode.NotFound));
-        }
-
-        [When(@"the employer applies for the grant")]
+        [When(@"the employer visits the home page")]
         public async Task WhenTheEmployerAppliesForTheGrant()
         {
             var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
@@ -174,7 +156,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
+
+            response.Should().HaveTitle("Hire a new apprentice payment");
             response.Should().HavePathAndQuery($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+
         }
 
     }
