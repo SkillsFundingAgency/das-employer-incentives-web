@@ -135,7 +135,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveLink($"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
+            response.Should().HaveLink("[data-linktype='add-bank-details']", $"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
         }
 
         [Then(@"the add bank details call to action is not shown")]
