@@ -64,6 +64,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
             return "asc";
         }
 
+        public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
+
         public bool ShowBankDetailsInReview { get; set; }
         public bool ShowAddBankDetailsCalltoAction { get; set; }
 

@@ -79,6 +79,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var model = new ViewApplicationsViewModel
             {
+                AccountId = accountId,
+                AccountLegalEntityId = accountLegalEntityId,
                 Applications = submittedApplications,
                 SortField = sortField,
                 ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
