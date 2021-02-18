@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
         private const string NeedBankDetailsUrl = "/complete/need-bank-details";
-        private const string ApplicationCompleteUrl = "/application-saved";
+        private const string ApplicationCompleteUrl = "/application-complete";
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
