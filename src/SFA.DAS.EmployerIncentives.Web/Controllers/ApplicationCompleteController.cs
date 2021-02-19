@@ -9,25 +9,28 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [Route("{accountId}/complete/{applicationId}")]
+    [Route("{accountId}/application-complete/{applicationId}")]
     public class ApplicationCompleteController : ControllerBase
     {
         private readonly IApplicationService _applicationService;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplicationCompleteController(ILegalEntitiesService legalEntitiesService,
-                                             IApplicationService applicationService)
+                                             IApplicationService applicationService,
+                                             IOptions<ExternalLinksConfiguration> configuration)
             : base(legalEntitiesService)
         {
             _applicationService = applicationService;
+            _configuration = configuration.Value;
         }
 
         [HttpGet]
-        [Route("application-saved")]
+        [Route("")]
         public async Task<IActionResult> Confirmation(string accountId, Guid applicationId)
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var model = new ConfirmationViewModel(accountId, application.AccountLegalEntityId, legalEntityName);
+            var model = new ConfirmationViewModel(accountId, application.AccountLegalEntityId, legalEntityName, _configuration.ManageApprenticeshipSiteUrl);
             return View(model);
         }
     }
