@@ -24,8 +24,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     public class ReadyToEnterBankDetailsSteps : StepsBase
     {
         private const string ReadyToEnterBankDetailsUrl = "/need-bank-details";
-        private const string NeedBankDetailsUrl = "/complete/need-bank-details";
-        private const string ApplicationCompleteUrl = "/application-saved";
+        private const string NeedBankDetailsUrl = "/complete/application-saved";
+        private const string ApplicationCompleteUrl = "/application-complete";
 
         private readonly TestContext _testContext;
         private HttpResponseMessage _continueNavigationResponse;
@@ -216,6 +216,31 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(_data.AccountLegalEntityId.ToString()));
 
+            _testContext.EmployerIncentivesApi.MockServer
+             .Given(
+                 Request
+                     .Create()
+                     .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                     .UsingGet()
+             )
+             .RespondWith(
+                 Response.Create()
+                     .WithStatusCode(HttpStatusCode.OK)
+                     .WithHeader("Content-Type", "application/json")
+                     .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                     .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_data.AccountId}/legalentities/{_data.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(_data.LegalEntity, TestHelper.DefaultSerialiserSettings)));
 
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
