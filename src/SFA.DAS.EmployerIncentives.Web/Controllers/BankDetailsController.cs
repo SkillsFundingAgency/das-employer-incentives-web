@@ -94,7 +94,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("complete/need-bank-details")]
+        [Route("complete/application-saved")]
         public async Task<IActionResult> NeedBankDetails(string accountId, Guid applicationId)
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
