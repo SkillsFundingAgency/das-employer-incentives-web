@@ -52,6 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             viewModel.AddOrganisations(await _legalEntitiesService.Get(viewModel.AccountId));
+            viewModel.SetManageAccountsUrl(_configuration.ManageApprenticeshipSiteUrl);
 
             if (string.IsNullOrEmpty(viewModel.Selected))
             {
