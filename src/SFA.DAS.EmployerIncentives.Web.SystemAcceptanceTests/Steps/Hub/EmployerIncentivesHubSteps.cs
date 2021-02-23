@@ -195,9 +195,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
         public void ThenTheBackLinkGoesToTheChooseOrganisationPage()
         {
             var accountId = _testDataStore.Get<string>("HashedAccountId");
+            var accountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveBackLink($"/{accountId}/apply/choose-organisation");
+            response.Should().HaveBackLink($"/{accountId}/apply/choose-organisation?selected={accountLegalEntityId}");
         }
 
         [Then(@"they are prompted to enter their bank details")]

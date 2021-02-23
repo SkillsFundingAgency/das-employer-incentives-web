@@ -5,7 +5,7 @@
 
 @if (Model.HasMultipleLegalEntities)
 {
-    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" class="govuk-back-link">Back</a>
+    <a asp-action="GetChooseOrganisation" asp-controller="ApplyOrganisation" asp-route-accountid="@Model.AccountId" asp-route-selected="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 }
 else
 { 
