@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Change your organisation's bank account details";
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.AmendBankDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/change-bank-details";
     ViewData["ZenDeskLabels"] = "ei-changebankdetails";
 }
@@ -8,8 +9,26 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Change your organisation's bank account details</h1>                      
+            <h1 class="govuk-heading-l">@Model.Title</h1>
+            <p class="govuk-body">You can only add one bank account for @Model.OrganisationName. We'll use this account to make all of their payments.</p>
+            <p class="govuk-body">You can change @Model.OrganisationName's:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>legal name, registered address and contact details</li>
+                <li>remittance email address</li>
+                <li>bank account details</li>
+            </ul>
+            <div class="govuk-inset-text">We cannot make any payments until we've verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.</div>
 
+            <form asp-action="AmendBankDetails" method="post">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountId)
+            @Html.HiddenFor(x => x.AccountLegalEntityId)
+            @Html.HiddenFor(x => x.ApplicationId)
+
+            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                Continue
+            </button>
+            </form>
         </div>
     </div>
 

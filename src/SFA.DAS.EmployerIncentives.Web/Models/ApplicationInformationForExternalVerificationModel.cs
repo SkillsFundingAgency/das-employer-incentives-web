@@ -17,11 +17,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public string HashedAccountId { get; set; }
         public Guid ApplicationId { get; set; }
         public IEnumerable<SignedAgreementModel> SignedAgreements { get; set; } = new List<SignedAgreementModel>();
+        public string LegalEntityName { get; set; }
 
         public string ToPsvString()
         {
-            return string.Join("|", HashedLegalEntityId, VendorId, SubmittedByFullName, SubmittedByEmailAddress, IncentiveAmount.ToString("F2", new CultureInfo("en-GB")),
+            var psvString =  string.Join("|", HashedLegalEntityId, VendorId, SubmittedByFullName, SubmittedByEmailAddress, IncentiveAmount.ToString("F2", new CultureInfo("en-GB")),
                 string.Join("|", SignedAgreements.Select(x => x.ToPsvString())), $"apps={NumberOfApprenticeships}");
+
+            if (!string.IsNullOrWhiteSpace(LegalEntityName))
+            {
+                psvString = string.Join("|", psvString, LegalEntityName);
+            }
+
+            return psvString;
         }
     }
 }

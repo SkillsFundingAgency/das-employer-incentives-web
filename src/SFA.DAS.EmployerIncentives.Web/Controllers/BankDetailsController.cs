@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
         private readonly IVerificationService _verificationService;
+        private readonly ILegalEntitiesService _legalEntitiesService;
         private ExternalLinksConfiguration _configuration;
 
         public BankDetailsController(IVerificationService verificationService,
@@ -33,6 +34,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             _emailService = emailService;
             _applicationService = applicationService;
             _hashingService = hashingService;
+            _legalEntitiesService = legalEntitiesService;
             _configuration = configuration.Value;
         }
 
@@ -88,7 +90,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var confirmationActionUrl = Url.Action("Confirmation", "ApplicationComplete", new { accountId, applicationId });
             var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
-            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, applicationId, returnUrl);
+            var application = await _applicationService.Get(accountId, applicationId, false);
+
+            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, application.AccountLegalEntityId, applicationId, returnUrl);
 
             return Redirect(achieveServiceUrl);
         }
@@ -107,7 +111,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("change-bank-details")]
         public async Task<IActionResult> AmendBankDetails(string accountId, Guid applicationId)
         {
-            return View();
+            var application = await _applicationService.Get(accountId, applicationId, false);
+            var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
+            var model = new AmendBankDetailsViewModel(accountId, application.AccountLegalEntityId, applicationId, legalEntity.Name);
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("change-bank-details")]
+        public async Task<IActionResult> AmendBankDetails(AmendBankDetailsViewModel model)
+        {
+            var confirmationActionUrl = Url.Action("Index", "Hub", new { model.AccountId, model.AccountLegalEntityId });
+            var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
+            var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(model.AccountId, model.AccountLegalEntityId, model.ApplicationId, returnUrl, amendBankDetails: true);
+
+            return Redirect(achieveServiceUrl);
         }
 
         private async Task SendBankDetailsRequiredEmail(string accountId, Guid applicationId)
