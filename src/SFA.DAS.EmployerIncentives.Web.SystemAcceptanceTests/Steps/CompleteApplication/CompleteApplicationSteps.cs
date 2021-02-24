@@ -39,6 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         public void GivenTheEmployerHasAllTheInformationRequiredToProcessTheirBankDetails()
         {            
             _testContext.TestDataStore.Add("HashedAccountId", _testdata.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testdata.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testdata.HashedAccountId);
 
             var application = _fixture.Create<ApplicationResponse>();
@@ -138,12 +139,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         [Then(@"the employer completes their application journey")]
         public void ThenTheEmployerCompletesTheirApplicationJourney()
         {
+            var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmationViewModel;
             model.Should().NotBeNull();
-            model.AccountId.Should().Be(_testdata.HashedAccountId);
-            model.AccountLegalEntityId.Should().Be(_testdata.HashedAccountLegalEntityId);
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
         }
     }
 }
