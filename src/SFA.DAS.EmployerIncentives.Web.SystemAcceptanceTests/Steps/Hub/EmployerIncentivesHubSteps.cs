@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             model.AccountLegalEntityId.Should().Be(accountLegalEntityId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveLink(".hub-apply-link", $"/{accountId}/{accountLegalEntityId}");
+            response.Should().HaveLink("[data-linktype='hub-apply']", $"/{accountId}/{accountLegalEntityId}");
         }
 
         [Then(@"they can view previous applications")]
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             var accountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveLink(".hub-payments-link", $"/{accountId}/payments/{accountLegalEntityId}/payment-applications");
+            response.Should().HaveLink("[data-linktype='hub-view-payments']", $"/{accountId}/payments/{accountLegalEntityId}/payment-applications");
         }
 
         [Then(@"they can navigate back to the manage apprenticeships page")]
@@ -207,7 +207,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             var accountId = _testDataStore.Get<string>("HashedAccountId");
             var response = _testDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveLink(".hub-bank-details-link", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
+            response.Should().HaveLink("[data-linktype='hub-add-bank-details']", $"/{accountId}/bank-details/{_applicationId}/add-bank-details");
         }
+
+        [Then(@"they can change their bank details")]
+        public void ThenTheyArePresentedWithALinkToChangeTheirBankDetails()
+        {
+            var accountId = _testDataStore.Get<string>("HashedAccountId");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+
+            response.Should().HaveLink("[data-linktype='hub-amend-bank-details']", $"/{accountId}/bank-details/{_applicationId}/change-bank-details");
+        }
+
     }
 }

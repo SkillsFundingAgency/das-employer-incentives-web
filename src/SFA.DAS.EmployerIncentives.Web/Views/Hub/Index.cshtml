@@ -28,6 +28,10 @@ else
                 {
                     <text>Apply for the payment, view @Model.OrganisationName's applications and add their bank details.</text>
                 }
+                else if (Model.ShowAmendBankDetails)
+                {
+                    <text>Apply for the payment, view @Model.OrganisationName's applications and change their bank details.</text>
+                }
                 else
                 {
                     <text>Apply for the payment and view @Model.OrganisationName's applications.</text>
@@ -52,9 +56,10 @@ else
                         We need @Model.OrganisationName's bank details, so that we can send any hire a new apprentice payments.
                     </p>
                     <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
-                        <a class="govuk-link das-link--white hub-bank-details-link" 
-                           asp-controller="BankDetails" 
-                           asp-action="AddBankDetails" 
+                        <a class="govuk-link das-link--white"
+                           data-linktype="hub-add-bank-details"
+                           asp-controller="BankDetails"
+                           asp-action="AddBankDetails"
                            asp-route-accountid="@Model.AccountId"
                            asp-route-applicationid="@Model.BankDetailsApplicationId">Add bank details</a>
                     </p>
@@ -68,7 +73,8 @@ else
                            asp-action="Start"
                            asp-route-accountid="@Model.AccountId"
                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                           class="govuk-link govuk-link--no-visited-state hub-apply-link">
+                           class="govuk-link govuk-link--no-visited-state"
+                           data-linktype="hub-apply">
                             Apply for the hire a new apprentice payment
                         </a>
                     </h2>
@@ -82,7 +88,8 @@ else
                            asp-action="ListPaymentsForLegalEntity"
                            asp-route-accountid="@Model.AccountId"
                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                           class="govuk-link govuk-link--no-visited-state hub-payments-link">
+                           class="govuk-link govuk-link--no-visited-state"
+                           data-linktype="hub-view-payments">
                             View applications
                         </a>
                     </h2>
@@ -94,29 +101,29 @@ else
         </div>
     </div>
 
-    @* 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <h2 class="govuk-heading-m">
-                        <a
-                            asp-controller="#"
-                            asp-action="#"
-                            asp-route-accountid="#"
-                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                            class="govuk-link govuk-link--no-visited-state"
-                        >
-                            Amend details
-                        </a>
-                    </h2>
-                    <p class="govuk-body">
-                        Amend details...
-                    </p>
+    @if (Model.ShowAmendBankDetails)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <h2 class="govuk-heading-m">
+                            <a asp-controller="BankDetails"
+                               asp-action="AmendBankDetails"
+                               asp-route-accountid="@Model.AccountId"
+                               asp-route-applicationId="@Model.BankDetailsApplicationId"
+                               class="govuk-link govuk-link--no-visited-state"
+                               data-linktype="hub-amend-bank-details">
+                                Change bank details
+                            </a>
+                        </h2>
+                        <p class="govuk-body">
+                            Change @Model.OrganisationName's address, contact or bank account details.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    *@
+    }
 
 </main>
