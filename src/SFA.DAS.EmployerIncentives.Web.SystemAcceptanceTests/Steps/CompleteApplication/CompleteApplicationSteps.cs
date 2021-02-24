@@ -131,7 +131,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
             queryParams.Should().Contain("return");
             queryParams["journey"].Should().Be("new");
             var returnUri = new Uri(HttpUtility.UrlDecode(queryParams["return"]));
-            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/complete/{_testdata.ApplicationId}/application-saved");
+            returnUri.PathAndQuery.Should().Be($"/{_testdata.HashedAccountId}/application-complete/{_testdata.ApplicationId}");
 
             request = new HttpRequestMessage(
                 HttpMethod.Get,
