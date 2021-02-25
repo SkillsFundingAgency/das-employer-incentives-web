@@ -38,29 +38,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
 
         public AndConstraint<HttpResponseMessageAssertions> HaveBackLink(string link, string because = "", params object[] becauseArgs)
         {
-             Execute.Assertion
-             .BecauseOf(because, becauseArgs)
-             .ForCondition(!string.IsNullOrEmpty(link))
-             .FailWith("Link to assert on not provided")
-             .Then
-             .Given(() => _document.DocumentElement.QuerySelector(".govuk-back-link").Attributes["href"].Value)
-             .ForCondition(t => _document.DocumentElement.QuerySelector(".govuk-back-link").Attributes["href"].Value == link)
-             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
-                 _ => link, item => item);
-
-            return new AndConstraint<HttpResponseMessageAssertions>(this);
+            return HaveLink(".govuk-back-link", link, because, becauseArgs);
         }
 
-        public AndConstraint<HttpResponseMessageAssertions> HaveLink(string link, string because = "", params object[] becauseArgs)
+        public AndConstraint<HttpResponseMessageAssertions> HaveLink(string selector, string link, string because = "", params object[] becauseArgs)
         {
             Execute.Assertion
             .BecauseOf(because, becauseArgs)
             .ForCondition(!string.IsNullOrEmpty(link))
             .FailWith("Link to assert on not provided")
             .Then
-            .Given(() => _document.DocumentElement.QuerySelectorAll(".govuk-link").Select(i => i.Attributes["href"].Value))
-            .ForCondition(t => _document.DocumentElement.QuerySelectorAll(".govuk-link").Select(i => i.Attributes["href"].Value).Contains(link))
-            .FailWith("Expected {context:DocumentElement} to contain {0} but none were found", _ => link);
+            .Given(() => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value == link)
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => link, item => item);
 
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
