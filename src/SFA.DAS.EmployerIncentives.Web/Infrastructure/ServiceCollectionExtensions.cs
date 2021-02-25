@@ -249,6 +249,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                 s.GetService<IBankingDetailsService>(),
                 s.GetService<IDataEncryptionService>(),
                 s.GetService<IHashingService>(),
+                s.GetService<ILegalEntitiesService>(),
                 s.GetService<IOptions<WebConfigurationOptions>>().Value
             ));
 
