@@ -95,10 +95,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("complete/need-bank-details")]
-        public ViewResult NeedBankDetails(Guid applicationId)
+        [Route("complete/application-saved")]
+        public async Task<IActionResult> NeedBankDetails(string accountId, Guid applicationId)
         {
-            var model = new NeedBankDetailsViewModel { AccountHomeUrl = _configuration.ManageApprenticeshipSiteUrl };
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
+            var model = new NeedBankDetailsViewModel(accountId, application.AccountLegalEntityId, legalEntityName);
             return View(model);
         }
 
