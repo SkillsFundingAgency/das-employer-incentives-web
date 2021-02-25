@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
         {
             // Arrange
             const int accountId = 20001;
-            const string hashedAccountId = "XFS24D";
+            const string hashedAccountId = "XFS24D"; 
             const string hashedAccountLegalEntityId = "G6M7RV";
             var applicationId = Guid.NewGuid();
             const long legalEntityId = 120001;
@@ -50,9 +50,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var hashingServiceMock = new Mock<IHashingService>();
             hashingServiceMock.Setup(x => x.DecodeValue(hashedAccountId)).Returns(accountId);
             hashingServiceMock.Setup(x => x.HashValue(legalEntityId)).Returns(hashedLegalEntityId);
-
+            
             var legalEntitiesServiceMock = new Mock<ILegalEntitiesService>();
-
+            var legalEntity = new LegalEntityModel
+            {
+                AccountId = hashedAccountId,
+                AccountLegalEntityId = hashedAccountLegalEntityId,
+                Name = "Legal Entity",
+                VrfVendorId = "ABC123"
+            };
+            legalEntitiesServiceMock.Setup(x => x.Get(hashedAccountId, hashedAccountLegalEntityId)).ReturnsAsync(legalEntity);
+            
             var webConfigurationOptionsMock = new Mock<WebConfigurationOptions>();
             const string achieveServiceBaseUrl = "https://dfeuat.achieveservice.com/service/provide-organisation-information";
             webConfigurationOptionsMock.Setup(x => x.AchieveServiceBaseUrl).Returns(achieveServiceBaseUrl);
@@ -137,7 +145,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             // Act
             var actual = await sut.BuildAchieveServiceUrl(hashedAccountId, hashedAccountLegalEntityId, applicationId, returnUrl, amendBankDetails: true);
 
-            // AssertW
+            // Assert
             actual.Should().Be(expectedUrl);
         }
     }

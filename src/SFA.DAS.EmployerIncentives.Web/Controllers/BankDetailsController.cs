@@ -90,8 +90,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var confirmationActionUrl = Url.Action("Confirmation", "ApplicationComplete", new { accountId, applicationId });
             var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
-            var application = await _applicationService.Get(accountId, applicationId, false);
-
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
             var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, application.AccountLegalEntityId, applicationId, returnUrl);
 
             return Redirect(achieveServiceUrl);

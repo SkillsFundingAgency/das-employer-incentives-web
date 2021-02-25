@@ -58,6 +58,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                 .Given(
                     Request
                         .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(_testdata.ApplicationResponse)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
                         .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}/accountlegalentity")
                         .UsingGet()
                 )
@@ -96,6 +108,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                         .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
+            .Given(
+                Request
+                    .Create()
+                    .WithPath($"/accounts/{_testdata.AccountId}/legalentities/{_testdata.AccountLegalEntityId}")
+                    .UsingGet()
+            )
+            .RespondWith(
+                Response.Create()
+                    .WithStatusCode(HttpStatusCode.OK)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntity)));
+
+           _testContext.EmployerIncentivesApi.MockServer
            .Given(
                    Request
                    .Create()

@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         private readonly WebConfigurationOptions _configuration;
 
         public VerificationService(IBankingDetailsService bankingDetailsService, IDataEncryptionService dataEncryptionService, IHashingService hashingService,
-                                   ILegalEntitiesService legalEntitiesService, WebConfigurationOptions configuration)
+            ILegalEntitiesService legalEntitiesService, WebConfigurationOptions configuration)
         {
             _bankingDetailsService = bankingDetailsService;
             _dataEncryptionService = dataEncryptionService;
@@ -36,12 +36,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             if (bankingDetails == null) throw new ArgumentException("Requested banking details records cannot be found");
             if (bankingDetails.SignedAgreements == null || !bankingDetails.SignedAgreements.Any()) throw new ArgumentException("Requested application records are invalid");
-
+            
             var legalEntity = await _legalEntitiesService.Get(hashedAccountId, hashedAccountLegalEntityId);
 
             var data = new ApplicationInformationForExternalVerificationModel
             {
                 ApplicationId = applicationId,
+                LegalEntityName = legalEntity.Name,
                 IsNew = !amendBankDetails,
                 HashedAccountId = hashedAccountId,
                 HashedLegalEntityId = _hashingService.HashValue(bankingDetails.LegalEntityId),
