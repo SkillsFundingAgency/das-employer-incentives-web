@@ -3,8 +3,7 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using System;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -119,6 +118,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             redirectUrl.Should().Contain("journey=amend");
             var hubPageUrl = HttpUtility.UrlEncode($"https://localhost:5001/{_testData.HashedAccountId}/{_testData.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
             redirectUrl.Should().Contain($"return={hubPageUrl}");
+        }
+
+        [Then(@"the employer can go back to the EI hub page")]
+        public void ThenTheEmployerCanGoBackToTheEIHubPage()
+        {
+            _response.Should().HaveBackLink($"/{_testData.HashedAccountId}/{_testData.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
     }
