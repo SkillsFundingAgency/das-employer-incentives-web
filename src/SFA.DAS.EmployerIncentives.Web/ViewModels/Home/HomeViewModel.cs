@@ -2,8 +2,6 @@
 {
     public class HomeViewModel : IViewModel
     {
-        private readonly string _accountsBaseUrl;
-
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
         public bool NewAgreementRequired { get; }

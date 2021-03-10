@@ -77,6 +77,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
             {
                 return $"accounts/{accountId}/legalentities/{accountLegalEntityId}";
             }
+
+            public static string UpdateVrfCaseStatus(in long accountId, in long accountLegalEntityId)
+            {
+                return $"accounts/{accountId}/legalentity/{accountLegalEntityId}/vrfcasestatus";
+           }
         }
     }
 }

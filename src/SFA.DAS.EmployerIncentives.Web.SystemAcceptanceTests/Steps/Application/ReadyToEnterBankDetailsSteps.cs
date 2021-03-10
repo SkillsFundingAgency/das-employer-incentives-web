@@ -79,6 +79,31 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(accountLegalEntityId.ToString()));
 
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_data.AccountId}/legalentities/{response.Application.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(_data.LegalEntity)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_data.AccountId}/legalentity/{_data.AccountLegalEntityId}/vrfcasestatus")
+                        .WithParam("vrfCaseStatus", "Requested")
+                        .UsingPut()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json"));
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -90,7 +115,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await _continueNavigationResponse.Content.ReadAsStreamAsync());
 
-            document.Title.Should().Be(new BankDetailsConfirmationViewModel().Title);
+            document.Title.Should().Be($"We need {_data.LegalEntity.LegalEntityName}'s bank details");
         }
 
         [When(@"the employer confirms they can provide their bank details")]
