@@ -8,7 +8,6 @@ using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
-using SFA.DAS.EmployerIncentives.Web.Services.BankDetails;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
 
@@ -19,7 +18,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
     {
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IApplicationService> _applicationService;
-        private Mock<IBankDetailsStatusService> _bankDetailsService;
         private ApplicationCompleteController _sut;
         private Fixture _fixture;
         private string _accountId;
@@ -40,22 +38,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
             var application = new ApplicationModel(_applicationId, _accountId, _accountLegalEntityId,
                 _fixture.CreateMany<ApplicationApprenticeshipModel>(2), false, false);
             _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
-
-            _bankDetailsService = new Mock<IBankDetailsStatusService>();
-
-            _sut = new ApplicationCompleteController(_legalEntitiesService.Object, _applicationService.Object,
-                _bankDetailsService.Object);
+            
+            _sut = new ApplicationCompleteController(_legalEntitiesService.Object, _applicationService.Object);
         }
 
-        [Test]
-        public async Task Then_the_view_indicates_that_the_bank_details_have_been_received()
+        [TestCase("")]
+        [TestCase(null)]
+        public async Task Then_the_view_indicates_that_the_bank_details_have_been_received(string existingStatus)
         {
             // Arrange
             var legalEntity = _fixture.Create<LegalEntityModel>();
             legalEntity.AccountId = _accountId;
             legalEntity.AccountLegalEntityId = _accountLegalEntityId;
-            legalEntity.VrfCaseStatus = "Requested";
-            _bankDetailsService.Setup(x => x.RecordBankDetailsComplete(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
+            legalEntity.VrfCaseStatus = existingStatus;
+            _legalEntitiesService.Setup(x => x.Get(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
             
             // Act
             var viewResult = await _sut.Confirmation(_accountId, _applicationId) as ViewResult;
@@ -68,6 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
             model.OrganisationName.Should().Be(legalEntity.Name);
             model.ShowBankDetailsInReview.Should().BeTrue();
+            _legalEntitiesService.Verify(x => x.UpdateVrfCaseStatus(It.Is<LegalEntityModel>(y => y.AccountId == _accountId && y.AccountLegalEntityId == _accountLegalEntityId && y.VrfCaseStatus == "Requested")), Times.Once);
         }
 
         [Test]
@@ -78,7 +75,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
             legalEntity.AccountId = _accountId;
             legalEntity.AccountLegalEntityId = _accountLegalEntityId;
             legalEntity.VrfCaseStatus = VrfStatusCompleted;
-            _bankDetailsService.Setup(x => x.RecordBankDetailsComplete(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
+            _legalEntitiesService.Setup(x => x.Get(_accountId, _accountLegalEntityId)).ReturnsAsync(legalEntity);
 
             // Act
             var viewResult = await _sut.Confirmation(_accountId, _applicationId) as ViewResult;
@@ -91,6 +88,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
             model.OrganisationName.Should().Be(legalEntity.Name);
             model.ShowBankDetailsInReview.Should().BeFalse();
+            _legalEntitiesService.Verify(x => x.UpdateVrfCaseStatus(It.Is<LegalEntityModel>(y => y.AccountId == _accountId && y.AccountLegalEntityId == _accountLegalEntityId)), Times.Never);
         }
     }
 }

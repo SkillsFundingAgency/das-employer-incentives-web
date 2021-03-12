@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.BankDetails;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {
@@ -135,7 +134,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddSingleton<IDocumentClientFactory, DocumentClientFactory>();
             serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
             serviceCollection.AddTransient<IUserService, UserService>();
-            serviceCollection.AddTransient<IBankDetailsStatusService, BankDetailsStatusService>();
 
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
