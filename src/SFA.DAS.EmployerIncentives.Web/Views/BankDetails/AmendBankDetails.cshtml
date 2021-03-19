@@ -15,11 +15,11 @@
             <p class="govuk-body">You can only add one bank account for @Model.OrganisationName. We'll use this account to make all of their payments.</p>
             <p class="govuk-body">You can change @Model.OrganisationName's:</p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>legal name, registered address and contact details</li>
+                <li>registered address</li>
                 <li>remittance email address</li>
-                <li>bank account details</li>
+                <li>bank account details (you'll need the existing bank details that we have for @Model.OrganisationName)</li>
             </ul>
-            <div class="govuk-inset-text">We cannot make any payments until we've verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.</div>
+            <div class="govuk-inset-text">We cannot make any payments until we've received and verified @Model.OrganisationName's organisation and finance details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.</div>
 
             <form asp-action="AmendBankDetails" method="post">
             @Html.AntiForgeryToken()
