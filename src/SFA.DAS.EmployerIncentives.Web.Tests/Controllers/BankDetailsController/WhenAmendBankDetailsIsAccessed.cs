@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             model.AccountId.Should().Be(_accountId);
             model.ApplicationId.Should().Be(_applicationId);
             model.OrganisationName.Should().Be(legalEntity.Name);
-            model.Title.Should().Be($"Change {legalEntity.Name}'s bank details");
+            model.Title.Should().Be($"Change {legalEntity.Name}'s organisation and finance details");
         }
 
         [Test]
