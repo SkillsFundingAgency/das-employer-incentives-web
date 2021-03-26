@@ -3,12 +3,12 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete
 {
     public class ConfirmationViewModel : IViewModel
     {
-        public ConfirmationViewModel(string accountId, string accountLegalEntityId, string organisationName, string accountsUrl)
+        public ConfirmationViewModel(string accountId, string accountLegalEntityId, string organisationName, bool showBankDetailsInReview)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             OrganisationName = organisationName;
-            AccountsUrl = accountsUrl;
+            ShowBankDetailsInReview = showBankDetailsInReview;
         }
 
         public string Title => "Application complete";
@@ -17,6 +17,6 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete
 
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
-        public string AccountsUrl { get; }
+        public bool ShowBankDetailsInReview { get; }
     }
 }

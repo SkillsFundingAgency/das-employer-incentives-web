@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.HashingService;
 using System;
@@ -8,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 {
@@ -78,6 +77,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
             var data = await JsonSerializer.DeserializeAsync<LegalEntityDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return data.ToLegalEntityModel(_hashingService);
+        }
+
+        public async Task UpdateVrfCaseStatus(LegalEntityModel legalEntity)
+        {
+            var accountId = _hashingService.DecodeValue(legalEntity.AccountId);
+            var accountLegalEntityId = _hashingService.DecodeValue(legalEntity.AccountLegalEntityId);
+            
+            var queryParams = new Dictionary<string, string>
+            {
+                {"vrfCaseStatus", legalEntity.VrfCaseStatus}
+            };
+            var url = QueryHelpers.AddQueryString(OuterApiRoutes.LegalEntities.UpdateVrfCaseStatus(accountId, accountLegalEntityId), queryParams);
+
+            using var response = await _client.PutAsync(url, new StringContent(string.Empty));
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }

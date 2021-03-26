@@ -113,6 +113,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
              Response.Create()
                .WithStatusCode(HttpStatusCode.OK)
                .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+           _testContext.EmployerIncentivesApi.MockServer
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/accounts/{_testdata.AccountId}/legalentity/{_testdata.AccountLegalEntityId}/vrfcasestatus")
+                       .WithParam("vrfCaseStatus", "Requested")
+                       .UsingPut()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.OK)
+                       .WithHeader("Content-Type", "application/json"));
         }
 
         [When(@"the employer provides their bank details")]
