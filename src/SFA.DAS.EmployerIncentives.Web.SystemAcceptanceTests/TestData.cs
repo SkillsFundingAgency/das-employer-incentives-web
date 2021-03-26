@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity };
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
 
-                public virtual LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4 };
+                public virtual LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4, HashedLegalEntityId = "VKGFT" };
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678 };
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789 };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 456789012 };
