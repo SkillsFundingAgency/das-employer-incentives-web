@@ -1,0 +1,39 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.AmendBankDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/change-bank-details";
+    ViewData["ZenDeskLabels"] = "ei-changebankdetails";
+}
+
+<a asp-controller="Hub" asp-action="Index" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">@Model.Title</h1>
+            <p class="govuk-body">You can only add one bank account for @Model.OrganisationName. We'll use this account to make all of their payments.</p>
+            <p class="govuk-body">You can change @Model.OrganisationName's:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>registered address</li>
+                <li>remittance email address</li>
+                <li>bank account details (you'll need the existing bank account details that we have for @Model.OrganisationName)</li>
+            </ul>
+            <div class="govuk-inset-text">We cannot make any payments until we've received and verified @Model.OrganisationName's organisation and finance details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.</div>
+
+            <form asp-action="AmendBankDetails" method="post">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.AccountId)
+            @Html.HiddenFor(x => x.AccountLegalEntityId)
+            @Html.HiddenFor(x => x.ApplicationId)
+
+            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                Continue
+            </button>
+            </form>
+        </div>
+    </div>
+
+
+</main>
+
