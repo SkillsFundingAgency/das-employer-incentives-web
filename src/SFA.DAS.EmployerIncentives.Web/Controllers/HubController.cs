@@ -41,6 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (applicationsResponse.ApprenticeApplications.Any())
             {
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
+                model.ShowAmendBankDetails = CanAmendBankDetails(applicationsResponse);
                 model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
             }
 
@@ -50,6 +51,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private static bool BankDetailsRequired(GetApplicationsModel applications)
         {
             return applications.BankDetailsStatus == BankDetailsStatus.NotSupplied || applications.BankDetailsStatus == BankDetailsStatus.Rejected;
+        }
+        private static bool CanAmendBankDetails(GetApplicationsModel applications)
+        {
+            return applications.BankDetailsStatus == BankDetailsStatus.Completed;
         }
     }
 }

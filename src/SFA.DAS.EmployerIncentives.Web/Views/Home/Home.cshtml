@@ -13,8 +13,19 @@
             <h1 class="govuk-heading-xl">
                 @Model.Title
             </h1>
+            <div class="das-highlight">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
+                    Apply for apprentices who joined your organisation before 1 April 2021 by 31 May 2021
+                </h2>
+                <p class="govuk-body">
+                    We're closing applications for apprentices who joined @Model.OrganisationName from 1 August 2020 to 31 March 2021.  The application deadline is 31 May 2021.
+                </p>
+                <p class="govuk-body govuk-!-margin-bottom-0">
+                    If @Model.OrganisationName takes on new apprentices from 1 April 2021 to 30 September 2021, they can apply from 1 June 2021.
+                </p>
+            </div>
             <p class="govuk-body">
-                The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
+                The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">30 September 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
             </p>
             <p class="govuk-body">
                 The payment is in addition to the existing £1,000 an employer will already get for taking on an apprentice who is either:
@@ -24,50 +35,71 @@
                 <li>under 25 and has an education, health and care plan or has been in the care of their local authority</li>
             </ul>
 
-            <h2 class="govuk-heading-m">What you'll get</h2>
-            <p class="govuk-body">For apprentices aged:</p>
+            <h2 class="govuk-heading-m">Apprentices who joined your organisation before 1 April 2021</h2>
+            <p class="govuk-body">For apprentices who joined your organisation between 1 August 2020 and 31 March 2021 who are aged:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>16 to 24, employers will receive £2,000</li>
                 <li>25 and over, employers will receive £1,500</li>
             </ul>
             <p class="govuk-body">
-                We'll make the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days.
-            </p>
-            <p class="govuk-body">
-                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
-            </p>
-            <p class="govuk-body">
-                We'll need @Model.OrganisationName's bank details, so that we can pay them directly.
+                You must apply for these apprentices before 31 May 2021.
             </p>
 
-            <h2 class="govuk-heading-m">
-                What you can use the payment for
-            </h2>
+            <h2 class="govuk-heading-m">Apprentices who joined your organisation from 1 April 2021</h2>
+            <p class="govuk-body">Employers will receive £3,000 for new employees of any age who start their apprenticeship from 1 April 2021 to 30 September 2021.</p>
+            <p class="govuk-body">You can apply for these apprentices from 1 June 2021.</p>
+
+            <h2 class="govuk-heading-m">What you'll get paid</h2>
+            <p class="govuk-body">We'll send the payment in 2 equal instalments for each apprentice.  We'll send the:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>first payment after an apprentice completes 90 days of their apprenticeship</li>
+                <li>second payment after an apprentice completes 365 days of their apprenticeship</li>
+            </ul>
             <p class="govuk-body">
-                @Model.OrganisationName can use the payment for anything to support your organisation's costs.
+                Payments are sent by Bacs on the 14th working day of the month.  It usually takes 3 working days to process.
             </p>
             <p class="govuk-body">
-                The payment is different to the apprenticeship levy and @Model.OrganisationName can use it to pay for recruiting and employing new apprentices.
+                We cannot send any payments until we've received and verified @Model.OrganisationName's organisation and finance details.  This could take up to 80 days and we may contact someone from @Model.OrganisationName.
+            </p>
+
+            <h2 class="govuk-heading-m">What you can use the payment for</h2>
+            <p class="govuk-body">
+                The payment is different to apprenticeship levy funds, so @Model.OrganisationName can spend it on anything to support their organisation's costs.  @Model.OrganisationName does not have to pay it back.
             </p>
 
             <h2 class="govuk-heading-m">
                 Eligibility
             </h2>
             <p class="govuk-body">
-                @Model.OrganisationName cannot apply for an existing employee who joined your organisation before <span class="das-no-wrap">1 August 2020</span>, even if they started an apprenticeship after this date.
+                @Model.OrganisationName cannot apply for an exiting employee who joined their organisation before 1 August 2020, even if they started an apprenticeship after this date.
             </p>
             <p class="govuk-body">
-                @Model.OrganisationName can only apply for new apprentices who joined your organisation from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
+                @Model.OrganisationName can only apply for new apprentices who joined your organisation from 1 August 2020 to 30 September 2021.
             </p>
 
-            <h2 class="govuk-heading-m">Before you start</h2>
+            <h2 class="govuk-heading-m">
+                Before you start
+            </h2>
             <p class="govuk-body">
-                You'll need:
+                You'll need to:
             </p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>to add the apprentices you want to apply for to the apprenticeship service account</li>
-                <li>@Model.OrganisationName's bank details (someone else from @Model.OrganisationName can add them later)</li>
+                <li>add the apprentices you want to apply for to the apprenticeship service account.</li>
+                <li>know the date each apprentice joined your organisation</li>
             </ul>
+
+            <p class="govuk-body">
+                You can add @Model.OrganisationName's organisation and finance details when you apply, or someone else from @Model.OrganisationName can add them later.  This includes @Model.OrganisationName's:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>legal name, registered address and contact details</li>
+                <li>Companies House number (if @Model.OrganisationName has one)</li>
+                <li>VAT number (if @Model.OrganisationName has one)</li>
+                <li>remittance email address</li>
+                <li>finance director or finance lead's contact details</li>
+                <li>bank account details</li>
+            </ul>
+
 
             @if (Model.NewAgreementRequired)
             {

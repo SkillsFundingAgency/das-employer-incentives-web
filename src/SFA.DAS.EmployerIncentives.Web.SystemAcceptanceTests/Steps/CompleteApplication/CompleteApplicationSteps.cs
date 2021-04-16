@@ -1,7 +1,10 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
@@ -23,18 +26,33 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
     {
         private readonly TestContext _testContext;
         private readonly TestData.Account.WithInitialApplicationAndBankingDetails _testdata;
+        private readonly Fixture _fixture;
 
         public CompleteApplicationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testdata = new TestData.Account.WithInitialApplicationAndBankingDetails();
+            _fixture = new Fixture();
         }
    
         [Given(@"given the employer has all the information required to process their bank details")]
         public void GivenTheEmployerHasAllTheInformationRequiredToProcessTheirBankDetails()
         {            
             _testContext.TestDataStore.Add("HashedAccountId", _testdata.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testdata.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testdata.HashedAccountId);
+            
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/applications/{_testdata.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(_testdata.ApplicationResponse)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -114,6 +132,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
                .WithStatusCode(HttpStatusCode.OK)
                .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testdata.AccountId}/legalentities/{_testdata.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(_testdata.LegalEntity, TestHelper.DefaultSerialiserSettings)));
            _testContext.EmployerIncentivesApi.MockServer
                .Given(
                    Request
@@ -157,12 +186,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.CompleteApp
         [Then(@"the employer completes their application journey")]
         public void ThenTheEmployerCompletesTheirApplicationJourney()
         {
+            var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmationViewModel;
             model.Should().NotBeNull();
-            model.AccountId.Should().Be(_testdata.HashedAccountId);
-            model.AccountLegalEntityId.Should().Be(_testdata.HashedAccountLegalEntityId);
+            model.AccountId.Should().Be(hashedAccountId);
+            model.AccountLegalEntityId.Should().Be(hashedAccountLegalEntityId);
+            model.OrganisationName.Should().Be(_testdata.LegalEntity.LegalEntityName);
         }
     }
 }

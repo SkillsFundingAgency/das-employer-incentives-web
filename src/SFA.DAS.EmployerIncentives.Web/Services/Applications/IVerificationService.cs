@@ -5,6 +5,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public interface IVerificationService
     {
-        Task<string> BuildAchieveServiceUrl(string hashedAccountId, string hashedAccountLegalEntityId, Guid applicationId, string enterBankDetails);
+        Task<string> BuildAchieveServiceUrl(string hashedAccountId, string hashedAccountLegalEntityId, Guid applicationId, string enterBankDetails, bool amendBankDetails = false);
     }
 }

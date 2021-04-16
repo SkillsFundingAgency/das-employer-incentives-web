@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             _configuration = configuration;
         }
 
-        public async Task<string> BuildAchieveServiceUrl(string hashedAccountId, string hashedAccountLegalEntityId, Guid applicationId, string returnUrl)
+        public async Task<string> BuildAchieveServiceUrl(string hashedAccountId, string hashedAccountLegalEntityId, Guid applicationId, string returnUrl, bool amendBankDetails = false)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             {
                 ApplicationId = applicationId,
                 LegalEntityName = legalEntity.Name,
-                IsNew = true,
+                IsNew = !amendBankDetails,
                 HashedAccountId = hashedAccountId,
                 HashedLegalEntityId = legalEntity.HashedLegalEntityId,
                 IncentiveAmount = bankingDetails.ApplicationValue,
@@ -59,9 +59,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 })
             };
 
+            if (amendBankDetails)
+            {
+                data.VendorId = legalEntity.VrfVendorId;
+                data.LegalEntityName = legalEntity.Name;
+            }
+
             var encryptedData = _dataEncryptionService.Encrypt(data.ToPsvString()).ToUrlString();
 
-            return $"{_configuration.AchieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData}";
+            var journeyType = "new";
+            if (amendBankDetails)
+            {
+                journeyType = "amend";
+            }
+
+            return $"{_configuration.AchieveServiceBaseUrl}?journey={journeyType}&return={returnUrl.ToUrlString()}&data={encryptedData}";
         }
 
     }

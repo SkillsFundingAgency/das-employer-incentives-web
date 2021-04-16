@@ -121,5 +121,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
         }
+
+        [Test]
+        public async Task Then_the_viewmodel_reflects_that_the_account_holder_can_change_their_provided_bank_details()
+        {
+            // Arrange
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = BankDetailsStatus.Completed,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationName.Should().Be(_legalEntities[0].Name);
+            model.ShowBankDetailsRequired.Should().BeFalse();
+            model.BankDetailsApplicationId.Should().NotBeEmpty();
+            model.ShowAmendBankDetails.Should().BeTrue();
+            model.AccountId.Should().Be(_accountId);
+            model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+        }
     }
 }
