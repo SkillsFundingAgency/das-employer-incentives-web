@@ -19,5 +19,10 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
         public string Title => "Which apprentices do you want to apply for?";
 
         public string OrganisationName { get; set; }
+        public int PageNumber { get; set; }
+        public int StartIndex { get; set; }
+        public int EndIndex { get; set; }
+        public bool PrevPage { get; set; }
+        public bool NextPage { get; set; }
     }
 }

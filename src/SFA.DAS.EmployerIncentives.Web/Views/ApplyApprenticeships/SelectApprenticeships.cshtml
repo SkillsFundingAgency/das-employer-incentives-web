@@ -50,6 +50,7 @@
                                 <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
                             </span>
                         }
+                        <partial name="PageInformation" model="Model" />
                         <div class="govuk-checkboxes">
                             @foreach (var apprenticeship in Model.Apprenticeships)
                             {
@@ -72,6 +73,7 @@
                                 </div>
                             }
                         </div>
+                        <partial name="PageInformation" model="Model" />
                     </fieldset>
                 </div>
 

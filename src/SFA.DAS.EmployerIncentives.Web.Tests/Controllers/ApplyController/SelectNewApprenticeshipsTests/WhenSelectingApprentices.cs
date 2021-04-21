@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
                 .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(_applicationId);
 
-            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>());
+            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>(), Mock.Of<IOptions<WebConfigurationOptions>>());
 
             _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;

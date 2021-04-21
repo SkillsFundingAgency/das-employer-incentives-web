@@ -12,5 +12,6 @@
         public virtual string ZenDeskCobrowsingSnippetKey { get; set; }
         public virtual string AchieveServiceBaseUrl { get; set; }
         public virtual string DataEncryptionServiceKey { get; set; }
+        public virtual int ApprenticeshipsPageSize { get; set; }
     }
 }

@@ -20,24 +20,27 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
-        private readonly ExternalLinksConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _linksConfiguration;
+        private readonly WebConfigurationOptions _webConfiguration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
-            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
+            IOptions<ExternalLinksConfiguration> linksConfiguration,
+            IOptions<WebConfigurationOptions> webConfiguration) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
-            _configuration = configuration.Value;
+            _linksConfiguration = linksConfiguration.Value;
+            _webConfiguration = webConfiguration.Value;
         } 
 
         [HttpGet]
         [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, int pageNumber = 1)
         {
-            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId);
+            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId, pageNumber, _webConfiguration.ApprenticeshipsPageSize);
 
             if (!model.Apprenticeships.Any())
             {
@@ -57,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
             }
 
-            var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
+            var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId, form.PageNumber, _webConfiguration.ApprenticeshipsPageSize);
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
             return View(viewModel);
@@ -65,9 +68,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("select-apprentices/{applicationId}")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId, int pageNumber = 1)
         {
-            var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId);
+            var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId, pageNumber, _webConfiguration.ApprenticeshipsPageSize);
 
             if (!model.Apprenticeships.Any())
             {
@@ -87,7 +90,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
             }
 
-            var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, false);
+            var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, form.PageNumber, _webConfiguration.ApprenticeshipsPageSize, false);
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
             return View(viewModel);
@@ -117,13 +120,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
+            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _linksConfiguration.ManageApprenticeshipSiteUrl);
             return View(viewModel);
         }
 
-        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
+        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId, int pageNumber, int pageSize)
         {
-            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId));
+            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId, pageNumber, pageSize));
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
             return new SelectApprenticeshipsViewModel
             {
@@ -134,11 +137,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             };
         }
 
-        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, bool showSelected = true)
+        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, int pageNumber, int pageSize, bool showSelected = true)
         {
             var application = await _applicationService.Get(accountId, applicationId);
 
-            var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
+            var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId, pageNumber, pageSize))).ToList();
 
             if (showSelected)
             {

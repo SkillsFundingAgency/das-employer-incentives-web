@@ -41,12 +41,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
 
         public static class Apprenticeships
         {
-            public static string GetApprenticeships(long accountId, long accountLegalEntityId)
+            public static string GetApprenticeships(long accountId, long accountLegalEntityId, int pageNumber, int pageSize)
             {
                 var queryParams = new Dictionary<string, string>()
                 {
                     {"accountid", accountId.ToString()},
-                    {"accountlegalentityid", accountLegalEntityId.ToString()}
+                    {"accountlegalentityid", accountLegalEntityId.ToString()},
+                    {"pageNumber", pageNumber.ToString()},
+                    {"pageSize", pageSize.ToString()}
                 };
 
                 return QueryHelpers.AddQueryString("apprenticeships", queryParams);

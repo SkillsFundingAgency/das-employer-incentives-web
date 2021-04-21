@@ -2,13 +2,17 @@
 {
     public class ApprenticesQuery
     {
-        public string AccountId { get; private set; }
-        public string AccountLegalEntityId { get; private set; }
+        public string AccountId { get; }
+        public string AccountLegalEntityId { get; }
+        public int PageNumber { get; }
+        public int PageSize { get; }
         
-        public ApprenticesQuery(string accountId, string accountLegalEntityId)
+        public ApprenticesQuery(string accountId, string accountLegalEntityId, int pageNumber, int pageSize)
         {
             AccountId = accountId;
-            AccountLegalEntityId = accountLegalEntityId;        
+            AccountLegalEntityId = accountLegalEntityId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }

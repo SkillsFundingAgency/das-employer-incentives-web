@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
         public async Task<IEnumerable<ApprenticeshipModel>> Get(ApprenticesQuery query)
         {
             var url = OuterApiRoutes.Apprenticeships.GetApprenticeships(_hashingService.DecodeValue(query.AccountId),
-                _hashingService.DecodeValue(query.AccountLegalEntityId));
+                _hashingService.DecodeValue(query.AccountLegalEntityId), query.PageNumber, query.PageSize);
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 

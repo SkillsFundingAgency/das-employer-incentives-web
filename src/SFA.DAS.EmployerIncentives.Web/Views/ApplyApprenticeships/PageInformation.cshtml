@@ -1,0 +1,22 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
+
+@if(Model.PageNumber > 1 || Model.NextPage)
+{
+    <nav role="navigation" aria-label="Pagination" class="govuk-!-margin-bottom-4">
+        <p class="pagination__summary govuk-body">Showing @Model.StartIndex to @Model.EndIndex of all apprentices</p>
+        <ul class="pagination govuk-list">
+            @if (Model.PrevPage)
+            {
+                <li class="pagination__item previouspage">
+                    <a class="pagination__link govuk-link" href="#" aria-label="Previous page">Previous</a>
+                </li>
+            }
+            @if (Model.NextPage)
+            {
+                <li class="pagination__item nextpage">
+                    <a class="pagination__link govuk-link" href="#" aria-label="Next page">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

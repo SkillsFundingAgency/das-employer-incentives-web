@@ -13,5 +13,6 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
         public static string SelectedApprenticeshipsPropertyName => nameof(SelectedApprenticeships);
 
         public bool HasSelectedApprenticeships => SelectedApprenticeships != null && SelectedApprenticeships.Count > 0;
+        public int PageNumber { get; set; }
     }
 }
