@@ -49,7 +49,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             var hashingServiceMock = new Mock<IHashingService>();
             hashingServiceMock.Setup(x => x.DecodeValue(hashedAccountId)).Returns(accountId);
-            hashingServiceMock.Setup(x => x.HashValue(legalEntityId)).Returns(hashedLegalEntityId);
             
             var legalEntitiesServiceMock = new Mock<ILegalEntitiesService>();
             var legalEntity = new LegalEntityModel
@@ -57,7 +56,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
                 AccountId = hashedAccountId,
                 AccountLegalEntityId = hashedAccountLegalEntityId,
                 Name = "Legal Entity",
-                VrfVendorId = "ABC123"
+                VrfVendorId = "ABC123",
+                HashedLegalEntityId = hashedLegalEntityId
             };
             legalEntitiesServiceMock.Setup(x => x.Get(hashedAccountId, hashedAccountLegalEntityId)).ReturnsAsync(legalEntity);
             
@@ -71,9 +71,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             const string encryptedData = "qNgwIVvU8twX0GPjF4yHcw==Qqm35mLvFQZ9RCNQ2Ff7zee2sO4CNS0H7hN9PzKM6Cfo7U+ajB52gza8VEt0F9jnKpTxYt93HWq4xZPrdzEDZw==";
             var dataEncryptionServiceMock = new Mock<IDataEncryptionService>();
-            dataEncryptionServiceMock.Setup(x => x.Encrypt(It.IsAny<string>())).Returns(encryptedData);
+            dataEncryptionServiceMock.Setup(x => x.Encrypt(It.Is<string>(y => y.StartsWith(hashedLegalEntityId)))).Returns(encryptedData);
 
-            var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
+            var expectedUrl = $"{achieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
 
             var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, legalEntitiesServiceMock.Object, webConfigurationOptionsMock.Object);
 

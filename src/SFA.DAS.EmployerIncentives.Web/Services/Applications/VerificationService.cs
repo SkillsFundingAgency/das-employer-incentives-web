@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 LegalEntityName = legalEntity.Name,
                 IsNew = !amendBankDetails,
                 HashedAccountId = hashedAccountId,
-                HashedLegalEntityId = _hashingService.HashValue(bankingDetails.LegalEntityId),
+                HashedLegalEntityId = legalEntity.HashedLegalEntityId,
                 IncentiveAmount = bankingDetails.ApplicationValue,
                 VendorId = bankingDetails.VendorCode,
                 SubmittedByFullName = bankingDetails.SubmittedByName,
