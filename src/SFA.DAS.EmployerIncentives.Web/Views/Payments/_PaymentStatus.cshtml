@@ -16,6 +16,11 @@
         <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-3">Payment issue</strong>
         <p class="govuk-body govuk-!-margin-bottom-0">Contact your training provider to check that your information matches</p>
     }
+    @if (Model.RequiresNewEmployerAgreement)
+    {
+        <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-3">Payment issue</strong>
+        <p class="govuk-body govuk-!-margin-bottom-0">Acccept a <a test-id="payment-status-view-agreement" class="govuk-link" data-linktype="payment-status-view-agreement" href="@Model.ViewAgreementLink">new employer agreement</a></p>
+    }
     @if (Model.LearnerMatchFound && !Model.InLearning)
     {
         <p class="govuk-body govuk-!-margin-bottom-0">Apprenticeship paused or stopped</p>
