@@ -43,6 +43,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
                 model.ShowAmendBankDetails = CanAmendBankDetails(applicationsResponse);
                 model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
+                model.ShowAcceptNewEmployerAgreement = applicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement));
+                model.ViewAgreementLink = CreateViewAgreementLink(accountId);
             }
 
             return View(model);
@@ -55,6 +57,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private static bool CanAmendBankDetails(GetApplicationsModel applications)
         {
             return applications.BankDetailsStatus == BankDetailsStatus.Completed;
+        }
+
+        private string CreateViewAgreementLink(string accountId)
+        {
+            var accountsbaseUrl = _configuration.ManageApprenticeshipSiteUrl;
+            if (!accountsbaseUrl.EndsWith("/"))
+            {
+                accountsbaseUrl += "/";
+            }
+            return $"{accountsbaseUrl}accounts/{accountId}/agreements";
         }
     }
 }
