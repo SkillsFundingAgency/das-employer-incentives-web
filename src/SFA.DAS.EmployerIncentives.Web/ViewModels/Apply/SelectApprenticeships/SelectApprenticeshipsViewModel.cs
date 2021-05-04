@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using System;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
         public string AccountId { get; set; }
 
         public string AccountLegalEntityId { get; set; }
+        public Guid ApplicationId { get; set; }
 
         public IEnumerable<ApprenticeshipModel> Apprenticeships { get; set; }
 
@@ -20,9 +22,26 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
 
         public string OrganisationName { get; set; }
         public int PageNumber { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-        public bool PrevPage { get; set; }
-        public bool NextPage { get; set; }
+        public int PageSize { get; set; }
+        public int StartIndex 
+        {
+            get 
+            {
+                var startIndex = 1;
+                if (CurrentPage > 1)
+                {
+                    startIndex = (PageSize * (CurrentPage - 1)) + 1;
+                }
+
+                return startIndex;
+            }
+        }
+        public int EndIndex => StartIndex + (Apprenticeships.Count() - 1);
+
+        public bool PreviousPages => (StartIndex > 1);
+
+        public bool MorePages { get; set; }
+        public int CurrentPage { get; set; }
+        public int Offset { get; set; }
     }
 }

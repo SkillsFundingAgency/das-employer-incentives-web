@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -23,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private readonly TestContext _testContext;
         private readonly IHashingService _hashingService;
-        private List<ApprenticeDto> _apprenticeshipData;
+        private EligibleApprenticesDto _apprenticeshipData;
         private TestData.Account.WithInitialApplicationForASingleEntity _data;
         private HttpResponseMessage _response;
 

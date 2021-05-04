@@ -18,6 +18,7 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using WireMock.Matchers;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -29,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         private readonly TestDataStore _testData;
         private readonly IHashingService _hashingService;
         private HttpResponseMessage _continueNavigationResponse;
-        private List<ApprenticeDto> _apprenticeshipData;
+        private EligibleApprenticesDto _apprenticeshipData;
 
         public ApprenticeSelectionSteps(TestContext testContext) : base(testContext)
         {
@@ -120,7 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer selects the apprentice the grant applies to")]
         public async Task WhenTheEmployerSelectsTheApprenticeTheGrantAppliesTo()
         {
-            var apprenticeships = _apprenticeshipData.ToApprenticeshipModel(_hashingService).ToArray();
+            var apprenticeships = _apprenticeshipData.Apprenticeships.ToApprenticeshipModel(_hashingService).ToArray();
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
@@ -171,7 +172,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _continueNavigationResponse.Should().HaveTitle(model.Title);
             _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/select-apprentices");
             model.Should().HaveTitle("Which apprentices do you want to apply for?");
-            model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Count);
+            model.Apprenticeships.Count().Should().Be(_apprenticeshipData.Apprenticeships.Count);
             model.AccountId.Should().Be(hashedAccountId);
             viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }

@@ -12,7 +12,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form asp-action="SelectApprenticeships" method="post">
+            <form method="post">
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.OrganisationName)
                 <partial name="ValidationSummary" />
@@ -40,10 +40,6 @@
                             </strong>
                         </div>
 
-                        <span id="new-apprenticeships-hint" class="govuk-hint">
-                            Select all that apply
-                        </span>
-
                         @if (!ViewData.ModelState.IsValid)
                         {
                             <span id="new-apprenticeships-error" class="govuk-error-message">
@@ -51,7 +47,7 @@
                             </span>
                         }
                         <partial name="PageInformation" model="Model" />
-                        <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes govuk-!-margin-bottom-4">
                             @foreach (var apprenticeship in Model.Apprenticeships)
                             {
                                 <div class="govuk-checkboxes__item">
@@ -76,8 +72,12 @@
                         <partial name="PageInformation" model="Model" />
                     </fieldset>
                 </div>
-
-                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                <input type="hidden" name="ApplicationId" value="@Model.ApplicationId" />
+                <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
+                <input type="hidden" name="PageNumber" value="@Model.PageNumber" />
+                <input type="hidden" name="Offset" value="@Model.Offset" />
+                <input type="hidden" name="OrganisationName" value="@Model.OrganisationName" />
+                <button type="submit" class="govuk-button" data-module="govuk-button" asp-action="CompleteApprenticesSelection" data-prevent-double-click="true">
                     Continue
                 </button>
 

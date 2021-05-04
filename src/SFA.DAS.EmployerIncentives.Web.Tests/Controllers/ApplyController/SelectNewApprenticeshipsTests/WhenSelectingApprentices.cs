@@ -25,17 +25,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         private string _hashedAccountId;
         private string _hashedLegalEntityId;
         private IActionResult _result;
-        private IEnumerable<ApprenticeshipModel> _apprenticeData;
+        private EligibleApprenticeshipsModel _apprenticeData;
         private SelectApprenticeshipsViewModel _model;
         private Mock<IApprenticesService> _apprenticesServiceMock;
         private Mock<IApplicationService> _applicationServiceMock;
+        private Mock<IOptions<WebConfigurationOptions>> _webConfigurationMock;
         private ApplyApprenticeshipsController _sut;
+        private Fixture _fixture;
 
         [SetUp]
         public async Task Arrange()
         {
+            _fixture = new Fixture();
             _applicationId = Guid.NewGuid();
-            _apprenticeData = new Fixture().CreateMany<ApprenticeshipModel>();
+            _apprenticeData = new Fixture().Create<EligibleApprenticeshipsModel>();
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
 
@@ -49,8 +52,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _applicationServiceMock
                 .Setup(x => x.Create(_hashedAccountId, _hashedLegalEntityId, It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync(_applicationId);
-
-            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>(), Mock.Of<IOptions<WebConfigurationOptions>>());
+            var application = new ApplicationModel(_applicationId, _hashedAccountId, _hashedLegalEntityId, new List<ApplicationApprenticeshipModel>(), false, false);
+            _applicationServiceMock.Setup(x => x.Get(_hashedAccountId, _applicationId, true)).ReturnsAsync(application);
+            _webConfigurationMock = new Mock<IOptions<WebConfigurationOptions>>();
+            var options = new WebConfigurationOptions {ApprenticeshipsPageSize = 50};
+            _webConfigurationMock.Setup(x => x.Value).Returns(options);
+            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>(), _webConfigurationMock.Object);
 
             _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
@@ -84,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         public void Then_should_display_a_list_of_apprentices()
         {
             _model.Apprenticeships.Should()
-                .BeEquivalentTo(_apprenticeData,
+                .BeEquivalentTo(_apprenticeData.Apprenticeships,
                     opt => opt
                         .Excluding(x => x.Id)
                         .Excluding(x => x.DisplayName)
@@ -103,9 +110,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             var request = new SelectApprenticeshipsRequest()
             {
                 AccountLegalEntityId = _hashedLegalEntityId,
-                AccountId = _hashedAccountId
+                AccountId = _hashedAccountId,
+                ApplicationId = _applicationId
             };
-            var result = _sut.SelectApprenticeships(request);
+            var result = _sut.CompleteApprenticesSelection(request);
 
             var viewResult = await result as ViewResult;
 
@@ -113,7 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _sut.ViewData.ModelState.IsValid.Should().BeFalse();
             _sut.ViewData.ModelState.Single(x => x.Key == _model.FirstCheckboxId).Value.Errors
                 .Should().Contain(x => x.ErrorMessage == SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
-            viewResult?.ViewName.Should().BeNullOrEmpty();
+            viewResult?.ViewName.Should().Be("SelectApprenticeships");
         }
 
         [Test]
@@ -121,10 +129,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         {
             var request = new SelectApprenticeshipsRequest
             {
-                SelectedApprenticeships = new List<string> { _apprenticeData.First().Id }
+                SelectedApprenticeships = new List<string> { _apprenticeData.Apprenticeships.First().Id },
+                AccountLegalEntityId = _hashedLegalEntityId,
+                AccountId = _hashedAccountId,
+                ApplicationId = _applicationId
             };
 
-            var result = _sut.SelectApprenticeships(request);
+            var apprenticeships = _fixture.CreateMany<ApplicationApprenticeshipModel>(2);
+            var application = new ApplicationModel(_applicationId, _hashedAccountId, _hashedLegalEntityId, apprenticeships, false, false);
+            _applicationServiceMock.Setup(x => x.Get(_hashedAccountId, _applicationId, true)).ReturnsAsync(application);
+
+            var result = _sut.CompleteApprenticesSelection(request);
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();

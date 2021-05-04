@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types
+namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types
 {
     public class ApprenticeDto
     {

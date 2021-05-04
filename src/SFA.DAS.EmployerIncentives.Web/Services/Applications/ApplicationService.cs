@@ -26,6 +26,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         public async Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
             var applicationId = Guid.NewGuid();
+            if (apprenticeshipIds == null)
+            {
+                apprenticeshipIds = new List<string>();
+            }
             var request = MapToCreateApplicationRequest(applicationId, accountId, accountLegalEntityId, apprenticeshipIds);
 
             var url = OuterApiRoutes.Application.CreateApplication(request.AccountId);

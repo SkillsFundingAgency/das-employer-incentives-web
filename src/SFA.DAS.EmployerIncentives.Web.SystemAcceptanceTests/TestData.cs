@@ -1,10 +1,10 @@
-﻿using Microsoft.OData.Edm;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -42,13 +42,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public long AccountLegalEntityId => 30001;
                 public string HashedAccountLegalEntityId => "MLP7DD";
 
-                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity };
-                public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> {LegalEntity};
+
+                public EligibleApprenticesDto Apprentices = new EligibleApprenticesDto
+                {
+                    Apprenticeships = new List<ApprenticeDto> {Apprentice1, Apprentice2, Apprentice3}, PageNumber = 1,
+                    PageSize = 50, TotalApprenticeships = 3
+                };
 
                 public virtual LegalEntityDto LegalEntity => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4, HashedLegalEntityId = "VKGFT" };
-                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678 };
-                public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789 };
-                public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 456789012 };
+                public static ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678 };
+                public static ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789 };
+                public static ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 456789012 };
             }
 
             public class WithMultipleLegalEntitiesWithNoEligibleApprenticeships
