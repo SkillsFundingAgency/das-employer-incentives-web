@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
@@ -69,6 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                      .WithPath($"/apprenticeships")
                      .WithParam("accountid", testdata.AccountId.ToString())
                      .WithParam("accountlegalentityid", testdata.LegalEntities.First().AccountLegalEntityId.ToString())
+                     .WithParam("pageNumber", "1")
                      .UsingGet()
                      )
                  .RespondWith(

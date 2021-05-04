@@ -169,6 +169,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                     }
                 };
 
+                public ApplicationResponse EmptyApplicationResponse => new ApplicationResponse
+                {
+                    Application = new IncentiveApplicationDto
+                    {
+                        AccountLegalEntityId = AccountLegalEntityId,
+                        NewAgreementRequired = false,
+                        Apprenticeships = new IncentiveApplicationApprenticeshipDto[0]
+                    }
+                };
+
                 public ApplicationResponse GetApplicationResponseWithFirstTwoApprenticesSelected =>
                     new ApplicationResponse
                     {

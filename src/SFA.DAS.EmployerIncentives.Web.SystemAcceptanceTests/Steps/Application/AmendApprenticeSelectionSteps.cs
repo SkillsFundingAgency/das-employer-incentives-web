@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -119,9 +118,43 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer updates application with no apprentices selected")]
         public async Task WhenTheEmployerUpdatesApplicationWithNoApprenticesSelected()
         {
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(JsonConvert.SerializeObject(_data.EmptyApplicationResponse, TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(_data.AccountLegalEntityId.ToString()));
+
             var hashedAccountId = _hashingService.HashValue(_data.AccountId);
-            var url = $"{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}";
-            var form = new SelectApprenticeshipsRequest();
+            var url = $"{hashedAccountId}/apply/complete-apprentices/{_data.ApplicationId}";
+            var form = new SelectApprenticeshipsRequest 
+            {
+                AccountId = _data.HashedAccountId, 
+                AccountLegalEntityId = _data.HashedAccountLegalEntityId, 
+                ApplicationId = _data.ApplicationId, 
+                SelectedApprenticeships = null, 
+                CurrentPage = 1
+            };
+            SetupEndpointForUpdateApplication();
 
             _response = await _testContext.WebsiteClient.PostAsJsonAsync(url, form);
         }
@@ -130,7 +163,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerUpdatesApplicationWithApprenticesSelected()
         {
             var hashedAccountId = _hashingService.HashValue(_data.AccountId);
-            var url = $"{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}";
+            var url = $"{hashedAccountId}/apply/complete-apprentices/{_data.ApplicationId}";
             var form = new KeyValuePair<string, string>("SelectedApprenticeships", _hashingService.HashValue(1));
             SetupEndpointForUpdateApplication();
 
@@ -172,7 +205,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
             _response.Should().HaveTitle(model.Title);
-            _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
+            _response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/complete-apprentices/{_data.ApplicationId}");
             model.Should().HaveTitle("Which apprentices do you want to apply for?");
             viewResult.Should().ContainError(model.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
         }

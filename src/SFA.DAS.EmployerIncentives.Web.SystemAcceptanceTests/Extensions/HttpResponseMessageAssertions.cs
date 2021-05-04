@@ -36,6 +36,22 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
 
+        public AndConstraint<HttpResponseMessageAssertions> HaveButton(string buttonText, string label, string because = "", params object[] becauseArgs)
+        {
+            var selector = $"button[type=submit]:contains('{buttonText}')";
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
+                .ForCondition(!string.IsNullOrEmpty(buttonText))
+                .FailWith("Button to assert on not provided")
+                .Then
+                .Given(() => _document.DocumentElement.QuerySelector(selector).Attributes["aria-label"].Value)
+                .ForCondition(t => _document.DocumentElement.QuerySelector(selector).Attributes["aria-label"].Value == label)
+                .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                    _ => label, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
         public AndConstraint<HttpResponseMessageAssertions> HaveBackLink(string link, string because = "", params object[] becauseArgs)
         {
             return HaveLink(".govuk-back-link", link, because, becauseArgs);
@@ -55,7 +71,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
 
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
-
+        
         public AndConstraint<HttpResponseMessageAssertions> NotHaveLink(string link, string because = "", params object[] becauseArgs)
         {
             Execute.Assertion

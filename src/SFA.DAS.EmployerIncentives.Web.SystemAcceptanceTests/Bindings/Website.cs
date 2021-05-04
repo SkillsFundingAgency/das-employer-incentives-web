@@ -31,7 +31,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 Hashstring = "SFA: digital apprenticeship service",                
                 RedisCacheConnectionString = "localhost",
                 AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information",
-                DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg=="
+                DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==",
+                ApprenticeshipsPageSize = 50
             };
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {

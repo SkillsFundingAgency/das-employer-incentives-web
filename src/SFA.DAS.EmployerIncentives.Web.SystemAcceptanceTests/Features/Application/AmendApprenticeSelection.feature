@@ -20,7 +20,6 @@ Scenario: An employer is changing the previously selected apprenticeships, but i
 
 Scenario: An employer is changing the previously selected apprenticeships and submits the application without any apprentices selected
 	Given there are eligible apprenticeships for the grant
-	And a initial application has been created
 	When the employer updates application with no apprentices selected
 	Then the employer will receive an error
 

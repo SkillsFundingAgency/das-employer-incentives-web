@@ -66,6 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.Hashstring = _testContext.WebConfigurationOptions.Hashstring;
                         o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
                         o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
+                        o.ApprenticeshipsPageSize = _testContext.WebConfigurationOptions.ApprenticeshipsPageSize;
                     });
                     s.Configure<ExternalLinksConfiguration>(o =>
                     {
