@@ -271,7 +271,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is offered the choice of viewing more apprentices")]
         public async Task ThenTheEmployerIsOfferedTheChoiceOfViewingMoreApprentices()
         {
-            _continueNavigationResponse.Should().HaveButton("Next", "Next page");
+            _continueNavigationResponse.Should().HaveButton("Next page of apprentices");
         }
 
         [When(@"the employer has viewed more apprentices")]
@@ -318,7 +318,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is offered the choice of viewing previous apprentices")]
         public void ThenTheEmployerIsOfferedTheChoiceOfViewingPreviousApprentices()
         {
-            _continueNavigationResponse.Should().HaveButton("Previous", "Previous page");
+            _continueNavigationResponse.Should().HaveButton("Previous page of apprentices");
         }
 
         [When(@"there are more apprentices to show")]

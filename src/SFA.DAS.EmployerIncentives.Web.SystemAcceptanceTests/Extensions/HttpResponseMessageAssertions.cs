@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
 
-        public AndConstraint<HttpResponseMessageAssertions> HaveButton(string buttonText, string label, string because = "", params object[] becauseArgs)
+        public AndConstraint<HttpResponseMessageAssertions> HaveButton(string buttonText, string because = "", params object[] becauseArgs)
         {
             var selector = $"button[type=submit]:contains('{buttonText}')";
             Execute.Assertion
@@ -44,10 +44,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
                 .ForCondition(!string.IsNullOrEmpty(buttonText))
                 .FailWith("Button to assert on not provided")
                 .Then
-                .Given(() => _document.DocumentElement.QuerySelector(selector).Attributes["aria-label"].Value)
-                .ForCondition(t => _document.DocumentElement.QuerySelector(selector).Attributes["aria-label"].Value == label)
+                .Given(() => _document.DocumentElement.QuerySelector(selector).TextContent)
+                .ForCondition(t => _document.DocumentElement.QuerySelector(selector).TextContent == buttonText)
                 .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
-                    _ => label, item => item);
+                    _ => buttonText, item => item);
 
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
