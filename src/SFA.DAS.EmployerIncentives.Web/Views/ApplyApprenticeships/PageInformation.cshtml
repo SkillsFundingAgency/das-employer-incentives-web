@@ -7,21 +7,17 @@
 
 @if(Model.PreviousPages || Model.MorePages)
 {
-    <nav role="navigation" aria-label="Pagination" class="govuk-!-margin-bottom-4">
-        <p class="pagination__summary govuk-body">Showing @Model.StartIndex to @Model.EndIndex of all apprentices</p>
-        <ul class="pagination govuk-list">
+    <nav role="navigation" aria-label="Pagination" class="govuk-!-margin-top-9 govuk-!-margin-bottom-6">
+        <p class="govuk-body govuk-!-margin-bottom-2">Showing @Model.StartIndex to @Model.EndIndex of all apprentices</p>
+        <p class="govuk-body">
             @if (Model.PreviousPages)
             {
-                <li class="pagination__item previouspage">
-                    <button type="submit" id="previousPage" name="pageNumber" value="@previousPage" asp-action="SelectApprenticeships" aria-label="Previous page">Previous</button>
-                </li>
+                <button type="submit" id="previousPage" name="pageNumber" value="@previousPage" asp-action="SelectApprenticeships" class="das-button--inline-link govuk-!-margin-right-2">Previous <span class="govuk-visually-hidden">page of apprentices</span></button> 
             }
             @if (Model.MorePages)
             {
-                <li class="pagination__item nextpage">
-                     <button type="submit" id="nextPage" name="pageNumber" value="@nextPage" asp-action="SelectApprenticeships" aria-label="Next page">Next</button>
-                </li>
+                <button type="submit" id="nextPage" name="pageNumber" value="@nextPage" asp-action="SelectApprenticeships" class="das-button--inline-link">Next <span class="govuk-visually-hidden">page of apprentices</span></button>
             }
-        </ul>
+        </p>
     </nav>
 }
