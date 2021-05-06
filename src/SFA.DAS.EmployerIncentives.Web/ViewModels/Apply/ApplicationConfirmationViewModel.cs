@@ -43,6 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             public DateTime StartDate { get; set; }
             public decimal ExpectedAmount { get; set; }
             public long Uln { get; set; }
+            public DateTime? EmploymentStartDate { get; set; }
         }
     }
 }
