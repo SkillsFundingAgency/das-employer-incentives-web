@@ -66,6 +66,21 @@ else
                 </div>
             }
 
+            @if (Model.ShowAcceptNewEmployerAgreement)
+            {
+                <div class="das-highlight das-highlight--featured govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+                    <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
+                        @Model.OrganisationName needs to accept a new employer agreement
+                    </h2>
+                    <p class="govuk-body das-highlight--featured__body">
+                        @Model.OrganisationName has a hire a new apprentice payment that is not covered by the existing agreement. We cannot send these payments until someone from @Model.OrganisationName accepts a new agreement.
+                    </p>
+                    <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
+                        <a class="govuk-link das-link--white" data-linktype="view-agreement" href="@Model.ViewAgreementLink">View agreement</a>
+                    </p>
+                </div>
+            }
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m">

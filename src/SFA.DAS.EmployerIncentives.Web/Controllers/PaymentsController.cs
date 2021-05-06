@@ -63,16 +63,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
+            var viewAgreementLink = CreateViewAgreementLink(accountId);
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
 
             //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
             foreach (var apprenticeApplicationModel in submittedApplications)
             {
-                if(apprenticeApplicationModel.FirstPaymentStatus != null)
+                if (apprenticeApplicationModel.FirstPaymentStatus != null)
+                {
+                    apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
+                }
 
-                if(apprenticeApplicationModel.SecondPaymentStatus != null)
+                if (apprenticeApplicationModel.SecondPaymentStatus != null)
+                {
+                    apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
+                }
             }
 
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
@@ -86,7 +93,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
                 ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
                 AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId),
-                OrganisationName = legalEntity?.Name
+                ShowAcceptNewEmployerAgreement = getApplicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement)),
+                OrganisationName = legalEntity?.Name,
+                ViewAgreementLink = viewAgreementLink
             };
             model.SetSortOrder(sortField, sortOrder);
 
@@ -172,5 +181,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var bankDetailsUrl = $"{host}/{accountId}/bank-details/{firstSubmittedApplicationId}/add-bank-details";
             return bankDetailsUrl;
         }
+
+        private string CreateViewAgreementLink(string accountId)
+        {
+            var accountsbaseUrl = _configuration.ManageApprenticeshipSiteUrl;
+            if (!accountsbaseUrl.EndsWith("/"))
+            {
+                accountsbaseUrl += "/";
+            }
+            return $"{accountsbaseUrl}accounts/{accountId}/agreements";
+        }        
     }
 }

@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
         private string _accountId;
         private string _accountLegalEntityId;
         private List<LegalEntityModel> _legalEntities;
+        private string _manageApprenticeshipSiteUrl;
 
         [SetUp]
         public void Arrange()
@@ -34,6 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
+            _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
 
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _legalEntities = _fixture.CreateMany<LegalEntityModel>(1).ToList();
@@ -51,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = "https://manage-apprentices.com" };
+            var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
             _configuration.Setup(x => x.Value).Returns(config);
 
             _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _configuration.Object);
@@ -147,6 +149,43 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             model.ShowAmendBankDetails.Should().BeTrue();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+        }
+
+        [TestCase(null, null, false)]
+        [TestCase(null, true, true)]
+        [TestCase(true, null, true)]
+        [TestCase(true, true, true)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(false, false, false)]
+        public async Task Then_accept_new_employer_agreement_is_shown_if_an_application_has_payment_status_that_requires_new_agreement(
+            bool? firstPaymentStatusRequiresNewAgreement,
+            bool? secondPaymentStatusRequiresNewAgreement,
+            bool showAcceptNewEmployerAgreement)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, firstPaymentStatusRequiresNewAgreement.HasValue ? _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, firstPaymentStatusRequiresNewAgreement).Create() : null)
+                .With(p => p.SecondPaymentStatus, secondPaymentStatusRequiresNewAgreement.HasValue ? _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, secondPaymentStatusRequiresNewAgreement).Create() : null)
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = Guid.NewGuid() };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.ShowAcceptNewEmployerAgreement.Should().Be(showAcceptNewEmployerAgreement);
+            viewModel.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";            
         }
     }
 }
