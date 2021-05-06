@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Sorry, there is a problem with the service";
+    ViewBag.GaData.Vpv = "/apply/problem-with-service";
+    ViewData["ZenDeskLabels"] = "ei-nocommitments";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                Sorry, there is a problem with the service
+            </h1>
+            <p class="govuk-body">
+                We did not save your answers.
+            </p>
+            <p class="govuk-body">
+                <a class="govuk-button" asp-controller="ApplyQualification" asp-action="GetQualificationQuestion">
+                    Apply again
+                </a>
+            </p>
+        </div>
+    </div>
+</main>

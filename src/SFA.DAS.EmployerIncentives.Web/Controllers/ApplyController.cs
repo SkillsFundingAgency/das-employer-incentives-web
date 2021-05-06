@@ -7,6 +7,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Exceptions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -50,7 +51,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var firstName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.GivenName)?.Value;
             var lastName = ControllerContext.HttpContext.User.FindFirst(claim => claim.Type == EmployerClaimTypes.FamilyName)?.Value;
 
-            await _applicationService.Confirm(accountId, applicationId, email, string.Join(" ", firstName, lastName));
+            try
+            {
+                await _applicationService.Confirm(accountId, applicationId, email, string.Join(" ", firstName, lastName));
+            }
+            catch (UlnAlreadySubmittedException)
+            {
+                return RedirectToAction("UlnAlreadyAppliedFor");
+            }
 
             return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });            
         }
@@ -78,6 +86,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> Redirect()
         {
             return RedirectToActionPermanent("CannotApplyYet");
+        }
+
+        [HttpGet]
+        [Route("problem-with-service")]
+        public async Task<IActionResult> UlnAlreadyAppliedFor()
+        {
+            return View();
         }
     }
 }
