@@ -175,7 +175,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 LastName = apprentice.LastName,
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
-                Uln = apprentice.Uln
+                Uln = apprentice.Uln,
+                EmploymentStartDate = apprentice.EmploymentStartDate
             };
         }
     }
