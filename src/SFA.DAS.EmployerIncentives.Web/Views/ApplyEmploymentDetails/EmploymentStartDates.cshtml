@@ -1,0 +1,94 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.EmploymentStartDatesViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/join-organisation";
+    ViewData["ZenDeskLabels"] = "ei-joinorganisation";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="EmploymentStartDates" method="post">
+                @Html.AntiForgeryToken()
+
+                <partial name="ValidationSummary" />
+
+                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                    <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading">
+                                @Model.Title
+                            </h1>
+                        </legend>
+
+                        <p class="govuk-body">
+                            Enter the date @Model.ApprenticeName joined @Model.OrganisationName, even if they started their apprenticeship after this date.
+                        </p>
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                Do not enter the apprenticeship start date, unless it is the same as the date @Model.ApprenticeName joined @Model.OrganisationName.
+                            </strong>
+                        </div>
+
+                        @foreach (var apprentice in Model.Apprentices.OrderBy(x => x.FullName))
+                        {
+                            <h2>@apprentice.FullName</h2>
+                            <span class="das-!-color-dark-grey">(ULN: @apprentice.Uln)</span>
+                            <div id="apprenticeship-course-name-hint" class="govuk-checkboxes__hint">
+                                @apprentice.CourseName
+                            </div>
+                            <div class="govuk-form-group">
+                                
+                                <span class="govuk-hint">
+                                    For example, 12 08 2020
+                                </span>
+                                
+                                <div class="govuk-date-input">
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateDay">Day</label>
+                                            <input value="@apprentice.EmploymentStartDateDay"
+                                                   class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                                   id="EmploymentStartDateDay"
+                                                   name="EmploymentStartDateDay"
+                                                   type="number"
+                                                   pattern="[0-9]*" />
+                                        </div>
+                                    </div>
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group">
+                                            <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateMonth">Month</label>
+                                            <input value="@apprentice.EmploymentStartDateMonth"
+                                                   class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                                   id="EmploymentStartDateMonth"
+                                                   name="EmploymentStartDateMonth"
+                                                   type="number"
+                                                   pattern="[0-9]*" />
+                                        </div>
+                                    </div>
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group" sfa-validation-for="PersonInControlDobYear">
+                                            <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateYear">Year</label>
+                                            <input value="@apprentice.EmploymentStartDateYear"
+                                                   class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                                   id="EmploymentStartDateYear"
+                                                   name="EmploymentStartDateYear"
+                                                   type="number"
+                                                   pattern="[0-9]*" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </fieldset>
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
+            </form>
+        </div>
+    </div>
+</main>

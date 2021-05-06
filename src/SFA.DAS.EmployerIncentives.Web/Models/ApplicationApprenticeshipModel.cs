@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Models
 {
@@ -14,6 +11,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public DateTime StartDate { get; set; }
         public decimal ExpectedAmount { get; set; }
         public long Uln { get; set; }
+        public DateTime? EmploymentStartDate { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
+        public int? EmploymentStartDateDay { get; set; }
+        public int? EmploymentStartDateMonth { get; set; }
+        public int? EmploymentStartDateYear { get; set; }
     }
     
 }
