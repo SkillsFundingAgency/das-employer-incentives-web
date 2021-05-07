@@ -10,10 +10,10 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 
         public Guid ApplicationId { get; set; }
 
-        public List<int> EmploymentStartDateYears { get; set; }
+        public List<int?> EmploymentStartDateYears { get; set; }
 
-        public List<int> EmploymentStartDateMonths { get; set; }
-        public List<int> EmploymentStartDateDays { get; set; }
+        public List<int?> EmploymentStartDateMonths { get; set; }
+        public List<int?> EmploymentStartDateDays { get; set; }
 
         public static string EmploymentStartDateYearsPropertyName => nameof(EmploymentStartDateYears);
         public static string EmploymentStartDateMonthsPropertyName => nameof(EmploymentStartDateMonths);

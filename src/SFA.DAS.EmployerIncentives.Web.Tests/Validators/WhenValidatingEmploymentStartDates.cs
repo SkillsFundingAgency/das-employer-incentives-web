@@ -27,9 +27,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Validators
             {
                 AccountId = _accountId,
                 ApplicationId = _applicationId,
-                EmploymentStartDateDays = new List<int>(),
-                EmploymentStartDateMonths = new List<int>(),
-                EmploymentStartDateYears = new List<int>()
+                EmploymentStartDateDays = new List<int?>(),
+                EmploymentStartDateMonths = new List<int?>(),
+                EmploymentStartDateYears = new List<int?>()
             };
         }
 
@@ -72,9 +72,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Validators
         public void Then_the_error_lines_are_reported_for_the_invalid_date_when_multiple_start_dates_are_submitted()
         {
             // Arrange
-            _request.EmploymentStartDateDays.AddRange(new List<int> {5, 0, 20, 1});
-            _request.EmploymentStartDateMonths.AddRange(new List<int> { 10, 8, 5, 0 });
-            _request.EmploymentStartDateYears.AddRange(new List<int> { 2021, 2021, 2021, 2021 });
+            _request.EmploymentStartDateDays.AddRange(new List<int?> {5, 0, 20, 1});
+            _request.EmploymentStartDateMonths.AddRange(new List<int?> { 10, 8, 5, 0 });
+            _request.EmploymentStartDateYears.AddRange(new List<int?> { 2021, 2021, 2021, 2021 });
 
             var validator = new EmploymentStartDateValidator();
 

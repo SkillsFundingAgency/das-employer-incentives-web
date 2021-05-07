@@ -4,6 +4,8 @@
     ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/apply/join-organisation";
     ViewData["ZenDeskLabels"] = "ei-joinorganisation";
+
+    var showError = Model.DateValidationResults.Any();
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
@@ -11,10 +13,24 @@
         <div class="govuk-grid-column-two-thirds">
             <form asp-action="EmploymentStartDates" method="post">
                 @Html.AntiForgeryToken()
+                
+                @if(showError)
+                {
+                    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+                        <h2 class="govuk-error-summary__title" id="error-summary-title">
+                            There is a problem
+                        </h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li>
+                                    <a href="#">@Model.DateValidationResults.First().ValidationMessage</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
 
-                <partial name="ValidationSummary" />
-
-                <span class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <div class="govuk-form-group @(showError ? "govuk-form-group--error" : "")" >
                     <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
@@ -32,21 +48,27 @@
                                 Do not enter the apprenticeship start date, unless it is the same as the date @Model.ApprenticeName joined @Model.OrganisationName.
                             </strong>
                         </div>
-
-                        @foreach (var apprentice in Model.Apprentices.OrderBy(x => x.FullName))
+                        
+                        @for (var index = 0; index < Model.Apprentices.Count; index++)
                         {
+                            var apprentice = Model.Apprentices[index];
                             <h2 class="govuk-heading-m">@apprentice.FullName</h2>
                             <p class="govuk-body govuk-!-margin-bottom-0">
                                 <span>(ULN: @apprentice.Uln)</span><br />
                                 <span>@apprentice.CourseName</span>
                             </p>
-                            
+
                             <div class="govuk-form-group">
 
                                 <span class="govuk-hint">
                                     For example, 12 08 2020
                                 </span>
-
+                                @if (showError && Model.DateValidationResults.FirstOrDefault(x => x.Index == index) != null)
+                                {
+                                    <span class="govuk-error-message">
+                                        @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
+                                    </span>
+                                }
                                 <div class="govuk-date-input">
                                     <div class="govuk-date-input__item">
                                         <div class="govuk-form-group">
@@ -89,7 +111,7 @@
                     <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                         Continue
                     </button>
-                </span>
+                </div>
 
             </form>
         </div>

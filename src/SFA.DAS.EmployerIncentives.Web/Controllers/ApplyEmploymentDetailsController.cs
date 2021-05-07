@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountId = accountId,
                 ApplicationId = applicationId,
                 OrganisationName = legalEntityName,
-                Apprentices = application.Apprentices,
+                Apprentices = application.Apprentices.OrderBy(x => x.FullName).ToList(),
                 DateValidationResults = new List<DateValidationResult>()
             };
             return View(model);
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     AccountId = request.AccountId,
                     ApplicationId = request.ApplicationId,
                     OrganisationName = legalEntityName,
-                    Apprentices = application.Apprentices,
+                    Apprentices = PopulateStartDates(application.Apprentices.OrderBy(x => x.FullName).ToList(), request),
                     DateValidationResults = validationResults.ToList()
                 };
                 return View("EmploymentStartDates", model);
@@ -72,6 +72,36 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             await _applicationService.ConfirmEmploymentDetails(confirmEmploymentDetailsRequest);
 
             return RedirectToAction("ConfirmApprenticeships", "ApplyApprenticeships", new { request.AccountId, request.ApplicationId });
+        }
+
+        private List<ApplicationApprenticeshipModel> PopulateStartDates(List<ApplicationApprenticeshipModel> apprentices, EmploymentStartDatesRequest request)
+        {
+            // dates may be partially filled out so find the column with the most values
+            var startDateCount = new List<int> 
+            {
+                request.EmploymentStartDateDays.Count, 
+                request.EmploymentStartDateMonths.Count, 
+                request.EmploymentStartDateYears.Count
+            }.Max();
+
+            for (var index = 0; index < startDateCount; index++)
+            {
+                var apprentice = apprentices[index];
+                if (request.EmploymentStartDateDays.Count > index)
+                {
+                    apprentice.EmploymentStartDateDay = request.EmploymentStartDateDays[index];
+                }
+                if (request.EmploymentStartDateMonths.Count > index)
+                {
+                    apprentice.EmploymentStartDateMonth = request.EmploymentStartDateMonths[index];
+                }
+                if (request.EmploymentStartDateYears.Count > index)
+                {
+                    apprentice.EmploymentStartDateYear = request.EmploymentStartDateYears[index];
+                }
+            }
+
+            return apprentices;
         }
 
         private ConfirmEmploymentDetailsRequest CreateEmploymentDetailsRequest(ApplicationModel application, EmploymentStartDatesRequest request)
@@ -85,7 +115,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             for(var index = 0; index < request.EmploymentStartDateDays.Count; index ++)
             {
-                var employmentStartDate = new DateTime(request.EmploymentStartDateYears[index], request.EmploymentStartDateMonths[index], request.EmploymentStartDateDays[index]);
+                var employmentStartDate = new DateTime(request.EmploymentStartDateYears[index].Value, request.EmploymentStartDateMonths[index].Value, request.EmploymentStartDateDays[index].Value);
                 var employmentDetails = new ApprenticeEmploymentDetailsDto
                 {
                     ApprenticeId = _hashingService.DecodeValue(application.Apprentices[index].ApprenticeshipId),

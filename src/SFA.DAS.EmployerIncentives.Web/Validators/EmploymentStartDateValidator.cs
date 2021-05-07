@@ -23,9 +23,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Validators
 
             for(var index = 0; index < request.EmploymentStartDateDays.Count; index++)
             {
-                if (request.EmploymentStartDateDays[index] == 0 
-                    || request.EmploymentStartDateMonths[index] == 0 
-                    || request.EmploymentStartDateYears[index] == 0)
+                if (!request.EmploymentStartDateDays[index].HasValue 
+                    || !request.EmploymentStartDateMonths[index].HasValue 
+                    || !request.EmploymentStartDateYears[index].HasValue)
+                {
+                    validationErrors.Add(new DateValidationResult { Index = index, ValidationMessage = InvalidFieldErrorMessage });
+                }
+                else if (request.EmploymentStartDateDays[index].Value == 0
+                    || request.EmploymentStartDateMonths[index].Value == 0
+                    || request.EmploymentStartDateYears[index].Value == 0)
                 {
                     validationErrors.Add(new DateValidationResult { Index = index, ValidationMessage = InvalidFieldErrorMessage });
                 }
@@ -37,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Validators
                 {
                     validationErrors.Add(new DateValidationResult { Index = index, ValidationMessage = InvalidFieldErrorMessage });
                 }
-                else if (request.EmploymentStartDateDays[index] > DateTime.DaysInMonth(request.EmploymentStartDateYears[index], request.EmploymentStartDateMonths[index]))
+                else if (request.EmploymentStartDateDays[index] > DateTime.DaysInMonth(request.EmploymentStartDateYears[index].Value, request.EmploymentStartDateMonths[index].Value))
                 {
                     validationErrors.Add(new DateValidationResult { Index = index, ValidationMessage = InvalidFieldErrorMessage });
                 }
