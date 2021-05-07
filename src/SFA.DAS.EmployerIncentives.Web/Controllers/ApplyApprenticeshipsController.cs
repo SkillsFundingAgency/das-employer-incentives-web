@@ -5,7 +5,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -184,8 +183,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeshipIds.Remove(apprenticeId);
                 }
             }
-
-            await _applicationService.Update(application.ApplicationId, application.AccountId, apprenticeshipIds);
+            if (apprenticeshipIds.Any())
+            {
+                await _applicationService.Update(application.ApplicationId, application.AccountId, apprenticeshipIds);
+            }
         }
         
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId, int pageNumber, int pageSize, int offset)
