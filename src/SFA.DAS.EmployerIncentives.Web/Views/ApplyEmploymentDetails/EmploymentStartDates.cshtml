@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.EmploymentStartDatesViewModel
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
+@model EmploymentStartDatesViewModel
 @{
     ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/apply/join-organisation";
@@ -13,7 +14,7 @@
 
                 <partial name="ValidationSummary" />
 
-                <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                <span class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
                     <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
@@ -34,17 +35,18 @@
 
                         @foreach (var apprentice in Model.Apprentices.OrderBy(x => x.FullName))
                         {
-                            <h2>@apprentice.FullName</h2>
-                            <span class="das-!-color-dark-grey">(ULN: @apprentice.Uln)</span>
-                            <div id="apprenticeship-course-name-hint" class="govuk-checkboxes__hint">
-                                @apprentice.CourseName
-                            </div>
+                            <h2 class="govuk-heading-m">@apprentice.FullName</h2>
+                            <p class="govuk-body govuk-!-margin-bottom-0">
+                                <span>(ULN: @apprentice.Uln)</span><br />
+                                <span>@apprentice.CourseName</span>
+                            </p>
+                            
                             <div class="govuk-form-group">
-                                
+
                                 <span class="govuk-hint">
                                     For example, 12 08 2020
                                 </span>
-                                
+
                                 <div class="govuk-date-input">
                                     <div class="govuk-date-input__item">
                                         <div class="govuk-form-group">
@@ -52,7 +54,7 @@
                                             <input value="@apprentice.EmploymentStartDateDay"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                    id="EmploymentStartDateDay"
-                                                   name="EmploymentStartDateDay"
+                                                   name="@EmploymentStartDatesRequest.EmploymentStartDateDaysPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
                                         </div>
@@ -63,7 +65,7 @@
                                             <input value="@apprentice.EmploymentStartDateMonth"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                    id="EmploymentStartDateMonth"
-                                                   name="EmploymentStartDateMonth"
+                                                   name="@EmploymentStartDatesRequest.EmploymentStartDateMonthsPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
                                         </div>
@@ -74,7 +76,7 @@
                                             <input value="@apprentice.EmploymentStartDateYear"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-4"
                                                    id="EmploymentStartDateYear"
-                                                   name="EmploymentStartDateYear"
+                                                   name="@EmploymentStartDatesRequest.EmploymentStartDateYearsPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
                                         </div>
@@ -83,11 +85,12 @@
                             </div>
                         }
                     </fieldset>
-                </div>
 
-                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
-                    Continue
-                </button>
+                    <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                        Continue
+                    </button>
+                </span>
+
             </form>
         </div>
     </div>

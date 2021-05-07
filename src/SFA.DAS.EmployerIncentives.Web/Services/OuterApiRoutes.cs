@@ -37,6 +37,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
             {
                 return $"accounts/{accountId}/applications/{applicationId}/accountlegalentity";
             }
+            public static string ConfirmEmploymentDetails(in long accountId, Guid applicationId)
+            {
+                return $"accounts/{accountId}/applications/{applicationId}/employmentDetails";
+            }
         }
 
         public static class Apprenticeships

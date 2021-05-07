@@ -1,4 +1,5 @@
-﻿using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using System;
+using SFA.DAS.EmployerIncentives.Web.Models;
 using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
@@ -8,6 +9,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string Title => $"When did {ApprenticeName} join {OrganisationName}?";
         
         public string OrganisationName { get; set; }
+        public string AccountId { get; set; }
+        public Guid ApplicationId { get; set; }
         public List<ApplicationApprenticeshipModel> Apprentices { get; set; }
         public string ApprenticeName 
         {
