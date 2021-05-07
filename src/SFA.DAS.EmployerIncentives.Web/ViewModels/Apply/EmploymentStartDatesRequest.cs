@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
     public class EmploymentStartDatesRequest
     {
         public string AccountId { get; set; }
+        public string AccountLegalEntityId { get; set; }
 
         public Guid ApplicationId { get; set; }
 

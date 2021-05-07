@@ -1,6 +1,7 @@
 ﻿using System;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using System.Collections.Generic;
+using SFA.DAS.EmployerIncentives.Web.Validators;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
@@ -12,6 +13,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string AccountId { get; set; }
         public Guid ApplicationId { get; set; }
         public List<ApplicationApprenticeshipModel> Apprentices { get; set; }
+        public List<DateValidationResult> DateValidationResults { get; set; }
         public string ApprenticeName 
         {
             get 

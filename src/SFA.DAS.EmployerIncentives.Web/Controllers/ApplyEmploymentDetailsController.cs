@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.Validators;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 
@@ -16,14 +18,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
+        private readonly IEmploymentStartDateValidator _employmentStartDateValidator;
 
         public ApplyEmploymentDetailsController(
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
-            IHashingService hashingService) : base(legalEntityService)
+            IHashingService hashingService,
+            IEmploymentStartDateValidator employmentStartDateValidator) : base(legalEntityService)
         {
             _applicationService = applicationService;
             _hashingService = hashingService;
+            _employmentStartDateValidator = employmentStartDateValidator;
         }
 
         [Route("{applicationId}/join-organisation")]
@@ -37,7 +42,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountId = accountId,
                 ApplicationId = applicationId,
                 OrganisationName = legalEntityName,
-                Apprentices = application.Apprentices 
+                Apprentices = application.Apprentices,
+                DateValidationResults = new List<DateValidationResult>()
             };
             return View(model);
         }
@@ -47,6 +53,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> SubmitEmploymentStartDates(EmploymentStartDatesRequest request)
         {
             var application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: true);
+            var validationResults = _employmentStartDateValidator.Validate(request);
+            if (validationResults.Any()) 
+            {
+                var legalEntityName = await GetLegalEntityName(request.AccountId, application.AccountLegalEntityId);
+                var model = new EmploymentStartDatesViewModel
+                {
+                    AccountId = request.AccountId,
+                    ApplicationId = request.ApplicationId,
+                    OrganisationName = legalEntityName,
+                    Apprentices = application.Apprentices,
+                    DateValidationResults = validationResults.ToList()
+                };
+                return View("EmploymentStartDates", model);
+            }
+
             var confirmEmploymentDetailsRequest = CreateEmploymentDetailsRequest(application, request);
             await _applicationService.ConfirmEmploymentDetails(confirmEmploymentDetailsRequest);
 
