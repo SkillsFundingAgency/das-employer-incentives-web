@@ -36,40 +36,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Given(@"an employer applying for a grant is asked to agree a declaration")]
         public void GivenAnEmployerApplyingForAGrantHasAlreadyConfirmedSelectedApprentices()
         {
-            _testContext.EmployerIncentivesApi.MockServer
-                .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/applications")
-                        .UsingPost()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.Created));
+            SetUpApiResponses(HttpStatusCode.OK);
+        }
 
-            _testContext.EmployerIncentivesApi.MockServer
-                .Given(
-                    Request
-                        .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/applications")
-                        .UsingPatch()
-                )
-                .RespondWith(
-                    Response.Create()
-                        .WithStatusCode(HttpStatusCode.Created));
-
-            _testContext.EmployerIncentivesApi.MockServer
-              .Given(
-                  Request
-                      .Create()
-                      .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}/accountlegalentity")
-                      .UsingGet()
-              )
-              .RespondWith(
-                  Response.Create()
-                      .WithStatusCode(HttpStatusCode.OK)
-                      .WithHeader("Content-Type", "application/json")
-                      .WithBody(_testData.AccountLegalEntityId.ToString()));
+        [Given(@"an employer applying for a grant for an already submitted uln")]
+        public void GivenAnEmployerApplyingForAGrantForAnAlreadySubmittedUln()
+        {
+            SetUpApiResponses(HttpStatusCode.Conflict);
         }
 
         [When(@"the employer understands and confirms the declaration")]
@@ -116,5 +89,49 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.ApplicationId.Should().Be(_testData.ApplicationId);
         }
 
+        [Then(@"the employer is shown the uln already submitted page")]
+        public void ThenTheEmployerIsShownTheUlnAlreadySubmittedPage()
+        {
+            var expectedUrl = $"/{_testData.HashedAccountId}/apply/problem-with-service";
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(expectedUrl);
+        }
+
+        private void SetUpApiResponses(HttpStatusCode submitStatusCode)
+        {
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/applications")
+                        .UsingPatch()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(submitStatusCode));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/applications/{_testData.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithHeader("Content-Type", "application/json")
+                        .WithBody(_testData.AccountLegalEntityId.ToString()));
+        }
     }
 }
