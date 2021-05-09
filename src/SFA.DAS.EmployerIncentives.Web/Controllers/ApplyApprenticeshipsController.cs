@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (!application.Apprentices.Any())
             {
-                var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, form.PageNumber, _webConfiguration.ApprenticeshipsPageSize, form.CurrentPage, form.Offset);
+                var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, form.CurrentPage, _webConfiguration.ApprenticeshipsPageSize, form.CurrentPage, form.Offset);
                 ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
                 return View("SelectApprenticeships", viewModel);
