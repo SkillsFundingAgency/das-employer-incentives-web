@@ -31,6 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private string _accountLegalEntityId;
         private string _sortOrder;
         private string _sortField;
+        private string _manageApprenticeshipSiteUrl;
 
         [SetUp]
         public void Arrange()
@@ -39,6 +40,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
+
+            _configuration.Setup(m => m.Value).Returns(new ExternalLinksConfiguration
+            {
+                ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl
+            });
+
             _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
@@ -95,6 +103,61 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Assert
             result.Should().NotBeNull();
             result.ActionName.Should().Be("NoApplications");
+        }
+
+        [TestCase(null, null, false)]
+        [TestCase(null, true, true)]
+        [TestCase(true, null, true)]
+        [TestCase(true, true, true)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(false, false, false)]
+        public async Task Then_accept_new_employer_agreement_is_shown_if_an_application_has_payment_status_that_requires_new_agreement(
+            bool? firstPaymentStatusRequiresNewAgreement,
+            bool? secondPaymentStatusRequiresNewAgreement,
+            bool showAcceptNewEmployerAgreement)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, firstPaymentStatusRequiresNewAgreement.HasValue ? _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, firstPaymentStatusRequiresNewAgreement).Create() : null)
+                .With(p => p.SecondPaymentStatus, secondPaymentStatusRequiresNewAgreement.HasValue ? _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, secondPaymentStatusRequiresNewAgreement).Create() : null)
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.ShowAcceptNewEmployerAgreement.Should().Be(showAcceptNewEmployerAgreement);
+            viewModel.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";
+            if(firstPaymentStatusRequiresNewAgreement.HasValue)
+            {
+                viewModel.Applications.First().FirstPaymentStatus.RequiresNewEmployerAgreement = firstPaymentStatusRequiresNewAgreement.Value;
+                viewModel.Applications.First().FirstPaymentStatus.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";
+            }
+            else
+            {
+                viewModel.Applications.First().FirstPaymentStatus.Should().BeNull();
+            }
+            if (secondPaymentStatusRequiresNewAgreement.HasValue)
+            {
+                viewModel.Applications.First().SecondPaymentStatus.RequiresNewEmployerAgreement = secondPaymentStatusRequiresNewAgreement.Value;
+                viewModel.Applications.First().SecondPaymentStatus.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";
+            }
+            else
+            {
+                viewModel.Applications.First().SecondPaymentStatus.Should().BeNull();
+            }
         }
 
         [TestCase(null)]

@@ -12,12 +12,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool PausePayments { get; set; }
         public bool PaymentSent { get; set; }
         public bool PaymentSentIsEstimated { get; set; }
+        public bool RequiresNewEmployerAgreement { get; set; }
+        public string ViewAgreementLink { get; set; }
 
         public bool ShowPaymentStatus
         {
             get
             {
-                return !LearnerMatchFound || HasDataLock || !InLearning || PausePayments;
+                return !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || RequiresNewEmployerAgreement;
             }
         }
     }

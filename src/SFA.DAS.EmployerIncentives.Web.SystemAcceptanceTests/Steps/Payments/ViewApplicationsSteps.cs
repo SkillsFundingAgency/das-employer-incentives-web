@@ -45,6 +45,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.Completed);
         }
 
+        [Given(@"an employer with a later agreement version that needs signing")]
+        public void GivenAnEmployerWithALaterAgreementVersionThatNeedsSigning()
+        {
+            AnEmployerHasAnApplicationWithAnAgreementVersionThatNeedsSigning(_testApplicationId);
+        }
+        [Given(@"an employer with an agreement version that has been signed")]
+        public void GivenAnEmployerWithALaterAgreementVersionThatHasBeenSigned()
+        {
+            AnEmployerHasAnApplicationWithAnAgreementVersionThatDoesNotNeedSigning(_testApplicationId);
+        }        
+
         [Given(@"an employer without bank details has a single submitted application")]
         public void GivenAnEmployerWithoutBankDetailsHasASingleSubmittedApplication()
         {
@@ -144,6 +155,22 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
 
             response.Should().NotHaveLink($"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
+        }
+
+        [Then(@"the accept new employer agreement call to action is shown")]
+        public void ThenTheShowAcceptNewEmployerAgreementIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveLink("[data-linktype='view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
+            response.Should().HaveLink("[data-linktype='payment-status-view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");            
+        }
+
+        [Then(@"the accept new employer agreement call to action is not shown")]
+        public void ThenTheShowAcceptNewEmployerAgreementIsNotShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().NotHaveLink("[data-linktype='view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
+            response.Should().NotHaveLink("[data-linktype='payment-status-view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
         }
 
         [Given(@"an employer has submitted and in progress applications")]
@@ -306,7 +333,74 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(getApplications)));
-
         }
+
+        private void AnEmployerHasAnApplicationWithAnAgreementVersionThatNeedsSigning(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstPaymentStatus, 
+                    _fixture.Build<PaymentStatusModel>()
+                    .With(p => p.RequiresNewEmployerAgreement, true)
+                    .Create()
+                    )
+                .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnEmployerHasAnApplicationWithAnAgreementVersionThatDoesNotNeedSigning(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstPaymentStatus,
+                    _fixture.Build<PaymentStatusModel>()
+                    .With(p => p.RequiresNewEmployerAgreement, false)
+                    .Create()
+                    )
+                .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }        
     }
 }
