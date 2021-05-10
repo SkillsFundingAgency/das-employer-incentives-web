@@ -13,6 +13,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Hub
         public bool ShowBankDetailsRequired { get; set; }
         public bool ShowAmendBankDetails { get; set; }
         public Guid BankDetailsApplicationId { get; set; }
+        public bool ShowAcceptNewEmployerAgreement { get; set; }
+        public string ViewAgreementLink { get; set; }        
 
         public string Title => "Hire a new apprentice payment";
 
