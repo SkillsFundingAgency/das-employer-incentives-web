@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             else
             {
                 data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.LastName).ToList();
-                for (var apprenticeIndex = (query.Offset - 1); apprenticeIndex < data.Apprenticeships.Count; apprenticeIndex++)
+                for (var apprenticeIndex = query.Offset; apprenticeIndex < data.Apprenticeships.Count; apprenticeIndex++)
                 {
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[apprenticeIndex]);
                 }
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 
             eligibleApprenticeships.PageNumber = pageNumber;
             eligibleApprenticeships.MorePages = morePages;
-            eligibleApprenticeships.Offset = index + 1;
+            eligibleApprenticeships.Offset = index;
             eligibleApprenticeships.TotalApprenticeships = data.TotalApprenticeships;
 
             return eligibleApprenticeships.ToEligibleApprenticeshipsModel(_hashingService);
