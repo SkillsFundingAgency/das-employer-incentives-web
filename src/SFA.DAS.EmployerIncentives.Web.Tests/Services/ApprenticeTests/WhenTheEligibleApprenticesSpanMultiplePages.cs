@@ -125,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             // Assert
             response.Apprenticeships.Count().Should().Be(query.PageSize);
             response.MorePages.Should().BeTrue();
-            response.Offset.Should().Be(17);
+            response.Offset.Should().Be(16);
             _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
         }
 
@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             var response = await _sut.Get(query);
 
             // Assert
-            response.Apprenticeships.Count().Should().Be(apprenticeships1.Count - query.Offset + 1);
+            response.Apprenticeships.Count().Should().Be(apprenticeships1.Count - query.Offset);
             response.MorePages.Should().BeFalse();
             _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
         }
