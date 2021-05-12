@@ -161,7 +161,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             // Assert
             response.Apprenticeships.Count().Should().Be(apprenticeships1.Count - query.Offset);
             response.MorePages.Should().BeFalse();
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(1);
         }
     }
 }

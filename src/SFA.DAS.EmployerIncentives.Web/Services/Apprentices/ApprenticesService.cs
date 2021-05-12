@@ -47,8 +47,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             var morePages = false;
             var index = 0;
             while (eligibleApprenticeships.Apprenticeships.Count < data.PageSize 
-                   && eligibleApprenticeships.Apprenticeships.Count < data.TotalApprenticeships 
-                   && data.Apprenticeships.Count > 0)
+                   && (eligibleApprenticeships.Apprenticeships.Count + ((query.PageNumber - 1) * query.PageSize) < data.TotalApprenticeships )
+                       && eligibleApprenticeships.Apprenticeships.Count < data.TotalApprenticeships 
+                       && data.Apprenticeships.Count > 0)
             {
                 pageNumber++;
 
