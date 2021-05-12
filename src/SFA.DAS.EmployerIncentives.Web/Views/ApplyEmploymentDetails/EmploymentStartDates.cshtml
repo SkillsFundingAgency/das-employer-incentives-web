@@ -23,7 +23,7 @@
                         <div class="govuk-error-summary__body">
                             <ul class="govuk-list govuk-error-summary__list">
                                 <li>
-                                    <a href="#">@Model.DateValidationResults.First().ValidationMessage</a>
+                                    <a href="#EmploymentStartDateDay">@Model.DateValidationResults.First().ValidationMessage</a>
                                 </li>
                             </ul>
                         </div>
@@ -31,7 +31,7 @@
                 }
 
                 <div class="govuk-form-group @(showError ? "govuk-form-group--error" : "")" >
-                    <fieldset class="govuk-fieldset" aria-describedby="choose-organisation-error">
+                    <fieldset class="govuk-fieldset" aria-describedby="employment-start-dates-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
@@ -65,9 +65,9 @@
                                 </span>
                                 @if (showError && Model.DateValidationResults.FirstOrDefault(x => x.Index == index) != null)
                                 {
-                                    <span class="govuk-error-message">
-                                        @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
-                                    </span>
+                            <span class="govuk-error-message" id="employment-start-dates-error">
+                                <span class="govuk-visually-hidden">Error:</span> @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
+                            </span>
                                 }
                                 <div class="govuk-date-input">
                                     <div class="govuk-date-input__item">
@@ -108,11 +108,11 @@
                         }
                     </fieldset>
 
-                    <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
-                        Continue
-                    </button>
                 </div>
-
+                
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Continue
+                </button>
             </form>
         </div>
     </div>
