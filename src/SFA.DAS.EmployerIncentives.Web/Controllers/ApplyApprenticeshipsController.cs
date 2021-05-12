@@ -103,22 +103,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId, bool newAgreementRequired)
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
         {
-            if(newAgreementRequired)
-                return RedirectToAction("NewAgreementRequired", new { accountId, applicationId });
-
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
-        }
-
-        [HttpGet]
-        [Route("accept-new-agreement/{applicationId}")]
-        public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
-        {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
-            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
-            return View(viewModel);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)

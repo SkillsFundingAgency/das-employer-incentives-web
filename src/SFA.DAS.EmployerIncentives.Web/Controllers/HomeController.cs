@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly ExternalLinksConfiguration _configuration;
-        private const int NewAgreementVersion = 5;
+        private const int NewAgreementVersion = 6;
 
         public HomeController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
         {
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             _configuration = configuration.Value;
         }
 
-        [Route("")]            
+        [Route("")]
         [AllowAnonymous()]
         public async Task<IActionResult> AnonymousHome()
         {            

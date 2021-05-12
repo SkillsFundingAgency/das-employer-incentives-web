@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
                 AccountId = _accountId,
                 AccountLegalEntityId = _accountLegalEntityId,
                 HasSignedIncentiveTerms = true,
-                SignedAgreementVersion = 5,
+                SignedAgreementVersion = 6,
                 Name = "Organisation Name"
             };
             var legalEntities = new List<LegalEntityModel> { legalEntity };
