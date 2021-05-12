@@ -37,15 +37,37 @@
                                 @Model.Title
                             </h1>
                         </legend>
-
-                        <p class="govuk-body">
-                            Enter the date @Model.ApprenticeName joined @Model.OrganisationName, even if they started their apprenticeship after this date.
-                        </p>
+                        
+                        @if(Model.Apprentices.Count == 1)
+                        {
+                            <p class="govuk-body">
+                                Enter the employment start date when @Model.ApprenticeName joined @Model.OrganisationName, as shown on their employment contract.
+                            </p>
+                            <p class="govuk-body">
+                                This is the date the apprentice joined @Model.OrganisationName and may be different to the apprenticeship start date.
+                            </p>
+                            <p class="govuk-body">
+                                @Model.OrganisationName can only apply for @Model.ApprenticeName if they joined their organisation from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021.</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="govuk-body">
+                                Enter the employment start date at @Model.OrganisationName for each apprentice, as shown on their employment contract.
+                            </p>
+                            <p class="govuk-body">
+                                This is the date each apprentice joined @Model.OrganisationName and may be different to the apprenticeship start date.
+                            </p>
+                            <p class="govuk-body">
+                                @Model.OrganisationName can only apply for new apprentices who joined their organisation from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021.</span>
+                            </p>
+                        }
+                        
                         <div class="govuk-warning-text">
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
                                 <span class="govuk-warning-text__assistive">Warning</span>
-                                Do not enter the apprenticeship start date, unless it is the same as the date @Model.ApprenticeName joined @Model.OrganisationName.
+                                We will stop payments and reclaim any funds paid for apprentices identified as ineligible.
                             </strong>
                         </div>
                         
