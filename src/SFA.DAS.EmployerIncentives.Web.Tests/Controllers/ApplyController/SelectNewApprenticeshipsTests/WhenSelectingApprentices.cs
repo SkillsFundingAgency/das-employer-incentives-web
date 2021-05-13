@@ -99,9 +99,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public void Then_should_have_apprentices_ordered_by_last_name()
+        public void Then_should_have_apprentices_ordered_by_display_name()
         {
-            _model.Apprenticeships.Should().BeInAscendingOrder(x => x.LastName);
+            _model.Apprenticeships.Should().BeInAscendingOrder(x => x.DisplayName);
         }
 
         [Test]

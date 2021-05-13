@@ -199,7 +199,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
                 
-                Apprenticeships = apprenticeships.Apprenticeships.OrderBy(a => a.LastName),
+                Apprenticeships = apprenticeships.Apprenticeships.OrderBy(a => a.DisplayName),
                 OrganisationName = legalEntityName,
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
@@ -224,7 +224,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountId = accountId,
                 AccountLegalEntityId = application.AccountLegalEntityId,
                 ApplicationId = applicationId,
-                Apprenticeships = apprenticeships.OrderBy(a => a.LastName),
+                Apprenticeships = apprenticeships.OrderBy(a => a.DisplayName),
                 OrganisationName = legalEntityName,
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
