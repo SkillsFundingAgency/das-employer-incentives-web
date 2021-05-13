@@ -33,7 +33,7 @@
                 }
 
                 <div class="govuk-form-group @(showError ? "govuk-form-group--error" : "")">
-                    <fieldset class="govuk-fieldset" aria-describedby="employment-start-dates-error">
+                    <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
@@ -89,7 +89,7 @@
                                 </span>
                                 @if (showError && Model.DateValidationResults.FirstOrDefault(x => x.Index == index) != null)
                                 {
-                                    <span class="govuk-error-message" id="employment-start-dates-error">
+                                    <span class="govuk-error-message" id="employment-start-dates-error-@apprentice.ApprenticeshipId">
                                         <span class="govuk-visually-hidden">Error:</span> @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
                                     </span>
                                 }
@@ -99,7 +99,7 @@
                                             <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateDay">Day</label>
                                             <input value="@apprentice.EmploymentStartDateDay"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-2"
-                                                   id="EmploymentStartDateDay"
+                                                   id="EmploymentStartDateDay-@apprentice.ApprenticeshipId"
                                                    name="@EmploymentStartDatesRequest.EmploymentStartDateDaysPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
@@ -110,7 +110,7 @@
                                             <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateMonth">Month</label>
                                             <input value="@apprentice.EmploymentStartDateMonth"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-2"
-                                                   id="EmploymentStartDateMonth"
+                                                   id="EmploymentStartDateMonth-@apprentice.ApprenticeshipId"
                                                    name="@EmploymentStartDatesRequest.EmploymentStartDateMonthsPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
@@ -121,7 +121,7 @@
                                             <label class="govuk-label govuk-date-input__label" for="EmploymentStartDateYear">Year</label>
                                             <input value="@apprentice.EmploymentStartDateYear"
                                                    class="govuk-input govuk-date-input__input govuk-input--width-4"
-                                                   id="EmploymentStartDateYear"
+                                                   id="EmploymentStartDateYear-@apprentice.ApprenticeshipId"
                                                    name="@EmploymentStartDatesRequest.EmploymentStartDateYearsPropertyName"
                                                    type="number"
                                                    pattern="[0-9]*" />
