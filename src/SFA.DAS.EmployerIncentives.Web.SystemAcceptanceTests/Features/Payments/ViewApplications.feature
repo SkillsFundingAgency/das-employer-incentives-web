@@ -33,3 +33,13 @@ Scenario: An employer with accepted bank details has a single apprentice submitt
 	Given an employer with accepted bank details has a single submitted application
 	When the employer views their applications
 	Then the add bank details call to action is not shown
+
+Scenario: An employer with an application on a later agreement that needs signing is prompted to sign the agreement
+	Given an employer with a later agreement version that needs signing
+	When the employer views their applications
+	Then the accept new employer agreement call to action is shown
+
+Scenario: An employer with an application that is on the signed version is not prompted to sign the agreement
+	Given an employer with an agreement version that has been signed
+	When the employer views their applications
+	Then the accept new employer agreement call to action is not shown

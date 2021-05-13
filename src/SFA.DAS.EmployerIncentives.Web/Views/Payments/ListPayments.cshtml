@@ -21,13 +21,13 @@
             </h1>
 
             @* IF VRF complete and BC vendor set up complete
-            <h2 class="govuk-heading-m">
-                You've added your organisation's bank details
-            </h2>
-            <p class="govuk-body">
-                We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
-            </p>
-            /IF VRF complete and BC vendor set up complete *@
+        <h2 class="govuk-heading-m">
+            You've added your organisation's bank details
+        </h2>
+        <p class="govuk-body">
+            We've confirmed the bank details you added during your hire a new apprentice payment application. You do not need to do anything else.
+        </p>
+        /IF VRF complete and BC vendor set up complete *@
 
             @if (Model.ShowBankDetailsInReview)
             {
@@ -55,6 +55,22 @@
                     </p>
                 </div>
             }
+
+            @if (Model.ShowAcceptNewEmployerAgreement)
+            {
+                <div class="das-highlight das-highlight--featured">
+                    <h2 class="govuk-heading-m das-highlight--featured__title govuk-!-margin-bottom-1">
+                        @Model.OrganisationName needs to accept a new employer agreement
+                    </h2>
+                    <p class="govuk-body das-highlight--featured__body">
+                        @Model.OrganisationName has a hire a new apprentice payment that is not covered by the existing agreement. We cannot send these payments until someone from @Model.OrganisationName accepts a new agreement.
+                    </p>
+                    <p class="govuk-body das-highlight--featured__body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">
+                        <a class="govuk-link das-link--white" data-linktype="view-agreement" href="@Model.ViewAgreementLink">View agreement</a>
+                    </p>
+                </div>
+            }
+
             <p class="govuk-body">
                 We'll send the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days. The training provider needs to confirm to ESFA when an apprentice is ready for each payment.
             </p>

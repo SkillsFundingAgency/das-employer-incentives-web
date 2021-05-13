@@ -215,7 +215,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             var data = new TestData.Account.WithPreviousApplicationsForFirstLegalEntity();
 
             var applications = new List<ApprenticeApplicationModel> { data.Application1, data.Application2, data.Application3, data.Application4, data.Application5 };
-            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = Guid.NewGuid(), BankDetailsStatus = BankDetailsStatus.NotSupplied };
             _server
                 .Given(
                     Request
