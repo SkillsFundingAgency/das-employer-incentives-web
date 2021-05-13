@@ -8,13 +8,15 @@
     var showError = Model.DateValidationResults.Any();
 }
 
+<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <form asp-action="EmploymentStartDates" method="post">
                 @Html.AntiForgeryToken()
-                
-                @if(showError)
+
+                @if (showError)
                 {
                     <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
                         <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -30,15 +32,15 @@
                     </div>
                 }
 
-                <div class="govuk-form-group @(showError ? "govuk-form-group--error" : "")" >
+                <div class="govuk-form-group @(showError ? "govuk-form-group--error" : "")">
                     <fieldset class="govuk-fieldset" aria-describedby="employment-start-dates-error">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-fieldset__heading">
                                 @Model.Title
                             </h1>
                         </legend>
-                        
-                        @if(Model.Apprentices.Count == 1)
+
+                        @if (Model.Apprentices.Count == 1)
                         {
                             <p class="govuk-body">
                                 Enter the date that @Model.ApprenticeName started their employment with @Model.OrganisationName, as shown on their employment contract.
@@ -62,7 +64,7 @@
                                 @Model.OrganisationName can only apply for new apprentices who joined their organisation from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021.</span>
                             </p>
                         }
-                        
+
                         <div class="govuk-warning-text">
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
@@ -70,7 +72,7 @@
                                 We will stop payments and reclaim any funds paid for apprentices identified as ineligible.
                             </strong>
                         </div>
-                        
+
                         @for (var index = 0; index < Model.Apprentices.Count; index++)
                         {
                             var apprentice = Model.Apprentices[index];
@@ -87,9 +89,9 @@
                                 </span>
                                 @if (showError && Model.DateValidationResults.FirstOrDefault(x => x.Index == index) != null)
                                 {
-                            <span class="govuk-error-message" id="employment-start-dates-error">
-                                <span class="govuk-visually-hidden">Error:</span> @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
-                            </span>
+                                    <span class="govuk-error-message" id="employment-start-dates-error">
+                                        <span class="govuk-visually-hidden">Error:</span> @Model.DateValidationResults.First(x => x.Index == index).ValidationMessage
+                                    </span>
                                 }
                                 <div class="govuk-date-input">
                                     <div class="govuk-date-input__item">
@@ -131,7 +133,7 @@
                     </fieldset>
 
                 </div>
-                
+
                 <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                     Continue
                 </button>

@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [Route("{applicationId}/join-organisation")]
         [HttpPost]
-        public async Task<IActionResult> SubmitEmploymentStartDates(EmploymentStartDatesRequest request)
+        public async Task<IActionResult> SubmitEmploymentStartDates([FromBody] EmploymentStartDatesRequest request)
         {
             var application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: true);
             var validationResults = _employmentStartDateValidator.Validate(request);

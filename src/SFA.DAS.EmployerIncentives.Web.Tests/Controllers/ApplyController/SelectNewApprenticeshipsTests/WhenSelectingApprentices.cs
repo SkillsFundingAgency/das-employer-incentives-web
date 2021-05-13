@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public async Task Then_the_ConfirmApprenticeships_page_is_displayed()
+        public async Task Then_the_employment_start_dates_page_is_displayed()
         {
             var request = new SelectApprenticeshipsRequest
             {
@@ -128,7 +128,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
-            redirectResult?.ActionName.Should().Be("ConfirmApprenticeships");
+            redirectResult?.ActionName.Should().Be("EmploymentStartDates");
+            redirectResult?.ControllerName.Should().Be("ApplyEmploymentDetails");
         }
     }
 }
