@@ -139,19 +139,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies valid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesValidStartDatesForTheSelectedApprentices()
         {
-            var employmentStartDatesRequest = new EmploymentStartDatesRequest
+            var values = new List<KeyValuePair<string, string>>
             {
-                AccountId = _data.HashedAccountId,
-                AccountLegalEntityId = _data.HashedAccountLegalEntityId,
-                ApplicationId = _data.ApplicationId,
-                EmploymentStartDateDays = new List<int?> { 10, 20},
-                EmploymentStartDateMonths = new List<int?> { 4, 5 },
-                EmploymentStartDateYears = new List<int?> { 2021, 2021 }
+                new KeyValuePair<string, string>("AccountId", _data.HashedAccountId),
+                new KeyValuePair<string, string>("AccountLegalEntityId", _data.HashedAccountLegalEntityId),
+                new KeyValuePair<string, string>("ApplicationId", _data.ApplicationId.ToString()),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "10"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "4"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021"),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "20"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "5"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021")
             };
-
             var url = $"{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation";
             
-            _response = await _testContext.WebsiteClient.PostAsJsonAsync(url, employmentStartDatesRequest);
+            _response = await _testContext.WebsiteClient.PostFormAsync(url, values.ToArray());
         }
 
         [Then(@"the employer is asked to confirm their selected apprentices")]
@@ -170,19 +172,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies invalid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesInvalidStartDatesForTheSelectedApprentices()
         {
-            var employmentStartDatesRequest = new EmploymentStartDatesRequest
+            var values = new List<KeyValuePair<string, string>>
             {
-                AccountId = _data.HashedAccountId,
-                AccountLegalEntityId = _data.HashedAccountLegalEntityId,
-                ApplicationId = _data.ApplicationId,
-                EmploymentStartDateDays = new List<int?> { 32, 20 },
-                EmploymentStartDateMonths = new List<int?> { 4, 13 },
-                EmploymentStartDateYears = new List<int?> { 2021, 2021 }
+                new KeyValuePair<string, string>("AccountId", _data.HashedAccountId),
+                new KeyValuePair<string, string>("AccountLegalEntityId", _data.HashedAccountLegalEntityId),
+                new KeyValuePair<string, string>("ApplicationId", _data.ApplicationId.ToString()),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "32"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "4"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021"),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "20"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "13"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021")
             };
-
             var url = $"{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation";
 
-            _response = await _testContext.WebsiteClient.PostAsJsonAsync(url, employmentStartDatesRequest);
+            _response = await _testContext.WebsiteClient.PostFormAsync(url, values.ToArray());
         }
 
         [Then(@"the employer is asked to change their submitted dates")]
