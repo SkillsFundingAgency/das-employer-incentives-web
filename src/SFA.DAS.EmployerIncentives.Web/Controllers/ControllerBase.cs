@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -17,12 +16,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
             return legalEntity != null ? legalEntity.Name : string.Empty;
-        }
-
-        protected async Task<bool> HasMultipleLegalEntities(string accountId)
-        {
-            var legalEntities = await _legalEntitiesService.Get(accountId);
-            return legalEntities.Count() > 1;
         }
     }
 }
