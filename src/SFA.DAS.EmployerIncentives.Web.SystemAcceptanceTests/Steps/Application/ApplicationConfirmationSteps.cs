@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using TechTalk.SpecFlow;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
@@ -50,6 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
 
             var application = _fixture.Create<IncentiveApplicationDto>();
+            application.AccountLegalEntityId = _testData.AccountLegalEntityId;
             application.BankDetailsRequired = true;
             var response = new ApplicationResponse { Application = application };
 
@@ -92,7 +94,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is shown the uln already submitted page")]
         public void ThenTheEmployerIsShownTheUlnAlreadySubmittedPage()
         {
-            var expectedUrl = $"/{_testData.HashedAccountId}/apply/problem-with-service";
+            var expectedUrl = $"/{_testData.HashedAccountId}/apply/{_testData.HashedAccountLegalEntityId}/problem-with-service";
             _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be(expectedUrl);
         }
 

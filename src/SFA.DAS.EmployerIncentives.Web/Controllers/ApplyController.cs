@@ -57,7 +57,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             catch (UlnAlreadySubmittedException)
             {
-                return RedirectToAction("UlnAlreadyAppliedFor");
+                var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+                return RedirectToAction("UlnAlreadyAppliedFor", new {accountId, application.AccountLegalEntityId });
             }
 
             return RedirectToAction("BankDetailsConfirmation", "BankDetails", new { accountId, applicationId });            
@@ -89,10 +90,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("problem-with-service")]
-        public async Task<IActionResult> UlnAlreadyAppliedFor()
+        [Route("{accountLegalEntityId}/problem-with-service")]
+        public async Task<IActionResult> UlnAlreadyAppliedFor(string accountId, string accountLegalEntityId)
         {
-            return View();
+            var viewModel = new UlnAlreadyAppliedForViewModel(accountId, accountLegalEntityId);
+            return View(viewModel);
         }
     }
 }

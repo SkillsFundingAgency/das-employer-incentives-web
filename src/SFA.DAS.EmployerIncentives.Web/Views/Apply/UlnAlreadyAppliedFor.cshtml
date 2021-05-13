@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.UlnAlreadyAppliedForViewModel
+@{
     ViewData["Title"] = "Sorry, there is a problem with the service";
     ViewBag.GaData.Vpv = "/apply/problem-with-service";
     ViewData["ZenDeskLabels"] = "ei-nocommitments";
@@ -14,7 +15,7 @@
                 We did not save your answers.
             </p>
             <p class="govuk-body">
-                <a class="govuk-button" asp-controller="ApplyQualification" asp-action="GetQualificationQuestion">
+                <a class="govuk-button" asp-controller="ApplyQualification" asp-action="GetQualificationQuestion" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId">
                     Apply again
                 </a>
             </p>
