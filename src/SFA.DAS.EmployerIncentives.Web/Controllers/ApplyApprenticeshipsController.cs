@@ -173,7 +173,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 foreach(var apprenticeId in form.SelectedApprenticeships)
                 {
-                    apprenticeshipIds.Add(apprenticeId);
+                    if (application.Apprentices.FirstOrDefault(x => x.ApprenticeshipId == apprenticeId) == null)
+                    {
+                        apprenticeshipIds.Add(apprenticeId);
+                    }
                 }
             }
             if (previousSelectedApprenticeships.Any())
