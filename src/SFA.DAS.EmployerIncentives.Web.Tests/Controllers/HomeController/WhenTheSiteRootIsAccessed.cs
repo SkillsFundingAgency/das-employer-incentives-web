@@ -14,14 +14,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
     {
         private Web.Controllers.HomeController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
 
         [SetUp]
         public void SetUp()
         {
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object);
         }
 
         [Test]

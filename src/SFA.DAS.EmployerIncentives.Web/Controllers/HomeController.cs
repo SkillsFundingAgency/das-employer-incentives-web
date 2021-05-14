@@ -18,13 +18,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly ExternalLinksConfiguration _configuration;
         private const int NewAgreementVersion = 5;
 
-        public HomeController(ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public HomeController(ILegalEntitiesService legalEntitiesService)
         {
             _legalEntitiesService = legalEntitiesService;
-            _configuration = configuration.Value;
         }
 
         [Route("")]            
@@ -54,11 +52,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> Start(string accountId, string accountLegalEntityId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var hasMultipleLegalEntities = legalEntities.Count() > 1;
             var legalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
-            var newAgreementRequired = (legalEntity != null && legalEntity.SignedAgreementVersion.HasValue && legalEntity.SignedAgreementVersion != NewAgreementVersion);
-            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, hasMultipleLegalEntities, newAgreementRequired, _configuration.ManageApprenticeshipSiteUrl));
-        
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name));
         }
 
         [Route("/signout")]

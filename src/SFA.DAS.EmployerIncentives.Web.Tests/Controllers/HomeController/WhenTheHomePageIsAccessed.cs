@@ -2,12 +2,9 @@
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
 {
@@ -16,7 +13,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
     {
         private Web.Controllers.HomeController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
 
@@ -24,8 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         public void SetUp()
         {
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object);
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
         }
