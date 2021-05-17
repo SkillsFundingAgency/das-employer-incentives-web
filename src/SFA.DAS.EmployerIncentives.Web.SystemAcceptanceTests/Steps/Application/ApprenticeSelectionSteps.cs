@@ -278,7 +278,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public async Task WhenTheEmployerHasViewedMoreApprentices()
         {
             var data = new TestData.Account.WithInitialApplicationForASingleEntity();
-            var url = $"{data.HashedAccountId}/apply/{data.HashedAccountLegalEntityId}/select-apprentices?pageNumber=2&pageSize=50";
+            var url = $"{data.HashedAccountId}/apply/{data.HashedAccountLegalEntityId}/select-apprentices?pageNumber=2&pageSize=50&startIndex=51";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
