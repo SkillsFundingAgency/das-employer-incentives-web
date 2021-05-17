@@ -46,8 +46,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             {
                 AccountId = _accountId,
                 AccountLegalEntityId = _accountLegalEntityId,
-                HasSignedIncentiveTerms = true,
-                SignedAgreementVersion = 4,
+                IsAgreementSigned = false,
                 Name = "Organisation Name"
             };
             var legalEntities = new List<LegalEntityModel> { legalEntity };
@@ -68,33 +67,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         }
 
         [Test]
-        public async Task Then_a_warning_message_is_not_shown_if_the_signed_legal_agreement_version_is_the_latest_version()
-        {
-            // Arrange
-            var legalEntity = new LegalEntityModel
-            {
-                AccountId = _accountId,
-                AccountLegalEntityId = _accountLegalEntityId,
-                HasSignedIncentiveTerms = true,
-                SignedAgreementVersion = 6,
-                Name = "Organisation Name"
-            };
-            var legalEntities = new List<LegalEntityModel> { legalEntity };
-
-            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
-            // Act
-            var result = await _sut.Start(_accountId, _accountLegalEntityId);
-
-            // Assert
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as HomeViewModel;
-            model.Should().NotBeNull();
-            model.NewAgreementRequired.Should().BeFalse();
-        }
-
-        [Test]
         public async Task Then_a_warning_message_is_not_shown_if_no_legal_agreement_has_been_signed()
         {
             // Arrange
@@ -102,8 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             {
                 AccountId = _accountId,
                 AccountLegalEntityId = _accountLegalEntityId,
-                HasSignedIncentiveTerms = false,
-                SignedAgreementVersion = null,
+                IsAgreementSigned = true,
                 Name = "Organisation Name"
             };
             var legalEntities = new List<LegalEntityModel> { legalEntity };

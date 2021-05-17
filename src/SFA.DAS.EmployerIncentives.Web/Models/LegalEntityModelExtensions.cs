@@ -19,9 +19,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 AccountId = hashingService.HashValue(dto.AccountId),
                 AccountLegalEntityId = hashingService.HashValue(dto.AccountLegalEntityId),
                 Name = dto.LegalEntityName,
-                HasSignedIncentiveTerms = dto.HasSignedIncentivesTerms,
                 VrfCaseStatus = dto.VrfCaseStatus,
-                SignedAgreementVersion = dto.SignedAgreementVersion,
+                IsAgreementSigned = dto.IsAgreementSigned,
                 VrfVendorId = dto.VrfVendorId,
                 HashedLegalEntityId = dto.HashedLegalEntityId
             };

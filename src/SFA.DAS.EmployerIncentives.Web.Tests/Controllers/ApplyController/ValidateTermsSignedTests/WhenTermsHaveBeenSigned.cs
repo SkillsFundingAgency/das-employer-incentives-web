@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             var accountId = "ABC123";
             var accountLegalEntityId = "ZZZZ999";
 
-            var legalEntity = _fixture.Build<LegalEntityModel>().With(x => x.HasSignedIncentiveTerms, true).Create();
+            var legalEntity = _fixture.Build<LegalEntityModel>().With(x => x.IsAgreementSigned, true).Create();
             _legalEntityServiceMock.Setup(x => x.Get(accountId, accountLegalEntityId)).ReturnsAsync(legalEntity);
 
             var result = await _sut.ValidateTermsSigned(accountId, accountLegalEntityId);
