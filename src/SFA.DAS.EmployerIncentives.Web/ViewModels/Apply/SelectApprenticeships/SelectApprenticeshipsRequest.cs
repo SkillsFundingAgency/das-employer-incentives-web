@@ -18,5 +18,6 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
         public int PageNumber { get; set; }
         public int CurrentPage { get; set; }
         public int Offset { get; set; }
+        public int StartIndex { get; set; }
     }
 }

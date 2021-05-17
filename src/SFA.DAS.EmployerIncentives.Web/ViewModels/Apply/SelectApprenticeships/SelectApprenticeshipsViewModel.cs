@@ -23,19 +23,19 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships
         public string OrganisationName { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
-        public int StartIndex 
-        {
-            get 
-            {
-                var startIndex = 1;
-                if (CurrentPage > 1)
-                {
-                    startIndex = (PageSize * (CurrentPage - 1)) + 1;
-                }
+        public int StartIndex { get; set; }
+        //{
+            //get 
+            //{
+            //    var startIndex = 1;
+            //    if (CurrentPage > 1)
+            //    {
+            //        startIndex = (PageSize * (CurrentPage - 1)) + 1;
+            //    }
 
-                return startIndex;
-            }
-        }
+            //    return startIndex;
+            //}
+        //}
         public int EndIndex => StartIndex + (Apprenticeships.Count() - 1);
 
         public bool PreviousPages => (StartIndex > 1);

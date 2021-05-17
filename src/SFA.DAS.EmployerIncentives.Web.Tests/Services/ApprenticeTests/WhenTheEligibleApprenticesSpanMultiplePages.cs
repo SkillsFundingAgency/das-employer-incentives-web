@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         public async Task Then_the_apprenticeships_are_requested_until_the_page_is_populated()
         {
             // Arrange
-            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0);
+            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0, startIndex: 1);
 
             var apprenticeships1 = _fixture.CreateMany<ApprenticeDto>(22).ToList();
             var eligibleApprenticeships1 = new EligibleApprenticesDto
@@ -88,14 +88,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             // Assert
             response.Apprenticeships.Count().Should().Be(apprenticeships1.Count + apprenticeships2.Count);
             response.MorePages.Should().BeFalse();
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(3);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
         }
 
         [Test]
         public async Task Then_the_response_indicates_that_there_are_more_pages_of_apprenticeships()
         {
             // Arrange
-            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0);
+            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0, startIndex: 1);
 
             var apprenticeships1 = _fixture.CreateMany<ApprenticeDto>(34).ToList();
             var eligibleApprenticeships1 = new EligibleApprenticesDto
@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         [Test]
         public async Task Then_the_next_page_starts_with_an_offset_if_the_previous_page_was_partially_returned()
         {
-            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 2, pageSize: 50, offset: 20);
+            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 2, pageSize: 50, offset: 20, startIndex: 51);
 
             var apprenticeships1 = _fixture.CreateMany<ApprenticeDto>(46).ToList();
             var eligibleApprenticeships1 = new EligibleApprenticesDto

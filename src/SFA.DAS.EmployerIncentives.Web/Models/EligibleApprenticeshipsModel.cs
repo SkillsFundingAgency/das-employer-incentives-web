@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool MorePages { get; set; }
         public IEnumerable<ApprenticeshipModel> Apprenticeships { get; set; }
         public int Offset { get; set; }
+        public int StartIndex { get; set; }
     }
 }

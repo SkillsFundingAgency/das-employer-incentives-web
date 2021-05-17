@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
         public async Task<EligibleApprenticeshipsModel> Get(ApprenticesQuery query)
         {
             var data = await GetPagedEligibleApprentices(query.AccountId, query.AccountLegalEntityId, query.PageNumber, query.PageSize);
-
+            var startIndex = query.StartIndex;
             var eligibleApprenticeships = new EligibleApprenticesDto 
             {
                 PageSize = query.PageSize,
@@ -36,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             }
             else
             {
-                data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.LastName).ToList();
+                data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.DisplayName).ToList();
                 for (var apprenticeIndex = query.Offset; apprenticeIndex < data.Apprenticeships.Count; apprenticeIndex++)
                 {
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[apprenticeIndex]);
@@ -46,24 +46,30 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             var pageNumber = query.PageNumber;
             var morePages = false;
             var index = 0;
+            var offset = 0;
             while (eligibleApprenticeships.Apprenticeships.Count < data.PageSize 
-                   && (eligibleApprenticeships.Apprenticeships.Count + ((query.PageNumber - 1) * query.PageSize) < data.TotalApprenticeships )
-                       && eligibleApprenticeships.Apprenticeships.Count < data.TotalApprenticeships 
-                       && data.Apprenticeships.Count > 0)
+                   && (eligibleApprenticeships.Apprenticeships.Count + ((pageNumber - 1) * query.PageSize) < data.TotalApprenticeships )
+                       && eligibleApprenticeships.Apprenticeships.Count < data.TotalApprenticeships)
             {
+                index = 0;
                 pageNumber++;
 
                 data = await GetPagedEligibleApprentices(query.AccountId, query.AccountLegalEntityId, pageNumber, query.PageSize);
-                data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.LastName).ToList();
+                data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.DisplayName).ToList();
 
-                while (index < data.Apprenticeships.Count && eligibleApprenticeships.Apprenticeships.Count < query.PageSize)
+                while (eligibleApprenticeships.Apprenticeships.Count < query.PageSize)
                 {
+                    if (index >= data.Apprenticeships.Count)
+                    {
+                        break;
+                    }
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[index]);
                     index++;
                 }
                 if (data.Apprenticeships.Count > index)
                 {
                     morePages = true;
+                    offset = index;
                 }
             }
 
@@ -72,10 +78,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 morePages = true;
             }
 
-            eligibleApprenticeships.PageNumber = pageNumber;
+            if (offset == 0)
+            {
+                eligibleApprenticeships.PageNumber = pageNumber;
+            }
+            else
+            {
+                // fetch remainder of current page first
+                eligibleApprenticeships.PageNumber = pageNumber - 1;
+            }
             eligibleApprenticeships.MorePages = morePages;
-            eligibleApprenticeships.Offset = index;
+            eligibleApprenticeships.Offset = offset;
             eligibleApprenticeships.TotalApprenticeships = data.TotalApprenticeships;
+            eligibleApprenticeships.StartIndex = startIndex;
 
             return eligibleApprenticeships.ToEligibleApprenticeshipsModel(_hashingService);
         }

@@ -30,7 +30,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
                 PageSize = dto.PageSize,
                 MorePages = dto.MorePages,
                 Apprenticeships = dto.Apprenticeships.ToApprenticeshipModel(hashingService),
-                Offset = dto.Offset
+                Offset = dto.Offset,
+                StartIndex = dto.StartIndex
             };
         }
     }

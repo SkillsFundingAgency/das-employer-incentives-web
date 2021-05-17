@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         public async Task Then_the_apprenticeships_are_retrieved_in_a_single_request()
         {
             // Arrange
-            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0);
+            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0, startIndex: 1);
 
             var apprenticeships = _fixture.CreateMany<ApprenticeDto>(49).ToList();
             var eligibleApprenticeships = new EligibleApprenticesDto

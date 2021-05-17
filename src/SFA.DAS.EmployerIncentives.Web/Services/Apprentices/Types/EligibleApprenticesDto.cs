@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types
         public List<ApprenticeDto> Apprenticeships { get; set; }
         public bool MorePages { get; set; }
         public int Offset { get; set; }
+        public int StartIndex { get; set; }
     }
 }
