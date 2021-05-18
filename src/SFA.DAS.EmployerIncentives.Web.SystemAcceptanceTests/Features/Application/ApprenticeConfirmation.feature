@@ -14,11 +14,6 @@ Scenario: An employer has confirmed selected apprenticeships
 	When the employer confirms their selection
 	Then the employer is asked to read and accept a declaration
 
-Scenario: An employer has not signed the extension agreement
-	Given an employer has selected an apprentice within the extension window but has not signed the extension agreement
-	When the employer confirms their selection
-	Then the employer is asked to sign the extension agreement
-
 Scenario: An employer has signed the extension agreement
 	Given an employer has selected an apprentice within the extension window and has signed the extension agreement
 	When the employer confirms their selection
