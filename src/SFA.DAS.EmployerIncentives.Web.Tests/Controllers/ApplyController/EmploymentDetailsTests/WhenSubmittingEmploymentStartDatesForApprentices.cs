@@ -134,9 +134,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             redirectResult.Should().NotBeNull();
             redirectResult.ActionName.Should().Be("ConfirmApprenticeships");
             redirectResult.ControllerName.Should().Be("ApplyApprenticeships");
-            _applicationService.Verify(x => x.ConfirmEmploymentDetails(
-                It.Is<ConfirmEmploymentDetailsRequest>(y => y.ApplicationId == application.ApplicationId
-                && y.EmploymentDetails.Count == request.EmploymentStartDateDays.Count)), Times.Once);
+            _applicationService.Verify(x => x.SaveApprenticeshipDetails(
+                It.Is<ApprenticeshipDetailsRequest>(y => y.ApplicationId == application.ApplicationId
+                && y.ApprenticeshipDetails.Count == request.EmploymentStartDateDays.Count)), Times.Once);
         }
     }
 }

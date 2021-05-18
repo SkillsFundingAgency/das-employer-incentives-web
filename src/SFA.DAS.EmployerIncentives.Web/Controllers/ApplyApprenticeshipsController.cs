@@ -98,6 +98,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+            if(viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
+            {                
+                return View("NotEligibleApprenticeships", new NotEligibileViewModel(viewModel));
+            }
+
             return View(viewModel);
         }
 
@@ -165,9 +170,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                                                         apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
+        private ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
         {
-            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            return new ApplicationApprenticeship
             {
                 ApprenticeshipId = apprentice.ApprenticeshipId,
                 CourseName = apprentice.CourseName,
@@ -176,7 +181,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
                 Uln = apprentice.Uln,
-                EmploymentStartDate = apprentice.EmploymentStartDate
+                EmploymentStartDate = apprentice.EmploymentStartDate,
+                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
             };
         }
     }

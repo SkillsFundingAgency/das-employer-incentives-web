@@ -15,6 +15,8 @@ using SFA.DAS.HashingService;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
+using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -110,7 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications/{_data.ApplicationId}/employmentDetails"))
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications/{_data.ApplicationId}/apprenticeships"))
                         .UsingPatch()
                     )
                 .RespondWith(
@@ -119,6 +121,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     );
         }
 
+        [Given(@"the employer has selected apprentices for the application")]
         [When(@"the employer has selected apprentices for the application")]
         public async Task WhenTheEmployerHasSelectedApprenticesForTheApplication()
         {
@@ -189,6 +192,152 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _response = await _testContext.WebsiteClient.PostFormAsync(url, values.ToArray());
         }
 
+        [When(@"the employer supplies some ineligible start dates for the selected apprentices")]
+        public async Task WhenTheEmployerSuppliesSomeIneligibleStartDatesForTheSelectedApprentices()
+        {
+            var response = new ApplicationResponse
+            {
+                Application = new IncentiveApplicationDto
+                {
+                    AccountLegalEntityId = _data.AccountLegalEntityId,
+                    NewAgreementRequired = false,
+                    Apprenticeships = new IncentiveApplicationApprenticeshipDto[]
+                        {
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 1,
+                                CourseName = "Computing...",
+                                LastName = "Shipman",
+                                FirstName = "Harry",
+                                TotalIncentiveAmount = 2000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = false
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 2,
+                                CourseName = "T&D ...",
+                                LastName = "Leeman",
+                                FirstName = "Thomas",
+                                TotalIncentiveAmount = 1000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = true
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 3,
+                                CourseName = "Water Treatment Technician, Level: 3 (Standard)",
+                                LastName = "Johnson",
+                                FirstName = "Michael",
+                                TotalIncentiveAmount = 2000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = false
+                            }
+                        }
+                }
+            };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(response))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .UsingPatch()
+                    )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            await WhenTheEmployerSuppliesValidStartDatesForTheSelectedApprentices();
+        }
+
+        [When(@"the employer supplies all ineligible start dates for the selected apprentices")]
+        public async Task WhenTheEmployerSuppliesAllIneligibleStartDatesForTheSelectedApprentices()
+        {
+            var response = new ApplicationResponse
+            {
+                Application = new IncentiveApplicationDto
+                {
+                    AccountLegalEntityId = _data.AccountLegalEntityId,
+                    NewAgreementRequired = false,
+                    Apprenticeships = new IncentiveApplicationApprenticeshipDto[]
+                        {
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 1,
+                                CourseName = "Computing...",
+                                LastName = "Shipman",
+                                FirstName = "Harry",
+                                TotalIncentiveAmount = 2000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = false
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 2,
+                                CourseName = "T&D ...",
+                                LastName = "Leeman",
+                                FirstName = "Thomas",
+                                TotalIncentiveAmount = 1000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = false
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = 3,
+                                CourseName = "Water Treatment Technician, Level: 3 (Standard)",
+                                LastName = "Johnson",
+                                FirstName = "Michael",
+                                TotalIncentiveAmount = 2000m,
+                                EmploymentStartDate = new DateTime(2021, 05, 01),
+                                HasEligibleEmploymentStartDate = false
+                            }
+                        }
+                }
+            };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(response))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .UsingPatch()
+                    )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            await WhenTheEmployerSuppliesValidStartDatesForTheSelectedApprentices();
+        }
+
         [Then(@"the employer is asked to change their submitted dates")]
         public void ThenTheEmployerIsAskedToChangeTheirSubmittedDates()
         {
@@ -202,5 +351,36 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
         }
 
+        [Then(@"the employer is informed one more of their selected apprentices are ineligible")]
+        public void ThenTheEmployerIsInformedOneOrMoreOfTheirSelectedApprenticesAreInEligible()
+        {
+            _response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as NotEligibileViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Not eligible for the payment");
+            model.AllInEligible.Should().BeFalse();
+            model.Apprentices.Count.Should().Be(2);
+            _response.Should().HaveLink("[data-linktype='noneligible-continue']", "/");
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+        }
+
+        [Then(@"the employer is informed all of their selected apprentices are ineligible")]
+        public void ThenTheEmployerIsInformedAllOfTheirSelectedApprenticesAreInEligible()
+        {
+            _response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as NotEligibileViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Not eligible for the payment");
+            model.AllInEligible.Should().BeTrue();
+            model.Apprentices.Count.Should().Be(3);
+            _response.Should().HaveLink("[data-linktype='noneligible-cancel']", "/");
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+        }
     }
 }

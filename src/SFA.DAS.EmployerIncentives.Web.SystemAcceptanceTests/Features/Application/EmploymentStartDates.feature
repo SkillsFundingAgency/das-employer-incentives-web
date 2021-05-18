@@ -11,12 +11,24 @@ Scenario: An employer is prompted to supply employment start dates for the appre
 
 Scenario: An employer provides valid employment start dates for the apprentices included in the application
 	Given an initial application has been created
-	When the employer has selected apprentices for the application
-	And the employer supplies valid start dates for the selected apprentices
+	And the employer has selected apprentices for the application
+	When the employer supplies valid start dates for the selected apprentices
 	Then the employer is asked to confirm their selected apprentices
 
 Scenario: An employer provides invalid employment start dates for the apprentices included in the application
 	Given an initial application has been created
-	When the employer has selected apprentices for the application
-	And the employer supplies invalid start dates for the selected apprentices
+	And the employer has selected apprentices for the application
+	When the employer supplies invalid start dates for the selected apprentices
 	Then the employer is asked to change their submitted dates
+
+Scenario: An employer provides some ineligible employment start dates for the apprentices included in the application
+	Given an initial application has been created
+	And the employer has selected apprentices for the application
+	When the employer supplies some ineligible start dates for the selected apprentices
+	Then the employer is informed one more of their selected apprentices are ineligible
+
+Scenario: An employer provides all ineligible employment start dates for the apprentices included in the application
+	Given an initial application has been created
+	And the employer has selected apprentices for the application
+	When the employer supplies all ineligible start dates for the selected apprentices
+	Then the employer is informed all of their selected apprentices are ineligible

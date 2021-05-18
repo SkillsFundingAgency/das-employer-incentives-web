@@ -79,9 +79,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return accountLegalEntityId;
         }
 
-        public async Task ConfirmEmploymentDetails(ConfirmEmploymentDetailsRequest request)
+        public async Task SaveApprenticeshipDetails(ApprenticeshipDetailsRequest request)
         {
-            var url = OuterApiRoutes.Application.ConfirmEmploymentDetails(request.AccountId, request.ApplicationId);
+            var url = OuterApiRoutes.Application.SaveApprenticeshipDetails(request.AccountId, request.ApplicationId);
             using var response = await _client.PatchAsJsonAsync(url, request);
 
             response.EnsureSuccessStatusCode();
@@ -106,7 +106,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 ExpectedAmount = apprentice.TotalIncentiveAmount,
                 StartDate = apprentice.PlannedStartDate,
                 Uln = apprentice.Uln,
-                EmploymentStartDate = apprentice.EmploymentStartDate
+                EmploymentStartDate = apprentice.EmploymentStartDate,
+                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
             };
         }
 

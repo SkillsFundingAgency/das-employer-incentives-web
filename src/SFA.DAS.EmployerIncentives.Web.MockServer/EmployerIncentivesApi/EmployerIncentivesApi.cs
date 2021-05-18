@@ -146,7 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                   .RespondWith(
               Response.Create()
                   .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
-                  .WithStatusCode(HttpStatusCode.OK));
+                  .WithStatusCode(HttpStatusCode.OK));           
 
             AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
@@ -290,7 +290,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
-        }
+        }                
 
         public EmployerIncentivesApiBuilder WithInitialApplication()
         {
@@ -511,6 +511,288 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                     Response.Create()
                         .WithBody("123")
                         .WithStatusCode(HttpStatusCode.OK));
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithApplicationWithAllInEligibleEmployerStartDates()
+        {
+            var data = new TestData.Account.WithApplicationWithAllInEligibleEmployerStartDates();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId1}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(data.LegalEntity1, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", data.AccountId.ToString())
+                      .WithParam("accountlegalentityid", data.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.AccountLegalEntityId1))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/{data.ApplicationId}/apprenticeships"))
+                      .UsingPatch()
+                  )
+              .RespondWith(
+                  Response.Create()
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithApplicationWithSomeInEligibleEmployerStartDates()
+        {
+            var data = new TestData.Account.WithApplicationWithSomeInEligibleEmployerStartDates();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId1}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(data.LegalEntity1, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", data.AccountId.ToString())
+                      .WithParam("accountlegalentityid", data.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.AccountLegalEntityId1))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/{data.ApplicationId}/apprenticeships"))
+                      .UsingPatch()
+                  )
+              .RespondWith(
+                  Response.Create()
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
+            return this;
+        }
+
+        public EmployerIncentivesApiBuilder WithApplicationWithAllEligibleEmployerStartDates()
+        {
+            var data = new TestData.Account.WithApplicationWithAllEligibleEmployerStartDates();
+
+            _server
+            .Given(
+                    Request
+                    .Create()
+                    .WithPath($"/accounts/{data.AccountId}/legalentities")
+                    .UsingGet()
+                    )
+                .RespondWith(
+            Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithBody(JsonConvert.SerializeObject(data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId1}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(data.LegalEntity1, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/apprenticeships")
+                      .WithParam("accountid", data.AccountId.ToString())
+                      .WithParam("accountlegalentityid", data.LegalEntities.First().AccountLegalEntityId.ToString())
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithBody(JsonConvert.SerializeObject(data.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.AccountLegalEntityId1))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                 )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+              .Given(
+                  Request
+                      .Create()
+                      .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/{data.ApplicationId}/apprenticeships"))
+                      .UsingPatch()
+                  )
+              .RespondWith(
+                  Response.Create()
+                  .WithStatusCode(HttpStatusCode.OK));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
             return this;
         }
