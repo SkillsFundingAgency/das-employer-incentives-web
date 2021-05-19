@@ -199,7 +199,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             model.OrganisationName.Should().Be(legalEntityName);
             model.Apprentices.Count.Should().Be(1);
             model.AllInEligible.Should().BeFalse();
-            AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship1.ApprenticeshipId), apprenticeship1);            
+            AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship2.ApprenticeshipId), apprenticeship2);            
         }
 
         private void AssertAreEquivalent(ApplicationApprenticeship applicationApprenticeship, ApplicationApprenticeshipModel model)
