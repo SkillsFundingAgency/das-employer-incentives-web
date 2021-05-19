@@ -10,18 +10,17 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
 
-        public Decimal TotalPaymentAmount { get; }
+        public decimal TotalPaymentAmount { get; }
 
         public List<ApplicationApprenticeship> Apprentices { get; } 
 
         public bool BankDetailsRequired { get; }
-        public bool NewAgreementRequired { get; }
 
         public string Title => "Confirm apprentices";
 
         public string OrganisationName { get; set; }
         public ApplicationConfirmationViewModel(Guid applicationId, string accountId, string accountLegalEntityId, 
-            IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, bool newAgreementRequired, string organisationName) 
+            IEnumerable<ApplicationApprenticeship> apprentices, bool bankDetailsRequired, string organisationName) 
         {
             ApplicationId = applicationId;
             AccountId = accountId;
@@ -29,7 +28,6 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             Apprentices = apprentices.ToList();
             TotalPaymentAmount = Apprentices.Sum(x => x.ExpectedAmount);
             BankDetailsRequired = bankDetailsRequired;
-            NewAgreementRequired = newAgreementRequired;
             OrganisationName = organisationName;
         }
 

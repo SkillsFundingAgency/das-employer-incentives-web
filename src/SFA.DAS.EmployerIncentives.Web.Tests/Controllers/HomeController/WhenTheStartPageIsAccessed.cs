@@ -54,7 +54,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             model.Should().NotBeNull();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
-            model.HasMultipleLegalEntities.Should().BeTrue();
         }
 
         [Test]
@@ -75,7 +74,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             model.Should().NotBeNull();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
-            model.HasMultipleLegalEntities.Should().BeFalse();
         }
     }
 }

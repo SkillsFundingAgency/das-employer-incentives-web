@@ -4,21 +4,16 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
 {
     public class HomeViewModel : IViewModel
     {
+        public string Title => "Apply for the hire a new apprentice payment";
+
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
         public bool NewAgreementRequired { get; }
-        public bool HasMultipleLegalEntities { get; }
-        public bool BankDetailsRequired { get; }
-        public string ManageApprenticeshipSiteUrl { get; }
-
-        public string AccountHomeUrl { get; }
-        
-        public string AccountsAgreementsUrl => $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
-
-        public string Title => "Apply for the hire a new apprentice payment";
-
+        public bool BankDetailsRequired { get; }        
+        public string AccountsAgreementsUrl { get; }
         public string OrganisationName { get; set; }
-        
+
+        private string ManageApprenticeshipSiteUrl { get; }
         private const string RejectedDataValidation = "Case Rejected - Data validation";
         private const string RejectedVer1 = "VER1 Rejected";
         private const string RejectedVerification = "Case Rejected - Verification";
@@ -38,12 +33,11 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
             OrganisationName = organisationName;
             NewAgreementRequired = newAgreementRequired;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
-            HasMultipleLegalEntities = hasMultipleLegalEntities;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))
             {
                 ManageApprenticeshipSiteUrl += "/";
             }
-            AccountHomeUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            AccountsAgreementsUrl = $"{manageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
             BankDetailsRequired = MapBankDetailsRequired(vrfCaseStatus, vrfVendorId);
         }
 
