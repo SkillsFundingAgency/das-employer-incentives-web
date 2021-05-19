@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,8 +9,11 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsController.ConfirmApprenticeshipsTests
 {
@@ -51,19 +50,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 _mockLegalEntitiesService.Object,
                 _mockConfiguration.Object);
         }
-
-        //[HttpGet]
-        //[Route("confirm-apprentices/{applicationId}")]
-        //public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
-        //{
-        //    var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
-        //    if (viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
-        //    {
-        //        return View("NotEligibleApprenticeships", new NotEligibileViewModel(viewModel));
-        //    }
-
-        //    return View(viewModel);
-        //}
 
         [Test()]
         public async Task Then_the_apprenticeships_being_applied_for_are_displayed_when_they_have_eligible_employer_start_dates()
@@ -113,6 +99,107 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             model.Apprentices.Count.Should().Be(2);
             AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship1.ApprenticeshipId), apprenticeship1);
             AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship2.ApprenticeshipId), apprenticeship2);
+        }
+
+        [Test()]
+        public async Task Then_the_non_eligible_apprenticeships_being_applied_for_are_displayed_when_all_employer_start_dates_are_non_eligible()
+        {
+            // Arrange
+            var legalEntityName = _fixture.Create<string>();
+            var apprenticeship1 = _fixture
+                .Build<ApplicationApprenticeshipModel>()
+                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .Create();
+            var apprenticeship2 = _fixture
+                .Build<ApplicationApprenticeshipModel>()
+                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .Create();
+
+            var apprentices = new List<ApplicationApprenticeshipModel>
+            {
+               apprenticeship1,
+               apprenticeship2
+            };
+
+            var applicationResponse = new ApplicationModel(
+                _applicationId,
+                _accountId,
+                _accountLegalEntityId,
+                apprentices,
+                false,
+                false);
+
+            _mockApplicationService
+                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .ReturnsAsync(applicationResponse);
+            _mockLegalEntitiesService
+                .Setup(m => m.Get(_accountId, _accountLegalEntityId))
+                .ReturnsAsync(new LegalEntityModel() { Name = legalEntityName });
+
+            // Act
+            var viewResult = await _sut.ConfirmApprenticeships(_accountId, _applicationId) as ViewResult;
+
+            // Assert
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as NotEligibileViewModel;
+            model.Should().NotBeNull();
+            model.AccountId.Should().Be(_accountId);
+            model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+            model.OrganisationName.Should().Be(legalEntityName);
+            model.Apprentices.Count.Should().Be(2);
+            model.AllInEligible.Should().BeTrue();
+            AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship1.ApprenticeshipId), apprenticeship1);
+            AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship2.ApprenticeshipId), apprenticeship2);
+        }
+
+        [Test()]
+        public async Task Then_the_non_eligible_apprenticeships_being_applied_for_are_displayed_when_some_employer_start_dates_are_non_eligible()
+        {
+            // Arrange
+            var legalEntityName = _fixture.Create<string>();
+            var apprenticeship1 = _fixture
+                .Build<ApplicationApprenticeshipModel>()
+                .With(a => a.HasEligibleEmploymentStartDate, true)
+                .Create();
+            var apprenticeship2 = _fixture
+                .Build<ApplicationApprenticeshipModel>()
+                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .Create();
+
+            var apprentices = new List<ApplicationApprenticeshipModel>
+            {
+               apprenticeship1,
+               apprenticeship2
+            };
+
+            var applicationResponse = new ApplicationModel(
+                _applicationId,
+                _accountId,
+                _accountLegalEntityId,
+                apprentices,
+                false,
+                false);
+
+            _mockApplicationService
+                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .ReturnsAsync(applicationResponse);
+            _mockLegalEntitiesService
+                .Setup(m => m.Get(_accountId, _accountLegalEntityId))
+                .ReturnsAsync(new LegalEntityModel() { Name = legalEntityName });
+
+            // Act
+            var viewResult = await _sut.ConfirmApprenticeships(_accountId, _applicationId) as ViewResult;
+
+            // Assert
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as NotEligibileViewModel;
+            model.Should().NotBeNull();
+            model.AccountId.Should().Be(_accountId);
+            model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
+            model.OrganisationName.Should().Be(legalEntityName);
+            model.Apprentices.Count.Should().Be(1);
+            model.AllInEligible.Should().BeFalse();
+            AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship1.ApprenticeshipId), apprenticeship1);            
         }
 
         private void AssertAreEquivalent(ApplicationApprenticeship applicationApprenticeship, ApplicationApprenticeshipModel model)
