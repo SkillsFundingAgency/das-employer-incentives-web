@@ -358,12 +358,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as NotEligibileViewModel;
+            var model = viewResult.Model as NotEligibleViewModel;
             model.Should().NotBeNull();
             model.Should().HaveTitle("Not eligible for the payment");
             model.AllInEligible.Should().BeFalse();
             model.Apprentices.Count.Should().Be(2);
-            _response.Should().HaveLink("[data-linktype='noneligible-continue']", "/");
+            _response.Should().HaveLink("[data-linktype='noneligible-continue']", $"/{_data.HashedAccountId}/apply/remove-ineligible-apprentices/{_data.ApplicationId}");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 
@@ -374,7 +374,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as NotEligibileViewModel;
+            var model = viewResult.Model as NotEligibleViewModel;
             model.Should().NotBeNull();
             model.Should().HaveTitle("Not eligible for the payment");
             model.AllInEligible.Should().BeTrue();
@@ -382,5 +382,35 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _response.Should().HaveLink("[data-linktype='noneligible-cancel']", "/");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
+
+
+        [Given(@"the employer is informed one or more of their selected apprentices are ineligible")]
+        public async Task GivenTheEmployerIsInformedOneOrMoreOfTheirSelectedApprenticesAreIneligible()
+        {
+            await WhenTheEmployerSuppliesSomeIneligibleStartDatesForTheSelectedApprentices();
+        }
+
+        [When(@"the employer accepts to remove ineligible apprenticeships from the application")]
+        public async Task WhenTheEmployerAcceptsToRemoveIneligibleApprenticeshipsFromTheApplication()
+        {
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+            var url = $"/{_data.HashedAccountId}/apply/remove-ineligible-apprentices/{_data.ApplicationId}";
+
+            var form = new KeyValuePair<string, string>("SelectedApprenticeships", apprenticeships.Select(x => x.Id).ToString());
+
+            _response = await _testContext.WebsiteClient.PostFormAsync(url, form);
+        }
+
+        [Then(@"the employer is asked to confirm their apprenticeships selection")]
+        public void ThenTheEmployerIsAskedToConfirmTheirApprenticeshipsSelection()
+        {
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ApplicationConfirmationViewModel;
+            model.Should().NotBeNull();
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+            model.Should().HaveTitle("Confirm apprentices");
+        }
+
     }
 }

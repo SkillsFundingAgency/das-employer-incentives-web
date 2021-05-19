@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.NotEligibileViewModel
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.NotEligibleViewModel
 
 @{
     var culture = new CultureInfo("en-GB");
@@ -48,7 +48,7 @@
                 }
                 else
                 {
-                    <a href="/" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
+                    <a asp-action="RemoveIneligibleApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
                         Continue
                     </a>
                 }
