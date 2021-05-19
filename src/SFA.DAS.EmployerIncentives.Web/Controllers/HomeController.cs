@@ -55,9 +55,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> Start(string accountId, string accountLegalEntityId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var hasMultipleLegalEntities = legalEntities.Count() > 1;
             var legalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
-            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, hasMultipleLegalEntities, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity?.VrfCaseStatus, legalEntity?.VrfVendorId));        
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity?.VrfCaseStatus, legalEntity?.VrfVendorId));        
         }
 
         [Route("/signout")]

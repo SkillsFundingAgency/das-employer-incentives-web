@@ -21,8 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
         public HomeViewModel(
             string accountId, 
             string accountLegalEntityId, 
-            string organisationName, 
-            bool hasMultipleLegalEntities, 
+            string organisationName,             
             bool newAgreementRequired, 
             string manageApprenticeshipSiteUrl,
             string vrfCaseStatus,
