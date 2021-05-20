@@ -6,7 +6,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
     public class PageTrackingService : IPageTrackingService
     {
-        private string SessionKeyFormatString = $"ApprenticeshipsPage_{0}";
+        private string SessionKeyFormatString = "ApprenticeshipsPage_{0}";
         private readonly ISessionService _sessionService;
 
         public PageTrackingService(ISessionService sessionService)
