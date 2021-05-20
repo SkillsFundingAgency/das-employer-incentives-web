@@ -3,7 +3,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
-    public interface IPageTrackingService
+    public interface IPaginationService
     {
         Task<PagingInformation> GetPagingInformation(ApprenticesQuery apprenticesQuery);
         Task SavePagingInformation(PagingInformation pagingInformation);

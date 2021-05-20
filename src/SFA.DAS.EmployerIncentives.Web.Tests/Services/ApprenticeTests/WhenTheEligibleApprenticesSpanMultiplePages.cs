@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         private HttpClient _httpClient;
         private QueuedFakeHttpMessageHandler _httpClientHandlerFake;
         private Mock<IHashingService> _hashingService;
-        private Mock<IPageTrackingService> _pageTrackingService;
+        private Mock<IPaginationService> _paginationService;
         private string _baseUrl = "http://www.someurl.com";
         private ApprenticesService _sut;
         private string _accountId;
@@ -39,8 +39,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
             _hashingService = new Mock<IHashingService>();
-            _pageTrackingService = new Mock<IPageTrackingService>();
-            _sut = new ApprenticesService(_httpClient, _hashingService.Object, _pageTrackingService.Object);
+            _paginationService = new Mock<IPaginationService>();
+            _sut = new ApprenticesService(_httpClient, _hashingService.Object, _paginationService.Object);
 
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();

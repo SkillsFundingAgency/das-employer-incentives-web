@@ -14,18 +14,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
     {
         private readonly HttpClient _client;
         private readonly IHashingService _hashingService;
-        private readonly IPageTrackingService _pageTrackingService;
+        private readonly IPaginationService _paginationService;
 
-        public ApprenticesService(HttpClient client, IHashingService hashingService, IPageTrackingService pageTrackingService)
+        public ApprenticesService(HttpClient client, IHashingService hashingService, IPaginationService paginationService)
         {
             _client = client;
             _hashingService = hashingService;
-            _pageTrackingService = pageTrackingService;
+            _paginationService = paginationService;
         }
 
         public async Task<EligibleApprenticeshipsModel> Get(ApprenticesQuery query)
         {
-            var pagingInformation = await _pageTrackingService.GetPagingInformation(query);
+            var pagingInformation = await _paginationService.GetPagingInformation(query);
     
             var data = await GetPagedEligibleApprentices(query.AccountId, query.AccountLegalEntityId, pagingInformation.PageNumber, query.PageSize);
             var startIndex = query.StartIndex;
@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 StartIndex = query.StartIndex + query.PageSize
             };
 
-            await _pageTrackingService.SavePagingInformation(nextPageInformation);
+            await _paginationService.SavePagingInformation(nextPageInformation);
 
             eligibleApprenticeships.MorePages = morePages;
             eligibleApprenticeships.Offset = offset;

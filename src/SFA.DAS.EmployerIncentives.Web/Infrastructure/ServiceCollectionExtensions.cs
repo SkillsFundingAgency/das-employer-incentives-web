@@ -148,9 +148,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
             serviceCollection.AddTransient<IUserService, UserService>();
 
-            serviceCollection.AddSingleton<IPageTrackingService, PageTrackingService>();
+            serviceCollection.AddSingleton<IPaginationService, PaginationService>();
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>(), s.GetRequiredService<IPageTrackingService>()));
+            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>(), s.GetRequiredService<IPaginationService>()));
             serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));

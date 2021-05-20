@@ -4,12 +4,12 @@ using SFA.DAS.EmployerIncentives.Web.Services.Session;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
-    public class PageTrackingService : IPageTrackingService
+    public class PaginationService : IPaginationService
     {
         private string SessionKeyFormatString = "ApprenticeshipsPage_{0}";
         private readonly ISessionService _sessionService;
 
-        public PageTrackingService(ISessionService sessionService)
+        public PaginationService(ISessionService sessionService)
         {
             _sessionService = sessionService;
         }
