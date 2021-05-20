@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types
 {
-    public class ApprenticesQuery
+    public class ApprenticesQuery : IPaginationQuery
     {
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }

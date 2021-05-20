@@ -5,7 +5,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
 {
     public interface IPaginationService
     {
-        Task<PagingInformation> GetPagingInformation(ApprenticesQuery apprenticesQuery);
+        Task<PagingInformation> GetPagingInformation(IPaginationQuery paginationQuery);
         Task SavePagingInformation(PagingInformation pagingInformation);
     }
 }

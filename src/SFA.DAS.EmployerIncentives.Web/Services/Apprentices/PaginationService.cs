@@ -14,27 +14,31 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             _sessionService = sessionService;
         }
 
-        public async Task<PagingInformation> GetPagingInformation(ApprenticesQuery apprenticesQuery)
+        public async Task<PagingInformation> GetPagingInformation(IPaginationQuery paginationQuery)
         {
-            var pagingInformation = _sessionService.Get<PagingInformation>(string.Format(SessionKeyFormatString, apprenticesQuery.StartIndex));
+            var pagingInformation = _sessionService.Get<PagingInformation>(string.Format(SessionKeyFormatString, paginationQuery.StartIndex));
             if (pagingInformation == null)
             {
                 pagingInformation = new PagingInformation
                 {
-                    Offset = apprenticesQuery.Offset,
-                    StartIndex = apprenticesQuery.StartIndex
+                    Offset = paginationQuery.Offset,
+                    StartIndex = paginationQuery.StartIndex
                 };
-                if (apprenticesQuery.StartIndex == 1)
+                if (paginationQuery.StartIndex == 1)
                 {
                     pagingInformation.PageNumber = 1;
                 }
-                else if (apprenticesQuery.StartIndex > 1)
+                else if (paginationQuery.StartIndex > 1)
                 {
-                    var previousStartIndex = apprenticesQuery.StartIndex - apprenticesQuery.PageSize;
-                    pagingInformation = _sessionService.Get<PagingInformation>(string.Format(SessionKeyFormatString, previousStartIndex));
-                    if (apprenticesQuery.Offset == 0)
+                    var previousStartIndex = paginationQuery.StartIndex - paginationQuery.PageSize;
+                    var previousPagingInformation = _sessionService.Get<PagingInformation>(string.Format(SessionKeyFormatString, previousStartIndex));
+                    if (paginationQuery.Offset == 0)
                     {
-                        pagingInformation.PageNumber++;
+                        pagingInformation.PageNumber = previousPagingInformation.PageNumber + 1;
+                    }
+                    else
+                    {
+                        pagingInformation.PageNumber = previousPagingInformation.PageNumber;
                     }
                 }
 
