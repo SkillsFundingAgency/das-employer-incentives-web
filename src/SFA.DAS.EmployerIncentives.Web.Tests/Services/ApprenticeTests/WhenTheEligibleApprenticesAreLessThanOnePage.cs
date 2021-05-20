@@ -51,6 +51,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         {
             // Arrange
             var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageSize: 50, offset: 0, startIndex: 1);
+            var pagination = new PagingInformation
+            {
+                Offset = 0,
+                PageNumber = 1,
+                StartIndex = 1
+            };
+            _paginationService.Setup(x => x.GetPagingInformation(query)).ReturnsAsync(pagination);
 
             var apprenticeships = _fixture.CreateMany<ApprenticeDto>(49).ToList();
             var eligibleApprenticeships = new EligibleApprenticesDto
