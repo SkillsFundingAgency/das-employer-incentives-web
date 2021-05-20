@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
             var legalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
-            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity?.VrfCaseStatus, legalEntity?.VrfVendorId));        
+            return View("Home", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity == null || legalEntity.BankDetailsRequired));
         }
 
         [Route("/signout")]
