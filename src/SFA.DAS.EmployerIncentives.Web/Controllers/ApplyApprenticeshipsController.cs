@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("remove-ineligible-apprentices/{applicationId}")]
         public async Task<IActionResult> RemoveIneligibleApprenticeships(string accountId, Guid applicationId)
         {

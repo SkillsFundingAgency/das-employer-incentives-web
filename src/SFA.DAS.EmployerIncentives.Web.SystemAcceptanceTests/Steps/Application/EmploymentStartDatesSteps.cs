@@ -393,12 +393,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer accepts to remove ineligible apprenticeships from the application")]
         public async Task WhenTheEmployerAcceptsToRemoveIneligibleApprenticeshipsFromTheApplication()
         {
-            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
             var url = $"/{_data.HashedAccountId}/apply/remove-ineligible-apprentices/{_data.ApplicationId}";
-
-            var form = new KeyValuePair<string, string>("SelectedApprenticeships", apprenticeships.Select(x => x.Id).ToString());
-
-            _response = await _testContext.WebsiteClient.PostFormAsync(url, form);
+            _response = await _testContext.WebsiteClient.GetAsync(url);
         }
 
         [Then(@"the employer is asked to confirm their apprenticeships selection")]
