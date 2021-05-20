@@ -4,16 +4,14 @@
     {
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
-        public int PageNumber { get; }
         public int PageSize { get; }
         public int Offset { get; }
         public int StartIndex { get; }
         
-        public ApprenticesQuery(string accountId, string accountLegalEntityId, int pageNumber, int pageSize, int offset, int startIndex)
+        public ApprenticesQuery(string accountId, string accountLegalEntityId, int pageSize, int offset, int startIndex)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
-            PageNumber = pageNumber;
             PageSize = pageSize;
             Offset = offset;
             StartIndex = startIndex;

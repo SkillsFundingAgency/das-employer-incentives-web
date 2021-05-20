@@ -39,9 +39,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, int pageNumber = 1, int offset = 0, int startIndex = 1)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId, int offset = 0, int startIndex = 1)
         {
-            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId, pageNumber, _webConfiguration.ApprenticeshipsPageSize, offset, startIndex);
+            var model = await GetInitialSelectApprenticeshipsViewModel(accountId, accountLegalEntityId, _webConfiguration.ApprenticeshipsPageSize, offset, startIndex);
 
             if (!model.Apprenticeships.Any())
             {
@@ -63,19 +63,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 await ProcessSelectedApprenticeships(form);
             }
-
-            var startIndex = CalculateStartIndex(form);
-
-            var model = await GetSelectApprenticeshipsViewModel(form.AccountId, form.ApplicationId, form.PageNumber, _webConfiguration.ApprenticeshipsPageSize, form.CurrentPage, form.Offset, startIndex);
+            
+            var model = await GetSelectApprenticeshipsViewModel(form.AccountId, form.ApplicationId, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.RequestedStartIndex);
 
             return View(model);
         }
 
         [HttpGet]
         [Route("select-apprentices/{applicationId}")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId, int pageNumber = 1, int currentPage = 1, int offset = 0, int startIndex = 1)
+        public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId, int offset = 0, int startIndex = 1)
         {
-            var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId, pageNumber, _webConfiguration.ApprenticeshipsPageSize, currentPage, offset, startIndex);
+            var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId, _webConfiguration.ApprenticeshipsPageSize, offset, startIndex);
 
             if (!model.Apprenticeships.Any())
             {
@@ -89,10 +87,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("select-apprentices/{applicationId}")]
         public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest form, Guid applicationId)
         {
-            var startIndex = CalculateStartIndex(form);
             await ProcessSelectedApprenticeships(form);
 
-            var model = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, form.PageNumber, _webConfiguration.ApprenticeshipsPageSize, form.CurrentPage, form.Offset, startIndex);
+            var model = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.RequestedStartIndex);
 
             return View(model);
         }
@@ -135,7 +132,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (!application.Apprentices.Any())
             {
-                var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, form.CurrentPage, _webConfiguration.ApprenticeshipsPageSize, form.CurrentPage, form.Offset, form.StartIndex);
+                var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.StartIndex);
                 ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
                 return View("SelectApprenticeships", viewModel);
@@ -157,28 +154,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(viewModel);
         }
 
-        private int CalculateStartIndex(SelectApprenticeshipsRequest form)
-        {
-            var startIndex = form.StartIndex;
-            if (form.PageNumber > form.CurrentPage)
-            {
-                startIndex = form.StartIndex + _webConfiguration.ApprenticeshipsPageSize;
-            }
-            else if (form.PageNumber < form.CurrentPage)
-            {
-                if (form.PageNumber == 1)
-                {
-                    startIndex = 1;
-                }
-                else
-                {
-                    startIndex = form.StartIndex - _webConfiguration.ApprenticeshipsPageSize;
-                }
-            }
-
-            return startIndex;
-        }
-
         private async Task ProcessSelectedApprenticeships(SelectApprenticeshipsRequest form)
         {
             if (form.SelectedApprenticeships == null)
@@ -189,7 +164,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var apprenticeshipIds = application.Apprentices.Select(x => x.ApprenticeshipId).ToList();
 
             var availableApprenticeships = await GetInitialSelectApprenticeshipsViewModel(form.AccountId,
-                application.AccountLegalEntityId, form.CurrentPage, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.StartIndex);
+                application.AccountLegalEntityId, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.StartIndex);
             var unselectedApprenticeships = availableApprenticeships.Apprenticeships
                 .Where(x => !form.SelectedApprenticeships.Contains(x.Id)).Select(x => x.Id);
             var previousSelectedApprenticeships = application.Apprentices
@@ -217,9 +192,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
         }
         
-        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId, int pageNumber, int pageSize, int offset, int startIndex)
+        private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId, int pageSize, int offset, int startIndex)
         {
-            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId, pageNumber, pageSize, offset, startIndex));
+            var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId, pageSize, offset, startIndex));
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
             
             return new SelectApprenticeshipsViewModel
@@ -228,7 +203,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountLegalEntityId = accountLegalEntityId,
                 Apprenticeships = apprenticeships.Apprenticeships.OrderBy(a => a.DisplayName),
                 OrganisationName = legalEntityName,
-                CurrentPage = apprenticeships.PageNumber,
                 PageSize = pageSize,
                 MorePages = apprenticeships.MorePages,
                 Offset = apprenticeships.Offset,
@@ -236,10 +210,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             };
         }
 
-        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, int pageNumber, int pageSize, int currentPage, int offset, int startIndex, bool showSelected = true)
+        private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, int pageSize, int offset, int startIndex, bool showSelected = true)
         {
             var application = await _applicationService.Get(accountId, applicationId);
-            var response = await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId, pageNumber, pageSize, offset, startIndex));
+            var response = await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId, pageSize, offset, startIndex));
             var apprenticeships = response.Apprenticeships.ToList();
 
             if (showSelected)
@@ -254,7 +228,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ApplicationId = applicationId,
                 Apprenticeships = apprenticeships.OrderBy(a => a.DisplayName),
                 OrganisationName = legalEntityName,
-                CurrentPage = response.PageNumber,
                 PageSize = pageSize,
                 MorePages = response.MorePages,
                 Offset = response.Offset,

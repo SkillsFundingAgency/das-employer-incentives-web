@@ -123,6 +123,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services
                 .AddHashingService()
                 .AddEmployerIncentivesService()
+                .AddSessionService()
                 .AddDataEncryptionService()
                 .AddVerificationService()
                 .AddDataProtection(_configuration);

@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         private HttpClient _httpClient;
         private QueuedFakeHttpMessageHandler _httpClientHandlerFake;
         private Mock<IHashingService> _hashingService;
+        private Mock<IPageTrackingService> _pageTrackingService;
         private string _baseUrl = "http://www.someurl.com";
         private ApprenticesService _sut;
         private string _accountId;
@@ -38,7 +39,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
             _hashingService = new Mock<IHashingService>();
-            _sut = new ApprenticesService(_httpClient, _hashingService.Object);
+            _pageTrackingService = new Mock<IPageTrackingService>();
+            _sut = new ApprenticesService(_httpClient, _hashingService.Object, _pageTrackingService.Object);
 
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
@@ -48,7 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
         public async Task Then_the_apprenticeships_are_retrieved_in_a_single_request()
         {
             // Arrange
-            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageNumber: 1, pageSize: 50, offset: 0, startIndex: 1);
+            var query = new ApprenticesQuery(_accountId, _accountLegalEntityId, pageSize: 50, offset: 0, startIndex: 1);
 
             var apprenticeships = _fixture.CreateMany<ApprenticeDto>(49).ToList();
             var eligibleApprenticeships = new EligibleApprenticesDto

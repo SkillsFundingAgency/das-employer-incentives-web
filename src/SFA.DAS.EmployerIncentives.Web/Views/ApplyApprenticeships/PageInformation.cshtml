@@ -1,8 +1,8 @@
 ﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships.SelectApprenticeshipsViewModel
 
 @{
-    var previousPage = Model.CurrentPage - 1;
-    var nextPage = Model.CurrentPage + 1;
+    var previousPageIndex = Model.StartIndex - Model.PageSize;
+    var nextPageIndex = Model.StartIndex + Model.PageSize;
 }
 
 @if(Model.PreviousPages || Model.MorePages)
@@ -12,11 +12,11 @@
         <p class="govuk-body">
             @if (Model.PreviousPages)
             {
-                <button type="submit" id="previousPage" name="pageNumber" value="@previousPage" asp-action="SelectApprenticeships" class="das-button--inline-link govuk-!-margin-right-2">Previous <span class="govuk-visually-hidden">page of apprentices</span></button> 
+                <button type="submit" id="previousPage" name="requestedStartIndex" value="@previousPageIndex" asp-action="SelectApprenticeships" class="das-button--inline-link govuk-!-margin-right-2">Previous <span class="govuk-visually-hidden">page of apprentices</span></button> 
             }
             @if (Model.MorePages)
             {
-                <button type="submit" id="nextPage" name="pageNumber" value="@nextPage" asp-action="SelectApprenticeships" class="das-button--inline-link">Next <span class="govuk-visually-hidden">page of apprentices</span></button>
+                <button type="submit" id="nextPage" name="requestedStartIndex" value="@nextPageIndex" asp-action="SelectApprenticeships" class="das-button--inline-link">Next <span class="govuk-visually-hidden">page of apprentices</span></button>
             }
         </p>
     </nav>

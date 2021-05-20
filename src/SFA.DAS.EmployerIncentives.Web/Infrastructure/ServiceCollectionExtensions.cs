@@ -25,6 +25,8 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Session;
+using IHttpContextAccessor = Microsoft.AspNetCore.Http.IHttpContextAccessor;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {
@@ -129,14 +131,26 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             return serviceCollection;
         }
 
+        public static IServiceCollection AddSessionService(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddTransient<ISessionService>(s =>
+            {
+                var settings = s.GetService<IOptions<WebConfigurationOptions>>().Value;
+                return new SessionService(s.GetService<IHttpContextAccessor>(), settings.EnvironmentName);
+            });
+
+            return serviceCollection;
+        }
+
         public static IServiceCollection AddEmployerIncentivesService(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IDocumentClientFactory, DocumentClientFactory>();
             serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
             serviceCollection.AddTransient<IUserService, UserService>();
 
+            serviceCollection.AddSingleton<IPageTrackingService, PageTrackingService>();
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
+            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>(), s.GetRequiredService<IPageTrackingService>()));
             serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));

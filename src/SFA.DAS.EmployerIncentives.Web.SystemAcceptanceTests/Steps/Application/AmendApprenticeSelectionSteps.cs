@@ -151,8 +151,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 AccountId = _data.HashedAccountId, 
                 AccountLegalEntityId = _data.HashedAccountLegalEntityId, 
                 ApplicationId = _data.ApplicationId, 
-                SelectedApprenticeships = null, 
-                CurrentPage = 1
+                SelectedApprenticeships = null
             };
             SetupEndpointForUpdateApplication();
 

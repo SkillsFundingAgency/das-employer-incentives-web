@@ -13,5 +13,7 @@
         public virtual string AchieveServiceBaseUrl { get; set; }
         public virtual string DataEncryptionServiceKey { get; set; }
         public virtual int ApprenticeshipsPageSize { get; set; }
+        public virtual string EnvironmentName { get; set; }
+        public virtual string SessionRedisConnectionString { get; set; }
     }
 }

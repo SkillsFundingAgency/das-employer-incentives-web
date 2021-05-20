@@ -26,7 +26,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         {
             return new EligibleApprenticeshipsModel
             {
-                PageNumber = dto.PageNumber,
                 PageSize = dto.PageSize,
                 MorePages = dto.MorePages,
                 Apprenticeships = dto.Apprenticeships.ToApprenticeshipModel(hashingService),
