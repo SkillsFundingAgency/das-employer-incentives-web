@@ -363,7 +363,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().HaveTitle("Not eligible for the payment");
             model.AllInEligible.Should().BeFalse();
             model.Apprentices.Count.Should().Be(2);
-            _response.Should().HaveLink("[data-linktype='noneligible-continue']", $"/{_data.HashedAccountId}/apply/remove-ineligible-apprentices/{_data.ApplicationId}");
+            _response.Should().HaveLink("[data-linktype='noneligible-continue']", $"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=false");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 
@@ -393,7 +393,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer accepts to remove ineligible apprenticeships from the application")]
         public async Task WhenTheEmployerAcceptsToRemoveIneligibleApprenticeshipsFromTheApplication()
         {
-            var url = $"/{_data.HashedAccountId}/apply/remove-ineligible-apprentices/{_data.ApplicationId}";
+            var url = $"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=false";
             _response = await _testContext.WebsiteClient.GetAsync(url);
         }
 

@@ -54,11 +54,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
 
 
             // Act
-            var result = await _sut.RemoveIneligibleApprenticeships(_hashedAccountId, _applicationId) as ViewResult;
+            var result = await _sut.ConfirmApprenticeships(_hashedAccountId, _applicationId, false) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
-            result.ViewName.Should().Be("ConfirmApprenticeships");
             var model = result.Model as ApplicationConfirmationViewModel;
             Assert.IsNotNull(model);
             model.Apprentices.Count.Should().Be(2);

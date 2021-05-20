@@ -95,26 +95,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
-            if(viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
+
+            if (all && viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
             {
                 return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
             }
 
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        [Route("remove-ineligible-apprentices/{applicationId}")]
-        public async Task<IActionResult> RemoveIneligibleApprenticeships(string accountId, Guid applicationId)
-        {
-            var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
-
             viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
-
-            return View("ConfirmApprenticeships", viewModel);
+            
+            return View(viewModel);
         }
 
         [HttpPost]
