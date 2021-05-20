@@ -135,8 +135,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         {
             serviceCollection.AddTransient<ISessionService>(s =>
             {
-                var settings = s.GetService<IOptions<WebConfigurationOptions>>().Value;
-                return new SessionService(s.GetService<IHttpContextAccessor>(), settings.EnvironmentName);
+                return new SessionService(s.GetService<IHttpContextAccessor>());
             });
 
             return serviceCollection;

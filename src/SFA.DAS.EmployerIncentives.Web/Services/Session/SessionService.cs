@@ -7,24 +7,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Session
     public class SessionService : ISessionService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _environment;
 
-        public SessionService(IHttpContextAccessor httpContextAccessor, string environment)
+        public SessionService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _environment = environment;
         }
 
         public void Set(string key, object value)
         {
-            _httpContextAccessor.HttpContext.Session.SetString(_environment + "_" + key,
-                JsonConvert.SerializeObject(value));
+            _httpContextAccessor.HttpContext.Session.SetString(key, JsonConvert.SerializeObject(value));
         }
 
         public T Get<T>(string key)
         {
             var session = _httpContextAccessor.HttpContext.Session;
-            key = _environment + "_" + key;
 
             if (session.Keys.All(k => k != key))
             {
