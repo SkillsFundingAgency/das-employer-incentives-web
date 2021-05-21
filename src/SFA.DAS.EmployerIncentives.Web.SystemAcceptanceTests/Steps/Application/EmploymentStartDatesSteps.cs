@@ -404,7 +404,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ApplicationConfirmationViewModel;
             model.Should().NotBeNull();
-            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+            _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=true");
             model.Should().HaveTitle("Confirm apprentices");
         }
 

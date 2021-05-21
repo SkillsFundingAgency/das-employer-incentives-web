@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
 
-            if (all && viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
+            if (all && viewModel.HasIneligibleApprentices)
             {
                 return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
             }
