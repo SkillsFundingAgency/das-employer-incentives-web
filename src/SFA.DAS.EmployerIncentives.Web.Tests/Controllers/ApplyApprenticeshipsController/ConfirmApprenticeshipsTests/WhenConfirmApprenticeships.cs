@@ -141,7 +141,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
 
             // Assert
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as NotEligibileViewModel;
+            var model = viewResult.Model as NotEligibleViewModel;
             model.Should().NotBeNull();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);
@@ -192,7 +192,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
 
             // Assert
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as NotEligibileViewModel;
+            var model = viewResult.Model as NotEligibleViewModel;
             model.Should().NotBeNull();
             model.AccountId.Should().Be(_accountId);
             model.AccountLegalEntityId.Should().Be(_accountLegalEntityId);

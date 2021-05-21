@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
 {
-    public class NotEligibileViewModel : IViewModel
+    public class NotEligibleViewModel : IViewModel
     {
         public string Title => "Not eligible for the payment";
 
@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string OrganisationName { get; set; }
         public bool AllInEligible { get; set; }
 
-        public NotEligibileViewModel(ApplicationConfirmationViewModel applicationConfirmationViewModel) 
+        public NotEligibleViewModel(ApplicationConfirmationViewModel applicationConfirmationViewModel) 
         {
             ApplicationId = applicationConfirmationViewModel.ApplicationId;
             AccountId = applicationConfirmationViewModel.AccountId;
