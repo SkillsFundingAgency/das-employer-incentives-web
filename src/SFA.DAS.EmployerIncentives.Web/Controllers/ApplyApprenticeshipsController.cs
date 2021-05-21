@@ -95,9 +95,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+
+            if (all && viewModel.HasIneligibleApprentices)
+            {
+                return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
+            }
+
+            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
+            
             return View(viewModel);
         }
 
@@ -165,9 +173,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                                                         apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
+        private ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
         {
-            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            return new ApplicationApprenticeship
             {
                 ApprenticeshipId = apprentice.ApprenticeshipId,
                 CourseName = apprentice.CourseName,
@@ -176,7 +184,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
                 Uln = apprentice.Uln,
-                EmploymentStartDate = apprentice.EmploymentStartDate
+                EmploymentStartDate = apprentice.EmploymentStartDate,
+                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
             };
         }
     }

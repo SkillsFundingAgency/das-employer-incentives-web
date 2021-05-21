@@ -10,9 +10,10 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
 
-        public Decimal TotalPaymentAmount { get; }
+        public decimal TotalPaymentAmount { get; }
 
-        public List<ApplicationApprenticeship> Apprentices { get; } 
+        public List<ApplicationApprenticeship> Apprentices { get; }
+        public bool HasIneligibleApprentices { get; }
 
         public bool BankDetailsRequired { get; }
         public bool NewAgreementRequired { get; }
@@ -31,19 +32,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             BankDetailsRequired = bankDetailsRequired;
             NewAgreementRequired = newAgreementRequired;
             OrganisationName = organisationName;
-        }
-
-        public class ApplicationApprenticeship
-        {
-            public string ApprenticeshipId { get; set; }
-            public string DisplayName => $"{FirstName} {LastName}";
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string CourseName { get; set; }
-            public DateTime StartDate { get; set; }
-            public decimal ExpectedAmount { get; set; }
-            public long Uln { get; set; }
-            public DateTime? EmploymentStartDate { get; set; }
+            HasIneligibleApprentices = Apprentices.Any(a => !a.HasEligibleEmploymentStartDate);
         }
     }
 }

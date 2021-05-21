@@ -32,6 +32,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public int? EmploymentStartDateDay { get; set; }
         public int? EmploymentStartDateMonth { get; set; }
         public int? EmploymentStartDateYear { get; set; }
-    }
-    
+        public bool HasEligibleEmploymentStartDate { get; set; }        
+    }    
 }
