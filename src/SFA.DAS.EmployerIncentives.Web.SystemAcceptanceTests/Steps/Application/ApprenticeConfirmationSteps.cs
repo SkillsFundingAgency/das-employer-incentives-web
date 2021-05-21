@@ -41,18 +41,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             SetupServiceMocks(_testData.ApplicationResponse);
         }
 
-        [Given(@"an employer has selected an apprentice within the extension window but has not signed the extension agreement")]
-        public void GivenAnEmployerHasSelectedAnApprenticeWithinTheExtensionWindowButHasNotSignedTheAgreement()
-        {
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
-            SetupServiceMocks(_testData.GetApplicationResponseWithFirstTwoApprenticesSelectedAndExtensionNotSigned);
-
-            _newAgreementRequired = true;
-        }
-
         [Given(@"an employer has selected an apprentice within the extension window and has signed the extension agreement")]
         public void GivenAnEmployerHasSelectedAnApprenticeWithinTheExtensionWindowAndHasSignedTheAgreement()
         {
@@ -120,22 +108,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as DeclarationViewModel;
             model.Should().NotBeNull();
             model.Title.Should().Be("Declaration");
-            model.ApplicationId.Should().Be(_testData.ApplicationId);
-            model.AccountId.Should().Be(_testData.HashedAccountId);
-        }
-
-        [Then(@"the employer is asked to sign the extension agreement")]
-        public void ThenTheEmployerIsAskedToSignTheExtensionAgreement()
-        {
-            _continueNavigationResponse.EnsureSuccessStatusCode();
-            _continueNavigationResponse.Should().HavePathAndQuery($"/{_testData.HashedAccountId}/apply/accept-new-agreement/{_testData.ApplicationId}");
-
-            var viewResult = _testContext.ActionResult.LastViewResult;
-
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as NewAgreementRequiredViewModel;
-            model.Should().NotBeNull();
-            model.Title.Should().Be($"{_testData.LegalEntity.LegalEntityName} needs to accept a new employer agreement");
             model.ApplicationId.Should().Be(_testData.ApplicationId);
             model.AccountId.Should().Be(_testData.HashedAccountId);
         }
