@@ -36,8 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _applicationServiceMock = new Mock<IApplicationService>();
 
             _sut = new Web.Controllers.ApplyApprenticeshipsController(_apprenticesServiceMock.Object,
-                _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(),
-                Mock.Of<IOptions<ExternalLinksConfiguration>>());
+                _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>());
         }
 
         [Test]

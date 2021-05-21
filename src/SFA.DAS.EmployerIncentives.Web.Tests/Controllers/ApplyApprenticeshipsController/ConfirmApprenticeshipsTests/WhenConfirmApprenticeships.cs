@@ -47,8 +47,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             _sut = new Web.Controllers.ApplyApprenticeshipsController(
                 _mockApprenticesService.Object,
                 _mockApplicationService.Object,
-                _mockLegalEntitiesService.Object,
-                _mockConfiguration.Object);
+                _mockLegalEntitiesService.Object);
         }
 
         [Test()]

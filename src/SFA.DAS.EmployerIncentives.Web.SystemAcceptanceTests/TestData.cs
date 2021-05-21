@@ -1,5 +1,4 @@
-﻿using Microsoft.OData.Edm;
-using SFA.DAS.EmployerIncentives.Web.Models;
+﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System;
@@ -109,7 +108,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
                 public long AccountLegalEntityId1 => 6006;
                 public string HashedAccountLegalEntityId1 => "V6PNBL";
-                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4 };
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
                 
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
@@ -176,7 +175,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
                 public long AccountLegalEntityId1 => 6008;
                 public string HashedAccountLegalEntityId1 => "MYJPDY";
-                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4 };
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
 
                 public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
@@ -243,7 +242,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
                     public long AccountLegalEntityId1 => 6008;
                     public string HashedAccountLegalEntityId1 => "MYJPDY";
-                    public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}", HasSignedIncentivesTerms = true, SignedAgreementVersion = 4 };
+                    public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
 
                     public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
                     public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
