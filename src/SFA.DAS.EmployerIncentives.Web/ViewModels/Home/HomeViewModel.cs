@@ -1,20 +1,39 @@
-﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
+﻿using System;
+
+namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
 {
     public class HomeViewModel : IViewModel
     {
-        public string AccountId { get; }
-        public string AccountLegalEntityId { get; }
-
         public string Title => "Apply for the hire a new apprentice payment";
 
+        public string AccountId { get; }
+        public string AccountLegalEntityId { get; }
+        public bool NewAgreementRequired { get; }
+        public bool BankDetailsRequired { get; }        
+        public string AccountsAgreementsUrl { get; }
         public string OrganisationName { get; set; }
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName)
+        private string ManageApprenticeshipSiteUrl { get; }        
+
+        public HomeViewModel(
+            string accountId, 
+            string accountLegalEntityId, 
+            string organisationName,             
+            bool newAgreementRequired, 
+            string manageApprenticeshipSiteUrl,
+            bool bankDetailsRequired)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             OrganisationName = organisationName;
+            NewAgreementRequired = newAgreementRequired;
+            ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
+            if (!manageApprenticeshipSiteUrl.EndsWith("/"))
+            {
+                ManageApprenticeshipSiteUrl += "/";
+            }
+            AccountsAgreementsUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            BankDetailsRequired = bankDetailsRequired;
         }
-
     }
 }

@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
     {
         private Web.Controllers.HomeController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
+        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -26,7 +27,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         public void SetUp()
         {
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object);
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = "Https://manage-apprenticeships.com" };
+            _configuration.Setup(x => x.Value).Returns(config);
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object);
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
