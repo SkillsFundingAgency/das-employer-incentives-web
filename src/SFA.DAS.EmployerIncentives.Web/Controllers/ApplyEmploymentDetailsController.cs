@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             
             var confirmEmploymentDetailsRequest = CreateEmploymentDetailsRequest(application, request);
 
-            await _applicationService.ConfirmEmploymentDetails(confirmEmploymentDetailsRequest);
+            await _applicationService.SaveApprenticeshipDetails(confirmEmploymentDetailsRequest);
 
             return RedirectToAction("ConfirmApprenticeships", "ApplyApprenticeships", new { request.AccountId, request.ApplicationId });
         }
@@ -105,24 +105,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return apprentices;
         }
 
-        private ConfirmEmploymentDetailsRequest CreateEmploymentDetailsRequest(ApplicationModel application, EmploymentStartDatesRequest request)
+        private ApprenticeshipDetailsRequest CreateEmploymentDetailsRequest(ApplicationModel application, EmploymentStartDatesRequest request)
         {
-            var confirmRequest = new ConfirmEmploymentDetailsRequest
+            var confirmRequest = new ApprenticeshipDetailsRequest
             {
                 AccountId = _hashingService.DecodeValue(application.AccountId),
                 ApplicationId = application.ApplicationId,
-                EmploymentDetails = new List<ApprenticeEmploymentDetailsDto>()
+                ApprenticeshipDetails = new List<ApprenticeshipDetailsDto>()
             };
 
             for(var index = 0; index < request.EmploymentStartDateDays.Count; index ++)
             {
                 var employmentStartDate = new DateTime(request.EmploymentStartDateYears[index].Value, request.EmploymentStartDateMonths[index].Value, request.EmploymentStartDateDays[index].Value);
-                var employmentDetails = new ApprenticeEmploymentDetailsDto
+                var employmentDetails = new ApprenticeshipDetailsDto
                 {
                     ApprenticeId = _hashingService.DecodeValue(application.Apprentices[index].ApprenticeshipId),
                     EmploymentStartDate = employmentStartDate
                 };
-                confirmRequest.EmploymentDetails.Add(employmentDetails);
+                confirmRequest.ApprenticeshipDetails.Add(employmentDetails);
             }
 
             return confirmRequest;
