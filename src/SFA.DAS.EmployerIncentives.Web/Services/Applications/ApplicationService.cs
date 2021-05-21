@@ -1,7 +1,6 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
@@ -86,6 +85,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return accountLegalEntityId;
         }
 
+        public async Task ConfirmEmploymentDetails(ConfirmEmploymentDetailsRequest request)
+        {
+            var url = OuterApiRoutes.Application.ConfirmEmploymentDetails(request.AccountId, request.ApplicationId);
+            using var response = await _client.PatchAsJsonAsync(url, request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
         private ApplicationModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationModel(applicationId, accountId,
@@ -104,7 +111,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 LastName = apprentice.LastName,
                 ExpectedAmount = apprentice.TotalIncentiveAmount,
                 StartDate = apprentice.PlannedStartDate,
-                Uln = apprentice.Uln
+                Uln = apprentice.Uln,
+                EmploymentStartDate = apprentice.EmploymentStartDate
             };
         }
 
@@ -129,5 +137,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), userEmail, userName);
         }
+
     }
 }

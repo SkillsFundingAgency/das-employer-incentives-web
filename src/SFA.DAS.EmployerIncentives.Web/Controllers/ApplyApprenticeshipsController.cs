@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
+                return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 await _applicationService.Update(applicationId, form.AccountId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
+                return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, false);
@@ -157,7 +157,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 LastName = apprentice.LastName,
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
-                Uln = apprentice.Uln
+                Uln = apprentice.Uln,
+                EmploymentStartDate = apprentice.EmploymentStartDate
             };
         }
     }

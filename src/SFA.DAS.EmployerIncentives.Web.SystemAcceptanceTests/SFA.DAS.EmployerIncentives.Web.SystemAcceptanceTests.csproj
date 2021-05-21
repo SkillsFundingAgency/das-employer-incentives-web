@@ -31,6 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\Application\EmploymentStartDates.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EmploymentStartDates.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Hub\AmendBankDetails.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>AmendBankDetails.feature.cs</LastGenOutput>
@@ -67,6 +71,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\Application\EmploymentStartDates.feature.cs">
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Update="Features\Hub\AmendBankDetails.feature.cs">
       <DesignTime>True</DesignTime>
     </Compile>
