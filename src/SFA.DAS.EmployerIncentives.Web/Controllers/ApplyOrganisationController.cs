@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
 
-            if (legalEntity.HasSignedIncentiveTerms)
+            if (legalEntity.IsAgreementSigned)
             {
                 return RedirectToAction("SelectApprenticeships", "ApplyApprenticeships", new { accountId, accountLegalEntityId });
             }

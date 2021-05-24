@@ -6,8 +6,6 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -20,17 +18,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
-        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
-            ILegalEntitiesService legalEntityService,
-            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
+            ILegalEntitiesService legalEntityService) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
-            _configuration = configuration.Value;
         } 
 
         [HttpGet]
@@ -95,35 +90,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
-            if(viewModel.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate))
-            {                
-                return View("NotEligibleApprenticeships", new NotEligibileViewModel(viewModel));
+
+            if (all && viewModel.HasIneligibleApprentices)
+            {
+                return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
             }
 
+            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
+            
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId, bool newAgreementRequired)
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
         {
-            if(newAgreementRequired)
-                return RedirectToAction("NewAgreementRequired", new { accountId, applicationId });
-
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
-        }
-
-        [HttpGet]
-        [Route("accept-new-agreement/{applicationId}")]
-        public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
-        {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
-            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
-            return View(viewModel);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
@@ -167,7 +152,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var apprenticeships = application.Apprentices.Select(MapFromApplicationApprenticeDto);
             return new ApplicationConfirmationViewModel(applicationId, accountId, application.AccountLegalEntityId,
-                                                        apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
+                                                        apprenticeships, application.BankDetailsRequired, legalEntityName);
         }
 
         private ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)

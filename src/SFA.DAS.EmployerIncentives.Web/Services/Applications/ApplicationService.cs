@@ -5,9 +5,11 @@ using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Exceptions;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
@@ -64,6 +66,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             var url = OuterApiRoutes.Application.ConfirmApplication(request.AccountId);
             using var response = await _client.PatchAsJsonAsync(url, request);
 
+            if (response.StatusCode == HttpStatusCode.Conflict)
+            {
+                throw new UlnAlreadySubmittedException();
+            }
             response.EnsureSuccessStatusCode();
         }
 

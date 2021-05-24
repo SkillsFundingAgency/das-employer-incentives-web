@@ -7,7 +7,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
 {

@@ -32,3 +32,10 @@ Scenario: An employer provides all ineligible employment start dates for the app
 	And the employer has selected apprentices for the application
 	When the employer supplies all ineligible start dates for the selected apprentices
 	Then the employer is informed all of their selected apprentices are ineligible
+
+Scenario: An employer accepts to remove ineligible apprenticeships from the application
+	Given an initial application has been created
+	And the employer has selected apprentices for the application
+	And the employer is informed one or more of their selected apprentices are ineligible
+	When the employer accepts to remove ineligible apprenticeships from the application
+	Then the employer is asked to confirm their apprenticeships selection

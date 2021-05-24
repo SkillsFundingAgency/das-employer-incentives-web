@@ -8,7 +8,14 @@
     ViewData["ZenDeskLabels"] = "ei-confirmapprentices";
 }
 
-<a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+@if (Model.HasIneligibleApprentices)
+{
+    <a asp-action="ConfirmApprenticeships" asp-route-all="true" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+}
+else
+{
+    <a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+}
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -20,7 +27,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
                 @{
                     var pluraliseApprentice = Model.Apprentices.Count() == 1 ? "apprentice" : "apprentices";
-                } 
+                }
                 @Model.Apprentices.Count() @pluraliseApprentice
             </h2>
             <p class="govuk-body">
@@ -29,7 +36,6 @@
 
             <form asp-action="DisplayDeclaration" method="post">
                 @Html.AntiForgeryToken()
-                @Html.Hidden("newAgreementRequired", @Model.NewAgreementRequired)
 
                 <table class="govuk-table govuk-!-margin-bottom-3">
                     <thead class="govuk-table__head">
@@ -43,16 +49,16 @@
                         @foreach (var apprenticeship in Model.Apprentices)
                         {
                             <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">
-                                @apprenticeship.DisplayName
-                                <p class="govuk-body govuk-!-font-weight-regular das-!-color-dark-grey govuk-!-margin-bottom-0">ULN: @apprenticeship.Uln</p>
-                            </th>
-                            <td class="govuk-table__cell">
-                                @if (apprenticeship.EmploymentStartDate.HasValue)
-                                {
-                                    @apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")
-                                }
-                            </td>
+                                <th scope="row" class="govuk-table__header">
+                                    @apprenticeship.DisplayName
+                                    <p class="govuk-body govuk-!-font-weight-regular das-!-color-dark-grey govuk-!-margin-bottom-0">ULN: @apprenticeship.Uln</p>
+                                </th>
+                                <td class="govuk-table__cell">
+                                    @if (apprenticeship.EmploymentStartDate.HasValue)
+                                    {
+                                        @apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")
+                                    }
+                                </td>
                                 <td class="govuk-table__cell">@apprenticeship.CourseName</td>
                             </tr>
                         }
