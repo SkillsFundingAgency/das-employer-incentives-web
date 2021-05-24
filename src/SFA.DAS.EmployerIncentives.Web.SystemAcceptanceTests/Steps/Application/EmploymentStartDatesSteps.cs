@@ -379,7 +379,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().HaveTitle("Not eligible for the payment");
             model.AllInEligible.Should().BeTrue();
             model.Apprentices.Count.Should().Be(3);
-            _response.Should().HaveLink("[data-linktype='noneligible-cancel']", "/");
+            _response.Should().HaveLink("[data-linktype='noneligible-cancel']", $"/{_data.HashedAccountId}/{_data.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 

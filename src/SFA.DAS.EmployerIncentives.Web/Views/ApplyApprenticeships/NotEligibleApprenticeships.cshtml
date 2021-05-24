@@ -33,18 +33,19 @@
                 They will be removed from the application. If you need to correct the details, go back to edit.
             </p>
 
-            @if (Model.AllInEligible)
-            {
-                <a href="/" role="button" draggable="false" class="govuk-button" data-module="govuk-button" data-linktype="noneligible-cancel">
-                    Cancel application
-                </a>
-            }
-            else
-            {
-                <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
-                    Continue
-                </a>
-            }
+
+                @if (Model.AllInEligible)
+                {
+                    <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-cancel">
+                        Cancel application
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
+                        Continue
+                    </a>
+                }
+            </div>
         </div>
-    </div>
-</main>
+    </main>
