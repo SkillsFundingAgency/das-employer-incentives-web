@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IHashingService _hashingService;
         private readonly IVerificationService _verificationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private ExternalLinksConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public BankDetailsController(IVerificationService verificationService,
             IEmailService emailService,
