@@ -1,6 +1,6 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
@@ -45,7 +45,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         public async Task Then_an_error_is_displayed_if_any_dates_are_invalid()
         {
             // Arrange
+            var apprentices = _fixture.CreateMany<ApplicationApprenticeshipModel>(3).ToList();
+
             var request = _fixture.Create<EmploymentStartDatesRequest>();
+            request.ApprenticeshipIds = new List<string>
+            {
+                apprentices[0].ApprenticeshipId,
+                apprentices[1].ApprenticeshipId,
+                apprentices[2].ApprenticeshipId
+            };
             request.EmploymentStartDateDays = new List<int?>
             {
                 2,
@@ -64,8 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
                 2021,
                 2021
             };
-            
-            var apprentices = _fixture.CreateMany<ApplicationApprenticeshipModel>(3);
+
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
                 apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
             _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
@@ -100,7 +107,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         public async Task Then_the_employment_start_dates_are_submitted()
         {
             // Arrange
+            var apprentices = _fixture.CreateMany<ApplicationApprenticeshipModel>(3).ToList();
+
             var request = _fixture.Create<EmploymentStartDatesRequest>();
+            request.ApprenticeshipIds = new List<string>
+            {
+                apprentices[0].ApprenticeshipId,
+                apprentices[1].ApprenticeshipId,
+                apprentices[2].ApprenticeshipId
+            };
             request.EmploymentStartDateDays = new List<int?>
             {
                 2,
@@ -117,7 +132,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
                 2021
             };
 
-            var apprentices = _fixture.CreateMany<ApplicationApprenticeshipModel>(3);
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
                 apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
             _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
