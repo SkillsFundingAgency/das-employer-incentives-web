@@ -142,14 +142,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies valid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesValidStartDatesForTheSelectedApprentices()
         {
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+
             var values = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("AccountId", _data.HashedAccountId),
                 new KeyValuePair<string, string>("AccountLegalEntityId", _data.HashedAccountLegalEntityId),
                 new KeyValuePair<string, string>("ApplicationId", _data.ApplicationId.ToString()),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[0].Id),
                 new KeyValuePair<string, string>("EmploymentStartDateDays", "10"),
                 new KeyValuePair<string, string>("EmploymentStartDateMonths", "4"),
                 new KeyValuePair<string, string>("EmploymentStartDateYears", "2021"),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[1].Id),
                 new KeyValuePair<string, string>("EmploymentStartDateDays", "20"),
                 new KeyValuePair<string, string>("EmploymentStartDateMonths", "5"),
                 new KeyValuePair<string, string>("EmploymentStartDateYears", "2021")
@@ -175,14 +179,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies invalid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesInvalidStartDatesForTheSelectedApprentices()
         {
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+
             var values = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("AccountId", _data.HashedAccountId),
                 new KeyValuePair<string, string>("AccountLegalEntityId", _data.HashedAccountLegalEntityId),
                 new KeyValuePair<string, string>("ApplicationId", _data.ApplicationId.ToString()),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[0].Id),
                 new KeyValuePair<string, string>("EmploymentStartDateDays", "32"),
                 new KeyValuePair<string, string>("EmploymentStartDateMonths", "4"),
                 new KeyValuePair<string, string>("EmploymentStartDateYears", "2021"),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[1].Id),
                 new KeyValuePair<string, string>("EmploymentStartDateDays", "20"),
                 new KeyValuePair<string, string>("EmploymentStartDateMonths", "13"),
                 new KeyValuePair<string, string>("EmploymentStartDateYears", "2021")
