@@ -10,12 +10,8 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.HashingService;
 using System;
-using System.Collections.Generic;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
@@ -28,7 +24,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         private Mock<IApplicationService> _applicationService;
         private Mock<IHashingService> _hashingService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Web.Controllers.BankDetailsController _sut;
         private Fixture _fixture;
         private string _accountId;
@@ -46,9 +41,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             _applicationService = new Mock<IApplicationService>();
             _hashingService = new Mock<IHashingService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _sut = new Web.Controllers.BankDetailsController(_verificationService.Object, _emailService.Object, _applicationService.Object,
-                                                             _hashingService.Object, _legalEntitiesService.Object, _configuration.Object);
+                                                             _hashingService.Object, _legalEntitiesService.Object);
             var urlHelper = new Mock<IUrlHelper>();
             _sut.Url = urlHelper.Object;
             _sut.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
