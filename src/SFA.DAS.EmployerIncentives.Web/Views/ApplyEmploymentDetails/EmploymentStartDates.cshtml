@@ -76,6 +76,11 @@
                         @for (var index = 0; index < Model.Apprentices.Count; index++)
                         {
                             var apprentice = Model.Apprentices[index];
+                            <input value="@apprentice.ApprenticeshipId"
+                                   id="ApprenticeshhipId-@apprentice.ApprenticeshipId"
+                                   name="@EmploymentStartDatesRequest.ApprenticeshipIdsPropertyName"
+                                   type="hidden" />
+
                             <h2 class="govuk-heading-m">@apprentice.FullName</h2>
                             <p class="govuk-body govuk-!-margin-bottom-0">
                                 <span>(ULN: @apprentice.Uln)</span><br />

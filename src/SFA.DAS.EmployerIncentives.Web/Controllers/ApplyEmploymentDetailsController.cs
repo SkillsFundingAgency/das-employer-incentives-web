@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             for (var index = 0; index < startDateCount; index++)
             {
-                var apprentice = apprentices[index];
+                var apprentice = apprentices.Single(x => x.ApprenticeshipId == request.ApprenticeshipIds[index]);
                 if (request.EmploymentStartDateDays.Count > index)
                 {
                     apprentice.EmploymentStartDateDay = request.EmploymentStartDateDays[index];
@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 var employmentStartDate = new DateTime(request.EmploymentStartDateYears[index].Value, request.EmploymentStartDateMonths[index].Value, request.EmploymentStartDateDays[index].Value);
                 var employmentDetails = new ApprenticeshipDetailsDto
                 {
-                    ApprenticeId = _hashingService.DecodeValue(application.Apprentices[index].ApprenticeshipId),
+                    ApprenticeId = _hashingService.DecodeValue(request.ApprenticeshipIds[index]),
                     EmploymentStartDate = employmentStartDate
                 };
                 confirmRequest.ApprenticeshipDetails.Add(employmentDetails);
