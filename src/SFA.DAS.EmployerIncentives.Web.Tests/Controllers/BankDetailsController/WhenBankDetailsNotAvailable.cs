@@ -5,11 +5,9 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
@@ -27,7 +25,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         private Mock<IApplicationService> _applicationService;
         private Mock<IHashingService> _hashingService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private Web.Controllers.BankDetailsController _sut;
         private string _accountId;
@@ -43,15 +40,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             _applicationService = new Mock<IApplicationService>();
             _hashingService = new Mock<IHashingService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _fixture = new Fixture();
-            var config = _fixture.Create<ExternalLinksConfiguration>();
-            _configuration.Setup(x => x.Value).Returns(config);
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<long>();
             _applicationId = Guid.NewGuid();
             _emailAddress = _fixture.Create<string>();
-
         }
 
         [Test]
@@ -71,8 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             var user = new ClaimsPrincipal(identity);
 
             _sut = new Web.Controllers.BankDetailsController(_verificationService.Object, _emailService.Object,
-                _applicationService.Object, _hashingService.Object, _legalEntitiesService.Object,
-                _configuration.Object)
+                _applicationService.Object, _hashingService.Object, _legalEntitiesService.Object)
             {
                 ControllerContext = new ControllerContext()
             };
