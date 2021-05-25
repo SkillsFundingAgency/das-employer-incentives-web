@@ -97,9 +97,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             //foreach (var apprentice in model.Apprentices)
             for(var index = 0; index < model.Apprentices.Count; index++)
             {
-                model.Apprentices[index].EmploymentStartDateDay.Should().Be(request.EmploymentStartDateDays[index].Value);
-                model.Apprentices[index].EmploymentStartDateMonth.Should().Be(request.EmploymentStartDateMonths[index].Value);
-                model.Apprentices[index].EmploymentStartDateYear.Should().Be(request.EmploymentStartDateYears[index].Value);
+                model.Apprentices.Single(x => x.ApprenticeshipId == request.ApprenticeshipIds[index]).EmploymentStartDateDay.Should().Be(request.EmploymentStartDateDays[index].Value);
+                model.Apprentices.Single(x => x.ApprenticeshipId == request.ApprenticeshipIds[index]).EmploymentStartDateMonth.Should().Be(request.EmploymentStartDateMonths[index].Value);
+                model.Apprentices.Single(x => x.ApprenticeshipId == request.ApprenticeshipIds[index]).EmploymentStartDateYear.Should().Be(request.EmploymentStartDateYears[index].Value);
             }
         }
 
