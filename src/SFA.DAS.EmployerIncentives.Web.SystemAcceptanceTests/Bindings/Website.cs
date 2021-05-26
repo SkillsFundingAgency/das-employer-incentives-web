@@ -25,15 +25,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             var authHook = new Hook<AuthorizationHandlerContext>();
             _context.Hooks.Add(hook);
             _context.Hooks.Add(authHook);
-            _context.WebConfigurationOptions = new WebConfigurationOptions
+
+            if (_context.WebConfigurationOptions == null)
             {
-                AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY",
-                Hashstring = "SFA: digital apprenticeship service",                
-                RedisCacheConnectionString = "localhost",
-                AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information",
-                DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==",
-                ApprenticeshipsPageSize = 50
-            };
+                _context.WebConfigurationOptions = new WebConfigurationOptions();
+            }
+
+            _context.WebConfigurationOptions.AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY";
+            _context.WebConfigurationOptions.Hashstring = "SFA: digital apprenticeship service";
+            _context.WebConfigurationOptions.RedisCacheConnectionString = "localhost";
+            _context.WebConfigurationOptions.AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information";
+            _context.WebConfigurationOptions.DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
+            _context.WebConfigurationOptions.ApprenticeshipsPageSize = 50;
+ 
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {
                 CommitmentsSiteUrl = $"http://{Guid.NewGuid()}",
