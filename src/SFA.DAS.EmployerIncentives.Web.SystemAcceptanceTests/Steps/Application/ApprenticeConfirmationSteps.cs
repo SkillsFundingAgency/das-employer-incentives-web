@@ -110,6 +110,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Title.Should().Be("Declaration");
             model.ApplicationId.Should().Be(_testData.ApplicationId);
             model.AccountId.Should().Be(_testData.HashedAccountId);
+            _continueNavigationResponse.Should().HaveBackLink($"/{_testData.HashedAccountId}/apply/confirm-apprentices/{_testData.ApplicationId}?all=false");
         }
 
         private void SetupServiceMocks(ApplicationResponse applicationResponse)
