@@ -175,7 +175,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         public void ThenTheMessageShowingTheApplicationisStoppedIsShown()
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");            
-            response.Should().HaveInnerHtml("[data-linktype='view-agreement-stopped']", $"Apprenticeship paused or stopped");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-stopped']", $"Apprenticeship paused or stopped");
         }
 
         [Then(@"the accept new employer agreement call to action is not shown")]
