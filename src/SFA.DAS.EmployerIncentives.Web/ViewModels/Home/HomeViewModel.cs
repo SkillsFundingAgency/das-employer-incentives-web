@@ -1,35 +1,39 @@
-﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
+﻿using System;
+
+namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
 {
     public class HomeViewModel : IViewModel
     {
+        public string Title => "Apply for the hire a new apprentice payment";
+
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
         public bool NewAgreementRequired { get; }
-        public bool HasMultipleLegalEntities { get; }
-        public string ManageApprenticeshipSiteUrl { get; }
-
-        public string AccountHomeUrl { get; }
-        
-        public string AccountsAgreementsUrl => $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
-
-        public string Title => "Apply for the hire a new apprentice payment";
-
+        public bool BankDetailsRequired { get; }        
+        public string AccountsAgreementsUrl { get; }
         public string OrganisationName { get; set; }
 
-        public HomeViewModel(string accountId, string accountLegalEntityId, string organisationName, bool hasMultipleLegalEntities, bool newAgreementRequired, string manageApprenticeshipSiteUrl)
+        private string ManageApprenticeshipSiteUrl { get; }        
+
+        public HomeViewModel(
+            string accountId, 
+            string accountLegalEntityId, 
+            string organisationName,             
+            bool newAgreementRequired, 
+            string manageApprenticeshipSiteUrl,
+            bool bankDetailsRequired)
         {
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             OrganisationName = organisationName;
             NewAgreementRequired = newAgreementRequired;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
-            HasMultipleLegalEntities = hasMultipleLegalEntities;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))
             {
                 ManageApprenticeshipSiteUrl += "/";
             }
-            AccountHomeUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            AccountsAgreementsUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            BankDetailsRequired = bankDetailsRequired;
         }
-
     }
 }

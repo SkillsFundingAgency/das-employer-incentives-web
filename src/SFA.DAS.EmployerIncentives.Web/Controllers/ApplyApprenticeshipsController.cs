@@ -6,8 +6,6 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -20,17 +18,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
-        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
-            ILegalEntitiesService legalEntityService,
-            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
+            ILegalEntitiesService legalEntityService) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
-            _configuration = configuration.Value;
         } 
 
         [HttpGet]
@@ -54,7 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
+                return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetInitialSelectApprenticeshipsViewModel(form.AccountId, form.AccountLegalEntityId);
@@ -84,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 await _applicationService.Update(applicationId, form.AccountId, form.SelectedApprenticeships);
-                return RedirectToAction("ConfirmApprenticeships", new { form.AccountId, applicationId });
+                return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
             }
 
             var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, false);
@@ -95,30 +90,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+
+            if (all && viewModel.HasIneligibleApprentices)
+            {
+                return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
+            }
+
+            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
+            
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId, bool newAgreementRequired)
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
         {
-            if(newAgreementRequired)
-                return RedirectToAction("NewAgreementRequired", new { accountId, applicationId });
-
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
-        }
-
-        [HttpGet]
-        [Route("accept-new-agreement/{applicationId}")]
-        public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
-        {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
-            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
-            return View(viewModel);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId)
@@ -162,12 +152,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var apprenticeships = application.Apprentices.Select(MapFromApplicationApprenticeDto);
             return new ApplicationConfirmationViewModel(applicationId, accountId, application.AccountLegalEntityId,
-                                                        apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
+                                                        apprenticeships, application.BankDetailsRequired, legalEntityName);
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
+        private ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
         {
-            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            return new ApplicationApprenticeship
             {
                 ApprenticeshipId = apprentice.ApprenticeshipId,
                 CourseName = apprentice.CourseName,
@@ -175,7 +165,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 LastName = apprentice.LastName,
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
-                Uln = apprentice.Uln
+                Uln = apprentice.Uln,
+                EmploymentStartDate = apprentice.EmploymentStartDate,
+                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
             };
         }
     }

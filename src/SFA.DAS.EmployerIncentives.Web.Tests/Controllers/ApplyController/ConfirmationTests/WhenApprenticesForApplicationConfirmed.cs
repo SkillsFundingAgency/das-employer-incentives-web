@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
@@ -55,6 +57,36 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
             model.AccountId.Should().Be(_accountId);
             model.ApplicationId.Should().Be(_applicationId);
             model.OrganisationName.Should().Be(legalEntity.Name);
+        }
+
+        [Test]
+        public void Then_the_total_amount_includes_only_the_eligible_apprentices()
+        {
+            // Arrange
+            var apprentices = new List<ApplicationApprenticeship>();
+            apprentices.Add(new ApplicationApprenticeship 
+            { 
+                ExpectedAmount = _fixture.Create<decimal>(),
+                HasEligibleEmploymentStartDate = true
+            });
+            apprentices.Add(new ApplicationApprenticeship
+            {
+                ExpectedAmount = _fixture.Create<decimal>(),
+                HasEligibleEmploymentStartDate = true
+            });
+            apprentices.Add(new ApplicationApprenticeship
+            {
+                ExpectedAmount = _fixture.Create<decimal>(),
+                HasEligibleEmploymentStartDate = false
+            });
+
+            // Act
+            var model = new ApplicationConfirmationViewModel(Guid.NewGuid(), _fixture.Create<string>(),
+                _fixture.Create<string>(), apprentices, _fixture.Create<bool>(), _fixture.Create<string>());
+
+            // Assert
+            var expectedTotal = apprentices.Where(x => x.HasEligibleEmploymentStartDate).Sum(x => x.ExpectedAmount);
+            model.TotalPaymentAmount.Should().Be(expectedTotal);
         }
     }
 }

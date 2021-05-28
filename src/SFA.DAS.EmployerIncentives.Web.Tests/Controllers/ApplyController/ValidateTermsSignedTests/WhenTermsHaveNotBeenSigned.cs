@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Valid
             var accountLegalEntityId = "ZZZZ999";
             var accountsBaseUrl = "http://test.com/";
 
-            var legalEntity = _fixture.Build<LegalEntityModel>().With(x => x.HasSignedIncentiveTerms, false).Create();
+            var legalEntity = _fixture.Build<LegalEntityModel>().With(x => x.IsAgreementSigned, false).Create();
             _legalEntityServiceMock.Setup(x => x.Get(accountId, accountLegalEntityId)).ReturnsAsync(legalEntity);
 
             _externalLinksConfigurationMock.Setup(x => x.ManageApprenticeshipSiteUrl).Returns(accountsBaseUrl);

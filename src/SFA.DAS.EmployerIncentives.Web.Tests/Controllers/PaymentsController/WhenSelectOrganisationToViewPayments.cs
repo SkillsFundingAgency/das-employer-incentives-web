@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _accountId = _fixture.Create<string>();
             _manageAccountsUrl = _fixture.Create<string>();
 
-            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object);
+            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _configuration.Object);
         }
 
         [Test]
