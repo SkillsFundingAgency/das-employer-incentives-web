@@ -10,9 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Controllers;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.EmployerIncentives.Web.Controllers;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
@@ -30,7 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         private Mock<IApprenticesService> _apprenticesServiceMock;
         private Mock<IApplicationService> _applicationServiceMock;
         private Mock<IOptions<WebConfigurationOptions>> _webConfigurationMock;
-        private ApplyApprenticeshipsController _sut;
+        private Web.Controllers.ApplyApprenticeshipsController _sut;
         private Fixture _fixture;
 
         [SetUp]
@@ -57,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             _webConfigurationMock = new Mock<IOptions<WebConfigurationOptions>>();
             var options = new WebConfigurationOptions {ApprenticeshipsPageSize = 50};
             _webConfigurationMock.Setup(x => x.Value).Returns(options);
-            _sut = new ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), Mock.Of<IOptions<ExternalLinksConfiguration>>(), _webConfigurationMock.Object);
+            _sut = new Web.Controllers.ApplyApprenticeshipsController(_apprenticesServiceMock.Object, _applicationServiceMock.Object, Mock.Of<ILegalEntitiesService>(), _webConfigurationMock.Object);
 
             _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
@@ -125,7 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
         }
 
         [Test]
-        public async Task Then_the_ConfirmApprenticeships_page_is_displayed()
+        public async Task Then_the_employment_start_dates_page_is_displayed()
         {
             var request = new SelectApprenticeshipsRequest
             {
@@ -143,7 +144,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             var redirectResult = await result as RedirectToActionResult;
 
             redirectResult.Should().NotBeNull();
-            redirectResult?.ActionName.Should().Be("ConfirmApprenticeships");
+            redirectResult?.ActionName.Should().Be("EmploymentStartDates");
+            redirectResult?.ControllerName.Should().Be("ApplyEmploymentDetails");
         }
     }
 }

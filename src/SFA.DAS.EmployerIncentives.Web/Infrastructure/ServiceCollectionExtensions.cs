@@ -27,6 +27,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Services.Session;
 using IHttpContextAccessor = Microsoft.AspNetCore.Http.IHttpContextAccessor;
+using SFA.DAS.EmployerIncentives.Web.Validators;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {
@@ -146,6 +147,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddSingleton<IDocumentClientFactory, DocumentClientFactory>();
             serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
             serviceCollection.AddTransient<IUserService, UserService>();
+            serviceCollection.AddTransient<IEmploymentStartDateValidator, EmploymentStartDateValidator>();
 
             serviceCollection.AddSingleton<IPaginationService, PaginationService>();
             serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));

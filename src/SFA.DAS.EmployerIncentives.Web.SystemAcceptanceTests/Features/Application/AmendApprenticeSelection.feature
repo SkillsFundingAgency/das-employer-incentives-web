@@ -27,4 +27,4 @@ Scenario: An employer is changing the previously selected apprenticeships and su
 	Given there are eligible apprenticeships for the grant
 	And a initial application has been created
 	When the employer updates application with apprentices selected
-	Then the user is directed to the confirmation page
+	Then the user is directed to the employment start dates page

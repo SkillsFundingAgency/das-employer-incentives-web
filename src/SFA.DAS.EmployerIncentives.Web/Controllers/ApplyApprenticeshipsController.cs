@@ -21,19 +21,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
-        private readonly ExternalLinksConfiguration _linksConfiguration;
         private readonly WebConfigurationOptions _webConfiguration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
-            IOptions<ExternalLinksConfiguration> linksConfiguration,
             IOptions<WebConfigurationOptions> webConfiguration) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
-            _linksConfiguration = linksConfiguration.Value;
             _webConfiguration = webConfiguration.Value;
         } 
 
@@ -96,19 +93,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId)
+        public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+
+            if (all && viewModel.HasIneligibleApprentices)
+            {
+                return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
+            }
+
+            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
+            
             return View(viewModel);
         }
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId, bool newAgreementRequired)
+        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
         {
-            if(newAgreementRequired)
-                return RedirectToAction("NewAgreementRequired", new { accountId, applicationId });
-
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
 
@@ -137,22 +139,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
                 return View("SelectApprenticeships", viewModel);
             }
-            return RedirectToAction("ConfirmApprenticeships", new
-            {
-                form.AccountId,
-                applicationId
-            });
+            return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
         }
-
-        [HttpGet]
-        [Route("accept-new-agreement/{applicationId}")]
-        public async Task<IActionResult> NewAgreementRequired(string accountId, Guid applicationId)
-        {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
-            var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _linksConfiguration.ManageApprenticeshipSiteUrl);
-            return View(viewModel);
-        }
+        
 
         private async Task ProcessSelectedApprenticeships(SelectApprenticeshipsRequest form)
         {
@@ -242,12 +231,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var apprenticeships = application.Apprentices.Select(MapFromApplicationApprenticeDto);
             return new ApplicationConfirmationViewModel(applicationId, accountId, application.AccountLegalEntityId,
-                                                        apprenticeships, application.BankDetailsRequired, application.NewAgreementRequired, legalEntityName);
+                                                        apprenticeships, application.BankDetailsRequired, legalEntityName);
         }
 
-        private ApplicationConfirmationViewModel.ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
+        private ApplicationApprenticeship MapFromApplicationApprenticeDto(ApplicationApprenticeshipModel apprentice)
         {
-            return new ApplicationConfirmationViewModel.ApplicationApprenticeship
+            return new ApplicationApprenticeship
             {
                 ApprenticeshipId = apprentice.ApprenticeshipId,
                 CourseName = apprentice.CourseName,
@@ -255,7 +244,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 LastName = apprentice.LastName,
                 ExpectedAmount = apprentice.ExpectedAmount,
                 StartDate = apprentice.StartDate,
-                Uln = apprentice.Uln
+                Uln = apprentice.Uln,
+                EmploymentStartDate = apprentice.EmploymentStartDate,
+                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
             };
         }
     }
