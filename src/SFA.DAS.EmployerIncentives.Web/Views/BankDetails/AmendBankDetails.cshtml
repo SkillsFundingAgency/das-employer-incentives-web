@@ -27,7 +27,7 @@
                 <li>VAT number (if @Model.OrganisationName has one)</li>
                 <li>existing bank account details (if you want to change them)</li>
             </ul>
-            <p class="govuk-body">We cannot make any payments to @Model.OrganisationName's new bank account until we've received and verified their organisation and finance details. This could take up to 80 days and we may contact someone from @Model.OrganisationName.</p>
+            <p class="govuk-body">We cannot send any payments to @Model.OrganisationName's new bank account until we've received and verified their organisation and finance details. This could take up to 80 days and we may contact someone from @Model.OrganisationName.</p>
 
             <form asp-action="AmendBankDetails" method="post">
                 @Html.AntiForgeryToken()
