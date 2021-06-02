@@ -34,14 +34,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 PageSize = query.PageSize,
                 Apprenticeships = new List<ApprenticeDto>()
             };
-            if (query.Offset == 0)
+            if (pagingInformation.Offset == 0)
             {
                 eligibleApprenticeships.Apprenticeships.AddRange(data.Apprenticeships);
             }
             else
             {
                 data.Apprenticeships = data.Apprenticeships.OrderBy(a => a.DisplayName).ToList();
-                for (var apprenticeIndex = query.Offset; apprenticeIndex < data.Apprenticeships.Count; apprenticeIndex++)
+                for (var apprenticeIndex = pagingInformation.Offset; apprenticeIndex < data.Apprenticeships.Count; apprenticeIndex++)
                 {
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[apprenticeIndex]);
                 }
