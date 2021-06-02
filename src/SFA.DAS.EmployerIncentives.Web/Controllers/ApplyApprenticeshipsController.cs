@@ -149,6 +149,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 form.SelectedApprenticeships = new List<string>();
             }
+            if (form.RequestedStartIndex < form.StartIndex)
+            {
+                form.Offset = 0;
+            }
             var application = await _applicationService.Get(form.AccountId, form.ApplicationId, includeApprenticeships: true);
             var apprenticeshipIds = application.Apprentices.Select(x => x.ApprenticeshipId).ToList();
 
