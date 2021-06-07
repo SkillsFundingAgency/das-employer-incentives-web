@@ -2,10 +2,8 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
@@ -25,7 +23,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         private Mock<IApplicationService> _applicationService;
         private Mock<IHashingService> _hashingService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Web.Controllers.BankDetailsController _sut;
         private Fixture _fixture;
         private string _accountId;
@@ -45,9 +42,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             _applicationService = new Mock<IApplicationService>();
             _hashingService = new Mock<IHashingService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _sut = new Web.Controllers.BankDetailsController(_verificationService.Object, _emailService.Object, _applicationService.Object, 
-                                                             _hashingService.Object, _legalEntitiesService.Object, _configuration.Object);
+                                                             _hashingService.Object, _legalEntitiesService.Object);
             var urlHelper = new Mock<IUrlHelper>();
             _sut.Url = urlHelper.Object;
             _sut.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };

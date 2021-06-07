@@ -10,21 +10,18 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">@Model.Title</h1>
-            <p class="govuk-body">We need @Model.OrganisationName's bank account details, so that we can make their hire a new apprentice payment.</p>
-            <p class="govuk-body">You can only add one bank account for @Model.OrganisationName. We'll use this account to make all of their payments.</p>
-
-            <h2 class="govuk-heading-m">Before you start</h2>
-            <p class="govuk-body">To help us verify @Model.OrganisationName's bank details, you must answer all questions that apply to them.</p>
-            <p class="govuk-body">You'll need to give us @Model.OrganisationName's:</p>
+            <p class="govuk-body">We cannot send any payments until we've received and verified @Model.OrganisationName's organisation and finance details. This could take up to 80 days and we may contact someone from @Model.OrganisationName.</p>
+            <p class="govuk-body">This includes @Model.OrganisationName's:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>legal name, registered address and contact details</li>
                 <li>Companies House number (if @Model.OrganisationName has one)</li>
+                <li>VAT number (if @Model.OrganisationName has one)</li>
                 <li>remittance email address</li>
                 <li>finance director or finance lead's contact details</li>
                 <li>bank account details</li>
             </ul>
 
-            <div class="govuk-inset-text">We cannot make any payments until we've verified @Model.OrganisationName's bank details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.</div>
+            <p class="govuk-body">You can only add one bank account for @Model.OrganisationName. We'll use this account to make all of their payments.</p>
 
             <form asp-action="EnterBankDetails" method="post">
                 @Html.AntiForgeryToken()

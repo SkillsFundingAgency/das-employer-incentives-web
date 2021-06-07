@@ -2,7 +2,7 @@
 {
     public class AddBankDetailsViewModel : IViewModel
     {
-        public string Title => $"Add {OrganisationName}'s bank account details";
+        public string Title => $"Add {OrganisationName}'s organisation and finance details";
 
         public string OrganisationName { get; set; }
     }

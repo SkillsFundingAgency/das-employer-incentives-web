@@ -18,15 +18,20 @@
             @if (Model.ShowBankDetailsInReview)
             {
                 <p class="govuk-body">
-                    We cannot make any payments until we've verified @Model.OrganisationName's organisation and finance details. This could take up to 3 months and we may contact someone from @Model.OrganisationName.
+                    We cannot send any payments until we've verified @Model.OrganisationName's organisation and finance details. This could take up to 80 days and we may contact someone from @Model.OrganisationName.
                 </p>
                 <h2 class="govuk-heading-m">After we've verified @Model.OrganisationName's organisation and finance details</h2>
             }
             <p class="govuk-body">
-                We'll make the payment in 2 equal instalments for each apprentice. The first payment is after an apprentice completes 90 days of their apprenticeship and the second is after 365 days. The training provider needs to confirm to ESFA when an apprentice is ready for each payment.
+                We'll send the payment in 2 equal instalments for each apprentice. We'll send the:
             </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>first payment after an apprentice completes 90 days of their apprenticeship</li>
+                <li>second payment after an apprentice completes 365 days of their apprenticeship</li>
+            </ul>
+            <p class="govuk-body">The training provider needs to confirm to ESFA when an apprentice is ready for each payment.</p>
             <p class="govuk-body">
-                Payments are made by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
+                Payments are sent by Bacs on the 14th working day of the month. It usually takes 3 working days to process.
             </p>
             
             <h2 class="govuk-heading-m">Your applications</h2>
