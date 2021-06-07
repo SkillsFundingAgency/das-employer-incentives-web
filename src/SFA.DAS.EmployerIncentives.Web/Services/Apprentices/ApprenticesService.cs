@@ -69,10 +69,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[index]);
                     index++;
                 }
+                offset = index;
                 if (data.Apprenticeships.Count > index)
                 {
                     morePages = true;
-                    offset = index;
                 }
             }
 
