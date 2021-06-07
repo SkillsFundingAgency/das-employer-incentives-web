@@ -81,6 +81,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 morePages = true;
             }
 
+            if (data.Apprenticeships.Count == query.PageSize && morePages)
+            {
+                pageNumber++;
+            }
+
             var nextPageInformation = new PagingInformation
             { 
                 Offset = offset, 
