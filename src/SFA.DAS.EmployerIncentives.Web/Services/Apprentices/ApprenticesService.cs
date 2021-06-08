@@ -94,6 +94,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             };
 
             await _paginationService.SavePagingInformation(nextPageInformation);
+            
+            if (nextPageInformation.Offset == 0)
+            {
+                var nextPageData = await GetPagedEligibleApprentices(query.AccountId, query.AccountLegalEntityId, nextPageInformation.PageNumber, query.PageSize);
+                if (nextPageData.Apprenticeships.Count == 0
+                    && nextPageInformation.StartIndex + query.PageSize >= nextPageData.TotalApprenticeships)
+                {
+                    morePages = false;
+                }
+            }
 
             eligibleApprenticeships.MorePages = morePages;
             eligibleApprenticeships.Offset = offset;

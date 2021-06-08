@@ -99,16 +99,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             };
             _paginationService.Setup(x => x.GetPagingInformation(query3)).ReturnsAsync(pagination3);
 
-            var eligibleApprenticeships3 = new EligibleApprenticesDto
-                { Apprenticeships = new List<ApprenticeDto>(), PageNumber = 3, PageSize = 50, TotalApprenticeships = 49 };
-
-            var httpResponseMessage3 = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships3,
-                    new JsonMediaTypeFormatter(), "application/json")
-            };
-            _httpClientHandlerFake.AddResponse(httpResponseMessage3);
-
             // Act
             var response = await _sut.Get(query1);
 
@@ -204,7 +194,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             // Assert
             response.Apprenticeships.Count().Should().Be(apprenticeships1.Count - query.Offset);
             response.MorePages.Should().BeFalse();
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(1);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
         }
 
         [Test]
@@ -284,6 +274,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             };
             _httpClientHandlerFake.AddResponse(httpResponseMessage2);
 
+            var eligibleApprenticeships3 = new EligibleApprenticesDto
+                { Apprenticeships = new List<ApprenticeDto>(), PageNumber = 3, PageSize = 50, TotalApprenticeships = 50 };
+
+            var httpResponseMessage3 = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships3,
+                    new JsonMediaTypeFormatter(), "application/json")
+            };
+            _httpClientHandlerFake.AddResponse(httpResponseMessage3);
+
             // Act
             var response = await _sut.Get(query);
 
@@ -291,7 +291,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             response.Apprenticeships.Count().Should().Be(0);
             response.MorePages.Should().BeFalse();
             response.Offset.Should().Be(0);
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(3);
         }
 
         [Test]
@@ -371,6 +371,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             };
             _httpClientHandlerFake.AddResponse(httpResponseMessage6);
 
+            var eligibleApprenticeships7 = new EligibleApprenticesDto
+                { Apprenticeships = new List<ApprenticeDto>(), PageNumber = 7, PageSize = 200, TotalApprenticeships = 987 };
+            var httpResponseMessage7 = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships7,
+                    new JsonMediaTypeFormatter(), "application/json")
+            };
+            _httpClientHandlerFake.AddResponse(httpResponseMessage7);
+
             // Act
             var response = await _sut.Get(query);
 
@@ -378,7 +387,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             response.Apprenticeships.Count().Should().Be(apprenticeships1.Count + apprenticeships3.Count + apprenticeships4.Count + apprenticeships5.Count);
             response.MorePages.Should().BeFalse();
             response.Offset.Should().Be(0);
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(6);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(7);
         }
     }
 }

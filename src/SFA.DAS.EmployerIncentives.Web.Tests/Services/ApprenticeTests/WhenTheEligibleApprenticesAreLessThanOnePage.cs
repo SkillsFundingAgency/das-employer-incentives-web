@@ -60,15 +60,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             _paginationService.Setup(x => x.GetPagingInformation(query)).ReturnsAsync(pagination);
 
             var apprenticeships = _fixture.CreateMany<ApprenticeDto>(49).ToList();
-            var eligibleApprenticeships = new EligibleApprenticesDto
+            var eligibleApprenticeships1 = new EligibleApprenticesDto
                 {Apprenticeships = apprenticeships, PageNumber = 1, PageSize = 50, TotalApprenticeships = 49};
 
-            var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK)
+            var httpResponseMessage1 = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships,
+                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships1,
                     new JsonMediaTypeFormatter(), "application/json")
             };
-            _httpClientHandlerFake.AddResponse(httpResponseMessage);
+            _httpClientHandlerFake.AddResponse(httpResponseMessage1);
+
+            var eligibleApprenticeships2 = new EligibleApprenticesDto
+                { Apprenticeships = new List<ApprenticeDto>(), PageNumber = 2, PageSize = 50, TotalApprenticeships = 49 };
+
+            var httpResponseMessage2 = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ObjectContent<EligibleApprenticesDto>(eligibleApprenticeships2,
+                    new JsonMediaTypeFormatter(), "application/json")
+            };
+            _httpClientHandlerFake.AddResponse(httpResponseMessage2);
 
             // Act
             var response = await _sut.Get(query);
@@ -76,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeTests
             // Assert
             response.Apprenticeships.Count().Should().Be(apprenticeships.Count);
             response.MorePages.Should().BeFalse();
-            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(1);
+            _httpClientHandlerFake.RequestMesssages.Count.Should().Be(2);
         }
     }
 }
