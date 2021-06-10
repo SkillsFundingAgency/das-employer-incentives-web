@@ -69,7 +69,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                     eligibleApprenticeships.Apprenticeships.Add(data.Apprenticeships[index]);
                     index++;
                 }
-                offset = index;
+                if (index < query.PageSize)
+                {
+                    offset = index;
+                }
                 if (data.Apprenticeships.Count > index)
                 {
                     morePages = true;
@@ -81,7 +84,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
                 morePages = true;
             }
 
-            if (eligibleApprenticeships.Apprenticeships.Count == query.PageSize && pageNumber == pagingInformation.PageNumber)
+            if (eligibleApprenticeships.Apprenticeships.Count == query.PageSize)
             {
                 pageNumber++;
             }
@@ -99,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Apprentices
             {
                 var nextPageData = await GetPagedEligibleApprentices(query.AccountId, query.AccountLegalEntityId, nextPageInformation.PageNumber, query.PageSize);
                 if (nextPageData.Apprenticeships.Count == 0
-                    && nextPageInformation.StartIndex + query.PageSize >= nextPageData.TotalApprenticeships)
+                    && nextPageInformation.PageNumber * query.PageSize >= nextPageData.TotalApprenticeships)
                 {
                     morePages = false;
                 }
