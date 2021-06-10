@@ -5,6 +5,8 @@
     ViewData["Title"] = Model.Title;
     ViewBag.GaData.Vpv = "/apply/select-new-apprentices";
     ViewData["ZenDeskLabels"] = "ei-selectapprentices";
+    
+    var previousPageIndex = Model.StartIndex - Model.PageSize;
 }
 
 <a asp-action="GetQualificationQuestion" asp-controller="ApplyQualification" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
@@ -24,52 +26,61 @@
                                 @Model.Title
                             </h1>
                         </legend>
-
-                        <p class="govuk-body">
-                            We're showing the apprentices in the account with a start date from April 2021 to November 2021.  We're not showing any apprentices that you have already applied for.
-                        </p>
-                        <p class="govuk-body">
-                            Only select new apprentices with an employment start date at @Model.OrganisationName from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
-                        </p>
-
-                        <div class="govuk-warning-text">
-                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                            <strong class="govuk-warning-text__text">
-                                <span class="govuk-warning-text__assistive">Warning</span>
-                                You must not select existing employees who joined @Model.OrganisationName before <span class="das-no-wrap">1 April 2021</span>, even if they started an apprenticeship after this date.
-                            </strong>
-                        </div>
-
-                        @if (!ViewData.ModelState.IsValid)
+                        @if(Model.Apprenticeships.Count() > 0)
                         {
-                            <span id="new-apprenticeships-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
-                            </span>
-                        }
-                        <partial name="PageInformation" model="Model" />
-                        <div class="govuk-checkboxes govuk-!-margin-bottom-4">
-                            @foreach (var apprenticeship in Model.Apprenticeships)
+                            <p class="govuk-body">
+                                We're showing the apprentices in the account with a start date from April 2021 to November 2021.  We're not showing any apprentices that you have already applied for.
+                            </p>
+                            <p class="govuk-body">
+                                Only select new apprentices with an employment start date at @Model.OrganisationName from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+                            </p>
+
+                            <div class="govuk-warning-text">
+                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                <strong class="govuk-warning-text__text">
+                                    <span class="govuk-warning-text__assistive">Warning</span>
+                                    You must not select existing employees who joined @Model.OrganisationName before <span class="das-no-wrap">1 April 2021</span>, even if they started an apprenticeship after this date.
+                                </strong>
+                            </div>
+
+                            @if (!ViewData.ModelState.IsValid)
                             {
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input"
-                                           id="new-apprenticeships-@apprenticeship.Id"
-                                           name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
-                                           type="checkbox"
-                                           @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
-                                           aria-describedby="apprenticeship-start-date-hint apprenticeship-course-name-hint" />
-                                    <label class="govuk-label govuk-checkboxes__label govuk-!-padding-bottom-0" for="new-apprenticeships-@apprenticeship.Id">
-                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Uln)</span>
-                                    </label>
-                                    <div class="govuk-checkboxes__hint govuk-!-margin-bottom-0">
-                                        @apprenticeship.StartDate.ToString("MMMM yyyy") (apprenticeship start date)
-                                    </div>
-                                    <div class="govuk-checkboxes__hint">
-                                        @apprenticeship.CourseName
-                                    </div>
-                                </div>
+                                <span id="new-apprenticeships-error" class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span> @SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage
+                                </span>
                             }
-                        </div>
-                        <partial name="PageInformation" model="Model" />
+
+                            <partial name="PageInformation" model="Model" />
+                            <div class="govuk-checkboxes govuk-!-margin-bottom-4">
+                                @foreach (var apprenticeship in Model.Apprenticeships)
+                                {
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input"
+                                               id="new-apprenticeships-@apprenticeship.Id"
+                                               name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
+                                               type="checkbox"
+                                               @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
+                                               aria-describedby="apprenticeship-start-date-hint apprenticeship-course-name-hint" />
+                                        <label class="govuk-label govuk-checkboxes__label govuk-!-padding-bottom-0" for="new-apprenticeships-@apprenticeship.Id">
+                                            <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Uln)</span>
+                                        </label>
+                                        <div class="govuk-checkboxes__hint govuk-!-margin-bottom-0">
+                                            @apprenticeship.StartDate.ToString("MMMM yyyy") (apprenticeship start date)
+                                        </div>
+                                        <div class="govuk-checkboxes__hint">
+                                            @apprenticeship.CourseName
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <partial name="PageInformation" model="Model" />
+
+                        }
+                        else
+                        {
+                            <p class="govuk-body">There are no more apprentices to show.</p>
+                            <p class="govuk-body">You can <button type="submit" id="previousPage" name="requestedStartIndex" value="@previousPageIndex" asp-action="SelectApprenticeships" class="das-button--inline-link govuk-!-margin-right-1">go back to change your selections</button>or continue to confirm your apprentices.</p>
+                        }
                     </fieldset>
                 </div>
                 <input type="hidden" name="ApplicationId" value="@Model.ApplicationId" />
