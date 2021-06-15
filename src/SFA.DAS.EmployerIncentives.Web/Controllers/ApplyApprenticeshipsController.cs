@@ -141,46 +141,44 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
         }
-        
+
 
         private async Task ProcessSelectedApprenticeships(SelectApprenticeshipsRequest form)
         {
-            if (form.SelectedApprenticeships == null)
-            {
-                form.SelectedApprenticeships = new List<string>();
-            }
-            var application = await _applicationService.Get(form.AccountId, form.ApplicationId, includeApprenticeships: true);
-            var apprenticeshipIds = application.Apprentices.Select(x => x.ApprenticeshipId).ToList();
+            form.SelectedApprenticeships ??= new List<string>();
 
-            var availableApprenticeships = await GetInitialSelectApprenticeshipsViewModel(form.AccountId,
-                application.AccountLegalEntityId, _webConfiguration.ApprenticeshipsPageSize, form.Offset, form.StartIndex);
-            var unselectedApprenticeships = availableApprenticeships.Apprenticeships
+            var application = await _applicationService.Get(form.AccountId, form.ApplicationId, includeApprenticeships: true);
+            
+            var apprenticeshipIdsSavedAgainstApplication = application.Apprentices.Select(x => x.ApprenticeshipId).ToList();
+
+            var availableApprenticeshipsOnCurrentPage = await GetInitialSelectApprenticeshipsViewModel(form.AccountId,
+                application.AccountLegalEntityId, _webConfiguration.ApprenticeshipsPageSize, form.Offset,
+                form.StartIndex);
+            
+            var deselectedApprenticeshipsOnCurrentPage = availableApprenticeshipsOnCurrentPage.Apprenticeships
                 .Where(x => !form.SelectedApprenticeships.Contains(x.Id)).Select(x => x.Id);
+          
             var previousSelectedApprenticeships = application.Apprentices
-                .Where(x => unselectedApprenticeships.Contains(x.ApprenticeshipId)).Select(x => x.ApprenticeshipId).ToList();
-            if (form.SelectedApprenticeships.Any())
+                .Where(x => deselectedApprenticeshipsOnCurrentPage.Contains(x.ApprenticeshipId))
+                .Select(x => x.ApprenticeshipId)
+                .ToList();
+
+            foreach (var apprenticeId in form.SelectedApprenticeships)
             {
-                foreach(var apprenticeId in form.SelectedApprenticeships)
+                if (application.Apprentices.All(x => x.ApprenticeshipId != apprenticeId))
                 {
-                    if (application.Apprentices.FirstOrDefault(x => x.ApprenticeshipId == apprenticeId) == null)
-                    {
-                        apprenticeshipIds.Add(apprenticeId);
-                    }
+                    apprenticeshipIdsSavedAgainstApplication.Add(apprenticeId);
                 }
             }
-            if (previousSelectedApprenticeships.Any())
+
+            foreach (var apprenticeId in previousSelectedApprenticeships)
             {
-                foreach(var apprenticeId in previousSelectedApprenticeships)
-                {
-                    apprenticeshipIds.Remove(apprenticeId);
-                }
+                apprenticeshipIdsSavedAgainstApplication.Remove(apprenticeId);
             }
-            if (apprenticeshipIds.Any())
-            {
-                await _applicationService.Update(application.ApplicationId, application.AccountId, apprenticeshipIds);
-            }
+
+            await _applicationService.Update(application.ApplicationId, application.AccountId, apprenticeshipIdsSavedAgainstApplication);
         }
-        
+
         private async Task<SelectApprenticeshipsViewModel> GetInitialSelectApprenticeshipsViewModel(string accountId, string accountLegalEntityId, int pageSize, int offset, int startIndex)
         {
             var apprenticeships = await _apprenticesService.Get(new ApprenticesQuery(accountId, accountLegalEntityId, pageSize, offset, startIndex));
