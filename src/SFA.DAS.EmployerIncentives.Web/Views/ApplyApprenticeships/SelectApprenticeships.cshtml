@@ -19,6 +19,10 @@ else
         <button type="submit" id="previousPage" name="requestedStartIndex" value="@previousPageIndex" asp-action="SelectApprenticeships" class="das-button--inline-link govuk-!-margin-right-1">
             Back
         </button>
+        <input type="hidden" name="ApplicationId" value="@Model.ApplicationId" />
+        <input type="hidden" name="Offset" value="@Model.Offset" />
+        <input type="hidden" name="OrganisationName" value="@Model.OrganisationName" />
+        <input type="hidden" name="StartIndex" value="@Model.StartIndex" />
     </form>
 }
     <main class="govuk-main-wrapper " id="main-content" role="main">
