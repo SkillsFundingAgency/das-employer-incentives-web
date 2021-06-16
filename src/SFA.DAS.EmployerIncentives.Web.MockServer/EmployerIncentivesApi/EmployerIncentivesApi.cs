@@ -799,6 +799,144 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+
+        public EmployerIncentivesApiBuilder WithApplicationWith103Apprenticeships()
+        {
+            var data = new TestData.Account.WithApplicationWith103Apprenticeships();
+            
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPost()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.Created));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(new List<LegalEntityDto> { data.LegalEntity }, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(data.LegalEntity, TestHelper.DefaultSerialiserSettings)));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications/{data.ApplicationId}/accountlegalentity")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.AccountLegalEntityId))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/applications/{data.ApplicationId}/apprenticeships"))
+                        .UsingPatch()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/applications")
+                        .UsingPut()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/apprenticeships")
+                        .WithParam("accountid", data.AccountId.ToString())
+                        .WithParam("accountlegalentityid", data.LegalEntity.AccountLegalEntityId.ToString())
+                        .WithParam("pageNumber", "1")
+                        .WithParam("pageSize", "50")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.EligibleApprenticesResponsePage1, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/apprenticeships")
+                        .WithParam("accountid", data.AccountId.ToString())
+                        .WithParam("accountlegalentityid", data.LegalEntity.AccountLegalEntityId.ToString())
+                        .WithParam("pageNumber", "2")
+                        .WithParam("pageSize", "50")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.EligibleApprenticesResponsePage2, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/apprenticeships")
+                        .WithParam("accountid", data.AccountId.ToString())
+                        .WithParam("accountlegalentityid", data.LegalEntity.AccountLegalEntityId.ToString())
+                        .WithParam("pageNumber", "3")
+                        .WithParam("pageSize", "50")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(data.EligibleApprenticesResponsePage3, TestHelper.DefaultSerialiserSettings))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+            return this;
+        }
+
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
@@ -829,6 +967,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
                 Debug.WriteLine("==========================================================================================================");
             }
         }
+
     }
 
 #pragma warning disable S3881 // "IDisposable" should be implemented correctly

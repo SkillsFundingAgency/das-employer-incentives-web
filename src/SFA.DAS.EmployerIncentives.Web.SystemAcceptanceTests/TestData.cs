@@ -4,6 +4,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices.Types;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
@@ -97,7 +98,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public string HashedAccountLegalEntityId2 => "VW6RJG";
                 public LegalEntityDto LegalEntity2 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId2, LegalEntityName = $"Organisation {AccountLegalEntityId2}", IsAgreementSigned = true };
 
-                public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
+                public EligibleApprenticesDto Apprentices => new EligibleApprenticesDto
+                {
+                    PageSize = 50,
+                    TotalApprenticeships = 3,
+                    PageNumber = 1,
+                    Apprenticeships = new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 }
+                };
+
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678 };
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789 };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 34567890 };
@@ -114,9 +122,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
                 public long AccountLegalEntityId1 => 6006;
                 public string HashedAccountLegalEntityId1 => "V6PNBL";
-                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
-                
-                public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { IsAgreementSigned = true, AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
+
+                public EligibleApprenticesDto Apprentices => new EligibleApprenticesDto
+                {
+                    PageSize = 50,
+                    TotalApprenticeships = 3,
+                    PageNumber = 1,
+                    Apprenticeships = new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 }
+                };
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789, EmploymentStartDate = new DateTime(2020, 1, 1) };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 34567890, EmploymentStartDate = new DateTime(2020, 1, 1) };
@@ -181,9 +195,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
                 public long AccountLegalEntityId1 => 6008;
                 public string HashedAccountLegalEntityId1 => "MYJPDY";
-                public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { IsAgreementSigned = true, AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
 
-                public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
+                public EligibleApprenticesDto Apprentices => new EligibleApprenticesDto
+                {
+                    PageSize = 50,
+                    TotalApprenticeships = 3,
+                    PageNumber = 1,
+                    Apprenticeships = new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 }
+                };
+
                 public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
                 public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789, EmploymentStartDate = new DateTime(2021, 6, 1) };
                 public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 34567890, EmploymentStartDate = new DateTime(2020, 1, 1) };
@@ -238,72 +259,79 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
             }
 
             public class WithApplicationWithAllEligibleEmployerStartDates
+            {
+                public Guid ApplicationId = Guid.Parse("18073eb3-f22a-4ab3-9726-dfe99b911d56");
+
+                public long AccountId { get; } = 6009;
+                public string HashedAccountId => "MN47XD";
+
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity1 };
+
+                public long AccountLegalEntityId1 => 6008;
+                public string HashedAccountLegalEntityId1 => "MYJPDY";
+                public LegalEntityDto LegalEntity1 => new LegalEntityDto { IsAgreementSigned = true, AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
+
+                public EligibleApprenticesDto Apprentices => new EligibleApprenticesDto
                 {
-                    public Guid ApplicationId = Guid.Parse("18073eb3-f22a-4ab3-9726-dfe99b911d56");
+                    PageSize = 50,
+                    TotalApprenticeships = 3,
+                    PageNumber = 1,
+                    Apprenticeships = new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 }
+                };
 
-                    public long AccountId { get; } = 6009;
-                    public string HashedAccountId => "MN47XD";
+                public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
+                public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789, EmploymentStartDate = new DateTime(2021, 6, 1) };
+                public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 34567890, EmploymentStartDate = new DateTime(2020, 1, 1) };
 
-                    public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity1 };
-
-                    public long AccountLegalEntityId1 => 6008;
-                    public string HashedAccountLegalEntityId1 => "MYJPDY";
-                    public LegalEntityDto LegalEntity1 => new LegalEntityDto { AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId1, LegalEntityName = $"Organisation {AccountLegalEntityId1}" };
-
-                    public List<ApprenticeDto> Apprentices => new List<ApprenticeDto> { Apprentice1, Apprentice2, Apprentice3 };
-                    public ApprenticeDto Apprentice1 => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
-                    public ApprenticeDto Apprentice2 => new ApprenticeDto { ApprenticeshipId = 2, FirstName = "Mary", FullName = "Mary 2 Lyman", LastName = "Lyman", CourseName = "Assistant accountant Level 3", StartDate = new DateTime(2020, 9, 1), Uln = 23456789, EmploymentStartDate = new DateTime(2021, 6, 1) };
-                    public ApprenticeDto Apprentice3 => new ApprenticeDto { ApprenticeshipId = 3, FirstName = "Sebastian", FullName = "Sebastian 3 Lawrence", LastName = "Lawrence", CourseName = "General Welder (Arc Processes) Level 2", StartDate = new DateTime(2020, 10, 1), Uln = 34567890, EmploymentStartDate = new DateTime(2020, 1, 1) };
-
-                    public ApplicationResponse ApplicationResponse => new ApplicationResponse
+                public ApplicationResponse ApplicationResponse => new ApplicationResponse
+                {
+                    Application = new IncentiveApplicationDto
                     {
-                        Application = new IncentiveApplicationDto
+                        AccountLegalEntityId = AccountLegalEntityId1,
+                        BankDetailsRequired = true,
+                        Apprenticeships = new List<IncentiveApplicationApprenticeshipDto>
                         {
-                            AccountLegalEntityId = AccountLegalEntityId1,
-                            BankDetailsRequired = true,
-                            Apprenticeships = new List<IncentiveApplicationApprenticeshipDto>
+                            new IncentiveApplicationApprenticeshipDto
                             {
-                                new IncentiveApplicationApprenticeshipDto
-                                {
-                                    ApprenticeshipId = Apprentice1.ApprenticeshipId,
-                                    CourseName = Apprentice1.CourseName,
-                                    FirstName = Apprentice1.FirstName,
-                                    LastName =   Apprentice1.LastName,
-                                    TotalIncentiveAmount = 2000m,
-                                    PlannedStartDate = Apprentice1.StartDate,
-                                    EmploymentStartDate = Apprentice1.EmploymentStartDate,
-                                    Uln = Apprentice1.Uln,
-                                    HasEligibleEmploymentStartDate = true
-                                },
-                                new IncentiveApplicationApprenticeshipDto
-                                {
-                                    ApprenticeshipId = Apprentice2.ApprenticeshipId,
-                                    CourseName = Apprentice2.CourseName,
-                                    FirstName = Apprentice2.FirstName,
-                                    LastName =   Apprentice2.LastName,
-                                    TotalIncentiveAmount = 2000m,
-                                    PlannedStartDate = Apprentice2.StartDate,
-                                    EmploymentStartDate = Apprentice2.EmploymentStartDate,
-                                    Uln = Apprentice2.Uln,
-                                    HasEligibleEmploymentStartDate = true
-                                },
-                                new IncentiveApplicationApprenticeshipDto
-                                {
-                                    ApprenticeshipId = Apprentice3.ApprenticeshipId,
-                                    CourseName = Apprentice3.CourseName,
-                                    FirstName = Apprentice3.FirstName,
-                                    LastName =   Apprentice3.LastName,
-                                    TotalIncentiveAmount = 2000m,
-                                    PlannedStartDate = Apprentice3.StartDate,
-                                    EmploymentStartDate = Apprentice3.EmploymentStartDate,
-                                    Uln = Apprentice3.Uln,
-                                    HasEligibleEmploymentStartDate = true
-                                }
+                                ApprenticeshipId = Apprentice1.ApprenticeshipId,
+                                CourseName = Apprentice1.CourseName,
+                                FirstName = Apprentice1.FirstName,
+                                LastName =   Apprentice1.LastName,
+                                TotalIncentiveAmount = 2000m,
+                                PlannedStartDate = Apprentice1.StartDate,
+                                EmploymentStartDate = Apprentice1.EmploymentStartDate,
+                                Uln = Apprentice1.Uln,
+                                HasEligibleEmploymentStartDate = true
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = Apprentice2.ApprenticeshipId,
+                                CourseName = Apprentice2.CourseName,
+                                FirstName = Apprentice2.FirstName,
+                                LastName =   Apprentice2.LastName,
+                                TotalIncentiveAmount = 2000m,
+                                PlannedStartDate = Apprentice2.StartDate,
+                                EmploymentStartDate = Apprentice2.EmploymentStartDate,
+                                Uln = Apprentice2.Uln,
+                                HasEligibleEmploymentStartDate = true
+                            },
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = Apprentice3.ApprenticeshipId,
+                                CourseName = Apprentice3.CourseName,
+                                FirstName = Apprentice3.FirstName,
+                                LastName =   Apprentice3.LastName,
+                                TotalIncentiveAmount = 2000m,
+                                PlannedStartDate = Apprentice3.StartDate,
+                                EmploymentStartDate = Apprentice3.EmploymentStartDate,
+                                Uln = Apprentice3.Uln,
+                                HasEligibleEmploymentStartDate = true
                             }
                         }
-                    };
+                    }
+                };
 
-                }
+            }
 
             public class WithoutASignedAgreement
             {
@@ -496,6 +524,86 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                             new SignedAgreementDto { SignedByEmail = "jon.skeet@google.com", SignedByName = "Jon Skeet", SignedDate = DateTime.Parse("01-09-2020 12:34:59")}
                         }
                     };
+            }
+
+            public class WithApplicationWith103Apprenticeships // https://localhost:5001/V8BB4L/apply/M6XWGJ/select-apprentices
+            {
+                public Guid ApplicationId = Guid.Parse("78b4fe25-41ca-486e-b1d7-a6fb697e1689");
+
+                public long AccountId = 36632;
+
+                public string HashedAccountId => "V8BB4L";
+
+                public long AccountLegalEntityId => 36957; // M6XWGJ
+
+                public LegalEntityDto LegalEntity => new LegalEntityDto { IsAgreementSigned = true, AccountId = AccountId, AccountLegalEntityId = AccountLegalEntityId, LegalEntityName = $"Organisation {AccountLegalEntityId}" };
+                public List<LegalEntityDto> LegalEntities => new List<LegalEntityDto> { LegalEntity };
+
+                public ApprenticeDto PreSelectedApprentice => new ApprenticeDto { ApprenticeshipId = 1, FirstName = "Adam", FullName = "Adam 1 Glover", LastName = "Glover", CourseName = "Early Years Educator Level 3", StartDate = new DateTime(2020, 8, 1), Uln = 12345678, EmploymentStartDate = new DateTime(2020, 1, 1) };
+
+                private static readonly Fixture Fixture = new Fixture();
+
+                private List<ApprenticeDto> GetApprenticeshipsPage1()
+                {
+                    var result = new List<ApprenticeDto> { PreSelectedApprentice };
+                    result.AddRange(Fixture.CreateMany<ApprenticeDto>(49).ToList());
+                    return result;
+                }
+
+                public EligibleApprenticesDto EligibleApprenticesResponsePage1 => new EligibleApprenticesDto
+                {
+                    Offset = 0,
+                    PageSize = 50,
+                    TotalApprenticeships = 103,
+                    StartIndex = 0,
+                    PageNumber = 1,
+                    Apprenticeships = GetApprenticeshipsPage1(),
+                };
+
+                public EligibleApprenticesDto EligibleApprenticesResponsePage2 => new EligibleApprenticesDto
+                {
+                    Offset = 0,
+                    PageSize = 50,
+                    TotalApprenticeships = 103,
+                    StartIndex = 51,
+                    PageNumber = 2,
+                    Apprenticeships = Fixture.CreateMany<ApprenticeDto>(50).ToList(),
+                };
+
+                public EligibleApprenticesDto EligibleApprenticesResponsePage3 => new EligibleApprenticesDto
+                {
+                    Offset = 0,
+                    PageSize = 50,
+                    TotalApprenticeships = 103,
+                    StartIndex = 101,
+                    PageNumber = 3,
+                    Apprenticeships = Fixture.CreateMany<ApprenticeDto>(3).ToList(),
+                };
+
+                public ApplicationResponse ApplicationResponse => new ApplicationResponse
+                {
+                    Application = new IncentiveApplicationDto
+                    {
+                        AccountLegalEntityId = AccountLegalEntityId,
+                        BankDetailsRequired = true,
+                        Apprenticeships = new List<IncentiveApplicationApprenticeshipDto>
+                        {
+                            new IncentiveApplicationApprenticeshipDto
+                            {
+                                ApprenticeshipId = PreSelectedApprentice.ApprenticeshipId,
+                                CourseName = PreSelectedApprentice.CourseName,
+                                FirstName = PreSelectedApprentice.FirstName,
+                                LastName = PreSelectedApprentice.LastName,
+                                TotalIncentiveAmount = 2000,
+                                PlannedStartDate = PreSelectedApprentice.StartDate,
+                                EmploymentStartDate = PreSelectedApprentice.EmploymentStartDate,
+                                Uln = PreSelectedApprentice.Uln
+                            }
+                        }
+                    }
+                };
+
+            
             }
         }
     }
