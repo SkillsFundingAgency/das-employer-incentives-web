@@ -52,8 +52,9 @@
 }
 
 .app-back-link-button {
-  background: none;
-  border: none;
-  padding: 0 0 0 14px;
-  cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0 0 0 14px;
+    cursor: pointer;
+    text-decoration: underline;
 }
