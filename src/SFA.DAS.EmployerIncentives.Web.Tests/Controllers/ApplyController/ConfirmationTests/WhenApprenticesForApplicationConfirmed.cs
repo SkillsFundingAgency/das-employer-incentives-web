@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
     public class WhenApprenticesForApplicationConfirmed
     {
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
+        private ExternalLinksConfiguration _externalLinksConfiguration;
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Web.Controllers.ApplyController _sut;
@@ -30,10 +31,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
         [SetUp]
         public void Arrange()
         {
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            _applicationService = new Mock<IApplicationService>();
-            _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _fixture = new Fixture();
+            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _externalLinksConfiguration = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _fixture.Create<string>() };
+            _configuration.Setup(x => x.Value).Returns(_externalLinksConfiguration); _applicationService = new Mock<IApplicationService>();
+            _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _accountId = _fixture.Create<string>();
             _applicationId = Guid.NewGuid();
             _sut = new Web.Controllers.ApplyController(_configuration.Object, _applicationService.Object, _legalEntitiesService.Object);
@@ -57,6 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
             model.AccountId.Should().Be(_accountId);
             model.ApplicationId.Should().Be(_applicationId);
             model.OrganisationName.Should().Be(legalEntity.Name);
+            model.AgreementsUrl.Should().Be($"{_externalLinksConfiguration.ManageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");
         }
 
         [Test]
