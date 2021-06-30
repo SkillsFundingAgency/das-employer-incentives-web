@@ -30,6 +30,7 @@
 
             <h2 class="govuk-heading-m">Apprentices who joined your organisation from 1 April 2021</h2>
             <p class="govuk-body">Employers will receive £3,000 for new apprentices of any age who have an employment start date of 1 April 2021 to 30 September 2021. They must have an apprenticeship start date of 1 April 2021 to 30 November 2021.</p>
+            <p class="govuk-body">Employers are also able to apply for new apprentices who they recruited under the Kickstart scheme.</p>
 
             <h2 class="govuk-heading-m">What you'll get paid</h2>
             <p class="govuk-body">We'll send the payment in 2 equal instalments for each apprentice.  We'll send the:</p>
@@ -100,7 +101,7 @@
                 </div>
             }
 
-            <a href="/@Model.AccountId/apply/@Model.AccountLegalEntityId/eligible-apprentices" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
+            <a asp-action="GetQualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now
                 <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                     <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
