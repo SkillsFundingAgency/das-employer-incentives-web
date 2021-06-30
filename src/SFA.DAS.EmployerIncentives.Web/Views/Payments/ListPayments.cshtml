@@ -112,9 +112,12 @@
                 </div>
             </details>
 
-            <p class="govuk-body">
-                <a href="https://help.apprenticeships.education.gov.uk/hc/en-gb#contact-us" class="govuk-link">Contact us</a> to cancel an application.
-            <p>
+            @if(Model.ShowCancelLink)
+            {
+                <p class="govuk-body">
+                    <a href="@Model.CancelLink" class="govuk-link">Cancel an application</a>
+                </p>
+            }
         </div>
     </div>
 
