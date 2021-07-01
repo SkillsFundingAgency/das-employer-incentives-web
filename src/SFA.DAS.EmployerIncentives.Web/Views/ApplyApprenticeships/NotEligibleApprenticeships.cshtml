@@ -1,0 +1,62 @@
+﻿@using System.Globalization
+@model SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.NotEligibleViewModel
+
+@{
+    var culture = new CultureInfo("en-GB");
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/apply/not-eligible";
+    ViewData["ZenDeskLabels"] = "ei-not-eligible";
+}
+<a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+                One or more apprentices are not eligible for the payment
+            </h1>
+            <p class="govuk-body">
+                @Model.OrganisationName can only apply for apprentices who joined their organisation from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+            </p>
+            <p class="govuk-body">
+                This is the date shown on the employment contract with @Model.OrganisationName and may be different to the apprenticeship start date.
+            </p>
+            <p class="govuk-body">
+                The following are not eligible for the payment:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                @foreach (var apprenticeship in Model.Apprentices)
+                {
+                    <li>@apprenticeship.DisplayName (joined on <span class="das-no-wrap">@apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")</span>)</li>
+                }
+            </ul>
+            <p class="govuk-body">
+                They will be removed from the application. If you need to correct the details, go back to edit.
+            </p>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Are you applying for apprentices who you previously recruited under the Kickstart scheme?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">
+                        If you can prove that you recruited an apprentice under the Kickstart scheme, you can apply for these apprentices using their apprenticeship start date instead of the employment start date.
+                    </p>
+                </div>
+            </details>
+
+                @if (Model.AllInEligible)
+                {
+                    <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-cancel">
+                        Cancel application
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
+                        Continue
+                    </a>
+                }
+            </div>
+        </div>
+    </main>

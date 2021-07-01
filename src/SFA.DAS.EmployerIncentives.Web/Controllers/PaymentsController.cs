@@ -6,7 +6,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.HashingService;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,15 +17,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticeshipIncentiveService _apprenticeshipIncentiveService;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly IHashingService _hashingService;
         private readonly ExternalLinksConfiguration _configuration;
 
-        public PaymentsController(IApprenticeshipIncentiveService apprenticeshipIncentiveService, ILegalEntitiesService legalEntitiesService, 
-                                  IHashingService hashingService, IOptions<ExternalLinksConfiguration> configuration)
+        public PaymentsController(IApprenticeshipIncentiveService apprenticeshipIncentiveService, ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _apprenticeshipIncentiveService = apprenticeshipIncentiveService;
             _legalEntitiesService = legalEntitiesService;
-            _hashingService = hashingService;
             _configuration = configuration.Value;
         }
 
@@ -106,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> NoApplications(string accountId, string accountLegalEntityId)
         {
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            var model = new NoApplicationsViewModel 
+            var model = new NoApplicationsViewModel
             { 
                 OrganisationName = legalEntity?.Name, 
                 AccountId = accountId, 

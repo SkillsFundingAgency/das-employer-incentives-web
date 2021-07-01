@@ -6,6 +6,8 @@
     ViewData["ZenDeskLabels"] = "ei-declaration";
 }
 
+<a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+
 <main class="govuk-main-wrapper" id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -22,11 +24,13 @@
             </p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>all the information in this application is correct</li>
-                <li>all the apprentices in this application are new employees who joined @Model.OrganisationName from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span></li>
-                <li>all the apprentices in this application are eligible in accordance with the funding rules</li>
-                <li>you understand that @Model.OrganisationName must tell Education and Skills Funding Agency about any change to any of the information provided</li>
-                <li>you have read and understood the agreement</li>
-                <li>you understand that if you have provided any inaccurate or misleading information, @Model.OrganisationName may have to repay any relevant hire a new apprentice payments</li>
+                <li>all the apprentices in this application are new employees who joined @Model.OrganisationName from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span></li>
+                <li>you understand we will be undertaking checks of apprentice employment date, which may include cross-referencing with PAYE data</li>
+                <li>you understand that where applicable, we may ask for evidence that your apprentice was recruited as part of the Kickstart scheme</li>
+                <li>all the apprentices in this application are eligible in accordance with <a href="https://www.gov.uk/guidance/apprenticeship-funding-rules" target="_blank">the funding rules</a></li>
+                <li>you understand we will stop payments and reclaim any funds paid for apprentices identified as ineligible</li>
+                <li>you understand that @Model.OrganisationName must contact apprenticeship service support about any changes to the information provided</li>
+                <li>you have read and understood <a href="@Model.AgreementsUrl" target="_blank">the agreement</a></li>
             </ul>
 
             <form asp-action="SubmitApplication" asp-controller="Apply" method="post" class="form">

@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Web.Controllers.PaymentsController _sut;
         private Mock<IApprenticeshipIncentiveService> _apprenticeshipIncentiveService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IHashingService> _hashingService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
@@ -38,7 +37,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         {
             _apprenticeshipIncentiveService = new Mock<IApprenticeshipIncentiveService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _hashingService = new Mock<IHashingService>();
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
 
@@ -47,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                 ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl
             });
 
-            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _hashingService.Object, _configuration.Object)
+            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -59,7 +57,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
             _sortField = ApplicationsSortField.ApprenticeName;
-            _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns(_fixture.Create<string>());
         }
 
         [Test]

@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
-            return View(new DeclarationViewModel(accountId, applicationId, legalEntityName));
+            return View(new DeclarationViewModel(accountId, applicationId, legalEntityName, _configuration.ManageApprenticeshipSiteUrl));
         }
 
         [HttpPost]

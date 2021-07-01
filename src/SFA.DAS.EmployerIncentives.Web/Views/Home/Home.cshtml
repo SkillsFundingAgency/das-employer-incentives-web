@@ -13,19 +13,9 @@
             <h1 class="govuk-heading-xl">
                 @Model.Title
             </h1>
-            <div class="das-highlight">
-                <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
-                    Apply for apprentices who joined your organisation before 1 April 2021 by 31 May 2021
-                </h2>
-                <p class="govuk-body">
-                    We're closing applications for apprentices who joined @Model.OrganisationName from 1 August 2020 to 31 March 2021.  The application deadline is 31 May 2021.
-                </p>
-                <p class="govuk-body govuk-!-margin-bottom-0">
-                    If @Model.OrganisationName takes on new apprentices from 1 April 2021 to 30 September 2021, they can apply from 1 June 2021.
-                </p>
-            </div>
+            
             <p class="govuk-body">
-                The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">30 September 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
+                The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
             </p>
             <p class="govuk-body">
                 The payment is in addition to the existing £1,000 an employer will already get for taking on an apprentice who is either:
@@ -36,18 +26,11 @@
             </ul>
 
             <h2 class="govuk-heading-m">Apprentices who joined your organisation before 1 April 2021</h2>
-            <p class="govuk-body">For apprentices who joined your organisation between 1 August 2020 and 31 March 2021 who are aged:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>16 to 24, employers will receive £2,000</li>
-                <li>25 and over, employers will receive £1,500</li>
-            </ul>
-            <p class="govuk-body">
-                Apprentices must have started their apprenticeship and you must have applied before 31 May 2021.
-            </p>
+            <p class="govuk-body">The application deadline for these apprentices has closed.</p>
 
             <h2 class="govuk-heading-m">Apprentices who joined your organisation from 1 April 2021</h2>
-            <p class="govuk-body">Employers will receive £3,000 for new employees of any age who have an employment start date of 1 April 2021 to 30 September 2021. They must have an apprenticeship start date of 1 April 2021 to 30 November 2021.</p>
-            <p class="govuk-body">You can apply for these apprentices from 1 June 2021.</p>
+            <p class="govuk-body">Employers will receive £3,000 for new apprentices of any age who have an employment start date of 1 April 2021 to 30 September 2021. They must have an apprenticeship start date of 1 April 2021 to 30 November 2021.</p>
+            <p class="govuk-body">Employers are also able to apply for new apprentices who they recruited under the Kickstart scheme.</p>
 
             <h2 class="govuk-heading-m">What you'll get paid</h2>
             <p class="govuk-body">We'll send the payment in 2 equal instalments for each apprentice.  We'll send the:</p>
@@ -63,43 +46,49 @@
             </p>
 
             <h2 class="govuk-heading-m">What you can use the payment for</h2>
+
             <p class="govuk-body">
-                The payment is different to apprenticeship levy funds, so @Model.OrganisationName can spend it on anything to support their organisation's costs.  @Model.OrganisationName does not have to pay it back.
+                @Model.OrganisationName can spend it on anything to support their organisation’s costs.  @Model.OrganisationName does not have to pay it back.
             </p>
 
             <h2 class="govuk-heading-m">
                 Eligibility
             </h2>
+
             <p class="govuk-body">
-                @Model.OrganisationName cannot apply for an existing employee who joined their organisation before 1 August 2020, even if they started an apprenticeship after this date.
+                @Model.OrganisationName cannot apply for an existing employee who joined your organisation before 1 April 2021, even if they started an apprenticeship after this date.
             </p>
             <p class="govuk-body">
-                @Model.OrganisationName can only apply for new apprentices who joined your organisation from 1 August 2020 to 30 September 2021.
+                @Model.OrganisationName can only apply for new apprentices who joined your organisation from 1 April 2021 to 30 September 2021.
             </p>
 
             <h2 class="govuk-heading-m">
                 Before you start
             </h2>
+
             <p class="govuk-body">
                 You'll need to:
             </p>
+
             <ul class="govuk-list govuk-list--bullet">
                 <li>add the apprentices you want to apply for to the apprenticeship service account.</li>
                 <li>know the date each apprentice joined your organisation</li>
             </ul>
 
-            <p class="govuk-body">
-                You can add @Model.OrganisationName's organisation and finance details when you apply, or someone else from @Model.OrganisationName can add them later.  This includes @Model.OrganisationName's:
-            </p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>legal name, registered address and contact details</li>
-                <li>Companies House number (if @Model.OrganisationName has one)</li>
-                <li>VAT number (if @Model.OrganisationName has one)</li>
-                <li>remittance email address</li>
-                <li>finance director or finance lead's contact details</li>
-                <li>bank account details</li>
-            </ul>
-
+            @if (Model.BankDetailsRequired)
+            {
+                <p class="govuk-body">
+                    You can add @Model.OrganisationName's organisation and finance details when you apply, or someone else from @Model.OrganisationName can add them later.  This includes @Model.OrganisationName's:
+                </p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>legal name, registered address and contact details</li>
+                    <li>Companies House number (if @Model.OrganisationName has one)</li>
+                    <li>VAT number (if @Model.OrganisationName has one)</li>
+                    <li>remittance email address</li>
+                    <li>finance director or finance lead's contact details</li>
+                    <li>bank account details</li>
+                </ul>
+            }
 
             @if (Model.NewAgreementRequired)
             {
@@ -107,12 +96,12 @@
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        If you're applying for apprentices with a start date from <span class="das-no-wrap">1 February 2021</span>, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
+                        If you're applying for apprentices with a start date from <span class="das-no-wrap">1 April 2021</span>, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
                     </strong>
                 </div>
             }
 
-            <a href="/@Model.AccountId/apply/@Model.AccountLegalEntityId/eligible-apprentices" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
+            <a asp-action="GetQualificationQuestion" asp-controller="ApplyQualification" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button">
                 Start now
                 <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                     <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>

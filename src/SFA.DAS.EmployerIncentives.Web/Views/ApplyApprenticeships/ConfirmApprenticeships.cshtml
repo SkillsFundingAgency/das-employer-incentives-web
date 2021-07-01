@@ -8,7 +8,14 @@
     ViewData["ZenDeskLabels"] = "ei-confirmapprentices";
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+@if (Model.HasIneligibleApprentices)
+{
+    <a asp-action="ConfirmApprenticeships" asp-route-all="true" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+}
+else
+{
+    <a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-back-link">Back</a>
+}
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -20,7 +27,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
                 @{
                     var pluraliseApprentice = Model.Apprentices.Count() == 1 ? "apprentice" : "apprentices";
-                } 
+                }
                 @Model.Apprentices.Count() @pluraliseApprentice
             </h2>
             <p class="govuk-body">
@@ -29,13 +36,12 @@
 
             <form asp-action="DisplayDeclaration" method="post">
                 @Html.AntiForgeryToken()
-                @Html.Hidden("newAgreementRequired", @Model.NewAgreementRequired)
 
                 <table class="govuk-table govuk-!-margin-bottom-3">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header">Apprentice</th>
-                            <th scope="col" class="govuk-table__header">Apprenticeship start date</th>
+                            <th scope="col" class="govuk-table__header">Joined organisation</th>
                             <th scope="col" class="govuk-table__header">Course</th>
                         </tr>
                     </thead>
@@ -47,7 +53,12 @@
                                     @apprenticeship.DisplayName
                                     <p class="govuk-body govuk-!-font-weight-regular das-!-color-dark-grey govuk-!-margin-bottom-0">ULN: @apprenticeship.Uln</p>
                                 </th>
-                                <td class="govuk-table__cell">@apprenticeship.StartDate.ToString("MMMM yyyy")</td>
+                                <td class="govuk-table__cell">
+                                    @if (apprenticeship.EmploymentStartDate.HasValue)
+                                    {
+                                        @apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")
+                                    }
+                                </td>
                                 <td class="govuk-table__cell">@apprenticeship.CourseName</td>
                             </tr>
                         }
@@ -64,7 +75,7 @@
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        All apprentices must have joined @Model.OrganisationName from <span class="das-no-wrap">1 August 2020</span> to <span class="das-no-wrap">31 March 2021</span>.
+                        All apprentices must have joined @Model.OrganisationName from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
                     </strong>
                 </div>
 
