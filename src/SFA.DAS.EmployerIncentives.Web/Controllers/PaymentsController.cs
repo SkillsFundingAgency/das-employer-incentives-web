@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             return RedirectToAction("ListPaymentsForLegalEntity", new { accountId, legalEntities.First().AccountLegalEntityId, sortOrder, sortField });
-        }
+        }       
 
         [Route("{accountLegalEntityId}/payment-applications")]
         public async Task<IActionResult> ListPaymentsForLegalEntity(string accountId, string accountLegalEntityId, string sortOrder, string sortField)
@@ -186,6 +186,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 accountsbaseUrl += "/";
             }
             return $"{accountsbaseUrl}accounts/{accountId}/agreements";
-        }        
+        }
     }
 }

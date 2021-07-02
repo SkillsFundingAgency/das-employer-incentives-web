@@ -56,6 +56,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
 
+        public AndConstraint<HttpResponseMessageAssertions> HaveInnerHtml(string selector, string innerHtml, string because = "", params object[] becauseArgs)
+        {
+            Execute.Assertion
+            .BecauseOf(because, becauseArgs)
+            .ForCondition(!string.IsNullOrEmpty(innerHtml))
+            .FailWith("InnerHtml to assert on not provided")
+            .Then
+            .Given(() => _document.DocumentElement.QuerySelector(selector))
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).InnerHtml == innerHtml)
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => innerHtml, item => item.InnerHtml);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
         public AndConstraint<HttpResponseMessageAssertions> NotHaveLink(string link, string because = "", params object[] becauseArgs)
         {
             Execute.Assertion

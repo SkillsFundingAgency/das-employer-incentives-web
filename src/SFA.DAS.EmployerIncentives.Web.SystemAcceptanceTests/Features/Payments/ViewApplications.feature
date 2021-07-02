@@ -43,3 +43,8 @@ Scenario: An employer with an application that is on the signed version is not p
 	Given an employer with an agreement version that has been signed
 	When the employer views their applications
 	Then the accept new employer agreement call to action is not shown
+
+Scenario: An employer with an stopped application is shown the stopped status
+	Given an employer with a stopped application
+	When the employer views their applications
+	Then the message showing the application is stopped is shown
