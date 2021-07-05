@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithApplicationWithAllInEligibleEmployerStartDates()
                 .WithApplicationWithSomeInEligibleEmployerStartDates()
                 .WithApplicationWithAllEligibleEmployerStartDates()
+                .WithPreviousApprenticeshipIncentives()
                 .Build();
 
             var readStore = await AccountsReadStoreBuilder.Create();

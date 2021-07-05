@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\Application\ApprenticeSelection - Copy.feature.cs" />
+  </ItemGroup>
  
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
@@ -31,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\Application\CancelApprenticeship.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Application\EmploymentStartDates.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EmploymentStartDates.feature.cs</LastGenOutput>
@@ -71,6 +79,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\Application\CancelApprenticeship.feature.cs">
+      <DependentUpon>CancelApprenticeship.feature</DependentUpon>
+    </Compile>
     <Compile Update="Features\Application\EmploymentStartDates.feature.cs">
       <DesignTime>True</DesignTime>
     </Compile>

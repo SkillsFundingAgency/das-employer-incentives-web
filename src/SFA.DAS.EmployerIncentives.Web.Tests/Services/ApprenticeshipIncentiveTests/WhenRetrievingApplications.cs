@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
         private HttpResponseMessage _httpResponseMessage;
         private string _accountId;
         private string _accountLegalEntityId;
-        private ApprenticeshipIncentiveService _sut;
+        private ApplicationService _sut;
         private Fixture _fixture;
         private string _baseUrl = "http://www.someurl.com";
 
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             _httpClient = new HttpClient(_httpClientHandlerFake);
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
-            _sut = new ApprenticeshipIncentiveService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
         }
 
         [Test]

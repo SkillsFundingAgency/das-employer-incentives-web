@@ -14,5 +14,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         Task Confirm(string accountId, Guid applicationId, string userEmail, string userName);
         Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId);
         Task SaveApprenticeshipDetails(ApprenticeshipDetailsRequest request);
+        Task<GetApplicationsModel> GetList(string accountId, string accountLegalEntityId);
     }
 }

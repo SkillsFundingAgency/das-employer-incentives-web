@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public interface IApprenticeshipIncentiveService
     {
-        Task<GetApplicationsModel> GetList(string accountId, string accountLegalEntityId);
+        Task<IEnumerable<ApprenticeshipIncentiveModel>> GetList(string accountId, string accountLegalEntityId);
     }
 }
