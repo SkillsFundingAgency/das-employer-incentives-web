@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -12,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.SelectNewApprenticeshipsTests
+namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.SelectingApprenticesTests
 {
     public class WhenSelectingApprentices
     {
@@ -30,6 +32,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
         public async Task Arrange()
         {
             _apprenticeshipIncentiveData = new Fixture().CreateMany<ApprenticeshipIncentiveModel>();
+
             _hashedAccountId = Guid.NewGuid().ToString();
             _hashedLegalEntityId = Guid.NewGuid().ToString();
             _organisationName = Guid.NewGuid().ToString();
@@ -44,7 +47,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
                 .Setup(m => m.GetList(_hashedAccountId, _hashedLegalEntityId))
                 .ReturnsAsync(_apprenticeshipIncentiveData);
 
-            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object);
+            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object)
+            {
+                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
+            };
 
             _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
@@ -89,6 +95,29 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
                         .Excluding(x => x.Id)
                         .Excluding(x => x.DisplayName)
                 );
+        }
+
+        [Test]
+        public async Task Then_should_display_a_list_of_apprentices_with_checked_ones_selected()
+        {
+            foreach(var _apprenticeshipIncentive in _apprenticeshipIncentiveData)
+            {
+                _apprenticeshipIncentive.Selected = false;
+            }
+
+            _mockApprenticeshipIncentiveService
+               .Setup(m => m.GetList(_hashedAccountId, _hashedLegalEntityId))
+               .ReturnsAsync(_apprenticeshipIncentiveData);
+
+            _sut.TempData["selected"] = new string[] { _apprenticeshipIncentiveData.First().Id };
+           
+            _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
+            
+            _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
+
+            _model.ApprenticeshipIncentives.Single(a => a.Id == _apprenticeshipIncentiveData.First().Id).Selected.Should().BeTrue();
+            _model.ApprenticeshipIncentives.Any(a => a.Id != _apprenticeshipIncentiveData.First().Id && a.Selected).Should().BeFalse();
+            _sut.TempData.Should().BeEmpty();
         }
 
         [Test]

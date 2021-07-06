@@ -1,0 +1,63 @@
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel
+@model CancelledApprenticeshipsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/confirm-cancel-application";
+    ViewData["ZenDeskLabels"] = "ei-confirm-cancel-apprentices";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <div class="govuk-panel govuk-panel--confirmation">
+                @{
+                    var pluraliseApplication = Model.ApprenticeshipIncentives.Count() == 1 ? "application" : "applications";
+                }
+
+                @if (Model.ApprenticeshipIncentives.Count() == 1)
+                {
+                    <h1 class="govuk-panel__title">One @pluraliseApplication cancelled</h1>
+                }
+                else
+                {
+                    <h1 class="govuk-panel__title">@Model.ApprenticeshipIncentives.Count() @pluraliseApplication cancelled</h1>
+                }
+            </div>
+
+            <p class="govuk-body">
+                You've cancelled the following for the hire a new apprentice payment:
+            </p>
+
+            @foreach (var apprenticeship in Model.ApprenticeshipIncentives)
+            {
+                <h3 class="govuk-heading-s">ULN: @apprenticeship.Uln</h3>
+            }
+
+            <h2 class="govuk-heading-m">What happens next</h2>
+
+            <p class="govuk-body">
+                For the @pluraliseApplication you’ve cancelled, @Model.OrganisationName will:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>not receive any more payments</li>
+                <li>have to repay any payments that they’ve already received</li>
+            </ul>
+            <p class="govuk-body">
+                If you’ve already received a payment, we will try to reclaim it automatically from @Model.OrganisationName’s future incentive payments. If we cannot reclaim the amount, we will invoice @Model.OrganisationName for payment.
+            </p>
+            <p class="govuk-body">
+                It can take up to 4 working days for this change to show within your applications.
+            </p>
+            <p class="govuk-body">
+                <a class="govuk-button" href="@Model.ViewApplicationsUrl">
+                    View applications
+                </a>
+            </p>
+            <p class="govuk-body">
+                <a href="https://www.smartsurvey.co.uk/s/HANAIP" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)
+            </p>
+        </div>
+    </div>
+</main>

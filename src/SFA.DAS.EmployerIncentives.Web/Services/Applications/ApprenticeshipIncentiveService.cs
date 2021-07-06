@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
@@ -17,6 +19,31 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             _client = client;
             _hashingService = hashingService;
+        }
+
+        public async Task Cancel(string accountLegalEntityId, IEnumerable<ApprenticeshipIncentiveModel> apprenticeshipIncentives)
+        {
+            var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
+
+            var url = $"withdrawals";
+            var serviceRequest = new ServiceRequest()
+            {
+                TaskId = Guid.NewGuid().ToString(),
+                TaskCreatedDate = DateTime.UtcNow
+            };
+
+            foreach (var apprenticeshipIncentive in apprenticeshipIncentives)
+            {
+                var request = new WithdrawRequest(
+                    WithdrawalType.Employer,
+                    decodedAccountLegalEntityId,
+                    apprenticeshipIncentive.Uln,
+                    serviceRequest);
+
+                using var response = await _client.PostAsJsonAsync(url, request);
+
+                response.EnsureSuccessStatusCode();
+            }
         }
 
         public async Task<IEnumerable<ApprenticeshipIncentiveModel>> GetList(string accountId, string accountLegalEntityId)

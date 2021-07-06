@@ -252,6 +252,17 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
 
             AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
 
+            _server
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/withdrawals")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.Accepted));
+
             return this;
         }
 
