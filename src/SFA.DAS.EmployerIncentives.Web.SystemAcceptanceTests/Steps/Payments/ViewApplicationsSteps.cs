@@ -74,6 +74,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.Rejected);
         }
 
+        [Given(@"an employer with an application withdrawn by compliance")]
+        public void GivenAnEmployerWithAnApplicationWithdrawnByCompliance()
+        {
+            AnEmployerWithAnApplicationWithdrawnByCompliance(_testApplicationId);
+        }
+
+        [Given(@"an employer has withdrawn an application")]
+        public void GivenAnEmployerHasWithdrawnAnApplication()
+        {
+            AnEmployerHasWithdrawnAnApplication(_testApplicationId);
+        }
+
         [When(@"the employer views their applications")]
         public async Task WhenTheEmployerViewsTheirApplications()
         {
@@ -176,6 +188,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");            
             response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-stopped']", $"Apprenticeship paused or stopped");
+        }
+
+        [Then(@"the message showing the application is rejected is shown")]
+        public void ThenTheMessageShowingTheApplicationisRejectedIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-withdrawnByCompliance']", $"Application rejected");
+        }
+
+        [Then(@"the message showing the application is cancelled is shown")]
+        public void ThenTheMessageShowingTheApplicationisCancelledIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-withdrawnByEmployer']", $"Application cancelled");
         }
 
         [Then(@"the accept new employer agreement call to action is not shown")]
@@ -363,6 +389,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.RequiresNewEmployerAgreement, true)
                     .With(p => p.PaymentIsStopped, false)
+                    .With(p => p.WithdrawnByCompliance, false)
+                    .With(p => p.WithdrawnByEmployer, false)
                     .Create()
                     )
                 .Create()
@@ -397,6 +425,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .With(p => p.FirstPaymentStatus,
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.RequiresNewEmployerAgreement, false)
+                    .With(p => p.WithdrawnByCompliance, false)
+                    .With(p => p.WithdrawnByEmployer, false)
                     .Create()
                     )
                 .Create()
@@ -431,9 +461,82 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .With(p => p.FirstPaymentStatus,
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.PaymentIsStopped, true)
+
                     .Create()
                     )
                 .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnEmployerWithAnApplicationWithdrawnByCompliance(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.WithdrawnByCompliance, true)
+                            .With(p => p.WithdrawnByEmployer, false)
+                            .With(p => p.PaymentIsStopped, false)
+                            .Create()
+                    )
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnEmployerHasWithdrawnAnApplication(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.WithdrawnByEmployer, true)
+                            .With(p => p.WithdrawnByCompliance, true)
+                            .With(p => p.PaymentIsStopped, false)
+                            .Create()
+                    )
+                    .Create()
             };
 
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
