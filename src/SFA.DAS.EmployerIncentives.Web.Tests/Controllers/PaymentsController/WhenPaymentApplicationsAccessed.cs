@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         }
 
         [Test]
-        public async Task Then_a_shutter_page_is_shown_if_no_applcations()
+        public async Task Then_a_shutter_page_is_shown_if_no_applications()
         {
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
@@ -278,6 +278,40 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             modelApplications[0].ULN.Should().Be(applications[2].ULN);
             modelApplications[1].ULN.Should().Be(applications[0].ULN);
             modelApplications[2].ULN.Should().Be(applications[1].ULN);
+        }
+
+        [TestCase(false, false, false, false)]
+        [TestCase(true, false, true, false)]
+        [TestCase(false, true, false, true)]
+        public async Task Then_stopped_message_is_shown_when_the_apprenticeship_incentive_is_in_stopped_state(
+            bool firstPaymentStatusPaymentIsStopped,
+            bool secondPaymentStatusPaymentIsStopped,
+            bool showStoppedMessageInFirstColumn,
+            bool showStoppedMessageInSecondColumn)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.PaymentIsStopped, firstPaymentStatusPaymentIsStopped).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.PaymentIsStopped, secondPaymentStatusPaymentIsStopped).Create())
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInFirstColumn);
+            viewModel.Applications.First().SecondPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInSecondColumn);
         }
     }
 }
