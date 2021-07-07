@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using static SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.TestData.Account;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -284,10 +283,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is shown the application cancelled page")]
         public void ThenTheEmployerIsShownTheApplicationCancelledPage()
         {
+            var hashedAccountId = _testData.Get<string>("HashedAccountId");
+            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
+
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CancelledApprenticeshipsViewModel;
             model.Should().NotBeNull();
+
+            _continueNavigationResponse.Should().HaveLink("[data-linktype='cancel-view-applications']", $"/{hashedAccountId}/payments/{hashedLegalEntityId}/payment-applications");
+            _continueNavigationResponse.Should().HaveLink("[data-linktype='cancel-survey']", @"https://www.smartsurvey.co.uk/s/HANAIP");
         }
     }
 }

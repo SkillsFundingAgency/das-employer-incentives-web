@@ -48,8 +48,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             .ForCondition(!string.IsNullOrEmpty(link))
             .FailWith("Link to assert on not provided")
             .Then
-            .Given(() => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value)
-            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value == link)
+            .Given(() => _document.DocumentElement.QuerySelector(selector)?.Attributes["href"]?.Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector)?.Attributes["href"]?.Value == link)
             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
                 _ => link, item => item);
 
@@ -63,8 +63,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             .ForCondition(!string.IsNullOrEmpty(buttonText))
             .FailWith("Button to assert on not provided")
             .Then
-            .Given(() => _document.DocumentElement.QuerySelector(selector).InnerHtml)
-            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).InnerHtml.Trim() == buttonText.Trim())
+            .Given(() => _document.DocumentElement.QuerySelector(selector)?.InnerHtml)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector)?.InnerHtml?.Trim() == buttonText.Trim())
             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
                 _ => buttonText, item => item);
 
@@ -77,8 +77,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             .ForCondition(!string.IsNullOrEmpty(action))
             .FailWith("Button to assert on not provided")
             .Then
-            .Given(() => _document.DocumentElement.QuerySelector("form[method=\"post\"]").Attributes["action"].Value)
-            .ForCondition(t => _document.DocumentElement.QuerySelector("form[method=\"post\"]").Attributes["action"].Value == action)
+            .Given(() => _document.DocumentElement.QuerySelector("form[method=\"post\"]")?.Attributes["action"]?.Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector("form[method=\"post\"]")?.Attributes["action"]?.Value == action)
             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
                 _ => action, item => item);
 
