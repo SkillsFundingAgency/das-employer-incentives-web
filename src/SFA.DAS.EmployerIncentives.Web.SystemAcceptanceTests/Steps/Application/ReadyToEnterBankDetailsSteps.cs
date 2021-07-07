@@ -115,7 +115,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var parser = new HtmlParser();
             var document = parser.ParseDocument(await _continueNavigationResponse.Content.ReadAsStreamAsync());
 
-            document.Title.Should().Be($"We need {_data.LegalEntity.LegalEntityName}'s bank details");
+            document.Title.Should().Be($"Can you add {_data.LegalEntity.LegalEntityName}'s organisation and finance details now?");
         }
 
         [When(@"the employer confirms they can provide their bank details")]

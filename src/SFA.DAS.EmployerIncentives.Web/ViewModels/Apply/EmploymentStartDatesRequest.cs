@@ -9,9 +9,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public string AccountLegalEntityId { get; set; }
 
         public Guid ApplicationId { get; set; }
-
+        
+        public List<string> ApprenticeshipIds { get; set; }
         public List<int?> EmploymentStartDateYears { get; set; }
-
         public List<int?> EmploymentStartDateMonths { get; set; }
         public List<int?> EmploymentStartDateDays { get; set; }
 
@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
         public static string EmploymentStartDateMonthsPropertyName => nameof(EmploymentStartDateMonths);
 
         public static string EmploymentStartDateDaysPropertyName => nameof(EmploymentStartDateDays);
+        public static string ApprenticeshipIdsPropertyName => nameof(ApprenticeshipIds);
 
     }
 }

@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             Apprentices = apprentices.ToList();
-            TotalPaymentAmount = Apprentices.Sum(x => x.ExpectedAmount);
+            TotalPaymentAmount = Apprentices.Where(x => x.HasEligibleEmploymentStartDate).Sum(x => x.ExpectedAmount);
             BankDetailsRequired = bankDetailsRequired;
             OrganisationName = organisationName;
             HasIneligibleApprentices = Apprentices.Any(a => !a.HasEligibleEmploymentStartDate);

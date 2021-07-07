@@ -54,7 +54,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         public void GivenAnEmployerWithALaterAgreementVersionThatHasBeenSigned()
         {
             AnEmployerHasAnApplicationWithAnAgreementVersionThatDoesNotNeedSigning(_testApplicationId);
-        }        
+        }
+
+        [Given(@"an employer with a stopped application")]
+        public void GivenAnEmployerWithAStoppedApplication()
+        {
+            AnEmployerWithAStoppedApplication(_testApplicationId);
+        }
 
         [Given(@"an employer without bank details has a single submitted application")]
         public void GivenAnEmployerWithoutBankDetailsHasASingleSubmittedApplication()
@@ -163,6 +169,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
             response.Should().HaveLink("[data-linktype='view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
             response.Should().HaveLink("[data-linktype='payment-status-view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");            
+        }
+
+        [Then(@"the message showing the application is stopped is shown")]
+        public void ThenTheMessageShowingTheApplicationisStoppedIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");            
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-stopped']", $"Apprenticeship paused or stopped");
         }
 
         [Then(@"the accept new employer agreement call to action is not shown")]
@@ -349,6 +362,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .With(p => p.FirstPaymentStatus, 
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.RequiresNewEmployerAgreement, true)
+                    .With(p => p.PaymentIsStopped, false)
                     .Create()
                     )
                 .Create()
@@ -401,6 +415,40 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(getApplications)));
-        }        
+        }
+
+        private void AnEmployerWithAStoppedApplication(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstPaymentStatus,
+                    _fixture.Build<PaymentStatusModel>()
+                    .With(p => p.PaymentIsStopped, true)
+                    .Create()
+                    )
+                .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
     }
 }
