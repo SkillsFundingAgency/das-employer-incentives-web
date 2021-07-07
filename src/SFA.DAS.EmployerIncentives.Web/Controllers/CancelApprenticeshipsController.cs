@@ -28,7 +28,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("{accountLegalEntityId}/select-apprentices")]
         public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
         {            
-            
             var model = await GetSelectViewModel(accountId, accountLegalEntityId);
 
             if (!model.ApprenticeshipIncentives.Any())
@@ -64,7 +63,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ListPaymentsForLegalEntity", "Payments", new { request.AccountId, request.AccountLegalEntityId });
             }
 
-            // do the withdraw and display the confirmation
             var apprenticeshipIncentivesToWithdraw = (await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId)).ApprenticeshipIncentives.Where(a => a.Selected);
 
             await _apprenticeshipIncentiveService.Cancel(request.AccountLegalEntityId, apprenticeshipIncentivesToWithdraw);

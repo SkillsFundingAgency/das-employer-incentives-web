@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
         [Test]
         public void Then_page_title_is_set()
         {
-            _model.Title.Should().Be("Which apprentices do you want to cancel an application for?");
+            _model.Title.Should().Be("Application cancelled");
         }
 
         [Test]
@@ -115,7 +115,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
         public void Then_apprenticeships_are_withdrawn()
         {
             _mockApprenticeshipIncentiveService
-               .Verify(m => m.Cancel(_hashedAccountLegalEntityId, _apprenticeshipIncentiveData.Where(a => a.Selected)), Times.Once);
+               .Verify(m => m.Cancel(_hashedAccountLegalEntityId, It.Is<IEnumerable<ApprenticeshipIncentiveModel>>(x => VerifySelected(x))), Times.Once);
+        }
+
+        private bool VerifySelected(IEnumerable<ApprenticeshipIncentiveModel> list)
+        {
+            try
+            {
+                list.Should().BeEquivalentTo(_apprenticeshipIncentiveData.Where(a => a.Selected));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }            
         }
 
         [Test]
@@ -123,7 +136,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
         {
             // assert 
             _model.ApprenticeshipIncentives.Should()
-                .BeEquivalentTo(_apprenticeshipIncentiveData);
+                .BeEquivalentTo(_apprenticeshipIncentiveData.Where(a => a.Selected));
         }
     }
 }
