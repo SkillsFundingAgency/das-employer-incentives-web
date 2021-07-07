@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -12,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.SelectNewApprenticeshipsTests
+namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.SelectedApprenticesTests
 {
     public class WhenSelectedApprentices
     {
@@ -42,7 +44,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
                 .Setup(m => m.GetList(_hashedAccountId, _hashedAccountLegalEntityId))
                 .ReturnsAsync(_apprenticeshipIncentiveData);
 
-            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object);           
+            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object)
+            {
+                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
+            };
         }
 
         [Test]

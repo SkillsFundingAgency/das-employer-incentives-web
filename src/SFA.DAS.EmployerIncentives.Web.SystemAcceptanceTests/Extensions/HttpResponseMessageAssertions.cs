@@ -56,6 +56,35 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
 
+        public AndConstraint<HttpResponseMessageAssertions> HaveButton(string selector, string buttonText, string because = "", params object[] becauseArgs)
+        {
+            Execute.Assertion
+            .BecauseOf(because, becauseArgs)
+            .ForCondition(!string.IsNullOrEmpty(buttonText))
+            .FailWith("Button to assert on not provided")
+            .Then
+            .Given(() => _document.DocumentElement.QuerySelector(selector).InnerHtml)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).InnerHtml.Trim() == buttonText.Trim())
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => buttonText, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+        public AndConstraint<HttpResponseMessageAssertions> HaveForm(string action, string because = "", params object[] becauseArgs)
+        {            
+            Execute.Assertion
+            .BecauseOf(because, becauseArgs)
+            .ForCondition(!string.IsNullOrEmpty(action))
+            .FailWith("Button to assert on not provided")
+            .Then
+            .Given(() => _document.DocumentElement.QuerySelector("form[method=\"post\"]").Attributes["action"].Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector("form[method=\"post\"]").Attributes["action"].Value == action)
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => action, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
         public AndConstraint<HttpResponseMessageAssertions> NotHaveLink(string link, string because = "", params object[] becauseArgs)
         {
             Execute.Assertion
