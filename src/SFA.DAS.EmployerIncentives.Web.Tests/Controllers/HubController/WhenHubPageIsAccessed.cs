@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
     {
         private Web.Controllers.HubController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IApprenticeshipIncentiveService> _applicationService;
+        private Mock<IApplicationService> _applicationService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
         private string _accountId;
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _legalEntities[0].AccountLegalEntityId = _accountLegalEntityId;
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(_legalEntities);
 
-            _applicationService = new Mock<IApprenticeshipIncentiveService>();
+            _applicationService = new Mock<IApplicationService>();
             var applicationsResponse = new GetApplicationsModel
             {
                 BankDetailsStatus = BankDetailsStatus.Completed,
