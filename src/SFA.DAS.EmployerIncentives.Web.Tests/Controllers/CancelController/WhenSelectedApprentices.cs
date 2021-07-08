@@ -165,21 +165,26 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
         }
 
         [Test]
-        public async Task Then_should_have_apprentices_ordered_by_last_name()
+        public async Task Then_should_have_apprentices_ordered_by_first_name_last_name_uln()
         {
             // arrange
             var selected = new SelectApprenticeshipsRequest()
             {
                 AccountId = _hashedAccountId,
                 AccountLegalEntityId = _hashedAccountLegalEntityId,
-                SelectedApprenticeships = new List<string>()
+                SelectedApprenticeships = _apprenticeshipIncentiveData.Select(a => a.Id).ToList()
             };
-
+            
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as ConfirmApprenticeshipsViewModel;
 
             // assert 
-            result.ApprenticeshipIncentives.Should().BeInAscendingOrder(x => x.LastName);
+            var expectedResults = _apprenticeshipIncentiveData
+                                        .OrderBy(a => a.FirstName)
+                                        .ThenBy(a => a.LastName)
+                                        .ThenBy(a => a.Uln);
+
+            result.ApprenticeshipIncentives.Should().ContainInOrder(expectedResults);
         }
 
         [Test]
