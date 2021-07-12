@@ -319,17 +319,36 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                         .WithBody(JsonConvert.SerializeObject(legalEntities)));
         }
 
+        [Given(@"an employer with an application with a clawed back payment")]
+        public void GivenAnEmployerWithAnApplicationWithAClawedBackPayment()
+        {
+            AnApplicationWithAClawedBackPayment(_testApplicationId);
+        }
+
+        [Then(@"the message showing the payment is reclaimed is shown")]
+        public void ThenTheMessageShowingThePaymentIsWithdrawnIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-payment-clawback']", $"Payment reclaimed");
+        }
+
+
         private void AnEmployerHasASingleSubmittedApplication(Guid applicationId, BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
         {
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
+            
+            var clawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = null, ClawbackAmount = null }; 
+            
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                 .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstClawbackStatus, clawbackStatus)
+                .With(p => p.SecondClawbackStatus, clawbackStatus)
                 .Create()
             };
             applications[0].Status = "Submitted";
@@ -355,6 +374,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
+            var clawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = null, ClawbackAmount = null };
+
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
@@ -365,6 +387,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .With(p => p.PaymentIsStopped, false)
                     .Create()
                     )
+                .With(p => p.FirstClawbackStatus, clawbackStatus)
+                .With(p => p.SecondClawbackStatus, clawbackStatus)
                 .Create()
             };
 
@@ -390,10 +414,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
+            var clawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = null, ClawbackAmount = null };
+
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                 .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstClawbackStatus, clawbackStatus)
+                .With(p => p.SecondClawbackStatus, clawbackStatus)
                 .With(p => p.FirstPaymentStatus,
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.RequiresNewEmployerAgreement, false)
@@ -424,16 +453,58 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
+            var clawbackStatus = new ClawbackStatusModel
+                {ClawbackDate = null, ClawbackAmount = null};
+
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                 .With(p => p.AccountId, _testData.AccountId)
+                .With(p => p.FirstClawbackStatus, clawbackStatus)
+                .With(p => p.SecondClawbackStatus, clawbackStatus)
                 .With(p => p.FirstPaymentStatus,
                     _fixture.Build<PaymentStatusModel>()
                     .With(p => p.PaymentIsStopped, true)
                     .Create()
                     )
                 .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnApplicationWithAClawedBackPayment(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var clawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>() };
+
+            var unsetClawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = null, ClawbackAmount = null };
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, unsetClawbackStatus)
+                    .Create()
             };
 
             var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };

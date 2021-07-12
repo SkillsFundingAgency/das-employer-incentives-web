@@ -48,3 +48,9 @@ Scenario: An employer with an stopped application is shown the stopped status
 	Given an employer with a stopped application
 	When the employer views their applications
 	Then the message showing the application is stopped is shown
+
+	
+Scenario: An employer with a clawed back payment is shown the payment withdrawn status
+	Given an employer with an application with a clawed back payment
+	When the employer views their applications
+	Then the message showing the payment is reclaimed is shown
