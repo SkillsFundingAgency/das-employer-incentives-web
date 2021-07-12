@@ -165,11 +165,13 @@
                             </td>
                             <td data-label="First payment" class="govuk-table__cell">
                                 <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
+                                <partial name="_ClawbackStatus" for="@apprenticeApplication.FirstClawbackStatus" />
                             </td>
                             <td data-label="Second payment" class="govuk-table__cell">
                                 @if (apprenticeApplication.ShowSecondPaymentStatus)
                                 {
                                     <partial name="_PaymentStatus" for="@apprenticeApplication.SecondPaymentStatus" />
+                                    <partial name="_ClawbackStatus" for="@apprenticeApplication.SecondClawbackStatus" />
                                 }
                             </td>
                         </tr>
