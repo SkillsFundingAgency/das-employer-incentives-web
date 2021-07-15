@@ -78,7 +78,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                ApprenticeshipIncentives = apprenticeshipIncentives.OrderBy(a => a.LastName),
+                ApprenticeshipIncentives = apprenticeshipIncentives
+                                        .OrderBy(a => a.FirstName)
+                                        .ThenBy(a => a.LastName)
+                                        .ThenBy(a => a.Uln),
                 OrganisationName = legalEntity?.Name ?? string.Empty
             };
 
