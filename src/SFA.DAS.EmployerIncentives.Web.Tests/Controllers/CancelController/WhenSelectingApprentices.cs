@@ -123,7 +123,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
         [Test]
         public void Then_should_have_apprentices_ordered_by_last_name()
         {
-            _model.ApprenticeshipIncentives.Should().BeInAscendingOrder(x => x.LastName);
+            var expectedResults = _model.ApprenticeshipIncentives
+                                        .OrderBy(a => a.FirstName)
+                                        .ThenBy(a => a.LastName)
+                                        .ThenBy(a => a.Uln);
+
+            _model.ApprenticeshipIncentives.Should().ContainInOrder(expectedResults);
         }
 
         [Test]
