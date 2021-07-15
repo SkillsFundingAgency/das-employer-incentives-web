@@ -339,9 +339,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-            
-            var clawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = null, ClawbackAmount = null }; 
+
+            ClawbackStatusModel clawbackStatus = null; 
             
             var applications = new List<ApprenticeApplicationModel>
             {
@@ -374,8 +373,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            var clawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = null, ClawbackAmount = null };
+            ClawbackStatusModel clawbackStatus = null;
 
             var applications = new List<ApprenticeApplicationModel>
             {
@@ -414,8 +412,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            var clawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = null, ClawbackAmount = null };
+            ClawbackStatusModel clawbackStatus = null;
 
             var applications = new List<ApprenticeApplicationModel>
             {
@@ -453,8 +450,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            var clawbackStatus = new ClawbackStatusModel
-                {ClawbackDate = null, ClawbackAmount = null};
+            ClawbackStatusModel clawbackStatus = null;
 
             var applications = new List<ApprenticeApplicationModel>
             {
@@ -495,8 +491,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var clawbackStatus = new ClawbackStatusModel
                 { ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>() };
 
-            var unsetClawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = null, ClawbackAmount = null };
+            ClawbackStatusModel unsetClawbackStatus = null; 
 
             var applications = new List<ApprenticeApplicationModel>
             {
