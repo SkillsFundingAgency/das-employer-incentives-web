@@ -25,8 +25,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         } 
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
+        [Route("{accountLegalEntityId}/cancel-application")]
+        public async Task<IActionResult> CancelApplication(string accountId, string accountLegalEntityId)
         {            
             var model = await GetSelectViewModel(accountId, accountLegalEntityId);
 
@@ -35,12 +35,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ListPaymentsForLegalEntity", "Payments", new { accountId, accountLegalEntityId });
             }            
             
-            return View(model);
+            return View("SelectApprenticeships", model);
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest request)
+        [Route("{accountLegalEntityId}/confirm-cancel-application")]
+        public async Task<IActionResult> Confirm(SelectApprenticeshipsRequest request)
         {
             if (!request.HasSelectedApprenticeships)
             {
@@ -48,15 +48,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
                 ModelState.AddModelError(viewModel.FirstCheckboxId, viewModel.SelectApprenticeshipsMessage);
 
-                return View(viewModel);
+                return View("SelectApprenticeships", viewModel);
             }
 
             return View("ConfirmApprentices", await GetConfirmViewModel(request));
         }
 
         [HttpPost]
-        [Route("{accountLegalEntityId}/confirm-cancel-application")]
-        public async Task<IActionResult> Confirm(SelectApprenticeshipsRequest request)
+        [Route("{accountLegalEntityId}/application-cancelled")]
+        public async Task<IActionResult> Cancelled(SelectApprenticeshipsRequest request)
         {
             if (!request.HasSelectedApprenticeships)
             {

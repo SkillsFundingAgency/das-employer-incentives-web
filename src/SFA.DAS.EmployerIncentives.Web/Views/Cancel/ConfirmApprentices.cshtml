@@ -7,7 +7,7 @@
     ViewData["ZenDeskLabels"] = "ei-confirm-cancel-apprentices";
 }
 
-<a asp-action="SelectApprenticeships" asp-controller="Cancel" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+<a asp-action="CancelApplication" asp-controller="Cancel" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -23,7 +23,7 @@
                 @Model.ApprenticeshipIncentives.Count() @pluraliseApprentice
             </h2>
 
-            <form asp-action="Confirm" method="post">
+            <form asp-action="Cancelled" method="post">
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.OrganisationName)
 
@@ -61,7 +61,7 @@
                 }
 
                 <p class="govuk-body govuk-!-margin-bottom-6">
-                    <a asp-action="SelectApprenticeships" asp-controller="Cancel" asp-route-accountid="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-link govuk-link--no-visited-state" data-linktype='cancel-change'>
+                    <a asp-action="CancelApplication" asp-controller="Cancel" asp-route-accountid="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-link govuk-link--no-visited-state" data-linktype='cancel-change'>
                         Change apprentices
                     </a>
                 </p>

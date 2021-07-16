@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
                 .Setup(m => m.Cancel(_hashedAccountLegalEntityId, _apprenticeshipIncentiveData.Where(a => a.Selected)))
                 .Verifiable();
 
-            _result = await _sut.Confirm(selected);
+            _result = await _sut.Cancelled(selected);
             _model = ((ViewResult)_result).Model as CancelledApprenticeshipsViewModel;            
         }
 
@@ -78,7 +78,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
             };
 
             // act
-            var result = (await _sut.Confirm(selected)) as RedirectToActionResult;
+            var result = (await _sut.Cancelled(selected)) as RedirectToActionResult;
 
             // assert  
             result.ControllerName.Should().Be("Payments");
