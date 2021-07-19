@@ -6,6 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -56,16 +57,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("{accountLegalEntityId}/application-cancelled")]
-        public async Task<IActionResult> Cancelled(SelectApprenticeshipsRequest request)
+        public async Task<IActionResult> Cancelled(SelectApprenticeshipsRequest request, string accountId)
         {
             if (!request.HasSelectedApprenticeships)
             {
                 return RedirectToAction("ListPaymentsForLegalEntity", "Payments", new { request.AccountId, request.AccountLegalEntityId });
             }
 
-            var apprenticeshipIncentivesToWithdraw = (await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId)).ApprenticeshipIncentives.Where(a => a.Selected);
+            var apprenticeshipIncentivesToWithdraw = 
+                (await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId))
+                .ApprenticeshipIncentives.Where(a => a.Selected).ToList();
 
-            await _apprenticeshipIncentiveService.Cancel(request.AccountLegalEntityId, apprenticeshipIncentivesToWithdraw);
+            var emailAddress = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.EmailAddress))?.Value;
+
+            await _apprenticeshipIncentiveService.Cancel(request.AccountLegalEntityId, apprenticeshipIncentivesToWithdraw,
+                accountId, emailAddress);
 
             return View("ConfirmCancellation", await GetCancelledViewModel(request,  apprenticeshipIncentivesToWithdraw));
         }

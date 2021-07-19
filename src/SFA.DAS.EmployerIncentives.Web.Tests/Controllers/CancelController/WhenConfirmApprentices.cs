@@ -12,7 +12,9 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.ConfirmApprenticesTests
 {
@@ -21,6 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
         private string _hashedAccountId;
         private string _hashedAccountLegalEntityId;
         private string _organisationName;
+        private string _emailAddress;
         private IEnumerable<ApprenticeshipIncentiveModel> _apprenticeshipIncentiveData;
         private Mock<ILegalEntitiesService> _mockLegalEntitiesService;
         private Mock<IApprenticeshipIncentiveService> _mockApprenticeshipIncentiveService;
@@ -46,11 +49,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
                 .Setup(m => m.GetList(_hashedAccountId, _hashedAccountLegalEntityId))
                 .ReturnsAsync(_apprenticeshipIncentiveData);
 
-            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object)
-            {
-                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
-            };
-
             var selected = new SelectApprenticeshipsRequest()
             {
                 AccountId = _hashedAccountId,
@@ -58,11 +56,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
                 SelectedApprenticeships = _apprenticeshipIncentiveData.Where(a => a.Selected).Select(a => a.Id).ToList()
             };
 
-            _mockApprenticeshipIncentiveService
-                .Setup(m => m.Cancel(_hashedAccountLegalEntityId, _apprenticeshipIncentiveData.Where(a => a.Selected)))
-                .Verifiable();
+            _emailAddress = "test@one.lv";
+            var claims = new[] {new Claim(EmployerClaimTypes.EmailAddress, _emailAddress)};
+            var user = new ClaimsPrincipal(new ClaimsIdentity(claims));
 
-            _result = await _sut.Cancelled(selected);
+            _sut = new Web.Controllers.CancelController(_mockApprenticeshipIncentiveService.Object, _mockLegalEntitiesService.Object)
+            {
+                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>()),
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext {User = user}}
+            };
+
+            _mockApprenticeshipIncentiveService
+                .Setup(m => m.Cancel(_hashedAccountLegalEntityId, _apprenticeshipIncentiveData.Where(a => a.Selected),
+                            _hashedAccountId, _emailAddress))
+                        .Verifiable();
+
+            _result = await _sut.Cancelled(selected, _hashedAccountId);
             _model = ((ViewResult)_result).Model as CancelledApprenticeshipsViewModel;            
         }
 
@@ -78,7 +87,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
             };
 
             // act
-            var result = (await _sut.Cancelled(selected)) as RedirectToActionResult;
+            var result = (await _sut.Cancelled(selected, _hashedAccountId)) as RedirectToActionResult;
 
             // assert  
             result.ControllerName.Should().Be("Payments");
@@ -115,7 +124,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Conf
         public void Then_apprenticeships_are_withdrawn()
         {
             _mockApprenticeshipIncentiveService
-               .Verify(m => m.Cancel(_hashedAccountLegalEntityId, It.Is<IEnumerable<ApprenticeshipIncentiveModel>>(x => VerifySelected(x))), Times.Once);
+               .Verify(m => m.Cancel(_hashedAccountLegalEntityId, 
+                   It.Is<IEnumerable<ApprenticeshipIncentiveModel>>(x => VerifySelected(x)),
+                   _hashedAccountId,
+                   _emailAddress
+                   ), Times.Once);
         }
 
         private bool VerifySelected(IEnumerable<ApprenticeshipIncentiveModel> list)
