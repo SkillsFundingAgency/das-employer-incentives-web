@@ -9,5 +9,6 @@
         public string VrfVendorId { get; set; }
         public bool IsAgreementSigned { get; set; }
         public string HashedLegalEntityId { get; set; }
+        public bool BankDetailsRequired { get; set; }
     }
 }
