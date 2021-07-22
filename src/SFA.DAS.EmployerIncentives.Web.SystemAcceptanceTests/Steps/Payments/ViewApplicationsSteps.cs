@@ -332,6 +332,19 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             response.Should().HaveInnerHtml("[data-paragraphtype='view-payment-clawback']", $"Payment reclaimed");
         }
 
+        [Given(@"an employer with an application with a clawed back payment that has not been sent")]
+        public void GivenAnEmployerWithAnApplicationWithAClawedBackPaymentThatHasNotBeenSent()
+        {
+            AnApplicationWithAnUnsentClawedBackPayment(_testApplicationId);
+        }
+
+        [Then(@"the message showing the payment is reclaimed is not shown")]
+        public void ThenTheMessageShowingThePaymentIsReclaimedIsNotShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().NotHaveInnerHtml("[data-paragraphtype='view-payment-clawback']");
+        }
+
 
         private void AnEmployerHasASingleSubmittedApplication(Guid applicationId, BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
         {
@@ -492,6 +505,42 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 { ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>() };
 
             ClawbackStatusModel unsetClawbackStatus = null; 
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, unsetClawbackStatus)
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnApplicationWithAnUnsentClawedBackPayment(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var clawbackStatus = new ClawbackStatusModel
+                { ClawbackDate = null, ClawbackAmount = _fixture.Create<decimal>() };
+
+            ClawbackStatusModel unsetClawbackStatus = null;
 
             var applications = new List<ApprenticeApplicationModel>
             {

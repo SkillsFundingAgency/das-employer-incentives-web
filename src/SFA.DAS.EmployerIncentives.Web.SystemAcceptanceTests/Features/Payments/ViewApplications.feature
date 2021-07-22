@@ -54,3 +54,8 @@ Scenario: An employer with a clawed back payment is shown the payment withdrawn 
 	Given an employer with an application with a clawed back payment
 	When the employer views their applications
 	Then the message showing the payment is reclaimed is shown
+
+Scenario: An employer with a clawed back payment that has not been sent
+	Given an employer with an application with a clawed back payment that has not been sent
+	When the employer views their applications
+	Then the message showing the payment is reclaimed is not shown
