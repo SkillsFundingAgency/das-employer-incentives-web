@@ -21,7 +21,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             _hashingService = hashingService;
         }
 
-        public async Task Cancel(string accountLegalEntityId, IEnumerable<ApprenticeshipIncentiveModel> apprenticeshipIncentives)
+        public async Task Cancel(string accountLegalEntityId, IEnumerable<ApprenticeshipIncentiveModel> apprenticeshipIncentives,
+            string hashedAccountId, string emailAddress)
         {
             var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
 
@@ -38,7 +39,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                     WithdrawalType.Employer,
                     decodedAccountLegalEntityId,
                     apprenticeshipIncentive.Uln,
-                    serviceRequest);
+                    serviceRequest,
+                    _hashingService.DecodeValue(hashedAccountId),
+                    emailAddress
+                    );
 
                 using var response = await _client.PostAsJsonAsync(url, request);
 
