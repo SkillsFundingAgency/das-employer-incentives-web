@@ -13,10 +13,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HubController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly IApprenticeshipIncentiveService _applicationService;
+        private readonly IApplicationService _applicationService;
         private readonly ExternalLinksConfiguration _configuration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService, IApprenticeshipIncentiveService applicationService, IOptions<ExternalLinksConfiguration> configuration)
+        public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, IOptions<ExternalLinksConfiguration> configuration)
         {
             _legalEntitiesService = legalEntitiesService;
             _applicationService = applicationService;

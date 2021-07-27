@@ -13,6 +13,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public DateTime ApplicationDate { get; set; }
         public decimal TotalIncentiveAmount { get; set; }
         public string Status { get; set; }
+        public bool IsWithdrawn { 
+            get
+            {
+                if ((FirstPaymentStatus != null) && (FirstPaymentStatus.WithdrawnByCompliance || FirstPaymentStatus.WithdrawnByEmployer))
+                {
+                    return true;
+                }
+                if (SecondPaymentStatus != null && (SecondPaymentStatus.WithdrawnByCompliance || SecondPaymentStatus.WithdrawnByEmployer))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         public PaymentStatusModel FirstPaymentStatus { get; set; }
         public PaymentStatusModel SecondPaymentStatus { get; set; }
         public string CourseName { get; set; }        

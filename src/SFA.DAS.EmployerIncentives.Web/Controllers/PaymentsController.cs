@@ -15,13 +15,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     [Route("{accountId}/payments")]
     public class PaymentsController : Controller
     {
-        private readonly IApprenticeshipIncentiveService _apprenticeshipIncentiveService;
+        private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly ExternalLinksConfiguration _configuration;
 
-        public PaymentsController(IApprenticeshipIncentiveService apprenticeshipIncentiveService, ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
         {
-            _apprenticeshipIncentiveService = apprenticeshipIncentiveService;
+            _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
             _configuration = configuration.Value;
         }
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 sortField = ApplicationsSortField.ApprenticeName;
             }
 
-            var getApplicationsResponse = await _apprenticeshipIncentiveService.GetList(accountId, accountLegalEntityId);
+            var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
 
             var submittedApplications = getApplicationsResponse.ApprenticeApplications.AsQueryable();
 
@@ -91,7 +91,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AddBankDetailsLink = CreateAddBankDetailsLink(accountId, getApplicationsResponse.FirstSubmittedApplicationId),
                 ShowAcceptNewEmployerAgreement = getApplicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement)),
                 OrganisationName = legalEntity?.Name,
-                ViewAgreementLink = viewAgreementLink
+                ViewAgreementLink = viewAgreementLink,
+                ShowCancelLink = getApplicationsResponse.ApprenticeApplications.Any(a => !a.IsWithdrawn),
+                CancelLink = CreateCancelApprenticesLink(accountId, accountLegalEntityId)
             };
             model.SetSortOrder(sortField, sortOrder);
 
@@ -176,6 +178,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
             var bankDetailsUrl = $"{host}/{accountId}/bank-details/{firstSubmittedApplicationId}/add-bank-details";
             return bankDetailsUrl;
+        }
+
+        private string CreateCancelApprenticesLink(string accountId, string accountLegalEntityId)
+        {
+            var requestContext = ControllerContext.HttpContext.Request;
+            var host = $"{requestContext.Scheme}://{requestContext.Host}";
+            return $"{host}/{accountId}/cancel/{accountLegalEntityId}/cancel-application";
         }
 
         private string CreateViewAgreementLink(string accountId)

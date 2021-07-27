@@ -48,3 +48,13 @@ Scenario: An employer with an stopped application is shown the stopped status
 	Given an employer with a stopped application
 	When the employer views their applications
 	Then the message showing the application is stopped is shown
+
+Scenario: An employer with an application withdrawn by compliance is shown the rejected status
+	Given an employer with an application withdrawn by compliance
+	When the employer views their applications
+	Then the message showing the application is rejected is shown
+
+Scenario: An employer who has withdrawn an application is shown the rejected status
+	Given an employer has withdrawn an application
+	When the employer views their applications
+	Then the message showing the application is cancelled is shown

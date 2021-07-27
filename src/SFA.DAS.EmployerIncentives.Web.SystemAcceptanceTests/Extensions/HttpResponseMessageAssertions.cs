@@ -48,10 +48,39 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             .ForCondition(!string.IsNullOrEmpty(link))
             .FailWith("Link to assert on not provided")
             .Then
-            .Given(() => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value)
-            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).Attributes["href"].Value == link)
+            .Given(() => _document.DocumentElement.QuerySelector(selector)?.Attributes["href"]?.Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector)?.Attributes["href"]?.Value == link)
             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
                 _ => link, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
+        public AndConstraint<HttpResponseMessageAssertions> HaveButton(string selector, string buttonText, string because = "", params object[] becauseArgs)
+        {
+            Execute.Assertion
+            .BecauseOf(because, becauseArgs)
+            .ForCondition(!string.IsNullOrEmpty(buttonText))
+            .FailWith("Button to assert on not provided")
+            .Then
+            .Given(() => _document.DocumentElement.QuerySelector(selector)?.InnerHtml)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector)?.InnerHtml?.Trim() == buttonText.Trim())
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => buttonText, item => item);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+        public AndConstraint<HttpResponseMessageAssertions> HaveForm(string action, string because = "", params object[] becauseArgs)
+        {            
+            Execute.Assertion
+            .BecauseOf(because, becauseArgs)
+            .ForCondition(!string.IsNullOrEmpty(action))
+            .FailWith("Button to assert on not provided")
+            .Then
+            .Given(() => _document.DocumentElement.QuerySelector("form[method=\"post\"]")?.Attributes["action"]?.Value)
+            .ForCondition(t => _document.DocumentElement.QuerySelector("form[method=\"post\"]")?.Attributes["action"]?.Value == action)
+            .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
+                _ => action, item => item);
 
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }

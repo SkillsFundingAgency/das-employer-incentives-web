@@ -77,6 +77,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 public ApprenticeApplicationModel Application5 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 11, 01), FirstName = "Helen", LastName = "Taylor", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9763445765, CourseName = "Finance Management", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = true, PausePayments = true } };
             }
 
+            public class WithPreviousApprenticeshipIncentiveForFirstLegalEntity : WithMultipleLegalEntitiesWithEligibleApprenticeships
+            {
+                public List<ApprenticeshipIncentiveModel> ApprenticeshipIncentives => new List<ApprenticeshipIncentiveModel> { ApprenticeshipIncentive1, ApprenticeshipIncentive2, ApprenticeshipIncentive3, ApprenticeshipIncentive4, ApprenticeshipIncentive5 };
+                public ApprenticeshipIncentiveModel ApprenticeshipIncentive1 => new ApprenticeshipIncentiveModel { Id = Guid.Parse("65e6b350-e78a-464f-93c0-0b3b1f3ab411").ToString(), ApprenticeshipId = 1, FirstName = "Jane", LastName = "Doe", CourseName = "Accounting", StartDate = new DateTime(2021, 05, 01), Uln = 900004567};
+                public ApprenticeshipIncentiveModel ApprenticeshipIncentive2 => new ApprenticeshipIncentiveModel { Id = Guid.Parse("8c5e0ed3-0364-413d-a939-b061ed093879").ToString(), ApprenticeshipId = 2, FirstName = "Robert", LastName = "Smith", CourseName = "Bar Tending", StartDate = new DateTime(2021, 04, 01), Uln = 9565565665};
+                public ApprenticeshipIncentiveModel ApprenticeshipIncentive3 => new ApprenticeshipIncentiveModel { Id = Guid.Parse("b32c2bc4-73e4-43bb-a6d9-25a7707ea2e6").ToString(), ApprenticeshipId = 3, FirstName = "Andrew", LastName = "Digby-Jones", CourseName = "Zoo Keeper", StartDate = new DateTime(2021, 06, 12), Uln = 9968575765};
+                public ApprenticeshipIncentiveModel ApprenticeshipIncentive4 => new ApprenticeshipIncentiveModel { Id = Guid.Parse("590eb25a-3f64-4c48-aba6-414391f0efd6").ToString(), ApprenticeshipId = 4, FirstName = "Steve", LastName = "Craddock", CourseName = "Sausage Making", StartDate = new DateTime(2021, 06, 01), Uln = 9968445765};
+                public ApprenticeshipIncentiveModel ApprenticeshipIncentive5 => new ApprenticeshipIncentiveModel { Id = Guid.Parse("472a7374-3e57-4869-8aaf-d7030e793c36").ToString(), ApprenticeshipId = 5, FirstName = "Helen", LastName = "Taylor", CourseName = "Finance Management", StartDate = new DateTime(2021, 06, 29), Uln = 9763445765};
+
+                public ApprenticeApplicationModel Application1 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 09, 01), FirstName = "Jane", LastName = "Doe", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 900004567, CourseName = "Accounting", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = false, PausePayments = false } };
+                public List<ApprenticeApplicationModel> ApprenticeApplications => new List<ApprenticeApplicationModel> { Application1};
+
+                public GetApplicationsModel GetApplicationsResponse => new GetApplicationsModel
+                {
+                    ApprenticeApplications = ApprenticeApplications
+                };
+
+            }
+
             public class WithMultipleLegalEntitiesWithEligibleApprenticeships
             {
                 public long AccountId { get; } = 30003;
