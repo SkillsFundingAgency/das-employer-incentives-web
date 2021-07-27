@@ -100,6 +100,21 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             return new AndConstraint<HttpResponseMessageAssertions>(this);
         }
 
+        public AndConstraint<HttpResponseMessageAssertions> NotHaveInnerHtml(string selector, string because = "", params object[] becauseArgs)
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
+                .ForCondition(!string.IsNullOrEmpty(selector))
+                .FailWith("Selector not provided")
+                .Then
+                .Given(() => _document.DocumentElement.QuerySelector(selector))
+                .ForCondition(t => _document.DocumentElement.QuerySelector(selector)?.InnerHtml == null)
+                .FailWith("Expected {context:DocumentElement} not to contain {0}",
+                    _ => selector);
+
+            return new AndConstraint<HttpResponseMessageAssertions>(this);
+        }
+
         public AndConstraint<HttpResponseMessageAssertions> NotHaveLink(string link, string because = "", params object[] becauseArgs)
         {
             Execute.Assertion

@@ -167,11 +167,13 @@
                                 @apprenticeApplication.ApplicationDate.ToString("d MMMM yyyy", culture)
                             </td>
                             <td data-label="First payment" class="govuk-table__cell">
+                                <partial name="_ClawbackStatus" for="@apprenticeApplication.FirstClawbackStatus" />
                                 <partial name="_PaymentStatus" for="@apprenticeApplication.FirstPaymentStatus" />
                             </td>
                             <td data-label="Second payment" class="govuk-table__cell">
                                 @if (apprenticeApplication.ShowSecondPaymentStatus)
                                 {
+                                    <partial name="_ClawbackStatus" for="@apprenticeApplication.SecondClawbackStatus" />
                                     <partial name="_PaymentStatus" for="@apprenticeApplication.SecondPaymentStatus" />
                                 }
                             </td>
