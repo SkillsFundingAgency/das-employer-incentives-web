@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
             };
 
-            _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
+            _result = await _sut.CancelApplication(_hashedAccountId, _hashedLegalEntityId);
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
         }
 
@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
 
             _sut.TempData["selected"] = new string[] { _apprenticeshipIncentiveData.First().Id };
            
-            _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
+            _result = await _sut.CancelApplication(_hashedAccountId, _hashedLegalEntityId);
             
             _model = ((ViewResult)_result).Model as SelectApprenticeshipsViewModel;
 
@@ -123,7 +123,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
         [Test]
         public void Then_should_have_apprentices_ordered_by_last_name()
         {
-            _model.ApprenticeshipIncentives.Should().BeInAscendingOrder(x => x.LastName);
+            var expectedResults = _model.ApprenticeshipIncentives
+                                        .OrderBy(a => a.FirstName)
+                                        .ThenBy(a => a.LastName)
+                                        .ThenBy(a => a.Uln);
+
+            _model.ApprenticeshipIncentives.Should().ContainInOrder(expectedResults);
         }
 
         [Test]
@@ -133,7 +138,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
                .Setup(m => m.GetList(_hashedAccountId, _hashedLegalEntityId))
                .ReturnsAsync(new List<ApprenticeshipIncentiveModel>());
 
-            _result = await _sut.SelectApprenticeships(_hashedAccountId, _hashedLegalEntityId);
+            _result = await _sut.CancelApplication(_hashedAccountId, _hashedLegalEntityId);
             var redirect = _result as RedirectToActionResult;
 
             redirect.ControllerName.Should().Be("Payments");

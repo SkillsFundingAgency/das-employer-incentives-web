@@ -184,7 +184,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var requestContext = ControllerContext.HttpContext.Request;
             var host = $"{requestContext.Scheme}://{requestContext.Host}";
-            return $"{host}/{accountId}/cancel/{accountLegalEntityId}/select-apprentices";
+            return $"{host}/{accountId}/cancel/{accountLegalEntityId}/cancel-application";
         }
 
         private string CreateViewAgreementLink(string accountId)

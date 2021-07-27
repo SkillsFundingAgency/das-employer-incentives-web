@@ -313,5 +313,73 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.First().FirstPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInFirstColumn);
             viewModel.Applications.First().SecondPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInSecondColumn);
         }
+
+        [TestCase(false, false, false, false)]
+        [TestCase(true, false, true, false)]
+        [TestCase(false, true, false, true)]
+        public async Task Then_withdrawn_message_is_shown_when_the_apprenticeship_incentive_is_in_withdrawn_by_compliance(
+            bool firstPaymentStatusPaymentIsWithdrawn,
+            bool secondPaymentStatusPaymentIsWithdrawn,
+            bool showWithdrawnMessageInFirstColumn,
+            bool showWithdrawnMessageInSecondColumn)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByCompliance, firstPaymentStatusPaymentIsWithdrawn).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByCompliance, secondPaymentStatusPaymentIsWithdrawn).Create())
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.WithdrawnByCompliance.Should().Be(showWithdrawnMessageInFirstColumn);
+            viewModel.Applications.First().SecondPaymentStatus.WithdrawnByCompliance.Should().Be(showWithdrawnMessageInSecondColumn);
+        }
+
+        [TestCase(false, false, false, false)]
+        [TestCase(true, false, true, false)]
+        [TestCase(false, true, false, true)]
+        public async Task Then_withdrawn_message_is_shown_when_the_apprenticeship_incentive_is_in_withdrawn_by_employer(
+            bool firstPaymentStatusPaymentIsWithdrawn,
+            bool secondPaymentStatusPaymentIsWithdrawn,
+            bool showWithdrawnMessageInFirstColumn,
+            bool showWithdrawnMessageInSecondColumn)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByEmployer, firstPaymentStatusPaymentIsWithdrawn).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByEmployer, secondPaymentStatusPaymentIsWithdrawn).Create())
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInFirstColumn);
+            viewModel.Applications.First().SecondPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInSecondColumn);
+        }
     }
 }

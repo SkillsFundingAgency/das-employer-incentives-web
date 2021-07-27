@@ -150,7 +150,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices";
+            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/cancel-application";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -162,7 +162,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices";
+            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/confirm-cancel-application";
             var form = new KeyValuePair<string, string>("SelectedApprenticeships", _data.ApprenticeshipIncentive4.Id);
 
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, form);
@@ -175,7 +175,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices";
+            var url = $"{hashedAccountId}/cancel/{hashedLegalEntityId}/confirm-cancel-application";
 
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url);
             _continueNavigationResponse.EnsureSuccessStatusCode();
@@ -187,7 +187,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"/{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices";
+            var url = $"/{hashedAccountId}/cancel/{hashedLegalEntityId}/cancel-application";
             _continueNavigationResponse.Should().HaveLink("[data-linktype='cancel-change']", url);
 
             _continueNavigationResponse = await _testContext.WebsiteClient.GetAsync(url);
@@ -200,7 +200,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
             var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
-            var url = $"/{hashedAccountId}/cancel/{hashedLegalEntityId}/confirm-cancel-application";
+            var url = $"/{hashedAccountId}/cancel/{hashedLegalEntityId}/application-cancelled";
             _continueNavigationResponse.Should().HaveForm(url);
             _continueNavigationResponse.Should().HaveButton("[data-buttontype='cancel-confirm']", "Confirm");
 
@@ -221,7 +221,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             
             model.ApprenticeshipIncentives.Should().BeEquivalentTo(_data.ApprenticeshipIncentives);
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/cancel-application");
             _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/payments/{hashedLegalEntityId}/payment-applications");
             model.Should().HaveTitle($"Which apprentices do you want to cancel an application for?");
         }
@@ -236,8 +236,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmApprenticeshipsViewModel;
             model.Should().NotBeNull();
-            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices");
-            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices");
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/confirm-cancel-application");
+            _continueNavigationResponse.Should().HaveBackLink($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/cancel-application");
             model.Should().HaveTitle($"Confirm apprentices");
         }
 
@@ -261,7 +261,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var model = viewResult.Model as SelectApprenticeshipsViewModel;
             model.Should().NotBeNull();
             _continueNavigationResponse.Should().HaveTitle(model.Title);
-            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/select-apprentices");
+            _continueNavigationResponse.Should().HavePathAndQuery($"/{hashedAccountId}/cancel/{hashedLegalEntityId}/confirm-cancel-application");
             model.Should().HaveTitle($"Which apprentices do you want to cancel an application for?");
             model.ApprenticeshipIncentives.Should().BeEquivalentTo(_data.ApprenticeshipIncentives);
             model.AccountId.Should().Be(hashedAccountId);

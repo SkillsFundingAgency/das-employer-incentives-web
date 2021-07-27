@@ -6,6 +6,7 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -25,8 +26,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         } 
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(string accountId, string accountLegalEntityId)
+        [Route("{accountLegalEntityId}/cancel-application")]
+        public async Task<IActionResult> CancelApplication(string accountId, string accountLegalEntityId)
         {            
             var model = await GetSelectViewModel(accountId, accountLegalEntityId);
 
@@ -35,23 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ListPaymentsForLegalEntity", "Payments", new { accountId, accountLegalEntityId });
             }            
             
-            return View(model);
-        }
-
-        [HttpPost]
-        [Route("{accountLegalEntityId}/select-apprentices")]
-        public async Task<IActionResult> SelectApprenticeships(SelectApprenticeshipsRequest request)
-        {
-            if (!request.HasSelectedApprenticeships)
-            {
-                var viewModel = await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId);
-
-                ModelState.AddModelError(viewModel.FirstCheckboxId, viewModel.SelectApprenticeshipsMessage);
-
-                return View(viewModel);
-            }
-
-            return View("ConfirmApprentices", await GetConfirmViewModel(request));
+            return View("SelectApprenticeships", model);
         }
 
         [HttpPost]
@@ -60,12 +45,33 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             if (!request.HasSelectedApprenticeships)
             {
+                var viewModel = await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId);
+
+                ModelState.AddModelError(viewModel.FirstCheckboxId, viewModel.SelectApprenticeshipsMessage);
+
+                return View("SelectApprenticeships", viewModel);
+            }
+
+            return View("ConfirmApprentices", await GetConfirmViewModel(request));
+        }
+
+        [HttpPost]
+        [Route("{accountLegalEntityId}/application-cancelled")]
+        public async Task<IActionResult> Cancelled(SelectApprenticeshipsRequest request, string accountId)
+        {
+            if (!request.HasSelectedApprenticeships)
+            {
                 return RedirectToAction("ListPaymentsForLegalEntity", "Payments", new { request.AccountId, request.AccountLegalEntityId });
             }
 
-            var apprenticeshipIncentivesToWithdraw = (await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId)).ApprenticeshipIncentives.Where(a => a.Selected);
+            var apprenticeshipIncentivesToWithdraw = 
+                (await GetSelectViewModel(request.AccountId, request.AccountLegalEntityId))
+                .ApprenticeshipIncentives.Where(a => a.Selected).ToList();
 
-            await _apprenticeshipIncentiveService.Cancel(request.AccountLegalEntityId, apprenticeshipIncentivesToWithdraw);
+            var emailAddress = ControllerContext.HttpContext.User.FindFirst(c => c.Type.Equals(EmployerClaimTypes.EmailAddress))?.Value;
+
+            await _apprenticeshipIncentiveService.Cancel(request.AccountLegalEntityId, apprenticeshipIncentivesToWithdraw,
+                accountId, emailAddress);
 
             return View("ConfirmCancellation", await GetCancelledViewModel(request,  apprenticeshipIncentivesToWithdraw));
         }
@@ -78,7 +84,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                ApprenticeshipIncentives = apprenticeshipIncentives.OrderBy(a => a.LastName),
+                ApprenticeshipIncentives = apprenticeshipIncentives
+                                        .OrderBy(a => a.FirstName)
+                                        .ThenBy(a => a.LastName)
+                                        .ThenBy(a => a.Uln),
                 OrganisationName = legalEntity?.Name ?? string.Empty
             };
 
@@ -127,7 +136,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountId = request.AccountId,
                 AccountLegalEntityId = request.AccountLegalEntityId,
-                ApprenticeshipIncentives = apprenticeshipIncentives,
+                ApprenticeshipIncentives = apprenticeshipIncentives.OrderBy(a => a.Uln),
                 OrganisationName = legalEntity?.Name ?? string.Empty
             };
         }

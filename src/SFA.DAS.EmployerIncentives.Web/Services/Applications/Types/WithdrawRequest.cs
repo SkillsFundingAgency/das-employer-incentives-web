@@ -5,16 +5,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
     public class WithdrawRequest
     {
         public WithdrawalType WithdrawalType { get; }
+        public long AccountId { get; }
         public long AccountLegalEntityId { get; }
         public long ULN { get; }
         public ServiceRequest ServiceRequest { get; }
+        public string EmailAddress { get; }
 
-        public WithdrawRequest(WithdrawalType type, long accountLegalEntityId, long uln, ServiceRequest serviceRequest)
+        public WithdrawRequest(WithdrawalType type, long accountLegalEntityId, long uln, ServiceRequest serviceRequest, long accountId, string emailAddress)
         {
             WithdrawalType = type;
             AccountLegalEntityId = accountLegalEntityId;
             ULN = uln;
             ServiceRequest = serviceRequest;
+            AccountId = accountId;
+            EmailAddress = emailAddress;
         }    
     }
 

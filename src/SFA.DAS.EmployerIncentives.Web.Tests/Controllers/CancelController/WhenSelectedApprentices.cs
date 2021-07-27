@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = (await _sut.SelectApprenticeships(selected)) as ViewResult;
+            var result = (await _sut.Confirm(selected)) as ViewResult;
 
             // assert  
             result.ViewData.ModelState.ErrorCount.Should().Be(1);
@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as SelectApprenticeshipsViewModel;
 
             // assert  
             result.Title.Should().Be("Which apprentices do you want to cancel an application for?");
@@ -98,7 +98,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as SelectApprenticeshipsViewModel;
 
             // assert  
             result.AccountId.Should().Be(_hashedAccountId);
@@ -116,7 +116,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as SelectApprenticeshipsViewModel;
 
             // assert 
             result.AccountLegalEntityId.Should().Be(_hashedAccountLegalEntityId);
@@ -134,7 +134,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as SelectApprenticeshipsViewModel;
 
             // assert 
             result.OrganisationName.Should().Be(_organisationName);
@@ -153,7 +153,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as SelectApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as SelectApprenticeshipsViewModel;
 
             // assert 
             result.ApprenticeshipIncentives.Should()
@@ -176,7 +176,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
             
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as ConfirmApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as ConfirmApprenticeshipsViewModel;
 
             // assert 
             var expectedResults = _apprenticeshipIncentiveData
@@ -198,7 +198,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected));
+            var result = ((ViewResult)await _sut.Confirm(selected));
             var model = result.Model as SelectApprenticeshipsViewModel;
 
             // assert 
@@ -219,7 +219,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.CancelController.Sele
             };
 
             // act
-            var result = ((ViewResult)await _sut.SelectApprenticeships(selected)).Model as ConfirmApprenticeshipsViewModel;
+            var result = ((ViewResult)await _sut.Confirm(selected)).Model as ConfirmApprenticeshipsViewModel;
 
             // assert
             result.Should().NotBeNull();
