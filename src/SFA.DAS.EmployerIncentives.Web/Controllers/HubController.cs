@@ -12,9 +12,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     public class HubController : Controller
     {
-        private ILegalEntitiesService _legalEntitiesService;
-        private IApplicationService _applicationService;
-        private ExternalLinksConfiguration _configuration;
+        private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly IApplicationService _applicationService;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, IOptions<ExternalLinksConfiguration> configuration)
         {
