@@ -15,12 +15,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool RequiresNewEmployerAgreement { get; set; }
         public string ViewAgreementLink { get; set; }
         public bool PaymentIsStopped { get; set; }
+        public bool WithdrawnByEmployer { get; set; }
+        public bool WithdrawnByCompliance { get; set; }
 
         public bool ShowPaymentStatus
         {
             get
             {
-                return PaymentIsStopped || !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || RequiresNewEmployerAgreement;
+                return PaymentIsStopped || !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || RequiresNewEmployerAgreement || WithdrawnByCompliance || WithdrawnByEmployer;
             }
         }
     }

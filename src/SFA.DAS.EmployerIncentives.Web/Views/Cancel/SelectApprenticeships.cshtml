@@ -1,0 +1,80 @@
+﻿@using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel
+@model SelectApprenticeshipsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewBag.GaData.Vpv = "/cancel-application";
+    ViewData["ZenDeskLabels"] = "ei-cancel-selectapprentices";
+}
+
+<a asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-accountId="@Model.AccountId" asp-route-accountLegalEntityId="@Model.AccountLegalEntityId" class="govuk-back-link">Back</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form asp-action="Confirm" method="post">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.OrganisationName)
+                <partial name="ValidationSummary" />
+                                
+                <fieldset class="govuk-fieldset" aria-describedby="cancel-apprenticeships-hint cancel-apprenticeships-error">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            @Model.Title
+                        </h1>
+                    </legend>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            Do not cancel an apprentice’s application if they have stopped or completed their apprenticeship, unless they’re not eligible for the payment.
+                        </strong>
+                    </div>
+
+                    <div class="govuk-warning-text">
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            If you cancel an application, @Model.OrganisationName will have to repay any payments that they’ve already received.
+                        </strong>
+                    </div>
+                    <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <span id="cancel-apprenticeships-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @Model.SelectApprenticeshipsMessage
+                            </span>
+                        }
+                        <div class="govuk-checkboxes">
+                            @foreach (var apprenticeship in Model.ApprenticeshipIncentives)
+                            {
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input"
+                                           id="cancel-apprenticeships-@apprenticeship.Id"
+                                           name="@SelectApprenticeshipsRequest.SelectedApprenticeshipsPropertyName"
+                                           type="checkbox"
+                                           @if (apprenticeship.Selected) { @Html.Raw("checked") } value="@apprenticeship.Id"
+                                           aria-describedby="apprenticeship-start-date-hint apprenticeship-course-name-hint" />
+                                    <label class="govuk-label govuk-checkboxes__label govuk-!-padding-bottom-0" for="cancel-apprenticeships-@apprenticeship.Id">
+                                        <span class="govuk-!-font-weight-bold">@apprenticeship.DisplayName</span> <span class="das-!-color-dark-grey">(ULN: @apprenticeship.Uln)</span>
+                                    </label>
+                                    <div id="apprenticeship-start-date-hint" class="govuk-checkboxes__hint govuk-!-margin-bottom-0">
+                                        @apprenticeship.StartDate.ToString("MMMM yyyy") (apprenticeship start date)
+                                    </div>
+                                    <div id="apprenticeship-course-name-hint" class="govuk-checkboxes__hint">
+                                        @apprenticeship.CourseName
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </fieldset>                
+
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-buttontype="cancel-continue">
+                    Continue
+                </button>
+
+            </form>
+        </div>
+    </div>
+</main>

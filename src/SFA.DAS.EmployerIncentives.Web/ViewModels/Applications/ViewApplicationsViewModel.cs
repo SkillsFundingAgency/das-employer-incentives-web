@@ -69,10 +69,12 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public bool ShowBankDetailsInReview { get; set; }
         public bool ShowAddBankDetailsCalltoAction { get; set; }
-        public bool ShowAcceptNewEmployerAgreement { get; set; }        
+        public bool ShowAcceptNewEmployerAgreement { get; set; }
+        public bool ShowCancelLink { get; set; }
 
         public string AddBankDetailsLink { get; set; }
         public string ViewAgreementLink { get; set; }
+        public string CancelLink { get; set; }
 
         public string Title => "Hire a new apprentice payment applications";
 

@@ -11,6 +11,14 @@
     {
         <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype='view-agreement-stopped'>Apprenticeship paused or stopped</p>
     }
+    else if (Model.WithdrawnByEmployer)
+    {
+        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype='view-agreement-withdrawnByEmployer'>Application cancelled</p>
+    }
+    else if (Model.WithdrawnByCompliance)
+    {
+        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype='view-agreement-withdrawnByCompliance'>Application rejected</p>
+    }
     else
     {
         @if (!Model.LearnerMatchFound && !Model.PausePayments)

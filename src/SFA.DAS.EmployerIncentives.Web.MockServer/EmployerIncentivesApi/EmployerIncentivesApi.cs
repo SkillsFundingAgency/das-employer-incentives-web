@@ -233,6 +233,39 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+        public EmployerIncentivesApiBuilder WithPreviousApprenticeshipIncentives()
+        {
+            var data = new TestData.Account.WithPreviousApprenticeshipIncentiveForFirstLegalEntity();
+
+            var applications = new List<ApprenticeshipIncentiveModel> { data.ApprenticeshipIncentive1, data.ApprenticeshipIncentive2, data.ApprenticeshipIncentive3, data.ApprenticeshipIncentive4, data.ApprenticeshipIncentive5 };
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{data.AccountId}/legalentities/{data.AccountLegalEntityId1}/apprenticeshipIncentives")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(applications)));
+
+            AddClaim(EmployerClaimTypes.Account, data.HashedAccountId);
+
+            _server
+               .Given(
+                   Request
+                       .Create()
+                       .WithPath($"/withdrawals")
+                       .UsingPost()
+               )
+               .RespondWith(
+                   Response.Create()
+                       .WithStatusCode(HttpStatusCode.Accepted));
+
+            return this;
+        }
+
         public EmployerIncentivesApiBuilder WithMultipleLegalEntityWithEligibleApprenticeships()
         {
             var data = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();

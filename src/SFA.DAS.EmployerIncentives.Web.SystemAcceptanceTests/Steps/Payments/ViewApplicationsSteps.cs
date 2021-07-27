@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         private readonly TestContext _testContext;
         private Fixture _fixture;
         private TestData.Account.WithInitialApplicationForASingleEntity _testData;
-        private Guid _testApplicationId;        
+        private Guid _testApplicationId;
 
         public ViewApplicationsSteps(TestContext testContext) : base(testContext)
         {
@@ -37,8 +37,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         public void GivenAnEmployerHasASingleSubmittedApplication()
         {
             AnEmployerHasASingleSubmittedApplication(_testApplicationId);
-        }        
-        
+        }
+
         [Given(@"an employer with accepted bank details has a single submitted application")]
         public void GivenAnEmployerWithAcceptedBankDetailsHasASingleSubmittedApplication()
         {
@@ -50,6 +50,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         {
             AnEmployerHasAnApplicationWithAnAgreementVersionThatNeedsSigning(_testApplicationId);
         }
+
         [Given(@"an employer with an agreement version that has been signed")]
         public void GivenAnEmployerWithALaterAgreementVersionThatHasBeenSigned()
         {
@@ -74,6 +75,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnEmployerHasASingleSubmittedApplication(_testApplicationId, BankDetailsStatus.Rejected);
         }
 
+        [Given(@"an employer with an application withdrawn by compliance")]
+        public void GivenAnEmployerWithAnApplicationWithdrawnByCompliance()
+        {
+            AnEmployerWithAnApplicationWithdrawnByCompliance(_testApplicationId);
+        }
+
+        [Given(@"an employer has withdrawn an application")]
+        public void GivenAnEmployerHasWithdrawnAnApplication()
+        {
+            AnEmployerHasWithdrawnAnApplication(_testApplicationId);
+        }
+
         [When(@"the employer views their applications")]
         public async Task WhenTheEmployerViewsTheirApplications()
         {
@@ -83,10 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 
-            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () =>
-            {
-                return response;
-            });
+            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () => { return response; });
         }
 
         [Then(@"the employer is shown a single submitted application")]
@@ -101,7 +111,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            response.Should()
+                .HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has multiple submitted applications")]
@@ -112,7 +123,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 _fixture.Create<ApprenticeApplicationModel>(),
                 _fixture.Create<ApprenticeApplicationModel>()
             };
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress};
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -123,7 +135,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -144,7 +157,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            response.Should()
+                .HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Then(@"the add bank details call to action is shown")]
@@ -152,7 +166,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().HaveLink("[data-linktype='add-bank-details']", $"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
+            response.Should().HaveLink("[data-linktype='add-bank-details']",
+                $"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
         }
 
         [Then(@"the add bank details call to action is not shown")]
@@ -160,30 +175,53 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
 
-            response.Should().NotHaveLink($"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
+            response.Should()
+                .NotHaveLink(
+                    $"https://{response.RequestMessage.RequestUri.Authority}/{_testData.HashedAccountId}/bank-details/{_testApplicationId}/add-bank-details");
         }
 
         [Then(@"the accept new employer agreement call to action is shown")]
         public void ThenTheShowAcceptNewEmployerAgreementIsShown()
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveLink("[data-linktype='view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
-            response.Should().HaveLink("[data-linktype='payment-status-view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");            
+            response.Should().HaveLink("[data-linktype='view-agreement']",
+                $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
+            response.Should().HaveLink("[data-linktype='payment-status-view-agreement']",
+                $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
         }
 
         [Then(@"the message showing the application is stopped is shown")]
         public void ThenTheMessageShowingTheApplicationisStoppedIsShown()
         {
-            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");            
-            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-stopped']", $"Apprenticeship paused or stopped");
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-stopped']",
+                $"Apprenticeship paused or stopped");
+        }
+
+        [Then(@"the message showing the application is rejected is shown")]
+        public void ThenTheMessageShowingTheApplicationisRejectedIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-withdrawnByCompliance']",
+                $"Application rejected");
+        }
+
+        [Then(@"the message showing the application is cancelled is shown")]
+        public void ThenTheMessageShowingTheApplicationisCancelledIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='view-agreement-withdrawnByEmployer']",
+                $"Application cancelled");
         }
 
         [Then(@"the accept new employer agreement call to action is not shown")]
         public void ThenTheShowAcceptNewEmployerAgreementIsNotShown()
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().NotHaveLink("[data-linktype='view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
-            response.Should().NotHaveLink("[data-linktype='payment-status-view-agreement']", $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
+            response.Should().NotHaveLink("[data-linktype='view-agreement']",
+                $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
+            response.Should().NotHaveLink("[data-linktype='payment-status-view-agreement']",
+                $"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{_testData.HashedAccountId}/agreements");
         }
 
         [Given(@"an employer has submitted and in progress applications")]
@@ -195,7 +233,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             applications[1].Status = "Submitted";
             applications[2].Status = "Submitted";
             applications[3].Status = "InProgress";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.InProgress};
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -206,7 +245,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -227,7 +267,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            response.Should()
+                .HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has in progress applications")]
@@ -240,7 +281,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             };
             applications[0].Status = "InProgress";
             applications[1].Status = "InProgress";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied};
 
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
@@ -251,7 +293,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -267,18 +310,20 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as NoApplicationsViewModel;
             model.Should().NotBeNull();
-            
+
             var hashedAccountId = _testContext.TestDataStore.Get<string>("HashedAccountId");
             var hashedAccountLegalEntityId = _testContext.TestDataStore.Get<string>("HashedAccountLegalEntityId");
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            response.Should()
+                .HaveBackLink($"/{hashedAccountId}/{hashedAccountLegalEntityId}/hire-new-apprentice-payment");
         }
 
         [Given(@"an employer has no applications")]
         public void GivenAnEmployerHasNoApplications()
         {
             var applications = new List<ApprenticeApplicationModel>();
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, BankDetailsStatus = BankDetailsStatus.NotSupplied};
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
@@ -288,7 +333,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -303,11 +349,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             var legalEntities = new List<LegalEntityModel>
             {
-                new LegalEntityModel { AccountId = _testData.AccountId.ToString(), AccountLegalEntityId =_testData.AccountLegalEntityId.ToString() },
-                new LegalEntityModel { AccountId = _testData.AccountId.ToString(), AccountLegalEntityId = _fixture.Create<string>() }
+                new LegalEntityModel
+                {
+                    AccountId = _testData.AccountId.ToString(),
+                    AccountLegalEntityId = _testData.AccountLegalEntityId.ToString()
+                },
+                new LegalEntityModel
+                    {AccountId = _testData.AccountId.ToString(), AccountLegalEntityId = _fixture.Create<string>()}
             };
             _testContext.EmployerIncentivesApi.MockServer
-                 .Given(
+                .Given(
                     Request
                         .Create()
                         .WithPath($"/accounts/{_testData.AccountId}/legalentities")
@@ -346,31 +397,37 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         }
 
 
-        private void AnEmployerHasASingleSubmittedApplication(Guid applicationId, BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
+        private void AnEmployerHasASingleSubmittedApplication(Guid applicationId,
+            BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
         {
             _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            ClawbackStatusModel clawbackStatus = null; 
-            
+            ClawbackStatusModel clawbackStatus = null;
+
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
-                .With(p => p.AccountId, _testData.AccountId)
-                .With(p => p.FirstClawbackStatus, clawbackStatus)
-                .With(p => p.SecondClawbackStatus, clawbackStatus)
-                .Create()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .Create()
             };
             applications[0].Status = "Submitted";
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, BankDetailsStatus = bankDetailsStatus, FirstSubmittedApplicationId = applicationId };
+            var getApplications = new GetApplicationsModel
+            {
+                ApprenticeApplications = applications, BankDetailsStatus = bankDetailsStatus,
+                FirstSubmittedApplicationId = applicationId
+            };
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -391,25 +448,29 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
-                .With(p => p.AccountId, _testData.AccountId)
-                .With(p => p.FirstPaymentStatus, 
-                    _fixture.Build<PaymentStatusModel>()
-                    .With(p => p.RequiresNewEmployerAgreement, true)
-                    .With(p => p.PaymentIsStopped, false)
-                    .Create()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.RequiresNewEmployerAgreement, true)
+                            .With(p => p.PaymentIsStopped, false)
+                            .With(p => p.WithdrawnByCompliance, false)
+                            .With(p => p.WithdrawnByEmployer, false)
+                            .Create()
                     )
-                .With(p => p.FirstClawbackStatus, clawbackStatus)
-                .With(p => p.SecondClawbackStatus, clawbackStatus)
-                .Create()
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .Create()
             };
 
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -430,24 +491,28 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
-                .With(p => p.AccountId, _testData.AccountId)
-                .With(p => p.FirstClawbackStatus, clawbackStatus)
-                .With(p => p.SecondClawbackStatus, clawbackStatus)
-                .With(p => p.FirstPaymentStatus,
-                    _fixture.Build<PaymentStatusModel>()
-                    .With(p => p.RequiresNewEmployerAgreement, false)
-                    .Create()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.RequiresNewEmployerAgreement, false)
+                            .With(p => p.WithdrawnByCompliance, false)
+                            .With(p => p.WithdrawnByEmployer, false)
+                            .Create()
                     )
-                .Create()
+                    .Create()
             };
 
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -468,24 +533,27 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
-                .With(p => p.AccountId, _testData.AccountId)
-                .With(p => p.FirstClawbackStatus, clawbackStatus)
-                .With(p => p.SecondClawbackStatus, clawbackStatus)
-                .With(p => p.FirstPaymentStatus,
-                    _fixture.Build<PaymentStatusModel>()
-                    .With(p => p.PaymentIsStopped, true)
-                    .Create()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstClawbackStatus, clawbackStatus)
+                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.PaymentIsStopped, true)
+
+                            .Create()
                     )
-                .Create()
+                    .Create()
             };
 
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -502,9 +570,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
             var clawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>() };
+                {ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>()};
 
-            ClawbackStatusModel unsetClawbackStatus = null; 
+            ClawbackStatusModel unsetClawbackStatus = null;
 
             var applications = new List<ApprenticeApplicationModel>
             {
@@ -515,13 +583,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .Create()
             };
 
-            var getApplications = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
                         .UsingGet()
                 )
                 .RespondWith(
@@ -538,7 +608,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
             var clawbackStatus = new ClawbackStatusModel
-                { ClawbackDate = null, ClawbackAmount = _fixture.Create<decimal>() };
+                {ClawbackDate = null, ClawbackAmount = _fixture.Create<decimal>()};
 
             ClawbackStatusModel unsetClawbackStatus = null;
 
@@ -548,6 +618,44 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .With(p => p.AccountId, _testData.AccountId)
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
                     .With(p => p.SecondClawbackStatus, unsetClawbackStatus)
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnEmployerHasWithdrawnAnApplication(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.WithdrawnByEmployer, true)
+                            .With(p => p.WithdrawnByCompliance, true)
+                            .With(p => p.PaymentIsStopped, false)
+                            .Create()
+                    )
                     .Create()
             };
 
@@ -565,5 +673,43 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
+        private void AnEmployerWithAnApplicationWithdrawnByCompliance(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.WithdrawnByCompliance, true)
+                            .With(p => p.WithdrawnByEmployer, false)
+                            .With(p => p.PaymentIsStopped, false)
+                            .Create()
+                    )
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel
+                {ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId};
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
     }
 }

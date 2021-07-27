@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
     public class WhenPaymentApplicationsAccessed
     {
         private Web.Controllers.PaymentsController _sut;
-        private Mock<IApprenticeshipIncentiveService> _apprenticeshipIncentiveService;
+        private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
         private Fixture _fixture;
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         [SetUp]
         public void Arrange()
         {
-            _apprenticeshipIncentiveService = new Mock<IApprenticeshipIncentiveService>();
+            _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                 ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl
             });
 
-            _sut = new Web.Controllers.PaymentsController(_apprenticeshipIncentiveService.Object, _legalEntitiesService.Object, _configuration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _configuration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications.AddRange(_fixture.CreateMany<ApprenticeApplicationModel>(5));
 
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications, FirstSubmittedApplicationId = Guid.NewGuid()};
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var applications = new List<ApprenticeApplicationModel>();
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -124,7 +124,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -170,7 +170,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].LastName = "Johnson";
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -197,7 +197,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -224,7 +224,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             applications[1].ApplicationDate = new DateTime(2020, 08, 20);
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -262,7 +262,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -299,7 +299,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
 
-            _apprenticeshipIncentiveService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
@@ -312,6 +312,74 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Should().NotBeNull();
             viewModel.Applications.First().FirstPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInFirstColumn);
             viewModel.Applications.First().SecondPaymentStatus.PaymentIsStopped.Should().Be(showStoppedMessageInSecondColumn);
+        }
+
+        [TestCase(false, false, false, false)]
+        [TestCase(true, false, true, false)]
+        [TestCase(false, true, false, true)]
+        public async Task Then_withdrawn_message_is_shown_when_the_apprenticeship_incentive_is_in_withdrawn_by_compliance(
+            bool firstPaymentStatusPaymentIsWithdrawn,
+            bool secondPaymentStatusPaymentIsWithdrawn,
+            bool showWithdrawnMessageInFirstColumn,
+            bool showWithdrawnMessageInSecondColumn)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByCompliance, firstPaymentStatusPaymentIsWithdrawn).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByCompliance, secondPaymentStatusPaymentIsWithdrawn).Create())
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.WithdrawnByCompliance.Should().Be(showWithdrawnMessageInFirstColumn);
+            viewModel.Applications.First().SecondPaymentStatus.WithdrawnByCompliance.Should().Be(showWithdrawnMessageInSecondColumn);
+        }
+
+        [TestCase(false, false, false, false)]
+        [TestCase(true, false, true, false)]
+        [TestCase(false, true, false, true)]
+        public async Task Then_withdrawn_message_is_shown_when_the_apprenticeship_incentive_is_in_withdrawn_by_employer(
+            bool firstPaymentStatusPaymentIsWithdrawn,
+            bool secondPaymentStatusPaymentIsWithdrawn,
+            bool showWithdrawnMessageInFirstColumn,
+            bool showWithdrawnMessageInSecondColumn)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByEmployer, firstPaymentStatusPaymentIsWithdrawn).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.WithdrawnByEmployer, secondPaymentStatusPaymentIsWithdrawn).Create())
+                .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInFirstColumn);
+            viewModel.Applications.First().SecondPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInSecondColumn);
         }
     }
 }
