@@ -382,11 +382,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         }
 
         [Test]
-        public async Task Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_compliance()
+        public void Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_compliance()
         {
             // Arrange / Act
             var model = new ApprenticeApplicationModel 
             { 
+                FirstPaymentStatus = new PaymentStatusModel(),
                 SecondPaymentStatus = new PaymentStatusModel { WithdrawnByCompliance = true, PaymentSent = true}
             };
 
@@ -396,11 +397,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
 
         [Test]
-        public async Task Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_employer()
+        public void Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_employer()
         {
             // Arrange / Act
             var model = new ApprenticeApplicationModel
             {
+                FirstPaymentStatus = new PaymentStatusModel(),
                 SecondPaymentStatus = new PaymentStatusModel { WithdrawnByEmployer = true, PaymentSent = true }
             };
 
@@ -409,7 +411,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         }
 
         [Test]
-        public async Task Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_compliance()
+        public void Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_compliance()
         {
             // Arrange / Act
             var model = new ApprenticeApplicationModel
@@ -422,7 +424,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         }
 
         [Test]
-        public async Task Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_employer()
+        public void Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_employer()
         {
             // Arrange / Act
             var model = new ApprenticeApplicationModel
@@ -435,7 +437,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         }
 
         [Test]
-        public async Task Then_the_second_payment_is_not_shown_if_the_first_payment_has_a_status_message()
+        public void Then_the_second_payment_is_not_shown_if_the_first_payment_has_a_status_message()
         {
             // Arrange / Act
             var model = new ApprenticeApplicationModel
