@@ -10,7 +10,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -380,6 +379,73 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Should().NotBeNull();
             viewModel.Applications.First().FirstPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInFirstColumn);
             viewModel.Applications.First().SecondPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInSecondColumn);
+        }
+
+        [Test]
+        public async Task Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_compliance()
+        {
+            // Arrange / Act
+            var model = new ApprenticeApplicationModel 
+            { 
+                SecondPaymentStatus = new PaymentStatusModel { WithdrawnByCompliance = true, PaymentSent = true}
+            };
+
+            // Assert
+            model.ShowSecondPaymentStatus.Should().BeTrue();
+        }
+
+
+        [Test]
+        public async Task Then_the_second_payment_is_shown_if_already_paid_and_the_application_is_subsequently_withdrawn_by_employer()
+        {
+            // Arrange / Act
+            var model = new ApprenticeApplicationModel
+            {
+                SecondPaymentStatus = new PaymentStatusModel { WithdrawnByEmployer = true, PaymentSent = true }
+            };
+
+            // Assert
+            model.ShowSecondPaymentStatus.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_compliance()
+        {
+            // Arrange / Act
+            var model = new ApprenticeApplicationModel
+            {
+                SecondPaymentStatus = new PaymentStatusModel { WithdrawnByCompliance = true, PaymentSent = false }
+            };
+
+            // Assert
+            model.ShowSecondPaymentStatus.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task Then_the_second_payment_is_not_shown_if_the_payment_has_not_been_sent_and_the_application_is_withdrawn_by_employer()
+        {
+            // Arrange / Act
+            var model = new ApprenticeApplicationModel
+            {
+                SecondPaymentStatus = new PaymentStatusModel { WithdrawnByEmployer = true, PaymentSent = false }
+            };
+
+            // Assert
+            model.ShowSecondPaymentStatus.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task Then_the_second_payment_is_not_shown_if_the_first_payment_has_a_status_message()
+        {
+            // Arrange / Act
+            var model = new ApprenticeApplicationModel
+            {
+                FirstPaymentStatus = new PaymentStatusModel { RequiresNewEmployerAgreement = true },
+                SecondPaymentStatus = new PaymentStatusModel { PaymentSent = false }
+            };
+
+            // Assert
+            model.ShowSecondPaymentStatus.Should().BeFalse();
         }
     }
 }

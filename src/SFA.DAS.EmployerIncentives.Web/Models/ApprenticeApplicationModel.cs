@@ -33,6 +33,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public ClawbackStatusModel SecondClawbackStatus { get; set; }
         public string CourseName { get; set; }        
 
-        public bool ShowSecondPaymentStatus => FirstPaymentStatus != null && !FirstPaymentStatus.ShowPaymentStatus;
+        public bool ShowSecondPaymentStatus
+        {
+            get
+            {
+                if (FirstPaymentStatus == null)
+                {
+                    return false;
+                }
+
+                if (SecondPaymentStatus != null && (SecondPaymentStatus.WithdrawnByCompliance || SecondPaymentStatus.WithdrawnByEmployer))
+                {
+                    return SecondPaymentStatus.PaymentSent;
+                }
+
+                return !FirstPaymentStatus.ShowPaymentStatus;
+            }
+        }
+            
+            
     }
 }
