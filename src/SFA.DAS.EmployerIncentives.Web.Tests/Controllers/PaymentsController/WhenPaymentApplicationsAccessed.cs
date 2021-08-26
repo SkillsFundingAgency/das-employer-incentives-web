@@ -10,7 +10,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -381,5 +380,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.First().FirstPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInFirstColumn);
             viewModel.Applications.First().SecondPaymentStatus.WithdrawnByEmployer.Should().Be(showWithdrawnMessageInSecondColumn);
         }
+
     }
 }
