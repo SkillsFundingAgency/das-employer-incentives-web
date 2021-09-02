@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -18,14 +20,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApprenticesService _apprenticesService;
         private readonly IApplicationService _applicationService;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyApprenticeshipsController(
             IApprenticesService apprenticesService,
             IApplicationService applicationService,
-            ILegalEntitiesService legalEntityService) : base(legalEntityService)
+            ILegalEntitiesService legalEntityService,
+            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
         {
             _apprenticesService = apprenticesService;
             _applicationService = applicationService;
+            _configuration = configuration.Value;
         } 
 
         [HttpGet]
@@ -49,6 +54,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (form.HasSelectedApprenticeships)
             {
                 var applicationId = await _applicationService.Create(form.AccountId, form.AccountLegalEntityId, form.SelectedApprenticeships);
+                var application = await _applicationService.Get(form.AccountId, applicationId, includeApprenticeships: false);
+
+                if(application.NewAgreementRequired)
+                {                    
+                    return View("NewAgreementRequired", await GetNewAgreementRequiredViewModel(form.AccountId, form.AccountLegalEntityId, applicationId));
+                }
+
                 return RedirectToAction("EmploymentStartDates", "ApplyEmploymentDetails", new { form.AccountId, applicationId });
             }
 
@@ -122,6 +134,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 Apprenticeships = apprenticeships.OrderBy(a => a.LastName),
                 OrganisationName = legalEntityName
             };
+        }
+
+        private async Task<NewAgreementRequiredViewModel> GetNewAgreementRequiredViewModel(string accountId, string accountLegalEntityId, Guid applicationId)
+        {
+            var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
+            return new NewAgreementRequiredViewModel(legalEntityName, accountId, applicationId, _configuration.ManageApprenticeshipSiteUrl);
         }
 
         private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, bool showSelected = true)
