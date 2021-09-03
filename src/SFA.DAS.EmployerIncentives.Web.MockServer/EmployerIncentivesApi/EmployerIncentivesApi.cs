@@ -830,6 +830,23 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi
             return this;
         }
 
+        public EmployerIncentivesApiBuilder WithUpdateVrfCaseStatus()
+        {
+            var data = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
+            _server
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{data.AccountId}/legalentity/{data.AccountLegalEntityId1}/vrfcasestatus"))
+                        .UsingPut()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            return this;
+        }
+
         public EmployerIncentivesApi Build()
         {
             _server.LogEntriesChanged += _server_LogEntriesChanged;
