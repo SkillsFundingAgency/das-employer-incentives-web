@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                        .WithPath(x => x.Contains($"/accounts/{_data.AccountId}/applications/") && !x.Contains("accountlegalentity"))
                         .UsingGet()
                 )
                 .RespondWith(
