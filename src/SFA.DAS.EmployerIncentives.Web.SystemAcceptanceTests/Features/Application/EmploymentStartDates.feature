@@ -39,3 +39,9 @@ Scenario: An employer accepts to remove ineligible apprenticeships from the appl
 	And the employer is informed one or more of their selected apprentices are ineligible
 	When the employer accepts to remove ineligible apprenticeships from the application
 	Then the employer is asked to confirm their apprenticeships selection
+
+Scenario: An employer provides supplies employment start dates that fall into next phase window
+	Given an initial application has been created
+	And the employer has selected apprentices for the application
+	When the employer supplied employment start dates fall into next phase window
+	Then the employer is asked to sign the agreement variation
