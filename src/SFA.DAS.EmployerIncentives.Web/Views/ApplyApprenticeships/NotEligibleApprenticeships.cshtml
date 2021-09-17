@@ -26,7 +26,7 @@
             <ul class="govuk-list govuk-list--bullet">
                 @foreach (var apprenticeship in Model.Apprentices)
                 {
-                    <li>@apprenticeship.DisplayName (joined on <span class="das-no-wrap">@apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")</span>)</li>
+                    <li name="ineligible-apprenticeship">@apprenticeship.DisplayName (joined on <span class="das-no-wrap" name="ineligible-apprenticeship-start-date">@apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")</span>)</li>
                 }
             </ul>
             <p class="govuk-body">
@@ -47,13 +47,13 @@
 
                 @if (Model.AllInEligible)
                 {
-                    <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-cancel">
+                    <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-cancel" id="cancelApplication">
                         Cancel application
                     </a>
                 }
                 else
                 {
-                    <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
+                    <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue" id="continueApplication">
                         Continue
                     </a>
                 }
