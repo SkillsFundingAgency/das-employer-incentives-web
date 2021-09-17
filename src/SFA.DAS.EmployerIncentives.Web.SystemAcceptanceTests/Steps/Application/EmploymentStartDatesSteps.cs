@@ -278,7 +278,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Harry",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -288,7 +288,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Thomas",
                                 TotalIncentiveAmount = 1000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -298,7 +298,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Michael",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             }
                         }
                 }
@@ -351,7 +351,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Harry",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -361,7 +361,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Thomas",
                                 TotalIncentiveAmount = 1000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -371,7 +371,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Michael",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             }
                         }
                 }
