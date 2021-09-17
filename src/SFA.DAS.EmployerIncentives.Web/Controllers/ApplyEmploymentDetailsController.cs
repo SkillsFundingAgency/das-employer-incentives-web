@@ -81,6 +81,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             if (application.NewAgreementRequired)
             {
+                request.AccountLegalEntityId = application.AccountLegalEntityId;
                 return await DisplayNewAgreementRequiredShutterPage(request);
             }
 

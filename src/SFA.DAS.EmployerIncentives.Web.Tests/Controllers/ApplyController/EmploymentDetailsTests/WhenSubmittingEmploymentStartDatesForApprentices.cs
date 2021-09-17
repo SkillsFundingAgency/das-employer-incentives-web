@@ -183,7 +183,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, false)).ReturnsAsync(application);
 
             var legalEntity = _fixture.Create<LegalEntityModel>();
-            _legalEntitiesService.Setup(x => x.Get(request.AccountId, request.AccountLegalEntityId))
+            _legalEntitiesService.Setup(x => x.Get(request.AccountId, application.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
 
             _validator.Setup(x => x.Validate(request)).Returns(Enumerable.Empty<DateValidationResult>());
