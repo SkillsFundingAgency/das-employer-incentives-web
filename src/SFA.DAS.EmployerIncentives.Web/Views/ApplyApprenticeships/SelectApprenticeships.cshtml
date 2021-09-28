@@ -26,11 +26,22 @@
                         </legend>
 
                         <p class="govuk-body">
-                            We're showing the apprentices in the account with a start date from April 2021 to November 2021.  We're not showing any apprentices that you have already applied for.
+                            @Model.OrganisationName can apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021,</span> applications close on <span class="das-no-wrap">30 November 2021.</span>
+                            <br />
+                            They must also have an apprenticeship start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 November 2021.</span>
                         </p>
                         <p class="govuk-body">
-                            Only select new apprentices with an employment start date at @Model.OrganisationName from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+                            In addition, @Model.OrganisationName can apply for apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022,</span> applications close on <span class="das-no-wrap">31 March 2022.</span>
+                            <br />
+                            They must also have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
                         </p>
+                        <p class="govuk-body">
+                            We are showing apprentices with an apprenticeship start within those dates.
+                        </p>
+                        <p class="govuk-body">
+                            We're not showing apprentices that you have already applied for.
+                        </p>
+                       
                         <details class="govuk-details" data-module="govuk-details">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">
@@ -48,7 +59,7 @@
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                             <strong class="govuk-warning-text__text">
                                 <span class="govuk-warning-text__assistive">Warning</span>
-                                You must not select existing employees who joined @Model.OrganisationName before <span class="das-no-wrap">1 April 2021</span>, even if they started an apprenticeship after this date.
+                                We will stop payments and reclaim any funds paid for apprentices identified as ineligible.
                             </strong>
                         </div>
 
