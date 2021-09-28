@@ -13,16 +13,9 @@
                 @Model.Title
             </h1>
             <p class="govuk-body">
-                To apply for the hire a new apprentice payment, all employers must review and accept an agreement with the Education and Skills Funding Agency.
+                To apply for the hire a new apprentice payment, someone from @Model.OrganisationName must review and accept a new agreement with the Education and Skills Funding Agency.
             </p>
-            <p class="govuk-body">
-                The version @Model.OrganisationName needs to accept depends on whether they've already accepted the agreement we published on <span class="das-no-wrap">9 January 2020</span>. If @Model.OrganisationName has:
-            </p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>already accepted the <span class="das-no-wrap">9 January 2020</span> agreement, they only need to accept a variation to it now</li>
-                <li>not accepted the <span class="das-no-wrap">9 January 2020</span> agreement yet, they need to accept a new agreement</li>
-            </ul>
-
+            
             <a href="@Model.AccountsAgreementsUrl" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
                 View agreement
             </a>
