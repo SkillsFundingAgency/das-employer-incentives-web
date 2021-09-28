@@ -34,7 +34,7 @@
                 }
             </ul>
             <p class="govuk-body">
-                They will be removed from the application. If you've noticed an error, you can <a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link">change the apprentice details</a>.
+                They will be removed from the application. If you've noticed an error, you can <a asp-action="EmploymentStartDates" asp-controller="ApplyEmploymentDetails" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link" data-linktype="noneligible-back">change the apprentice details</a>.
             </p>
 
                 @if (Model.AllInEligible)
