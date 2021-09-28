@@ -98,6 +98,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                     options.ClaimActions.MapUniqueJsonKey("sub", "id");
 
+                    options.NonceCookie.SameSite = SameSiteMode.None;
+                    options.NonceCookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.CorrelationCookie.SameSite = SameSiteMode.None;
+                    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+
                     // TODO: add redirect code ?
                     // https://auth0.com/docs/quickstart/webapp/aspnet-core-3/01-login                    
                 });
