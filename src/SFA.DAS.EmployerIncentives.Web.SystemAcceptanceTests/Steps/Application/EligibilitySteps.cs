@@ -296,13 +296,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var viewResult = _testContext.ActionResult.LastViewResult;
 
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as TakenOnCannotApplyViewModel;
+            var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
             model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/cannot-apply");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/no-new-apprentices");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]

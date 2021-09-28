@@ -74,15 +74,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/cannot-apply")]
+        [Route("{accountLegalEntityId}/no-new-apprentices")]
         public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
-            var model = new TakenOnCannotApplyViewModel(accountId, _configuration.CommitmentsSiteUrl, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
+            var model = new CannotApplyViewModel(accountId, _configuration.ManageApprenticeshipSiteUrl, legalEntityName);
             return View(model);
         }
 
         [HttpGet]
+        [Route("{accountLegalEntityId}/cannot-apply")]
         [Route("cannot-apply-yet")]
         public async Task<IActionResult> Redirect()
         {
