@@ -453,7 +453,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Then(@"the employer is offered the option to change their employment start dates")]
         public void ThenTheEmployerIsOfferedTheOptionToChangeTheirEmploymentStartDates()
         {
-            _response.Should().HaveLink("[data-linktype='noneligible-back']", $"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+            _response.Should().HaveLink("[data-linktype='noneligible-back']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
         }
 
 
