@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/no-eligible-apprentices")]
+        [Route("{accountLegalEntityId}/no-new-apprentices")]
         public async Task<ViewResult> CannotApply(string accountId, string accountLegalEntityId)
         {
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
@@ -74,7 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/no-new-apprentices")]
+        [Route("{accountLegalEntityId}/cannot-apply")]
         public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {
             var legalEntityName = await GetLegalEntityName(accountId, accountLegalEntityId);
@@ -83,11 +83,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountLegalEntityId}/cannot-apply")]
         [Route("cannot-apply-yet")]
         public async Task<IActionResult> Redirect()
         {
             return RedirectToActionPermanent("CannotApplyYet");
+        }
+
+        [HttpGet]
+        [Route("{accountLegalEntityId}/no-eligible-apprentices")]
+        public async Task<IActionResult> RedirectShutter()
+        {
+            return RedirectToActionPermanent("CannotApply");
         }
 
         [HttpGet]
