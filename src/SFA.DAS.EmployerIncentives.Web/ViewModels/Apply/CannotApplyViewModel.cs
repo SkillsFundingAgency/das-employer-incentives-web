@@ -18,7 +18,7 @@
 
         public string AccountId { get; }
         public string AccountHomeUrl { get; }
-        public string Title => $"{OrganisationName} does not have any eligible apprentices";
+        public string Title => $"{OrganisationName} cannot apply for this payment";
         public string OrganisationName { get; set; }
     }
 }
