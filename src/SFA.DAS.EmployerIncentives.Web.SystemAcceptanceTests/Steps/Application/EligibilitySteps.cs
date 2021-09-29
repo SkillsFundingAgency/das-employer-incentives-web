@@ -277,12 +277,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} cannot apply for this payment");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/no-eligible-apprentices");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/no-new-apprentices");
         }
 
         [Then(@"the employer is informed that they cannot apply yet")]
@@ -298,11 +298,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as CannotApplyViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
+            model.Should().HaveTitle($"{legalEntity.LegalEntityName} cannot apply for this payment");
             model.AccountId.Should().Be(hashedAccountId);
             model.AccountHomeUrl.Should().Be($"{_testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl}/accounts/{hashedAccountId}/teams");
             response.Should().HaveTitle(model.Title);
-            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/no-new-apprentices");
+            response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/cannot-apply");
         }
 
         [Then(@"the employer is informed that they need to specify whether or not they have eligible apprenticeships")]
