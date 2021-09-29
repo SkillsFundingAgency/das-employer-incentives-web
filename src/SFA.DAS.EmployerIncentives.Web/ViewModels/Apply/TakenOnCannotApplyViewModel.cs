@@ -6,6 +6,6 @@
         {
         }
 
-        public new string Title => $"{OrganisationName} cannot apply for this payment";
+        public new string Title => $"{OrganisationName} does not have any eligible apprentices";
     }
 }
