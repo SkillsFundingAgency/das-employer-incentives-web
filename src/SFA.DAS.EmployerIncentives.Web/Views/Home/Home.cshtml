@@ -13,7 +13,7 @@
             <h1 class="govuk-heading-xl">
                 @Model.Title
             </h1>
-            
+
             <p class="govuk-body">
                 The hire a new apprentice payment is available for employers that take on new apprentices from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>. Employers can apply for the payment after they add new apprentices to their apprenticeship service account.
             </p>
@@ -103,6 +103,15 @@
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
                         If you're applying for apprentices with a start date from <span class="das-no-wrap">1 April 2021</span>, @Model.OrganisationName needs to <a href="@Model.AccountsAgreementsUrl" class="govuk-link govuk-link--no-visited-state">sign a new employer agreement</a>.
+                    </strong>
+                </div>
+            }
+            else
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        Applications for apprentices hired after <span class="das-no-wrap">1 October 2021</span> are not open yet, you will not be able to apply for these apprentices until <span class="das-no-wrap">January 2022</span>.
                     </strong>
                 </div>
             }
