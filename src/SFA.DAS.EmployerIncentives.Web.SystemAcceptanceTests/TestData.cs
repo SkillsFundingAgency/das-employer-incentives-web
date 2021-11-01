@@ -394,6 +394,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                         Application = new IncentiveApplicationDto
                         {
                             AccountLegalEntityId = AccountLegalEntityId,
+                            NewAgreementRequired = false,
                             Apprenticeships = new IncentiveApplicationApprenticeshipDto[]
                             {
                                 new IncentiveApplicationApprenticeshipDto
