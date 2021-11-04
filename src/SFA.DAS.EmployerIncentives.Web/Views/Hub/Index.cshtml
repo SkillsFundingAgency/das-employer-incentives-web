@@ -65,7 +65,8 @@ else
                     </p>
                 </div>
             }
-            else
+
+            @if (Model.ShowNotificationBanner)
             {
                 <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
                     <div class="govuk-notification-banner__header">
@@ -75,13 +76,13 @@ else
                     </div>
                     <div class="govuk-notification-banner__content">
                         <p class="govuk-notification-banner__heading">
-                            There is still time to apply for the hire a new apprentice payment.
+                            Applications open on <span class="das-no-wrap">11 January 2022</span>
                         </p>
-                        <p class="govuk-body"> 
-                            If you've taken on new apprentices from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>, you need to apply before 30 November 2021.
+                        <p class="govuk-body">
+                            For apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022,</span> applications open on <span class="das-no-wrap">11 January 2022</span> and close on <span class="das-no-wrap">15 May 2022.</span>
                         </p>
-                        <p class="govuk-body"> 
-                            You will be able to apply for apprentices you have hired from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022</span> <a href="https://www.gov.uk/guidance/incentive-payments-for-hiring-a-new-apprentice" class="govuk-link govuk-link--no-visited-state">once applications open on <span class="das-no-wrap">11 January 2022</span></a>.
+                        <p class="govuk-body">
+                            They must also have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
                         </p>
                     </div>
                 </div>
@@ -111,11 +112,11 @@ else
                            asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
                            class="govuk-link govuk-link--no-visited-state"
                            data-linktype="hub-apply">
-                            Apply for the hire a new apprentice payment
+                            Hire a new apprentice payment
                         </a>
                     </h2>
                     <p class="govuk-body">
-                        You can apply for the payment if @Model.OrganisationName hires new apprentices from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+                        Applications for the hire a new apprentice payment open on <span class="das-no-wrap">11 January 2022.</span>
                     </p>
                 </div>
                 <div class="govuk-grid-column-one-half">
