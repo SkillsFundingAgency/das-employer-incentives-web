@@ -185,7 +185,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.Should().NotBeNull();
             viewModel.ShowAcceptNewEmployerAgreement.Should().Be(showAcceptNewEmployerAgreement);
-            viewModel.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";            
+            viewModel.ViewAgreementLink.Should().Be($"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");            
         }
     }
 }
