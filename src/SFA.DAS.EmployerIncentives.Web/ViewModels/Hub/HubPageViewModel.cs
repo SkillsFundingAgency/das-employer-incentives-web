@@ -14,7 +14,8 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Hub
         public bool ShowAmendBankDetails { get; set; }
         public Guid BankDetailsApplicationId { get; set; }
         public bool ShowAcceptNewEmployerAgreement { get; set; }
-        public string ViewAgreementLink { get; private set; }        
+        public string ViewAgreementLink { get; private set; }
+        public bool ShowNotificationBanner => !ShowBankDetailsRequired && !ShowAcceptNewEmployerAgreement;
 
         public string Title => "Hire a new apprentice payment";
 

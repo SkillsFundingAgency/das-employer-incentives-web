@@ -187,5 +187,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             viewModel.ShowAcceptNewEmployerAgreement.Should().Be(showAcceptNewEmployerAgreement);
             viewModel.ViewAgreementLink.Should().Be($"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");            
         }
+
+        [TestCase(true, true, true)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        [TestCase(true, false, false)]
+        public void Then_the_notification_banner_is_shown_if_other_tasks_are_completed(bool bankDetailsSupplied, bool legalAgreementSigned, bool showNotificationBanner)
+        {
+            // Arrange / Act
+
+            var viewModel = new HubPageViewModel(_fixture.Create<string>(), _fixture.Create<string>())
+            {
+                ShowBankDetailsRequired = !bankDetailsSupplied,
+                ShowAcceptNewEmployerAgreement = !legalAgreementSigned
+            };
+
+            // Assert
+            viewModel.ShowNotificationBanner.Should().Be(showNotificationBanner);
+        }
     }
 }
