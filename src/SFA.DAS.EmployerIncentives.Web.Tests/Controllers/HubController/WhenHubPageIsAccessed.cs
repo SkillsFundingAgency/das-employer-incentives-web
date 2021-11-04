@@ -22,7 +22,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
         private Web.Controllers.HubController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IApplicationService> _applicationService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
+        private Mock<IOptions<ExternalLinksConfiguration>> _externalLinksConfiguration;
+        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -52,11 +53,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
-            _configuration.Setup(x => x.Value).Returns(config);
+            _externalLinksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            var linksConfig = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
+            _externalLinksConfiguration.Setup(x => x.Value).Returns(linksConfig);
+            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
+            var webConfig = new WebConfigurationOptions();
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
 
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
         }
 
         [Test]
@@ -204,6 +208,39 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
 
             // Assert
             viewModel.ShowNotificationBanner.Should().Be(showNotificationBanner);
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public async Task Then_the_phase_two_closure_content_is_shown_when_the_cut_off_date_has_elapsed(int days) 
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.AddDays(days).ToString() };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Then_the_phase_two_content_is_shown_when_the_phase_two_scheme_is_still_active()
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.AddDays(1).ToString() };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowPhaseTwoClosureContent.Should().BeFalse();
         }
     }
 }
