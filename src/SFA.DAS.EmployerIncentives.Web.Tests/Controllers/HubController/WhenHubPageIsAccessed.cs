@@ -233,6 +233,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             // Arrange
             var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.AddDays(1).ToString() };
             _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+
+
             _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
 
             // Act
@@ -241,6 +243,25 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             // Assert
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.ShowPhaseTwoClosureContent.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task Then_the_phase_two_closure_content_is_shown_when_the_cut_off_date_has_elapsed_and_the_employer_has_not_applied_for_any_apprentices()
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = new List<ApprenticeApplicationModel>(), FirstSubmittedApplicationId = null };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+            
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
         }
     }
 }

@@ -38,7 +38,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
-                HasMultipleLegalEntities = legalEntities.Count() > 1
+                HasMultipleLegalEntities = legalEntities.Count() > 1,
+                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate)
             };
 
             var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
@@ -48,7 +49,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 model.ShowAmendBankDetails = CanAmendBankDetails(applicationsResponse);
                 model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
                 model.ShowAcceptNewEmployerAgreement = applicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement));
-                model.ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate);
             }
 
             return View(model);
