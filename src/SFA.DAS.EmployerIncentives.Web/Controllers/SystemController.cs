@@ -17,10 +17,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{accountId}/system-update")]
-        public async Task<IActionResult> SystemUpdate(string accountId)
+        [Route("{accountId}/applications-closed")]
+        public async Task<IActionResult> ApplicationsClosed(string accountId)
         {
-            return View(new SystemUpdateModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
+            return View(new ApplicationsClosedModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
     }
 }

@@ -33,14 +33,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
             {
                 var routeDataDictionary = controller.ControllerContext.RouteData?.Values;
 
-                if ((routeDataDictionary?["controller"]?.ToString() == "Home" && routeDataDictionary?["action"]?.ToString() == "Start") ||
-                    (routeDataDictionary?["controller"]?.ToString() == "Apply" && routeDataDictionary?["action"]?.ToString() == "SubmitApplication"))
+                if (
+                    (routeDataDictionary?["controller"]?.ToString() == "ApplicationComplete") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "ApplyApprenticeships") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "Apply" && routeDataDictionary?["action"]?.ToString() != "Forbidden") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "ApplyEmploymentDetails") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "ApplyOrganisation" && routeDataDictionary?["action"]?.ToString() != "GetChooseOrganisation" && routeDataDictionary?["action"]?.ToString() != "ChooseOrganisation") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "ApplyQualification") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "BankDetails" && routeDataDictionary?["action"]?.ToString() != "AmendBankDetails") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "Cancel") ||
+                    (routeDataDictionary?["controller"]?.ToString() == "Home" && routeDataDictionary?["action"]?.ToString() == "Start")
+                    )
                 {
-                    context.Result = new RedirectResult($"/{routeDataDictionary?["accountId"]?.ToString()}/system-update");
+                    context.Result = new RedirectResult($"/{routeDataDictionary?["accountId"]?.ToString()}/applications-closed");
                 }
             }
 
-             base.OnActionExecuting(context);
+            base.OnActionExecuting(context);
         }
 
         private void Initialise()

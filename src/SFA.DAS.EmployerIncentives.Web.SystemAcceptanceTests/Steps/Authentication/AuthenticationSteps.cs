@@ -34,13 +34,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [Given(@"a user of the system has not logged on")]
         public void GivenAUserOfTheSystemHasNotLoggedOn()
         {
-            _testContext.Claims.Clear();            
+            _testContext.Claims.Clear();
         }
 
         [When(@"the user access the (.*) page")]
         public async Task WhenTheUserAccessesTheHomePage(string url)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "/VBKBLD/apply");
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             var response = await _testContext.WebsiteClient.SendAsync(request);
 

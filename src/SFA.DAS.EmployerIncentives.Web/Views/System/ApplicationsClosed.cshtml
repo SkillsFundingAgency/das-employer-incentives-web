@@ -1,0 +1,23 @@
+﻿@model SFA.DAS.EmployerIncentives.Web.ViewModels.System.ApplicationsClosedModel
+@{
+    ViewBag.GaData.Vpv = "/apply/applications-closed";
+    ViewData["Title"] = Model.Title;
+}
+
+<a href="@Model.AccountHomeUrl" class="govuk-back-link" data-linktype="applications-closed-return">Return to account home</a>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">
+                Applications open on <span class="das-no-wrap">11 January 2022</span>
+            </h1>
+            <p class="govuk-body">
+                For apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022</span>, applications open on <span class="das-no-wrap">11 January 2022</span> and close on <span class="das-no-wrap">15 May 2022</span>.
+            </p>
+            <p class="govuk-body">
+                They must also have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022</span>.
+            </p>
+        </div>
+    </div>
+</main>
