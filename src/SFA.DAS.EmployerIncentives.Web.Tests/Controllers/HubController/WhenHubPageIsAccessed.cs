@@ -288,7 +288,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
 
         [TestCase(BankDetailsStatus.NotSupplied)]
         [TestCase(BankDetailsStatus.Rejected)]
-        public async Task Then_the_bank_details_banner_content_should_be_shown_if_none_supplied_and_the_cut_off_date_has_elapsed_and_no_applications_submitted(BankDetailsStatus bankDetailsStatus)
+        public async Task Then_the_bank_details_banner_content_should_be_not_shown_if_none_supplied_and_the_cut_off_date_has_elapsed_and_no_applications_submitted(BankDetailsStatus bankDetailsStatus)
         {
             // Arrange
             var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
@@ -303,8 +303,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
 
             // Assert
             var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowBankDetailsRequired.Should().BeTrue();
-            viewModel.ShowNotificationBanner.Should().BeFalse();
+            viewModel.ShowBankDetailsRequired.Should().BeFalse();
+            viewModel.ShowNotificationBanner.Should().BeTrue();
         }
     }
 }
