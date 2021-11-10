@@ -120,24 +120,34 @@ else
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <h2 class="govuk-heading-m">
-                        <a asp-controller="Home"
-                           asp-action="Start"
-                           asp-route-accountid="@Model.AccountId"
-                           asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                           class="govuk-link govuk-link--no-visited-state"
-                           data-linktype="hub-apply">
-                            Hire a new apprentice payment
-                        </a>
-                    </h2>
                     @if (Model.ShowPhaseTwoClosureContent) 
                     {
+                        <h2 class="govuk-heading-m">
+                            <a asp-controller="Home"
+                               asp-action="Start"
+                               asp-route-accountid="@Model.AccountId"
+                               asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                               class="govuk-link govuk-link--no-visited-state"
+                               data-linktype="hub-apply">
+                                Hire a new apprentice payment
+                            </a>
+                        </h2>
                         <p class="govuk-body">
                             Applications for the hire a new apprentice payment open on <span class="das-no-wrap">11 January 2022.</span>
                         </p>
                     }
                     else
                     {
+                        <h2 class="govuk-heading-m">
+                            <a asp-controller="Home"
+                               asp-action="Start"
+                               asp-route-accountid="@Model.AccountId"
+                               asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
+                               class="govuk-link govuk-link--no-visited-state"
+                               data-linktype="hub-apply">
+                                Apply for the hire a new apprentice payment
+                            </a>
+                        </h2>
                         <p class="govuk-body">
                             You can apply for the payment if @Model.OrganisationName hires new apprentices from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
                         </p>
