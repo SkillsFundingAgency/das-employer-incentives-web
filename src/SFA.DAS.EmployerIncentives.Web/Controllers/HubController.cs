@@ -34,18 +34,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var legalEntities = await _legalEntitiesService.Get(accountId);
             var selectedLegalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
 
+            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
             var model = new HubPageViewModel(_externalLinksConfiguration.ManageApprenticeshipSiteUrl, accountId)
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
                 HasMultipleLegalEntities = legalEntities.Count() > 1,
-                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate)
+                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate),
+                ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse)
             };
 
-            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
             if (applicationsResponse.ApprenticeApplications.Any())
             {
-                model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
                 model.ShowAmendBankDetails = CanAmendBankDetails(applicationsResponse);
                 model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
                 model.ShowAcceptNewEmployerAgreement = applicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement));

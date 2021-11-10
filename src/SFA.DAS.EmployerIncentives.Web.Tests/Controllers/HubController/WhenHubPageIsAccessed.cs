@@ -263,5 +263,48 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
         }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_bank_details_banner_content_should_be_shown_if_none_supplied_and_the_cut_off_date_has_elapsed(BankDetailsStatus bankDetailsStatus)
+        {
+            // Arrange
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = bankDetailsStatus,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowBankDetailsRequired.Should().BeTrue();
+            viewModel.ShowNotificationBanner.Should().BeFalse();
+        }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_bank_details_banner_content_should_be_shown_if_none_supplied_and_the_cut_off_date_has_elapsed_and_no_applications_submitted(BankDetailsStatus bankDetailsStatus)
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = new List<ApprenticeApplicationModel>(), FirstSubmittedApplicationId = null, BankDetailsStatus = bankDetailsStatus };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowBankDetailsRequired.Should().BeTrue();
+            viewModel.ShowNotificationBanner.Should().BeFalse();
+        }
     }
 }
