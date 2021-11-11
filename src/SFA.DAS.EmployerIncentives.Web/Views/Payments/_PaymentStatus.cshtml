@@ -5,7 +5,7 @@
     var culture = new CultureInfo("en-GB");
 }
 
-@if (Model != null)
+@if (Model != null && !Model.IsClawedBack)
 {
     @if (Model.PaymentIsStopped)
     {
