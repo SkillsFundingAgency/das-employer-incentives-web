@@ -27,7 +27,6 @@ Examples:
     | /VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details          |
     | /VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/add-bank-details           |
     | /VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/complete/application-saved |
-    | /VBKBLD/cancel/MLP7DD/cancel-application                                             |
     | /VBKBLD/MLP7DD                                                                       |
     
 @applyApplicationShutterPage
@@ -43,21 +42,22 @@ Scenario Outline: An employer is allowed to use some areas of the site after the
 	Then the employer is not shown the application shutter page
     
 Examples:
-    | url                                                                                  |
-    | /VBKBLD/apply/cannot-apply                                                           |
-    | /VBKBLD/apply/choose-organisation                                                    |
-    | /VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/change-bank-details        |
-    | /error/403                                                                           |
-    | /error/404                                                                           |
-    | /error/500                                                                           |
-    | /                                                                                    |
-    | /login                                                                               |
-    | /VBKBLD                                                                              |
-    | /VBKBLD/MLP7DD/hire-new-apprentice-payment                                           |
-    | /VBKBLD/payments/payment-applications                                                |
-    | /VBKBLD/payments/MLP7DD/payment-applications                                         |
-    | /VBKBLD/payments/MLP7DD/no-applications                                              |
-    | /VBKBLD/payments/choose-organisation                                                 |
+    | url                                                                           |
+    | /VBKBLD/apply/cannot-apply                                                    |
+    | /VBKBLD/apply/choose-organisation                                             |
+    | /VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/change-bank-details |
+    | /error/403                                                                    |
+    | /error/404                                                                    |
+    | /error/500                                                                    |
+    | /                                                                             |
+    | /login                                                                        |
+    | /VBKBLD                                                                       |
+    | /VBKBLD/MLP7DD/hire-new-apprentice-payment                                    |
+    | /VBKBLD/payments/payment-applications                                         |
+    | /VBKBLD/payments/MLP7DD/payment-applications                                  |
+    | /VBKBLD/payments/MLP7DD/no-applications                                       |
+    | /VBKBLD/payments/choose-organisation                                          |
+    | /VBKBLD/cancel/MLP7DD/cancel-application                                      |
 
 Scenario Outline: An employer is allowed to use all areas of the site before the phase 2 period has closed
 	Given the application is configured to allow applications
