@@ -23,10 +23,7 @@
                             </h1>
                         </legend>
                         <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
-                            @Model.OrganisationName can only apply for new apprentices who joined their organisation from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
-                        </span>
-                        <span id="HasTakenOnNewApprentices-hint-2" class="govuk-hint">
-                            @Model.OrganisationName cannot apply for apprentices who joined their organisation before <span class="das-no-wrap">1 April 2021</span>, even if they started an apprenticeship after this date.
+                            @Model.OrganisationName can only apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
                         </span>
                         <details class="govuk-details" data-module="govuk-details">
                             <summary class="govuk-details__summary">
@@ -55,6 +52,8 @@
                                 We will stop payments and reclaim any funds paid for apprentices identified as ineligible.
                             </strong>
                         </div>
+
+                        <h2 class="govuk-heading-m">Do you have eligible apprentices?</h2>
 
                         <div class="govuk-radios govuk-radios--inline">
                             <div class="govuk-radios__item">

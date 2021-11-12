@@ -9,7 +9,7 @@
         public string AccountId { get; set; }
         public string AccountLegalEntityId { get; set; }
 
-        public string Title => $"Does {OrganisationName} have apprentices who are eligible for the payment?";
+        public string Title => $"Eligible apprentices at {OrganisationName}";
 
         public string OrganisationName { get; set; }
     }
