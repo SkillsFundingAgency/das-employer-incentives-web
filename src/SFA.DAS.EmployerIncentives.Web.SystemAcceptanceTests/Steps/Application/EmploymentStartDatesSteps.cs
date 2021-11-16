@@ -431,6 +431,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AllInEligible.Should().BeFalse();
             model.Apprentices.Count.Should().Be(2);
             _response.Should().HaveLink("[data-linktype='noneligible-continue']", $"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=false");
+            _response.Should().HaveLink("[data-linktype='noneligible-change']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 
@@ -447,6 +448,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AllInEligible.Should().BeTrue();
             model.Apprentices.Count.Should().Be(3);
             _response.Should().HaveLink("[data-linktype='noneligible-cancel']", $"/{_data.HashedAccountId}/{_data.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            _response.Should().HaveLink("[data-linktype='noneligible-change']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 

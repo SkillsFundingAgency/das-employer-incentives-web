@@ -15,15 +15,18 @@
                 One or more apprentices are not eligible for the payment
             </h1>
             <p class="govuk-body">
-                @Model.OrganisationName can only apply for eligible apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>, applications close on <span class="das-no-wrap">30 November 2021.</span>
-                <br />
-                They must also have an apprenticeship start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 November 2021.</span>
+                @Model.OrganisationName can only apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
             </p>
             <p class="govuk-body">
                 In addition, @Model.OrganisationName can apply for apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022</span>, applications close on <span class="das-no-wrap">31 March 2022.</span>
                 <br />
                 They must also have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
             </p>
+
+            <p class="govuk-body">
+                Applications for apprentices hired from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022</span> are not open yet, you will not be able to apply for these apprentices until <span class="das-no-wrap">11 January 2022</span>.
+            </p>
+
             <p class="govuk-body">
                 The following are not eligible for the payment:
             </p>
@@ -34,21 +37,21 @@
                 }
             </ul>
             <p class="govuk-body">
-                They will be removed from the application. If you've noticed an error, you can <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link" data-linktype="noneligible-back">change the apprentice details</a>.
+                They will be removed from the application.  If you've noticed an error, you can <a asp-action="SelectApprenticeships" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state" data-linktype="noneligible-change">change the apprentice details.</a>
             </p>
 
-                @if (Model.AllInEligible)
-                {
-                    <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button" data-module="govuk-button" data-linktype="noneligible-cancel" id="cancelApplication">
-                        Cancel application
-                    </a>
-                }
-                else
-                {
-                    <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button" data-module="govuk-button" data-linktype="noneligible-continue" id="continueApplication">
-                        Continue
-                    </a>
-                }
-            </div>
+            @if (Model.AllInEligible)
+            {
+                <a asp-action="Index" asp-controller="Hub" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-cancel">
+                    Cancel application
+                </a>
+            }
+            else
+            {
+                <a asp-action="ConfirmApprenticeships" asp-route-all="false" asp-controller="ApplyApprenticeships" asp-route-accountid="@Model.AccountId" asp-route-applicationid="@Model.ApplicationId" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-8 govuk-button--start" data-module="govuk-button" data-linktype="noneligible-continue">
+                    Continue
+                </a>
+            }
         </div>
-    </main>
+    </div>
+</main>

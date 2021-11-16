@@ -22,16 +22,9 @@
                                 @Model.Title
                             </h1>
                         </legend>
-                        <p class="govuk-body">
-                            @Model.OrganisationName can apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021,</span> applications close on <span class="das-no-wrap">30 November 2021.</span>
-                            <br />
-                            They must also have an apprenticeship start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 November 2021.</span>
-                        </p>
-                        <p class="govuk-body">
-                            In addition, @Model.OrganisationName can apply for apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022,</span> applications close on <span class="das-no-wrap">31 March 2022.</span>
-                            <br />
-                            They must also have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
-                        </p>
+                        <span id="HasTakenOnNewApprentices-hint" class="govuk-hint">
+                            @Model.OrganisationName can only apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+                        </span>
                         <details class="govuk-details" data-module="govuk-details">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">
@@ -52,8 +45,17 @@
                             </span>
                         }
 
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                We will stop payments and reclaim any funds paid for apprentices identified as ineligible.
+                            </strong>
+                        </div>
+
                         <h2 class="govuk-heading-m">Do you have eligible apprentices?</h2>
-                        <div class="govuk-radios govuk-radios--inline govuk-!-margin-bottom-6">
+
+                        <div class="govuk-radios govuk-radios--inline">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" asp-for="HasTakenOnNewApprentices" id="HasTakenOnNewApprentices" type="radio" value="true" />
                                 <label class="govuk-label govuk-radios__label" for="HasTakenOnNewApprentices">
