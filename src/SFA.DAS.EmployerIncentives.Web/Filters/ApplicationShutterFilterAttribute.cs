@@ -40,7 +40,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
                     (routeDataDictionary?["controller"]?.ToString() == "ApplyEmploymentDetails") ||
                     (routeDataDictionary?["controller"]?.ToString() == "ApplyOrganisation" && routeDataDictionary?["action"]?.ToString() != "GetChooseOrganisation" && routeDataDictionary?["action"]?.ToString() != "ChooseOrganisation") ||
                     (routeDataDictionary?["controller"]?.ToString() == "ApplyQualification") ||
-                    (routeDataDictionary?["controller"]?.ToString() == "BankDetails" && routeDataDictionary?["action"]?.ToString() != "AmendBankDetails") ||
                     (routeDataDictionary?["controller"]?.ToString() == "Home" && routeDataDictionary?["action"]?.ToString() == "Start")
                     )
                 {
