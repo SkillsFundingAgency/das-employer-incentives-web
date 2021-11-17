@@ -94,10 +94,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Maintena
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/MLP7DD/validate-terms-signed", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/MLP7DD/eligible-apprentices", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/MLP7DD/taken-on-new-apprentices", null)]
-        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details", null)]
-        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/add-bank-details", null)]
-        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/complete/application-sa" +
-            "ved", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/MLP7DD", null)]
         public virtual void AnEmployerIsPreventedFromApplyingForANewApprenticeshipPaymentAfterThePhase2PeriodHasClosed(string url, string[] exampleTags)
         {
@@ -154,7 +150,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "applyApplicationShutterPage"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is prevented from submitting a new apprenticeship application", null, tagsOfScenario, argumentsOfScenario);
-#line 33
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -174,13 +170,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 34
+#line 31
  testRunner.Given("the application is configured to prevent applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 35
+#line 32
  testRunner.When("the employer submits an application for the new apprenticeship payment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 36
+#line 33
  testRunner.Then("the employer is shown the application shutter page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -193,6 +189,10 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.CategoryAttribute("applyApplicationShutterPage")]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/cannot-apply", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/choose-organisation", null)]
+        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/need-bank-details", null)]
+        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/add-bank-details", null)]
+        [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/complete/application-sa" +
+            "ved", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/bank-details/fd0f5a2d-b45b-4a73-8750-ddd167b270c3/change-bank-details", null)]
         [NUnit.Framework.TestCaseAttribute("/error/403", null)]
         [NUnit.Framework.TestCaseAttribute("/error/404", null)]
@@ -219,7 +219,7 @@ this.ScenarioInitialize(scenarioInfo);
             argumentsOfScenario.Add("url", url);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is allowed to use some areas of the site after the phase 2 period has" +
                     " closed", null, tagsOfScenario, argumentsOfScenario);
-#line 39
+#line 36
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -239,13 +239,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 40
+#line 37
  testRunner.Given("the application is configured to prevent applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 41
+#line 38
  testRunner.When(string.Format("the employer access the {0} page", url), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 42
+#line 39
  testRunner.Then("the employer is not shown the application shutter page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
