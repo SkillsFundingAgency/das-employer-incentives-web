@@ -318,7 +318,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as QualificationQuestionViewModel;
             model.Should().NotBeNull();
-            model.Should().HaveTitle($"Does {legalEntity.LegalEntityName} have apprentices who are eligible for the payment?");
+            model.Should().HaveTitle($"Eligible apprentices at {legalEntity.LegalEntityName}");
             model.AccountId.Should().Be(hashedAccountId);
 
             response.Should().HaveTitle(model.Title);
