@@ -8,8 +8,8 @@
 @if (Model != null && Model.IsClawedBack)
 {
     <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Payment sent</p>
-    <p class="govuk-body govuk-!-margin-bottom-0">@Model.ClawbackDate.Value.ToString("MMMM yyyy", culture)</p>
-    <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0">@Model.ClawbackAmount.ToString("C0", culture)</p>
+    <p class="govuk-body govuk-!-margin-bottom-0">@Model.OriginalPaymentDate.Value.ToString("MMMM yyyy", culture)</p>
+    <p class="govuk-body das-!-color-dark-grey govuk-!-margin-bottom-0">@(Model.ClawbackAmount * -1).ToString("C0", culture)</p>
 
-    <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-6" data-paragraphtype='view-payment-clawback'>Payment reclaimed</p> 
+    <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-6" data-paragraphtype='view-payment-clawback'>Payment reclaimed</p>
 }

@@ -565,7 +565,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var clawbackStatus = new ClawbackStatusModel
                 {
                 ClawbackDate = _fixture.Create<DateTime>(), 
-                ClawbackAmount = _fixture.Create<decimal>()
+                ClawbackAmount = _fixture.Create<decimal>(),
+                OriginalPaymentDate = _fixture.Create<DateTime>()
             };
 
             var applications = new List<ApprenticeApplicationModel>
@@ -604,7 +605,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             var clawbackStatus = new ClawbackStatusModel
             {
                 ClawbackDate = _fixture.Create<DateTime>(), // unset still has a clawback date 
-                ClawbackAmount = _fixture.Create<decimal>()
+                ClawbackAmount = _fixture.Create<decimal>(),
+                OriginalPaymentDate = _fixture.Create<DateTime>()
             };
 
             var applications = new List<ApprenticeApplicationModel>
