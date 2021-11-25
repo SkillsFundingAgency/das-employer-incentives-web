@@ -19,7 +19,7 @@
     {
         <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype='view-agreement-withdrawnByCompliance'>Application rejected</p>
     }
-    else
+    else if (!Model.IsClawedBack)
     {
         @if (!Model.LearnerMatchFound && !Model.PausePayments)
         {
