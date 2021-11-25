@@ -300,7 +300,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             model.Should().HaveTitle($"{legalEntity.LegalEntityName} does not have any eligible apprentices");
             model.AccountId.Should().Be(hashedAccountId);
-            model.AddApprenticesUrl.Should().Contain($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/commitments/accounts/{hashedAccountId}/apprentices/inform");
+            model.AddApprenticesUrl.Should().Contain($"{_testContext.ExternalLinksOptions.CommitmentsSiteUrl}/{hashedAccountId}/unapproved/inform");
 
             response.Should().HaveTitle(model.Title);
             response.Should().HavePathAndQuery($"/{hashedAccountId}/apply/{hashedLegalEntityId}/cannot-apply");

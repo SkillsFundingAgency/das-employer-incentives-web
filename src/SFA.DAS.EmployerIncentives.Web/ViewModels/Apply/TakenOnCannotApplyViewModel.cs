@@ -8,7 +8,7 @@
             {
                 commitmentsBaseUrl += "/";
             }
-            AddApprenticesUrl = $"{commitmentsBaseUrl}commitments/accounts/{accountId}/apprentices/inform";
+            AddApprenticesUrl = $"{commitmentsBaseUrl}{accountId}/unapproved/inform";
         }
 
         public new string Title => $"{OrganisationName} cannot apply for this payment";
