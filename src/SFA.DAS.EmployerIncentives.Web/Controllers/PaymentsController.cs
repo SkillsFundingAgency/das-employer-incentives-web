@@ -69,12 +69,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 {
                     apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
+                    apprenticeApplicationModel.FirstPaymentStatus.IsClawedBack = apprenticeApplicationModel.FirstClawbackStatus != null && apprenticeApplicationModel.FirstClawbackStatus.IsClawedBack;
                 }
 
                 if (apprenticeApplicationModel.SecondPaymentStatus != null)
                 {
                     apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
+                    apprenticeApplicationModel.SecondPaymentStatus.IsClawedBack = apprenticeApplicationModel.SecondClawbackStatus != null && apprenticeApplicationModel.SecondClawbackStatus.IsClawedBack;
                 }
             }
 
