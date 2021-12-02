@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return RedirectToAction("ValidateTermsSigned", "ApplyOrganisation", new { viewModel.AccountId, viewModel.AccountLegalEntityId });
             }
 
-            return RedirectToAction("CannotApply", "Apply", new { viewModel.AccountId });
+            return RedirectToAction("CannotApply", "Apply", new { accountId = viewModel.AccountId, accountLegalEntityId = viewModel.AccountLegalEntityId });            
         }
 
         [HttpGet]

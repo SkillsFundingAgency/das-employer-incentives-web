@@ -74,6 +74,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [HttpGet]
+        [Route("cannot-apply")]
+        public async Task<IActionResult> Forbidden()
+        {
+            return Forbid();
+        }
+
+        [HttpGet]
         [Route("{accountLegalEntityId}/cannot-apply")]
         public async Task<ViewResult> CannotApplyYet(string accountId, string accountLegalEntityId)
         {

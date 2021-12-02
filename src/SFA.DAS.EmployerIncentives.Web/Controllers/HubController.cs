@@ -5,6 +5,7 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,13 +15,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IApplicationService _applicationService;
-        private readonly ExternalLinksConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _externalLinksConfiguration;
+        private readonly WebConfigurationOptions _webConfiguration;
 
-        public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, IOptions<ExternalLinksConfiguration> configuration)
+        public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, 
+                             IOptions<ExternalLinksConfiguration> externalLinksConfiguration, IOptions<WebConfigurationOptions> webConfiguration)
         {
             _legalEntitiesService = legalEntitiesService;
             _applicationService = applicationService;
-            _configuration = configuration.Value;
+            _externalLinksConfiguration = externalLinksConfiguration.Value;
+            _webConfiguration = webConfiguration.Value;
         }
 
         [Route("{accountId}/{accountLegalEntityId}/hire-new-apprentice-payment")]
@@ -30,21 +34,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             var legalEntities = await _legalEntitiesService.Get(accountId);
             var selectedLegalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
 
-            var model = new HubPageViewModel(_configuration.ManageApprenticeshipSiteUrl, accountId)
+            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
+            var model = new HubPageViewModel(_externalLinksConfiguration.ManageApprenticeshipSiteUrl, accountId)
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
-                HasMultipleLegalEntities = legalEntities.Count() > 1
+                HasMultipleLegalEntities = legalEntities.Count() > 1,
+                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate)
             };
 
-            var applicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
             if (applicationsResponse.ApprenticeApplications.Any())
             {
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
                 model.ShowAmendBankDetails = CanAmendBankDetails(applicationsResponse);
                 model.BankDetailsApplicationId = applicationsResponse.FirstSubmittedApplicationId.Value;
                 model.ShowAcceptNewEmployerAgreement = applicationsResponse.ApprenticeApplications.Any(a => (a.FirstPaymentStatus != null && a.FirstPaymentStatus.RequiresNewEmployerAgreement) || (a.SecondPaymentStatus != null && a.SecondPaymentStatus.RequiresNewEmployerAgreement));
-                model.ViewAgreementLink = CreateViewAgreementLink(accountId);
             }
 
             return View(model);
@@ -58,15 +62,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return applications.BankDetailsStatus == BankDetailsStatus.Completed;
         }
-
-        private string CreateViewAgreementLink(string accountId)
+        private bool ShowPhaseTwoClosureContent(string applicationShutterPageDate)
         {
-            var accountsbaseUrl = _configuration.ManageApprenticeshipSiteUrl;
-            if (!accountsbaseUrl.EndsWith("/"))
-            {
-                accountsbaseUrl += "/";
-            }
-            return $"{accountsbaseUrl}accounts/{accountId}/agreements";
+            DateTime applyFromDate;
+            DateTime.TryParse(applicationShutterPageDate, out applyFromDate);
+            return applyFromDate != DateTime.MinValue && DateTime.Today >= applyFromDate.Date;
         }
+
     }
 }
