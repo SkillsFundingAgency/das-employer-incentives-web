@@ -227,6 +227,47 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
         }
 
+        [TestCase(0)]
+        [TestCase(-1)]
+        public async Task Then_the_phase_two_closure_content_is_shown_when_the_cut_off_date_has_elapsed_and_the_phase3_has_not_started(int days)
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { 
+                ApplicationShutterPageDate = DateTime.Now.AddDays(days).ToString(),
+                ApplicationShutterPageEndDate = DateTime.Now.AddDays(1).ToString()
+            };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public async Task Then_the_phase_two_closure_content_is_not_shown_when_the_cut_off_date_has_elapsed_and_the_phase3_has_started(int days)
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions {
+                ApplicationShutterPageDate = DateTime.Now.AddDays(days).ToString(),
+                ApplicationShutterPageEndDate = DateTime.Now.ToString()
+            };
+
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowPhaseTwoClosureContent.Should().BeFalse();
+        }
+
         [Test]
         public async Task Then_the_phase_two_content_is_shown_when_the_phase_two_scheme_is_still_active()
         {

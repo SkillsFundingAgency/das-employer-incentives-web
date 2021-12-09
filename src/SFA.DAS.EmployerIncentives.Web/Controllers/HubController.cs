@@ -40,9 +40,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
                 HasMultipleLegalEntities = legalEntities.Count() > 1,
-                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate)
+                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration)
             };
-
+            
             if (applicationsResponse.ApprenticeApplications.Any())
             {
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
@@ -62,12 +62,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return applications.BankDetailsStatus == BankDetailsStatus.Completed;
         }
-        private bool ShowPhaseTwoClosureContent(string applicationShutterPageDate)
-        {
-            DateTime applyFromDate;
-            DateTime.TryParse(applicationShutterPageDate, out applyFromDate);
-            return applyFromDate != DateTime.MinValue && DateTime.Today >= applyFromDate.Date;
+        private bool ShowPhaseTwoClosureContent(WebConfigurationOptions webConfigurationOptions)
+        {               
+            DateTime.TryParse(webConfigurationOptions.ApplicationShutterPageDate, out DateTime shutterFromDate);
+            DateTime.TryParse(webConfigurationOptions.ApplicationShutterPageEndDate, out DateTime shutterToDate);
+            if (shutterToDate != DateTime.MinValue &&  DateTime.Today >= shutterToDate.Date)
+            {
+                return false;
+            }
+            return shutterFromDate != DateTime.MinValue && DateTime.Today >= shutterFromDate.Date;
         }
-
     }
 }
