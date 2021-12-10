@@ -41,11 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             if(!string.IsNullOrEmpty(_testContext.WebConfigurationOptions?.ApplicationShutterPageDate))
             {
                 _appConfig.Add("EmployerIncentivesWeb:ApplicationShutterPageDate", _testContext.WebConfigurationOptions?.ApplicationShutterPageDate);
-            }
-            if (!string.IsNullOrEmpty(_testContext.WebConfigurationOptions?.ApplicationShutterPageEndDate))
-            {
-                _appConfig.Add("EmployerIncentivesWeb:ApplicationShutterPageEndDate", _testContext.WebConfigurationOptions?.ApplicationShutterPageEndDate);
-            }
+            }            
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -76,7 +72,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
                         o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
                         o.ApplicationShutterPageDate = _testContext.WebConfigurationOptions.ApplicationShutterPageDate;
-                        o.ApplicationShutterPageEndDate = _testContext.WebConfigurationOptions.ApplicationShutterPageEndDate;
                     });
                     s.Configure<ExternalLinksConfiguration>(o =>
                     {
