@@ -186,7 +186,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 18
-testRunner.Given("an employer has no applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer has no applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 19
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -199,12 +199,12 @@ testRunner.Given("an employer has no applications", ((string)(null)), ((TechTalk
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer without bank details has a single apprentice submitted application")]
-        public virtual void AnEmployerWithoutBankDetailsHasASingleApprenticeSubmittedApplication()
+        [NUnit.Framework.DescriptionAttribute("An employer views information about payment statuses")]
+        public virtual void AnEmployerViewsInformationAboutPaymentStatuses()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer without bank details has a single apprentice submitted application", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer views information about payment statuses", null, tagsOfScenario, argumentsOfScenario);
 #line 22
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -226,27 +226,25 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 23
- testRunner.Given("an employer without bank details has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer has multiple submitted applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 24
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 25
- testRunner.Then("the add bank details call to action is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the payment status help call to action is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with vrf rejected status has a single apprentice submitted applicatio" +
-            "n")]
-        public virtual void AnEmployerWithVrfRejectedStatusHasASingleApprenticeSubmittedApplication()
+        [NUnit.Framework.DescriptionAttribute("An employer without bank details has a single apprentice submitted application")]
+        public virtual void AnEmployerWithoutBankDetailsHasASingleApprenticeSubmittedApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with vrf rejected status has a single apprentice submitted applicatio" +
-                    "n", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer without bank details has a single apprentice submitted application", null, tagsOfScenario, argumentsOfScenario);
 #line 27
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -268,7 +266,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 28
- testRunner.Given("an employer with vrf rejected status has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer without bank details has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 29
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -281,14 +279,14 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with accepted bank details has a single apprentice submitted applicat" +
-            "ion")]
-        public virtual void AnEmployerWithAcceptedBankDetailsHasASingleApprenticeSubmittedApplication()
+        [NUnit.Framework.DescriptionAttribute("An employer with vrf rejected status has a single apprentice submitted applicatio" +
+            "n")]
+        public virtual void AnEmployerWithVrfRejectedStatusHasASingleApprenticeSubmittedApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with accepted bank details has a single apprentice submitted applicat" +
-                    "ion", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with vrf rejected status has a single apprentice submitted applicatio" +
+                    "n", null, tagsOfScenario, argumentsOfScenario);
 #line 32
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -310,27 +308,27 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 33
- testRunner.Given("an employer with accepted bank details has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with vrf rejected status has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 34
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 35
- testRunner.Then("the add bank details call to action is not shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the add bank details call to action is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with an application on a later agreement that needs signing is prompt" +
-            "ed to sign the agreement")]
-        public virtual void AnEmployerWithAnApplicationOnALaterAgreementThatNeedsSigningIsPromptedToSignTheAgreement()
+        [NUnit.Framework.DescriptionAttribute("An employer with accepted bank details has a single apprentice submitted applicat" +
+            "ion")]
+        public virtual void AnEmployerWithAcceptedBankDetailsHasASingleApprenticeSubmittedApplication()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an application on a later agreement that needs signing is prompt" +
-                    "ed to sign the agreement", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with accepted bank details has a single apprentice submitted applicat" +
+                    "ion", null, tagsOfScenario, argumentsOfScenario);
 #line 37
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -352,27 +350,27 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 38
- testRunner.Given("an employer with a later agreement version that needs signing", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with accepted bank details has a single submitted application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 39
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 40
- testRunner.Then("the accept new employer agreement call to action is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the add bank details call to action is not shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with an application that is on the signed version is not prompted to " +
-            "sign the agreement")]
-        public virtual void AnEmployerWithAnApplicationThatIsOnTheSignedVersionIsNotPromptedToSignTheAgreement()
+        [NUnit.Framework.DescriptionAttribute("An employer with an application on a later agreement that needs signing is prompt" +
+            "ed to sign the agreement")]
+        public virtual void AnEmployerWithAnApplicationOnALaterAgreementThatNeedsSigningIsPromptedToSignTheAgreement()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an application that is on the signed version is not prompted to " +
-                    "sign the agreement", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an application on a later agreement that needs signing is prompt" +
+                    "ed to sign the agreement", null, tagsOfScenario, argumentsOfScenario);
 #line 42
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -394,25 +392,27 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 43
- testRunner.Given("an employer with an agreement version that has been signed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with a later agreement version that needs signing", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 44
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 45
- testRunner.Then("the accept new employer agreement call to action is not shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the accept new employer agreement call to action is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer with an stopped application is shown the stopped status")]
-        public virtual void AnEmployerWithAnStoppedApplicationIsShownTheStoppedStatus()
+        [NUnit.Framework.DescriptionAttribute("An employer with an application that is on the signed version is not prompted to " +
+            "sign the agreement")]
+        public virtual void AnEmployerWithAnApplicationThatIsOnTheSignedVersionIsNotPromptedToSignTheAgreement()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an stopped application is shown the stopped status", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an application that is on the signed version is not prompted to " +
+                    "sign the agreement", null, tagsOfScenario, argumentsOfScenario);
 #line 47
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -434,12 +434,52 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 48
- testRunner.Given("an employer with a stopped application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an employer with an agreement version that has been signed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 49
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 50
+ testRunner.Then("the accept new employer agreement call to action is not shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("An employer with an stopped application is shown the stopped status")]
+        public virtual void AnEmployerWithAnStoppedApplicationIsShownTheStoppedStatus()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an stopped application is shown the stopped status", null, tagsOfScenario, argumentsOfScenario);
+#line 52
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 53
+ testRunner.Given("an employer with a stopped application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 54
+ testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 55
  testRunner.Then("the message showing the application is stopped is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -453,7 +493,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a clawed back payment is shown the payment withdrawn status", null, tagsOfScenario, argumentsOfScenario);
-#line 53
+#line 57
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -473,13 +513,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 54
+#line 58
  testRunner.Given("an employer with an application with a clawed back payment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 55
+#line 59
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 56
+#line 60
  testRunner.Then("the message showing the payment is reclaimed is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -493,7 +533,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with a clawed back payment that has not been sent", null, tagsOfScenario, argumentsOfScenario);
-#line 58
+#line 62
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -513,14 +553,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 59
+#line 63
  testRunner.Given("an employer with an application with a clawed back payment that has not been sent" +
                         "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 60
+#line 64
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 61
+#line 65
  testRunner.Then("the message showing the payment is reclaimed is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -536,7 +576,7 @@ this.ScenarioInitialize(scenarioInfo);
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer with an application withdrawn by compliance is shown the rejected sta" +
                     "tus", null, tagsOfScenario, argumentsOfScenario);
-#line 63
+#line 67
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -556,13 +596,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 64
+#line 68
  testRunner.Given("an employer with an application withdrawn by compliance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 65
+#line 69
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 66
+#line 70
  testRunner.Then("the message showing the application is rejected is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -576,7 +616,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer who has withdrawn an application is shown the rejected status", null, tagsOfScenario, argumentsOfScenario);
-#line 68
+#line 72
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -596,13 +636,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 69
+#line 73
  testRunner.Given("an employer has withdrawn an application", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 70
+#line 74
  testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 71
+#line 75
  testRunner.Then("the message showing the application is cancelled is shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
