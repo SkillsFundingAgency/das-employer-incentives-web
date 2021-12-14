@@ -2,7 +2,7 @@
 {
     public class HomeViewModel : IViewModel
     {
-        public string Title => "Apply for the hire a new apprentice payment";
+        public string Title { get; protected set; } 
 
         public string AccountId { get; }
         public string AccountLegalEntityId { get; }
@@ -21,6 +21,7 @@
             string manageApprenticeshipSiteUrl,
             bool bankDetailsRequired)
         {
+            Title = "Apply for the hire a new apprentice payment";
             AccountId = accountId;
             AccountLegalEntityId = accountLegalEntityId;
             OrganisationName = organisationName;

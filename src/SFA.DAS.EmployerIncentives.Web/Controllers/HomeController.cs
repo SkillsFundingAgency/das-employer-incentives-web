@@ -63,8 +63,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> BeforeStart(string accountId, string accountLegalEntityId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var legalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);
-            return View("BeforeStart", new HomeViewModel(accountId, accountLegalEntityId, legalEntity?.Name, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity == null || legalEntity.BankDetailsRequired));
+            var legalEntity = legalEntities.FirstOrDefault(x => x.AccountLegalEntityId == accountLegalEntityId);            
+            return View("BeforeStart", new BeforeYouStartViewModel(accountId, accountLegalEntityId, legalEntity?.Name, legalEntity == null || !legalEntity.IsAgreementSigned, _configuration.ManageApprenticeshipSiteUrl, legalEntity == null || legalEntity.BankDetailsRequired));
         }
 
         [Route("/signout")]
