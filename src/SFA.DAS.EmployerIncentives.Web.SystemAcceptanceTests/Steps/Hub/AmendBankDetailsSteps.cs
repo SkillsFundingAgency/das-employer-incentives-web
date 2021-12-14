@@ -119,12 +119,5 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             var hubPageUrl = HttpUtility.UrlEncode($"https://localhost:5001/{_testData.HashedAccountId}/{_testData.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
             redirectUrl.Should().Contain($"return={hubPageUrl}");
         }
-
-        [Then(@"the employer can go back to the EI hub page")]
-        public void ThenTheEmployerCanGoBackToTheEIHubPage()
-        {
-            _response.Should().HaveBackLink($"/{_testData.HashedAccountId}/{_testData.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
-        }
-
     }
 }

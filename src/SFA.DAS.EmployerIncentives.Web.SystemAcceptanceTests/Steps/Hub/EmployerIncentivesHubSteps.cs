@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             model.AccountLegalEntityId.Should().Be(accountLegalEntityId);
 
             response.Should().HaveTitle(model.Title);
-            response.Should().HaveLink("[data-linktype='hub-apply']", $"/{accountId}/{accountLegalEntityId}");
+            response.Should().HaveLink("[data-linktype='hub-apply']", $"/{accountId}/{accountLegalEntityId}/before-you-start");
         }
 
         [Then(@"they can view previous applications")]

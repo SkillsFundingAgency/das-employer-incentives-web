@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
+﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Home
 {
     public class HomeViewModel : IViewModel
     {
