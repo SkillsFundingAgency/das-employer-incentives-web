@@ -31,7 +31,7 @@
             {
                 ManageApprenticeshipSiteUrl += "/";
             }
-            AccountsAgreementsUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/teams";
+            AccountsAgreementsUrl = $"{ManageApprenticeshipSiteUrl}accounts/{AccountId}/agreements";
             BankDetailsRequired = bankDetailsRequired;
         }
     }
