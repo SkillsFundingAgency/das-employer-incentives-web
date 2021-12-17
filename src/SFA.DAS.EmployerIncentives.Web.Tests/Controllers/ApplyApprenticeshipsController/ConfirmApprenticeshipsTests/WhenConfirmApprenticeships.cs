@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);     
             
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))
@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);
 
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))
@@ -180,7 +180,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);
 
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))

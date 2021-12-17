@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return applicationId;
         }
 
-        public async Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true)
+        public async Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true, bool includeSubmitted = false)
         {
             var url = OuterApiRoutes.Application.GetApplication(_hashingService.DecodeValue(accountId), applicationId, includeApprenticeships);
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -46,6 +46,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
             var data = await JsonSerializer.DeserializeAsync<ApplicationResponse>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
+            if(!includeSubmitted && !string.IsNullOrEmpty(data.Application.SubmittedByEmail))
+            {
+                return null;
+            }
+            
             return MapFromGetApplicationResponse(data.Application, accountId, applicationId);
         }
 

@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
 
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
                 apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
-            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(request.AccountId, request.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
@@ -134,7 +134,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
 
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
                 apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
-            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(request.AccountId, request.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);

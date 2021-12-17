@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
                 bankDetailsRequired: false,
                 newAgreementRequired: false);
 
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(application);
 
             // Act
             var redirectResult = await _sut.BankDetailsConfirmation(_accountId, _applicationId) as RedirectToActionResult;

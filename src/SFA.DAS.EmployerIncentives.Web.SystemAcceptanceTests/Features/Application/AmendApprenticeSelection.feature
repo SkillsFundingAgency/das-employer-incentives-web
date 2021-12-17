@@ -3,7 +3,7 @@ Feature: AmendApprenticeSelection
 	As an employer applying for the new apprentice grant
 	If I choose to amend my previously selected eligible apprenticeships
 	I want to see the these apprentices checked 
-	And be able to change my previous selection
+	And be able to change my previous selection	
 	
 Scenario: An employer is changing the previously selected apprenticeships
 	Given there are eligible apprenticeships for the grant
@@ -29,3 +29,9 @@ Scenario: An employer is changing the previously selected apprenticeships and su
 	And a initial application has been created
 	When the employer updates application with apprentices selected
 	Then the user is directed to the employment start dates page
+
+Scenario: An employer is changing the previously selected apprenticeships for a previously submitted application
+	Given there are eligible apprenticeships for the grant
+	And a initial application has been created and submitted
+	When the employer returns to the select apprentices page
+	Then the user is directed to the hub page

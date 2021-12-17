@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId)).ReturnsAsync(legalEntity);
             

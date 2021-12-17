@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             {
                 apprentice.EmploymentStartDate = _fixture.Create<DateTime>();
             }
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
