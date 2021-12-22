@@ -7,7 +7,11 @@
 
 @if (Model != null)
 {
-    @if (Model.PaymentIsStopped)
+    @if (Model.DisplayEmploymentCheckResult && !Model.EmploymentCheckPassed)
+    {
+        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Application ineligible</p>
+    }
+    else if (Model.PaymentIsStopped)
     {
         <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype='view-agreement-stopped'>Apprenticeship paused or stopped</p>
     }

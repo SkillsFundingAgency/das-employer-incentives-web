@@ -17,13 +17,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly ExternalLinksConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _linksConfiguration;
+        private readonly WebConfigurationOptions _webConfiguration;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
+                                  IOptions<ExternalLinksConfiguration> linksConfiguration,
+                                  IOptions<WebConfigurationOptions> webConfiguration)
         {
             _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
-            _configuration = configuration.Value;
+            _linksConfiguration = linksConfiguration.Value;
+            _webConfiguration = webConfiguration.Value;
         }
 
         [Route("payment-applications")]
@@ -81,6 +85,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
+            submittedApplications = SetEmploymentCheckFeatureToggle(submittedApplications, _webConfiguration.DisplayEmploymentCheckResult);
 
             var model = new ViewApplicationsViewModel
             {
@@ -120,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ChooseOrganisation(string accountId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var model = new ChooseOrganisationViewModel(_configuration.ManageApprenticeshipSiteUrl, accountId) 
+            var model = new ChooseOrganisationViewModel(_linksConfiguration.ManageApprenticeshipSiteUrl, accountId) 
             { 
                 LegalEntities = legalEntities 
             };
@@ -173,6 +178,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return submittedApplications;
         }
+        private IQueryable<ApprenticeApplicationModel> SetEmploymentCheckFeatureToggle(IQueryable<ApprenticeApplicationModel> submittedApplications, bool employmentCheckFeatureToggle)
+        {
+            foreach (var application in submittedApplications)
+            {
+                if (application.FirstPaymentStatus != null)
+                {
+                    application.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
+                }
+                if (application.SecondPaymentStatus != null)
+                {
+                    application.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
+                }
+            }
+
+            return submittedApplications;
+        }
 
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
         {
@@ -191,7 +212,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         private string CreateViewAgreementLink(string accountId)
         {
-            var accountsbaseUrl = _configuration.ManageApprenticeshipSiteUrl;
+            var accountsbaseUrl = _linksConfiguration.ManageApprenticeshipSiteUrl;
             if (!accountsbaseUrl.EndsWith("/"))
             {
                 accountsbaseUrl += "/";
