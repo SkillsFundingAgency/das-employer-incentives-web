@@ -65,8 +65,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             var viewAgreementLink = CreateViewAgreementLink(accountId);
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-
-            //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
+            
+            var employmentCheckFeatureToggle = _webConfiguration.DisplayEmploymentCheckResult;
             foreach (var apprenticeApplicationModel in submittedApplications)
             {
                 if (apprenticeApplicationModel.FirstPaymentStatus != null)
@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
                     apprenticeApplicationModel.FirstPaymentStatus.IsClawedBack = apprenticeApplicationModel.FirstClawbackStatus != null && apprenticeApplicationModel.FirstClawbackStatus.IsClawedBack;
+                    apprenticeApplicationModel.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
                 }
 
                 if (apprenticeApplicationModel.SecondPaymentStatus != null)
@@ -81,10 +82,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
                     apprenticeApplicationModel.SecondPaymentStatus.IsClawedBack = apprenticeApplicationModel.SecondClawbackStatus != null && apprenticeApplicationModel.SecondClawbackStatus.IsClawedBack;
+                    apprenticeApplicationModel.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
                 }
             }
 
-            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications, _webConfiguration.DisplayEmploymentCheckResult);
+            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
 
             var model = new ViewApplicationsViewModel
             {
@@ -150,7 +152,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
-        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications, bool employmentCheckFeatureToggle)
+        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications)
         {
             if (sortOrder == ApplicationsSortOrder.Descending)
             {
@@ -175,23 +177,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 }
             }
 
-            return submittedApplications.Select(x => ApplyEmploymentCheckFeatureToggle(x, employmentCheckFeatureToggle));
+            return submittedApplications;
         }
-
-        private static ApprenticeApplicationModel ApplyEmploymentCheckFeatureToggle(ApprenticeApplicationModel application, bool employmentCheckFeatureToggle)
-        {
-            if (application.FirstPaymentStatus != null)
-            {
-                application.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-            }
-            if (application.SecondPaymentStatus != null)
-            {
-                application.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-            }
-
-            return application;
-        }
-
+        
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
         {
             var requestContext = ControllerContext.HttpContext.Request;
