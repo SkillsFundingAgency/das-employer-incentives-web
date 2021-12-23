@@ -84,8 +84,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 }
             }
 
-            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
-            submittedApplications = SetEmploymentCheckFeatureToggle(submittedApplications, _webConfiguration.DisplayEmploymentCheckResult);
+            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications, _webConfiguration.DisplayEmploymentCheckResult);
 
             var model = new ViewApplicationsViewModel
             {
@@ -151,7 +150,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View(model);
         }
 
-        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications)
+        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications, bool employmentCheckFeatureToggle)
         {
             if (sortOrder == ApplicationsSortOrder.Descending)
             {
@@ -176,23 +175,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 }
             }
 
-            return submittedApplications;
+            return submittedApplications.Select(x => ApplyEmploymentCheckFeatureToggle(x, employmentCheckFeatureToggle));
         }
-        private IQueryable<ApprenticeApplicationModel> SetEmploymentCheckFeatureToggle(IQueryable<ApprenticeApplicationModel> submittedApplications, bool employmentCheckFeatureToggle)
+
+        private static ApprenticeApplicationModel ApplyEmploymentCheckFeatureToggle(ApprenticeApplicationModel application, bool employmentCheckFeatureToggle)
         {
-            foreach (var application in submittedApplications)
+            if (application.FirstPaymentStatus != null)
             {
-                if (application.FirstPaymentStatus != null)
-                {
-                    application.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
-                if (application.SecondPaymentStatus != null)
-                {
-                    application.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
+                application.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
+            }
+            if (application.SecondPaymentStatus != null)
+            {
+                application.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
             }
 
-            return submittedApplications;
+            return application;
         }
 
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
