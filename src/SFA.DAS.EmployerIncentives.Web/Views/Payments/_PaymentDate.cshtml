@@ -5,7 +5,7 @@
     var culture = new CultureInfo("en-GB");
 }
 
-@if (Model != null && !Model.IsClawedBack)
+@if (Model != null && !Model.IsClawedBack && (!Model.DisplayEmploymentCheckResult || Model.EmploymentCheckPassed))
 {
     @if ((Model.PaymentSent || Model.PaymentSentIsEstimated) && Model.LearnerMatchFound && !Model.PausePayments && Model.InLearning && !Model.HasDataLock)
     {
