@@ -9,7 +9,8 @@
 {
     @if (Model.DisplayEmploymentCheckResult && !Model.EmploymentCheckPassed)
     {
-        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Application ineligible</p>
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Application ineligible</p>
+        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Apprentice and/or employer details are ineligible</p>
     }
     else if (Model.PaymentIsStopped)
     {
