@@ -399,7 +399,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
         public void ThenTheMessageShowingTheApplicationIsIneligibleIsShown()
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().HaveInnerHtml("[data-paragraphtype='application-ineligible']", $"Application ineligible");
+            response.Should().HaveInnerHtml("[data-paragraphtype='application-ineligible']", $"Apprentice and/or employer details are ineligible");
         }
 
 
