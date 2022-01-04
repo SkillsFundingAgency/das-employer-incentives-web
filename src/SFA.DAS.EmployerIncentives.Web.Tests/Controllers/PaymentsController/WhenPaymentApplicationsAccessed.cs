@@ -459,7 +459,50 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.First().SecondPaymentStatus.DisplayEmploymentCheckResult.Should().BeFalse();
             viewModel.Applications.First().SecondPaymentStatus.EmploymentCheckPassed.Should().BeFalse();
         }
-        
+
+        [Test]
+        public async Task Then_employment_check_status_message_is_not_shown_if_feature_toggle_on_and_employment_check_result_not_set()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.EmploymentCheckPassed).Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.EmploymentCheckPassed).Create())
+                    .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            _webConfiguration.Setup(x => x.Value).Returns(new WebConfigurationOptions
+            {
+                DisplayEmploymentCheckResult = true
+            });
+
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.DisplayEmploymentCheckResult.Should().BeTrue();
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckPassed.HasValue.Should().BeFalse();
+            viewModel.Applications.First().SecondPaymentStatus.DisplayEmploymentCheckResult.Should().BeTrue();
+            viewModel.Applications.First().SecondPaymentStatus.EmploymentCheckPassed.HasValue.Should().BeFalse();
+        }
+
         [Test]
         public async Task Then_employment_check_status_message_is_not_shown_if_feature_toggle_on_and_employment_check_passed()
         {
