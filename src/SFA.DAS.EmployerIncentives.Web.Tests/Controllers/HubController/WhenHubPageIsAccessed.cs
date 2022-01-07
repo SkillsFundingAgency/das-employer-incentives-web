@@ -192,78 +192,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             viewModel.ViewAgreementLink.Should().Be($"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");            
         }
 
-        [TestCase(true, true, true)]
-        [TestCase(false, true, false)]
-        [TestCase(false, false, false)]
-        [TestCase(true, false, false)]
-        public void Then_the_notification_banner_is_shown_if_other_tasks_are_completed(bool bankDetailsSupplied, bool legalAgreementSigned, bool showNotificationBanner)
-        {
-            // Arrange / Act
-
-            var viewModel = new HubPageViewModel(_fixture.Create<string>(), _fixture.Create<string>())
-            {
-                ShowBankDetailsRequired = !bankDetailsSupplied,
-                ShowAcceptNewEmployerAgreement = !legalAgreementSigned
-            };
-
-            // Assert
-            viewModel.ShowNotificationBanner.Should().Be(showNotificationBanner);
-        }
-
-        [TestCase(0)]
-        [TestCase(-1)]
-        public async Task Then_the_phase_two_closure_content_is_shown_when_the_cut_off_date_has_elapsed(int days) 
-        {
-            // Arrange
-            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.AddDays(days).ToString() };
-            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
-
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
-        }
-
-        [Test]
-        public async Task Then_the_phase_two_content_is_shown_when_the_phase_two_scheme_is_still_active()
-        {
-            // Arrange
-            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.AddDays(1).ToString() };
-            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
-
-
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
-
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowPhaseTwoClosureContent.Should().BeFalse();
-        }
-
-        [Test]
-        public async Task Then_the_phase_two_closure_content_is_shown_when_the_cut_off_date_has_elapsed_and_the_employer_has_not_applied_for_any_apprentices()
-        {
-            // Arrange
-            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
-            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
-            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = new List<ApprenticeApplicationModel>(), FirstSubmittedApplicationId = null };
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
-            
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
-
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowPhaseTwoClosureContent.Should().BeTrue();
-        }
-
         [TestCase(BankDetailsStatus.NotSupplied)]
         [TestCase(BankDetailsStatus.Rejected)]
         public async Task Then_the_bank_details_banner_content_should_be_shown_if_none_supplied_and_the_cut_off_date_has_elapsed(BankDetailsStatus bankDetailsStatus)
@@ -283,7 +211,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             // Assert
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.ShowBankDetailsRequired.Should().BeTrue();
-            viewModel.ShowNotificationBanner.Should().BeFalse();
         }
 
         [TestCase(BankDetailsStatus.NotSupplied)]
@@ -304,7 +231,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             // Assert
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.ShowBankDetailsRequired.Should().BeFalse();
-            viewModel.ShowNotificationBanner.Should().BeTrue();
         }
     }
 }

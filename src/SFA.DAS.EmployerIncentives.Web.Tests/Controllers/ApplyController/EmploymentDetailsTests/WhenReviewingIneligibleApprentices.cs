@@ -44,8 +44,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         {
             // Arrange
             var apprentices = _fixture.Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, true).CreateMany(3).ToList();
-            apprentices[0].HasEligibleEmploymentStartDate = false;
+                .With(a => a.StartDatesAreEligible, true).CreateMany(3).ToList();
+            apprentices[0].StartDatesAreEligible = false;
 
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
                 apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             var model = result.Model as ApplicationConfirmationViewModel;
             Assert.IsNotNull(model);
             model.Apprentices.Count.Should().Be(2);
-            model.Apprentices.Any(a => !a.HasEligibleEmploymentStartDate).Should().BeFalse();
+            model.Apprentices.Any(a => !a.StartDatesAreEligible).Should().BeFalse();
             _applicationServiceMock.Verify(x => x.Get(_hashedAccountId, _applicationId, true), Times.Once());
         }
     }

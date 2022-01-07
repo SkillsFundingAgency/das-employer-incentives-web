@@ -15,14 +15,10 @@
                 One or more apprentices are not eligible for the payment
             </h1>
             <p class="govuk-body">
-                @Model.OrganisationName can only apply for apprentices with an employment start date from <span class="das-no-wrap">1 April 2021</span> to <span class="das-no-wrap">30 September 2021</span>.
+                @Model.OrganisationName can only apply for eligible apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022.</span>
             </p>
             <p class="govuk-body">
-                This is the date shown on the employment contract with @Model.OrganisationName and may be different to the apprenticeship start date.
-            </p>
-
-            <p class="govuk-body">
-                Applications for apprentices hired from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022</span> are not open yet, you will not be able to apply for these apprentices until <span class="das-no-wrap">11 January 2022</span>.
+                They will also need to have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
             </p>
 
             <p class="govuk-body">
@@ -31,7 +27,7 @@
             <ul class="govuk-list govuk-list--bullet">
                 @foreach (var apprenticeship in Model.Apprentices)
                 {
-                    <li>@apprenticeship.DisplayName (joined on <span class="das-no-wrap">@apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")</span>)</li>
+                    <li data-name="ineligible-apprenticeship">@apprenticeship.DisplayName (joined on <span class="das-no-wrap" name="ineligible-apprenticeship-start-date">@apprenticeship.EmploymentStartDate.Value.ToString("dd MMMM yyyy")</span>)</li>
                 }
             </ul>
             <p class="govuk-body">

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
@@ -19,16 +21,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly IHashingService _hashingService;
         private readonly IEmploymentStartDateValidator _employmentStartDateValidator;
+        private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyEmploymentDetailsController(
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
             IHashingService hashingService,
-            IEmploymentStartDateValidator employmentStartDateValidator) : base(legalEntityService)
+            IEmploymentStartDateValidator employmentStartDateValidator,
+            IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
         {
             _applicationService = applicationService;
             _hashingService = hashingService;
             _employmentStartDateValidator = employmentStartDateValidator;
+            _configuration = configuration.Value;
         }
 
         [Route("{applicationId}/join-organisation")]
@@ -53,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> SubmitEmploymentStartDates(EmploymentStartDatesRequest request)
         {
             var application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: true);
-            var validationResults = _employmentStartDateValidator.Validate(request);
+            var validationResults = _employmentStartDateValidator.Validate(request).ToList();
             if (validationResults.Any()) 
             {
                 var legalEntityName = await GetLegalEntityName(request.AccountId, application.AccountLegalEntityId);
@@ -72,7 +77,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             await _applicationService.SaveApprenticeshipDetails(confirmEmploymentDetailsRequest);
 
+            application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: false);
+
+            if (application.NewAgreementRequired)
+            {
+                request.AccountLegalEntityId = application.AccountLegalEntityId;
+                return await DisplayNewAgreementRequiredShutterPage(request);
+            }
+
             return RedirectToAction("ConfirmApprenticeships", "ApplyApprenticeships", new { request.AccountId, request.ApplicationId });
+        }
+
+        private async Task<IActionResult> DisplayNewAgreementRequiredShutterPage(EmploymentStartDatesRequest request)
+        {
+            var legalEntityName = await GetLegalEntityName(request.AccountId, request.AccountLegalEntityId);
+            var viewModel = new NewAgreementRequiredViewModel(legalEntityName, request.AccountId, request.ApplicationId,
+                _configuration.ManageApprenticeshipSiteUrl);
+            return View("NewAgreementRequired", viewModel);
         }
 
         private List<ApplicationApprenticeshipModel> PopulateStartDates(List<ApplicationApprenticeshipModel> apprentices, EmploymentStartDatesRequest request)

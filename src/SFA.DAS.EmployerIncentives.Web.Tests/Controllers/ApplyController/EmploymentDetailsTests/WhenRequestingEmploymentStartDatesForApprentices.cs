@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
@@ -26,6 +28,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         private Fixture _fixture;
         private string _accountId;
         private Guid _applicationId;
+        private Mock<IOptions<ExternalLinksConfiguration>> _mockConfiguration;
 
         [SetUp]
         public void Arrange()
@@ -35,9 +38,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
             _validator = new Mock<IEmploymentStartDateValidator>();
+            _mockConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
 
             _sut = new ApplyEmploymentDetailsController(_applicationService.Object, _legalEntitiesService.Object,
-                _hashingService.Object, _validator.Object);
+                _hashingService.Object, _validator.Object, _mockConfiguration.Object);
 
             _accountId = _fixture.Create<string>();
             _applicationId = Guid.NewGuid();
