@@ -12,6 +12,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
         public DateTime PlannedStartDate { get; set; }
         public DateTime? EmploymentStartDate { get; set; }
         public long Uln { get; set; }
-        public bool HasEligibleEmploymentStartDate { get; set; }        
+        public bool StartDatesAreEligible { get; set; }        
     }
 }

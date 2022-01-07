@@ -99,7 +99,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View("NotEligibleApprenticeships", new NotEligibleViewModel(viewModel));
             }
 
-            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.HasEligibleEmploymentStartDate);
+            viewModel.Apprentices.RemoveAll(apprentice => !apprentice.StartDatesAreEligible);
             
             return View(viewModel);
         }
@@ -167,7 +167,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 StartDate = apprentice.StartDate,
                 Uln = apprentice.Uln,
                 EmploymentStartDate = apprentice.EmploymentStartDate,
-                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
+                StartDatesAreEligible = apprentice.StartDatesAreEligible
             };
         }
     }

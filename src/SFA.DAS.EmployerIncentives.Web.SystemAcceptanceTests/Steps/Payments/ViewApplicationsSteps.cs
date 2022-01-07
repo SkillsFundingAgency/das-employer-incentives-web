@@ -402,6 +402,13 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             response.Should().HaveInnerHtml("[data-paragraphtype='application-ineligible']", $"Apprentice and/or employer details are ineligible");
         }
 
+        [Then(@"the payment status help call to action is shown")]
+        public void ThenThePaymentStatusHelpCallToActionIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveLink("[data-linktype='payment-status-help']", "https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application");
+        }
+
 
         private void AnEmployerHasASingleSubmittedApplication(Guid applicationId,
             BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)

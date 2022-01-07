@@ -114,9 +114,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line 10
  testRunner.Then("the employer is shown the employer amend bank details journey", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 11
- testRunner.And("the employer can go back to the EI hub page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }
