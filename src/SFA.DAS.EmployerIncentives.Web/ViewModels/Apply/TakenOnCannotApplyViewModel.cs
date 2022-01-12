@@ -4,13 +4,8 @@
     {
         public TakenOnCannotApplyViewModel(string accountId, string commitmentsBaseUrl, string accountsBaseUrl, string organisationName) : base(accountId, accountsBaseUrl, organisationName)
         {
-            if (!commitmentsBaseUrl.EndsWith("/"))
-            {
-                commitmentsBaseUrl += "/";
-            }
-            AddApprenticesUrl = $"{commitmentsBaseUrl}{accountId}/unapproved/inform";
         }
 
-        public new string Title => $"{OrganisationName} cannot apply for this payment";
+        public new string Title => $"{OrganisationName} does not have any eligible apprentices";
     }
 }

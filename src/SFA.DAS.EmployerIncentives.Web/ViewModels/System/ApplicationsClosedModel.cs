@@ -1,12 +1,12 @@
 ﻿namespace SFA.DAS.EmployerIncentives.Web.ViewModels.System
 {
-    public class SystemUpdateModel
+    public class ApplicationsClosedModel
     {
-        public string Title => "Sorry, the service is being updated – apply for a new apprentice payment – GOV.UK";
+        public string Title => "Applications open on 11 January 2022";
         public string AccountHomeUrl { get; set; }
         private string ManageApprenticeshipSiteUrl { get; set; }
 
-        public SystemUpdateModel(string accountId,string manageApprenticeshipSiteUrl)
+        public ApplicationsClosedModel(string accountId,string manageApprenticeshipSiteUrl)
         {
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))

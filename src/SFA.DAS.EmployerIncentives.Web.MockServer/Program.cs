@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithInitialApplication()
                 .WithoutASignedAgreement()
                 .WithApplicationConfirmation()
+                .WithUpdateApplication()
                 .WithAccountOwnerUserId()
                 .WithBankingDetails()
                 .WithPreviousApplications()

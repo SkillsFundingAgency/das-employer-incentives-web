@@ -1,12 +1,11 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -39,7 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 return View("ChooseOrganisation", viewModel);
             }
 
-            return RedirectToAction("CannotApply", "Apply",  new { viewModel.AccountId });
+            return RedirectToAction("Forbidden", "Apply",  new { viewModel.AccountId });
         }
 
         [HttpPost]

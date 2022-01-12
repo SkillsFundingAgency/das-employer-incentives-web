@@ -57,11 +57,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             var legalEntityName = _fixture.Create<string>();
             var apprenticeship1 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, true)
+                .With(a => a.StartDatesAreEligible, true)
                 .Create();
             var apprenticeship2 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, true)
+                .With(a => a.StartDatesAreEligible, true)
                 .Create();
 
             var apprentices = new List<ApplicationApprenticeshipModel>
@@ -107,11 +107,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             var legalEntityName = _fixture.Create<string>();
             var apprenticeship1 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .With(a => a.StartDatesAreEligible, false)
                 .Create();
             var apprenticeship2 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .With(a => a.StartDatesAreEligible, false)
                 .Create();
 
             var apprentices = new List<ApplicationApprenticeshipModel>
@@ -158,11 +158,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             var legalEntityName = _fixture.Create<string>();
             var apprenticeship1 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, true)
+                .With(a => a.StartDatesAreEligible, true)
                 .Create();
             var apprenticeship2 = _fixture
                 .Build<ApplicationApprenticeshipModel>()
-                .With(a => a.HasEligibleEmploymentStartDate, false)
+                .With(a => a.StartDatesAreEligible, false)
                 .Create();
 
             var apprentices = new List<ApplicationApprenticeshipModel>
@@ -208,7 +208,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             applicationApprenticeship.DisplayName.Should().Be(model.FullName);
             applicationApprenticeship.EmploymentStartDate.Should().Be(model.EmploymentStartDate);
             applicationApprenticeship.ExpectedAmount.Should().Be(model.ExpectedAmount);
-            applicationApprenticeship.HasEligibleEmploymentStartDate.Should().Be(model.HasEligibleEmploymentStartDate);
+            applicationApprenticeship.StartDatesAreEligible.Should().Be(model.StartDatesAreEligible);
             applicationApprenticeship.StartDate.Should().Be(model.StartDate);
             applicationApprenticeship.FirstName.Should().Be(model.FirstName);
             applicationApprenticeship.LastName.Should().Be(model.LastName);
