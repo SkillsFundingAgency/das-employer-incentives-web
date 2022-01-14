@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             if(!string.IsNullOrEmpty(_testContext.WebConfigurationOptions?.ApplicationShutterPageDate))
             {
                 _appConfig.Add("EmployerIncentivesWeb:ApplicationShutterPageDate", _testContext.WebConfigurationOptions?.ApplicationShutterPageDate);
-            }
+            }            
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

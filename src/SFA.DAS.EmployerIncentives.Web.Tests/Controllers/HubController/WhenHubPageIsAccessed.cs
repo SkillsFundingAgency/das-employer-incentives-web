@@ -22,7 +22,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
         private Web.Controllers.HubController _sut;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IApplicationService> _applicationService;
-        private Mock<IOptions<ExternalLinksConfiguration>> _configuration;
+        private Mock<IOptions<ExternalLinksConfiguration>> _externalLinksConfiguration;
+        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -52,11 +53,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
 
-            _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
-            _configuration.Setup(x => x.Value).Returns(config);
+            _externalLinksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            var linksConfig = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
+            _externalLinksConfiguration.Setup(x => x.Value).Returns(linksConfig);
+            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
+            var webConfig = new WebConfigurationOptions();
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
 
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
         }
 
         [Test]
@@ -185,7 +189,48 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.Should().NotBeNull();
             viewModel.ShowAcceptNewEmployerAgreement.Should().Be(showAcceptNewEmployerAgreement);
-            viewModel.ViewAgreementLink = $"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements";            
+            viewModel.ViewAgreementLink.Should().Be($"{_manageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");            
+        }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_bank_details_banner_content_should_be_shown_if_none_supplied_and_the_cut_off_date_has_elapsed(BankDetailsStatus bankDetailsStatus)
+        {
+            // Arrange
+            var applicationsResponse = new GetApplicationsModel
+            {
+                BankDetailsStatus = bankDetailsStatus,
+                ApprenticeApplications = _fixture.CreateMany<ApprenticeApplicationModel>(5).ToList(),
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowBankDetailsRequired.Should().BeTrue();
+        }
+
+        [TestCase(BankDetailsStatus.NotSupplied)]
+        [TestCase(BankDetailsStatus.Rejected)]
+        public async Task Then_the_bank_details_banner_content_should_be_not_shown_if_none_supplied_and_the_cut_off_date_has_elapsed_and_no_applications_submitted(BankDetailsStatus bankDetailsStatus)
+        {
+            // Arrange
+            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
+            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = new List<ApprenticeApplicationModel>(), FirstSubmittedApplicationId = null, BankDetailsStatus = bankDetailsStatus };
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowBankDetailsRequired.Should().BeFalse();
         }
     }
 }

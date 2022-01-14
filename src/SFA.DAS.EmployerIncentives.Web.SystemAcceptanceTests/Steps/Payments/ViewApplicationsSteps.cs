@@ -389,11 +389,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnApplicationWithAnUnsentClawedBackPayment(_testApplicationId);
         }
 
-        [Then(@"the message showing the payment is reclaimed is not shown")]
-        public void ThenTheMessageShowingThePaymentIsReclaimedIsNotShown()
+        [Then(@"the payment status help call to action is shown")]
+        public void ThenThePaymentStatusHelpCallToActionIsShown()
         {
             var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
-            response.Should().NotHaveInnerHtml("[data-paragraphtype='view-payment-clawback']");
+            response.Should().HaveLink("[data-linktype='payment-status-help']", "https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application");
         }
 
 
@@ -413,12 +413,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .With(p => p.AccountId, _testData.AccountId)
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
                     .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).Create())
                     .Create()
             };
             applications[0].Status = "Submitted";
             var getApplications = new GetApplicationsModel
             {
-                ApprenticeApplications = applications, BankDetailsStatus = bankDetailsStatus,
+                ApprenticeApplications = applications, 
+                BankDetailsStatus = bankDetailsStatus,
                 FirstSubmittedApplicationId = applicationId
             };
 
@@ -455,6 +458,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.PaymentIsStopped, false)
                             .With(p => p.WithdrawnByCompliance, false)
                             .With(p => p.WithdrawnByEmployer, false)
+                            .Without(p => p.IsClawedBack)
                             .Create()
                     )
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
@@ -486,19 +490,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            ClawbackStatusModel clawbackStatus = null;
-
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.AccountId, _testData.AccountId)
-                    .With(p => p.FirstClawbackStatus, clawbackStatus)
-                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
                     .With(p => p.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(p => p.RequiresNewEmployerAgreement, false)
                             .With(p => p.WithdrawnByCompliance, false)
                             .With(p => p.WithdrawnByEmployer, false)
+                            .Without(p => p.IsClawedBack)
                             .Create()
                     )
                     .Create()
@@ -528,18 +531,16 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
-            ClawbackStatusModel clawbackStatus = null;
-
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.AccountId, _testData.AccountId)
-                    .With(p => p.FirstClawbackStatus, clawbackStatus)
-                    .With(p => p.SecondClawbackStatus, clawbackStatus)
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
                     .With(p => p.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(p => p.PaymentIsStopped, true)
-
+                            .Without(p => p.IsClawedBack)
                             .Create()
                     )
                     .Create()
@@ -570,16 +571,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
             var clawbackStatus = new ClawbackStatusModel
-                {ClawbackDate = _fixture.Create<DateTime>(), ClawbackAmount = _fixture.Create<decimal>()};
-
-            ClawbackStatusModel unsetClawbackStatus = null;
+                {
+                ClawbackDate = _fixture.Create<DateTime>(), 
+                ClawbackAmount = _fixture.Create<decimal>(),
+                OriginalPaymentDate = _fixture.Create<DateTime>()
+            };
 
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.AccountId, _testData.AccountId)
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
-                    .With(p => p.SecondClawbackStatus, unsetClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
                     .Create()
             };
 
@@ -608,16 +611,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
             var clawbackStatus = new ClawbackStatusModel
-                {ClawbackDate = null, ClawbackAmount = _fixture.Create<decimal>()};
-
-            ClawbackStatusModel unsetClawbackStatus = null;
+            {
+                ClawbackDate = _fixture.Create<DateTime>(), // unset still has a clawback date 
+                ClawbackAmount = _fixture.Create<decimal>(),
+                OriginalPaymentDate = _fixture.Create<DateTime>()
+            };
 
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.AccountId, _testData.AccountId)
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
-                    .With(p => p.SecondClawbackStatus, unsetClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
                     .Create()
             };
 
@@ -654,8 +659,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.WithdrawnByEmployer, true)
                             .With(p => p.WithdrawnByCompliance, true)
                             .With(p => p.PaymentIsStopped, false)
+                            .Without(p => p.IsClawedBack)
                             .Create()
                     )
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
                     .Create()
             };
 
@@ -689,9 +697,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.WithdrawnByCompliance, true)
                             .With(p => p.WithdrawnByEmployer, false)
                             .With(p => p.PaymentIsStopped, false)
+                            .Without(p => p.IsClawedBack)
                             .Create()
                     )
-                    .Create()
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
+                    .Create()                    
             };
 
             var getApplications = new GetApplicationsModel

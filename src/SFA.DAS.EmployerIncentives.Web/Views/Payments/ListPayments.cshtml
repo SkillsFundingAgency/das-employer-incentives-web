@@ -79,25 +79,39 @@
                 <li>365 days of their apprenticeship for your second payment</li>
             </ul>
             <p class="govuk-body">
-                Once the apprenticeship information has been checked, we will process the payments.
-            </p>
-            <p class="govuk-body">
-                Payments will be made on the 14th working day of the month, it can take up to 3 days for the payments to reach your account.
+                We will complete our checks, including cross-referencing the PAYE information. If the application is eligible, we will process the payments.
             </p>
             <p class="govuk-body">
                 You can track when your payments are due to be paid below.
             </p>
+            
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        Why we might send the payment after the estimated date
+                        When will I receive my payment?
                     </span>
                 </summary>
                 <div class="govuk-details__text">
                     <p class="govuk-body">
-                        We might send the payment after the estimated date if the training provider:
+                        Payments will be made on the 14th working day of the month, it can take up to 3 days for the payments to reach your account.
+                    </p>
+                </div>
+            </details>
+
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Why might my payment be sent later than estimated or my application be rejected?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">
+                        We might send the payment after the estimated date or reject your application if the training provider:
                     </p>
                     <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            submits an incorrect National Insurance Number for the apprentice
+                        </li>
                         <li>
                             does not submit their information on time
                         </li>
@@ -109,16 +123,32 @@
                         </li>
                     </ul>
                     <p class="govuk-body">
-                        We also might send the payment after the estimated date if:
+                        We also might send the payment after the estimated date or reject your application if:
                     </p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            @Model.OrganisationName does not add their bank details or if we have not confirmed them
+                            the PAYE schemes registered on the employer account and apprentice PAYE scheme information do not match
+                        </li>
+                        <li>
+                            @Model.OrganisationName does not add their organisation and finance details or if we have not verified them
                         </li>
                         <li>
                             an apprentice takes a break in learning
                         </li>
                     </ul>
+                </div>
+            </details>
+            
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        What do the payment statuses mean?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">
+                        To understand the statuses of your payments, you can <a class="govuk-link" data-linktype="payment-status-help" href="https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application" target="_blank">read this guide</a>.
+                    </p>
                 </div>
             </details>
 

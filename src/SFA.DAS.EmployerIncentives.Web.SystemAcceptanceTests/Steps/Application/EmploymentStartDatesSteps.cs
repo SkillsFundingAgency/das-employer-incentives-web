@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .Given(
                     Request
                         .Create()
-                        .WithPath($"/accounts/{_data.AccountId}/applications/{_data.ApplicationId}")
+                        .WithPath(x => x.Contains($"/accounts/{_data.AccountId}/applications/") && !x.Contains("accountlegalentity"))
                         .UsingGet()
                 )
                 .RespondWith(
@@ -200,6 +200,65 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _response = await _testContext.WebsiteClient.PostFormAsync(url, values.ToArray());
         }
 
+        [When(@"the employer supplied employment start dates fall into next phase window")]
+        public async Task WhenTheEmployerSuppliedEmploymentStartDatesFallIntoNextPhaseWindow()
+        {
+            var response = new ApplicationResponse
+            {
+                Application = new IncentiveApplicationDto
+                {
+                    AccountLegalEntityId = _data.AccountLegalEntityId,
+                    NewAgreementRequired = true,
+                    Apprenticeships = new IncentiveApplicationApprenticeshipDto[0]
+                }
+            };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .WithParam("includeApprenticeships")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(response))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(x => x.Contains($"accounts/{_data.AccountId}/applications"))
+                        .UsingPatch()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                        .WithStatusCode(HttpStatusCode.OK));
+
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+
+            var values = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("AccountId", _data.HashedAccountId),
+                new KeyValuePair<string, string>("AccountLegalEntityId", _data.HashedAccountLegalEntityId),
+                new KeyValuePair<string, string>("ApplicationId", _data.ApplicationId.ToString()),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[0].Id),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "1"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "9"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021"),
+                new KeyValuePair<string, string>("ApprenticeshipIds", apprenticeships[1].Id),
+                new KeyValuePair<string, string>("EmploymentStartDateDays", "1"),
+                new KeyValuePair<string, string>("EmploymentStartDateMonths", "10"),
+                new KeyValuePair<string, string>("EmploymentStartDateYears", "2021")
+            };
+            var url = $"{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation";
+
+            _response = await _testContext.WebsiteClient.PostFormAsync(url, values.ToArray());
+        }
+
         [When(@"the employer supplies some ineligible start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesSomeIneligibleStartDatesForTheSelectedApprentices()
         {
@@ -219,7 +278,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Harry",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -229,7 +288,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Thomas",
                                 TotalIncentiveAmount = 1000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -239,7 +298,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Michael",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             }
                         }
                 }
@@ -292,7 +351,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Harry",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -302,7 +361,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Thomas",
                                 TotalIncentiveAmount = 1000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -312,7 +371,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                                 FirstName = "Michael",
                                 TotalIncentiveAmount = 2000m,
                                 EmploymentStartDate = new DateTime(2021, 05, 01),
-                                HasEligibleEmploymentStartDate = false
+                                StartDatesAreEligible = false
                             }
                         }
                 }
@@ -372,6 +431,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AllInEligible.Should().BeFalse();
             model.Apprentices.Count.Should().Be(2);
             _response.Should().HaveLink("[data-linktype='noneligible-continue']", $"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=false");
+            _response.Should().HaveLink("[data-linktype='noneligible-change']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
         }
 
@@ -388,7 +448,14 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.AllInEligible.Should().BeTrue();
             model.Apprentices.Count.Should().Be(3);
             _response.Should().HaveLink("[data-linktype='noneligible-cancel']", $"/{_data.HashedAccountId}/{_data.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
+            _response.Should().HaveLink("[data-linktype='noneligible-change']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+        }
+
+        [Then(@"the employer is offered the option to change their employment start dates")]
+        public void ThenTheEmployerIsOfferedTheOptionToChangeTheirEmploymentStartDates()
+        {
+            _response.Should().HaveLink("[data-linktype='noneligible-change']", $"/{_data.HashedAccountId}/apply/select-apprentices/{_data.ApplicationId}");
         }
 
 
@@ -414,6 +481,23 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             _response.Should().HaveBackLink($"/{_data.HashedAccountId}/apply/confirm-apprentices/{_data.ApplicationId}?all=true");
             model.Should().HaveTitle("Confirm apprentices");
+        }
+
+        [Then(@"the employer is asked to sign the agreement variation")]
+        public void ThenTheEmployerIsAskedToSignTheAgreementVariation()
+        {
+            _response.EnsureSuccessStatusCode();
+            _response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{_data.HashedAccountId}/apply/{_data.ApplicationId}/join-organisation");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as NewAgreementRequiredViewModel;
+            model.Should().NotBeNull();
+
+
+            model.Should().HaveTitle($"{_legalEntity.LegalEntityName} needs to accept a new employer agreement");
+            model.AccountId.Should().Be(_data.HashedAccountId);
         }
 
     }

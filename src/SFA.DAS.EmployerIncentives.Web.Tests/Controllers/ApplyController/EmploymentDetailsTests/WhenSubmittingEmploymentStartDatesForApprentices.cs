@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Controllers;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
@@ -27,6 +30,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         private Mock<IEmploymentStartDateValidator> _validator;
         private ApplyEmploymentDetailsController _sut;
         private Fixture _fixture;
+        private Mock<IOptions<ExternalLinksConfiguration>> _mockConfiguration;
+        private string _manageApprenticeshipSiteUrl;
 
         [SetUp]
         public void Arrange()
@@ -36,9 +41,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _hashingService = new Mock<IHashingService>();
             _validator = new Mock<IEmploymentStartDateValidator>();
+            _mockConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
+            _mockConfiguration.Setup(m => m.Value).Returns(new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl });
 
             _sut = new ApplyEmploymentDetailsController(_applicationService.Object, _legalEntitiesService.Object,
-                _hashingService.Object, _validator.Object);
+                _hashingService.Object, _validator.Object, _mockConfiguration.Object);
         }
 
         [Test]
@@ -94,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             var model = viewResult.Model as EmploymentStartDatesViewModel;
             model.Should().NotBeNull();
             model.DateValidationResults.Count.Should().Be(1);
-            //foreach (var apprentice in model.Apprentices)
+
             for(var index = 0; index < model.Apprentices.Count; index++)
             {
                 model.Apprentices.Single(x => x.ApprenticeshipId == request.ApprenticeshipIds[index]).EmploymentStartDateDay.Should().Be(request.EmploymentStartDateDays[index].Value);
@@ -133,13 +141,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             };
 
             var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
-                apprentices, _fixture.Create<bool>(), _fixture.Create<bool>());
+                apprentices, _fixture.Create<bool>(), false);
+
             _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, false)).ReturnsAsync(application);
+          
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(request.AccountId, request.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
-            var validationResults = new List<DateValidationResult>();
-            _validator.Setup(x => x.Validate(request)).Returns(validationResults);
+
+            _validator.Setup(x => x.Validate(request)).Returns(Enumerable.Empty<DateValidationResult>());
 
             // Act
             var redirectResult = await _sut.SubmitEmploymentStartDates(request) as RedirectToActionResult;
@@ -151,6 +162,43 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _applicationService.Verify(x => x.SaveApprenticeshipDetails(
                 It.Is<ApprenticeshipDetailsRequest>(y => y.ApplicationId == application.ApplicationId
                 && y.ApprenticeshipDetails.Count == request.EmploymentStartDateDays.Count)), Times.Once);
+        }
+
+        [Test]
+        public async Task Then_the_sign_new_agreement_page_is_displayed_when_a_new_agreement_needs_to_be_signed()
+        {
+            // Arrange
+            var apprentices = _fixture.CreateMany<ApplicationApprenticeshipModel>().ToList();
+
+            var application = new ApplicationModel(Guid.NewGuid(), _fixture.Create<string>(), _fixture.Create<string>(),
+                apprentices, _fixture.Create<bool>(), true);
+
+            var request = _fixture.Build<EmploymentStartDatesRequest>()
+                    .With(x => x.EmploymentStartDateDays, new List<int?>())
+                    .With(x => x.EmploymentStartDateMonths, new List<int?>())
+                    .With(x => x.EmploymentStartDateYears, new List<int?>())
+                    .Create();
+
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, false)).ReturnsAsync(application);
+
+            var legalEntity = _fixture.Create<LegalEntityModel>();
+            _legalEntitiesService.Setup(x => x.Get(request.AccountId, application.AccountLegalEntityId))
+                .ReturnsAsync(legalEntity);
+
+            _validator.Setup(x => x.Validate(request)).Returns(Enumerable.Empty<DateValidationResult>());
+
+            // Act
+            var result = await _sut.SubmitEmploymentStartDates(request) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as NewAgreementRequiredViewModel;
+            model.AccountsAgreementsUrl.Should().Be($"{ _manageApprenticeshipSiteUrl}/accounts/{request.AccountId}/agreements");
+            model.AccountId.Should().Be(request.AccountId);
+            model.ApplicationId.Should().Be(request.ApplicationId);
+            model.OrganisationName.Should().Be(legalEntity.Name);
+            model.Title.Should().Be($"{legalEntity.Name} needs to accept a new employer agreement");
         }
     }
 }

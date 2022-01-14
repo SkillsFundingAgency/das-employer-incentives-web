@@ -20,9 +20,9 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Apply
             ApplicationId = applicationConfirmationViewModel.ApplicationId;
             AccountId = applicationConfirmationViewModel.AccountId;
             AccountLegalEntityId = applicationConfirmationViewModel.AccountLegalEntityId;
-            Apprentices = applicationConfirmationViewModel.Apprentices.Where(a => !a.HasEligibleEmploymentStartDate).ToList();
+            Apprentices = applicationConfirmationViewModel.Apprentices.Where(a => !a.StartDatesAreEligible).ToList();
             OrganisationName = applicationConfirmationViewModel.OrganisationName;
-            AllInEligible = applicationConfirmationViewModel.Apprentices.All(a => !a.HasEligibleEmploymentStartDate);
+            AllInEligible = applicationConfirmationViewModel.Apprentices.All(a => !a.StartDatesAreEligible);
         }
     }
 }

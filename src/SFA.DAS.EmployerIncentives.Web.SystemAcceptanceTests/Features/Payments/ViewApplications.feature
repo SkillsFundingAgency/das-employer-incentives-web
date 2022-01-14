@@ -15,9 +15,14 @@ Scenario: An employer had multiple apprentice submitted applications
 	Then the employer is shown submitted applications
 
 Scenario: An employer has no apprentice applications
-Given an employer has no applications
+	Given an employer has no applications
 	When the employer views their applications
 	Then the employer is shown no applications
+
+Scenario: An employer views information about payment statuses
+	Given an employer has multiple submitted applications
+	When the employer views their applications
+	Then the payment status help call to action is shown
 
 Scenario: An employer without bank details has a single apprentice submitted application
 	Given an employer without bank details has a single submitted application
@@ -48,7 +53,6 @@ Scenario: An employer with an stopped application is shown the stopped status
 	Given an employer with a stopped application
 	When the employer views their applications
 	Then the message showing the application is stopped is shown
-
 	
 Scenario: An employer with a clawed back payment is shown the payment withdrawn status
 	Given an employer with an application with a clawed back payment
@@ -58,7 +62,8 @@ Scenario: An employer with a clawed back payment is shown the payment withdrawn 
 Scenario: An employer with a clawed back payment that has not been sent
 	Given an employer with an application with a clawed back payment that has not been sent
 	When the employer views their applications
-	Then the message showing the payment is reclaimed is not shown
+	Then the message showing the payment is reclaimed is shown
+
 Scenario: An employer with an application withdrawn by compliance is shown the rejected status
 	Given an employer with an application withdrawn by compliance
 	When the employer views their applications
