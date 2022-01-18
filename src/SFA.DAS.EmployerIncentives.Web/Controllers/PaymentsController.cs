@@ -17,13 +17,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
-        private readonly ExternalLinksConfiguration _configuration;
+        private readonly ExternalLinksConfiguration _linksConfiguration;
+        private readonly WebConfigurationOptions _webConfiguration;
 
-        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, IOptions<ExternalLinksConfiguration> configuration)
+        public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
+                                  IOptions<ExternalLinksConfiguration> linksConfiguration,
+                                  IOptions<WebConfigurationOptions> webConfiguration)
         {
             _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
-            _configuration = configuration.Value;
+            _linksConfiguration = linksConfiguration.Value;
+            _webConfiguration = webConfiguration.Value;
         }
 
         [Route("payment-applications")]
@@ -61,8 +65,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             var viewAgreementLink = CreateViewAgreementLink(accountId);
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-
-            //EI-896 - emergency fudge to stop the Paused/Withdrawn message being displayed for anyone with a payment.
+            
+            var employmentCheckFeatureToggle = _webConfiguration.DisplayEmploymentCheckResult;
             foreach (var apprenticeApplicationModel in submittedApplications)
             {
                 if (apprenticeApplicationModel.FirstPaymentStatus != null)
@@ -70,6 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
                     apprenticeApplicationModel.FirstPaymentStatus.IsClawedBack = apprenticeApplicationModel.FirstClawbackStatus != null && apprenticeApplicationModel.FirstClawbackStatus.IsClawedBack;
+                    apprenticeApplicationModel.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
                 }
 
                 if (apprenticeApplicationModel.SecondPaymentStatus != null)
@@ -77,6 +82,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
                     apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
                     apprenticeApplicationModel.SecondPaymentStatus.IsClawedBack = apprenticeApplicationModel.SecondClawbackStatus != null && apprenticeApplicationModel.SecondClawbackStatus.IsClawedBack;
+                    apprenticeApplicationModel.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
                 }
             }
 
@@ -120,7 +126,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ChooseOrganisation(string accountId)
         {
             var legalEntities = await _legalEntitiesService.Get(accountId);
-            var model = new ChooseOrganisationViewModel(_configuration.ManageApprenticeshipSiteUrl, accountId) 
+            var model = new ChooseOrganisationViewModel(_linksConfiguration.ManageApprenticeshipSiteUrl, accountId) 
             { 
                 LegalEntities = legalEntities 
             };
@@ -173,7 +179,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return submittedApplications;
         }
-
+        
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
         {
             var requestContext = ControllerContext.HttpContext.Request;
@@ -191,7 +197,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         private string CreateViewAgreementLink(string accountId)
         {
-            var accountsbaseUrl = _configuration.ManageApprenticeshipSiteUrl;
+            var accountsbaseUrl = _linksConfiguration.ManageApprenticeshipSiteUrl;
             if (!accountsbaseUrl.EndsWith("/"))
             {
                 accountsbaseUrl += "/";
