@@ -73,3 +73,8 @@ Scenario: An employer who has withdrawn an application is shown the rejected sta
 	Given an employer has withdrawn an application
 	When the employer views their applications
 	Then the message showing the application is cancelled is shown
+
+Scenario: An employer who has an ineligible application due to a failed employment check
+	Given an employer with an application with a failed employment check
+	When the employer views their applications
+	Then the message showing the application is ineligible is shown
