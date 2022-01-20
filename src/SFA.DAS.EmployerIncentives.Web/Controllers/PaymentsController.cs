@@ -85,14 +85,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                     apprenticeApplicationModel.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
                 }
             }
-
-            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
-
+            
             var model = new ViewApplicationsViewModel
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                Applications = submittedApplications,
+                Applications = submittedApplications.Sort(sortOrder, sortField),
                 SortField = sortField,
                 ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
                 ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
@@ -150,34 +148,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             return View(model);
-        }
-
-        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications)
-        {
-            if (sortOrder == ApplicationsSortOrder.Descending)
-            {
-                if (sortField != ApplicationsSortField.ApprenticeName)
-                {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
-                }
-                else
-                {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN);
-                }
-            }
-            else
-            {
-                if (sortField != ApplicationsSortField.ApprenticeName)
-                {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
-                }
-                else
-                {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN);
-                }
-            }
-
-            return submittedApplications;
         }
         
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
