@@ -63,34 +63,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
+
             var viewAgreementLink = CreateViewAgreementLink(accountId);
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            
-            var employmentCheckFeatureToggle = _webConfiguration.DisplayEmploymentCheckResult;
-            foreach (var apprenticeApplicationModel in submittedApplications)
-            {
-                if (apprenticeApplicationModel.FirstPaymentStatus != null)
-                {
-                    apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
-                    apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
-                    apprenticeApplicationModel.FirstPaymentStatus.IsClawedBack = apprenticeApplicationModel.FirstClawbackStatus != null && apprenticeApplicationModel.FirstClawbackStatus.IsClawedBack;
-                    apprenticeApplicationModel.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
 
-                if (apprenticeApplicationModel.SecondPaymentStatus != null)
-                {
-                    apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
-                    apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
-                    apprenticeApplicationModel.SecondPaymentStatus.IsClawedBack = apprenticeApplicationModel.SecondClawbackStatus != null && apprenticeApplicationModel.SecondClawbackStatus.IsClawedBack;
-                    apprenticeApplicationModel.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
-            }
+            submittedApplications = submittedApplications.Sort(sortOrder, sortField);
+            submittedApplications.ForEach(m =>
+            {
+                m.SetClawedBackStatus();
+                m.SetInLearning();
+                m.SetViewAgreementLink(viewAgreementLink);
+                m.SetEmploymentCheckFeatureToggle(_webConfiguration);
+            });
             
             var model = new ViewApplicationsViewModel
             {
                 AccountId = accountId,
                 AccountLegalEntityId = accountLegalEntityId,
-                Applications = submittedApplications.Sort(sortOrder, sortField),
+                Applications = submittedApplications,
                 SortField = sortField,
                 ShowBankDetailsInReview = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.InProgress,
                 ShowAddBankDetailsCalltoAction = getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.NotSupplied || getApplicationsResponse.BankDetailsStatus == BankDetailsStatus.Rejected,
@@ -105,7 +95,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return View("ListPayments", model);
         }
-
+        
         [Route("{accountLegalEntityId}/no-applications")]
         public async Task<IActionResult> NoApplications(string accountId, string accountLegalEntityId)
         {
