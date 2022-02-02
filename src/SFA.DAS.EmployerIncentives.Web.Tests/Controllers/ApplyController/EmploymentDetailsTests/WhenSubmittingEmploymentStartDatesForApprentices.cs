@@ -179,8 +179,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
                     .With(x => x.EmploymentStartDateYears, new List<int?>())
                     .Create();
 
-            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true)).ReturnsAsync(application);
-            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, true, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(request.AccountId, request.ApplicationId, false, false)).ReturnsAsync(application);
 
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(request.AccountId, application.AccountLegalEntityId))
