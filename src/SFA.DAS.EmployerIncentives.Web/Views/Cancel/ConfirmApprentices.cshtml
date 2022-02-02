@@ -68,17 +68,12 @@
 
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
+                    <div class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        Only cancel ineligible applications.  Don't cancel the application just because the apprentice has now stopped or finished the apprenticeship.
-                    </strong>
-                </div>
-
-                <div class="govuk-warning-text">
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        If you cancel an application, @Model.OrganisationName will have to repay any payments that they’ve already received.
-                    </strong>
+                        <p><strong>Only cancel ineligible applications.  Don't cancel the application just because the apprentice has now stopped or finished the apprenticeship.</strong></p>
+                        <p><strong>If you cancel an application, @Model.OrganisationName will have to repay any payments that they've already received.</strong></p>
+                        <p><strong>Cancelling the application doesn't cancel the apprenticeship itself, just your application for the incentive payment.</strong></p>
+                    </div>
                 </div>
 
                 <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-buttontype="cancel-confirm">

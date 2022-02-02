@@ -83,17 +83,17 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
             apprentices.Add(new ApplicationApprenticeship 
             { 
                 ExpectedAmount = _fixture.Create<decimal>(),
-                HasEligibleEmploymentStartDate = true
+                StartDatesAreEligible = true
             });
             apprentices.Add(new ApplicationApprenticeship
             {
                 ExpectedAmount = _fixture.Create<decimal>(),
-                HasEligibleEmploymentStartDate = true
+                StartDatesAreEligible = true
             });
             apprentices.Add(new ApplicationApprenticeship
             {
                 ExpectedAmount = _fixture.Create<decimal>(),
-                HasEligibleEmploymentStartDate = false
+                StartDatesAreEligible = false
             });
 
             // Act
@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
                 _fixture.Create<string>(), apprentices, _fixture.Create<bool>(), _fixture.Create<string>());
 
             // Assert
-            var expectedTotal = apprentices.Where(x => x.HasEligibleEmploymentStartDate).Sum(x => x.ExpectedAmount);
+            var expectedTotal = apprentices.Where(x => x.StartDatesAreEligible).Sum(x => x.ExpectedAmount);
             model.TotalPaymentAmount.Should().Be(expectedTotal);
         }
     }

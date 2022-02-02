@@ -5,7 +5,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,10 +38,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
-                HasMultipleLegalEntities = legalEntities.Count() > 1,
-                ShowPhaseTwoClosureContent = ShowPhaseTwoClosureContent(_webConfiguration.ApplicationShutterPageDate)
+                HasMultipleLegalEntities = legalEntities.Count() > 1
             };
-
+            
             if (applicationsResponse.ApprenticeApplications.Any())
             {
                 model.ShowBankDetailsRequired = BankDetailsRequired(applicationsResponse);
@@ -61,13 +59,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private static bool CanAmendBankDetails(GetApplicationsModel applications)
         {
             return applications.BankDetailsStatus == BankDetailsStatus.Completed;
-        }
-        private bool ShowPhaseTwoClosureContent(string applicationShutterPageDate)
-        {
-            DateTime applyFromDate;
-            DateTime.TryParse(applicationShutterPageDate, out applyFromDate);
-            return applyFromDate != DateTime.MinValue && DateTime.Today >= applyFromDate.Date;
-        }
-
+        }        
     }
 }

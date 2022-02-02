@@ -140,7 +140,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 StartDate = apprentice.PlannedStartDate,
                 Uln = apprentice.Uln,
                 EmploymentStartDate = apprentice.EmploymentStartDate,
-                HasEligibleEmploymentStartDate = apprentice.HasEligibleEmploymentStartDate
+                StartDatesAreEligible = apprentice.StartDatesAreEligible
             };
         }
 

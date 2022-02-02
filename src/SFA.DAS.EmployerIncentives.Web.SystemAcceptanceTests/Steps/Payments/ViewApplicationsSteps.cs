@@ -389,6 +389,27 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnApplicationWithAnUnsentClawedBackPayment(_testApplicationId);
         }
 
+        [Given(@"an employer with an application with a failed employment check")]
+        public void GivenAnEmployerWithAnApplicationWithAFailedEmploymentCheck()
+        {
+            AnApplicationWithAFailedEmploymentCheck(_testApplicationId);
+        }
+
+        [Then(@"the message showing the application is ineligible is shown")]
+        public void ThenTheMessageShowingTheApplicationIsIneligibleIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='application-ineligible']", $"Apprentice and/or employer details are ineligible");
+        }
+
+        [Then(@"the payment status help call to action is shown")]
+        public void ThenThePaymentStatusHelpCallToActionIsShown()
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveLink("[data-linktype='payment-status-help']", "https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application");
+        }
+
+
         private void AnEmployerHasASingleSubmittedApplication(Guid applicationId,
             BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
         {
@@ -405,8 +426,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .With(p => p.AccountId, _testData.AccountId)
                     .With(p => p.FirstClawbackStatus, clawbackStatus)
                     .With(p => p.SecondClawbackStatus, clawbackStatus)
-                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).Create())
-                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).Create())
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).With(p => p.EmploymentCheckPassed, true).Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().Without(p => p.IsClawedBack).With(p => p.EmploymentCheckPassed, true).Create())
                     .Create()
             };
             applications[0].Status = "Submitted";
@@ -450,6 +471,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.PaymentIsStopped, false)
                             .With(p => p.WithdrawnByCompliance, false)
                             .With(p => p.WithdrawnByEmployer, false)
+                            .With(p => p.EmploymentCheckPassed, true)
                             .Without(p => p.IsClawedBack)
                             .Create()
                     )
@@ -493,6 +515,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.RequiresNewEmployerAgreement, false)
                             .With(p => p.WithdrawnByCompliance, false)
                             .With(p => p.WithdrawnByEmployer, false)
+                            .With(p => p.EmploymentCheckPassed, true)
                             .Without(p => p.IsClawedBack)
                             .Create()
                     )
@@ -532,6 +555,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                     .With(p => p.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(p => p.PaymentIsStopped, true)
+                            .With(p => p.EmploymentCheckPassed, true)
                             .Without(p => p.IsClawedBack)
                             .Create()
                     )
@@ -651,6 +675,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.WithdrawnByEmployer, true)
                             .With(p => p.WithdrawnByCompliance, true)
                             .With(p => p.PaymentIsStopped, false)
+                            .With(p => p.EmploymentCheckPassed, true)
                             .Without(p => p.IsClawedBack)
                             .Create()
                     )
@@ -689,6 +714,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                             .With(p => p.WithdrawnByCompliance, true)
                             .With(p => p.WithdrawnByEmployer, false)
                             .With(p => p.PaymentIsStopped, false)
+                            .With(p => p.EmploymentCheckPassed, true)
                             .Without(p => p.IsClawedBack)
                             .Create()
                     )
@@ -713,6 +739,48 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(getApplications)));
         }
+        
+        private void AnApplicationWithAFailedEmploymentCheck(Guid applicationId)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
 
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.EmploymentCheckPassed, false)
+                            .Create()
+                    )
+                    .With(p => p.SecondPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(p => p.EmploymentCheckPassed, false)
+                            .Create()
+                    )
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel
+                { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             var headerModel = new HeaderViewModel(new HeaderConfiguration
                 {
                     EmployerCommitmentsBaseUrl = $"{commitmentsSiteUrl.Scheme}://{commitmentsSiteUrl.Host}/commitments",
+                    EmployerCommitmentsV2BaseUrl = $"{commitmentsSiteUrl.Scheme}://{commitmentsSiteUrl.Host}",
                     EmployerFinanceBaseUrl = externalLinks?.ManageApprenticeshipSiteUrl,
                     ManageApprenticeshipsBaseUrl = externalLinks?.ManageApprenticeshipSiteUrl,
                     AuthenticationAuthorityUrl = authConfig?.BaseAddress,

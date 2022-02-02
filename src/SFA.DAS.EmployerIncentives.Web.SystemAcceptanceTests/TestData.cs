@@ -70,11 +70,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 
             public class WithPreviousApplicationsForFirstLegalEntity : WithMultipleLegalEntitiesWithEligibleApprenticeships
             {
-                public ApprenticeApplicationModel Application1 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 09, 01), FirstName = "Jane", LastName = "Doe", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 900004567, CourseName = "Accounting", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = false, PausePayments = false } };
-                public ApprenticeApplicationModel Application2 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 08, 14), FirstName = "Robert", LastName = "Smith", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9565565665, CourseName = "Bar Tending", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = true, PausePayments = false } };
-                public ApprenticeApplicationModel Application3 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 05), FirstName = "Andrew", LastName = "Digby-Jones", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968575765, CourseName = "Zoo Keeper", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = true, PaymentAmount = 1500, PaymentDate = new DateTime(2021, 2, 1), PausePayments = false } };
-                public ApprenticeApplicationModel Application4 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 08), FirstName = "Steve", LastName = "Craddock", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968445765, CourseName = "Sausage Making", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = false, PausePayments = false } };
-                public ApprenticeApplicationModel Application5 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 11, 01), FirstName = "Helen", LastName = "Taylor", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9763445765, CourseName = "Finance Management", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = true, PausePayments = true } };
+                public ApprenticeApplicationModel Application1 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 09, 01), FirstName = "Jane", LastName = "Doe", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 900004567, CourseName = "Accounting", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = false, PausePayments = false, EmploymentCheckPassed = true } };
+                public ApprenticeApplicationModel Application2 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 08, 14), FirstName = "Robert", LastName = "Smith", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9565565665, CourseName = "Bar Tending", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = true, PausePayments = false, EmploymentCheckPassed = false } };
+                public ApprenticeApplicationModel Application3 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 05), FirstName = "Andrew", LastName = "Digby-Jones", TotalIncentiveAmount = 2000m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968575765, CourseName = "Zoo Keeper", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = true, PaymentAmount = 1500, PaymentDate = new DateTime(2021, 2, 1), PausePayments = false, EmploymentCheckPassed = true } };
+                public ApprenticeApplicationModel Application4 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 10, 08), FirstName = "Steve", LastName = "Craddock", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9968445765, CourseName = "Sausage Making", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = false, PausePayments = false, EmploymentCheckPassed = null } };
+                public ApprenticeApplicationModel Application5 => new ApprenticeApplicationModel { AccountId = AccountId, ApplicationDate = new DateTime(2020, 11, 01), FirstName = "Helen", LastName = "Taylor", TotalIncentiveAmount = 1500m, LegalEntityName = $"Organisation {AccountLegalEntityId1}", ULN = 9763445765, CourseName = "Finance Management", FirstPaymentStatus = new PaymentStatusModel { LearnerMatchFound = true, HasDataLock = false, InLearning = true, PausePayments = true, EmploymentCheckPassed = true } };
             }
 
             public class WithPreviousApprenticeshipIncentiveForFirstLegalEntity : WithMultipleLegalEntitiesWithEligibleApprenticeships
@@ -152,7 +152,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice1.StartDate,
                                     EmploymentStartDate = Apprentice1.EmploymentStartDate,
                                     Uln = Apprentice1.Uln,
-                                    HasEligibleEmploymentStartDate = false
+                                    StartDatesAreEligible = false
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -164,7 +164,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice2.StartDate,
                                     EmploymentStartDate = Apprentice2.EmploymentStartDate,
                                     Uln = Apprentice2.Uln,
-                                    HasEligibleEmploymentStartDate = false
+                                    StartDatesAreEligible = false
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -176,7 +176,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice3.StartDate,
                                     EmploymentStartDate = Apprentice3.EmploymentStartDate,
                                     Uln = Apprentice3.Uln,
-                                    HasEligibleEmploymentStartDate = false
+                                    StartDatesAreEligible = false
                                 }
                             }
                         }
@@ -219,7 +219,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice1.StartDate,
                                     EmploymentStartDate = Apprentice1.EmploymentStartDate,
                                     Uln = Apprentice1.Uln,
-                                    HasEligibleEmploymentStartDate = false
+                                    StartDatesAreEligible = false
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -231,7 +231,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice2.StartDate,
                                     EmploymentStartDate = Apprentice2.EmploymentStartDate,
                                     Uln = Apprentice2.Uln,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -243,7 +243,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice3.StartDate,
                                     EmploymentStartDate = Apprentice3.EmploymentStartDate,
                                     Uln = Apprentice3.Uln,
-                                    HasEligibleEmploymentStartDate = false
+                                    StartDatesAreEligible = false
                                 }
                             }
                     }
@@ -286,7 +286,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice1.StartDate,
                                     EmploymentStartDate = Apprentice1.EmploymentStartDate,
                                     Uln = Apprentice1.Uln,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -298,7 +298,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice2.StartDate,
                                     EmploymentStartDate = Apprentice2.EmploymentStartDate,
                                     Uln = Apprentice2.Uln,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -310,7 +310,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     PlannedStartDate = Apprentice3.StartDate,
                                     EmploymentStartDate = Apprentice3.EmploymentStartDate,
                                     Uln = Apprentice3.Uln,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 }
                             }
                         }
@@ -346,7 +346,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                 LastName = "Shipman",
                                 FirstName = "Harry",
                                 TotalIncentiveAmount = 2000m,
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -355,7 +355,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                 LastName = "Leeman",
                                 FirstName = "Thomas",
                                 TotalIncentiveAmount = 1000m,
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -364,7 +364,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                 LastName = "Johnson",
                                 FirstName = "Michael",
                                 TotalIncentiveAmount = 2000m,
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -373,7 +373,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                 LastName = "Roberts",
                                 FirstName = "Jack",
                                 TotalIncentiveAmount = 1500m,
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             },
                             new IncentiveApplicationApprenticeshipDto
                             {
@@ -382,7 +382,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                 LastName = "Smith",
                                 FirstName = "Steven",
                                 TotalIncentiveAmount = 2000m,
-                                HasEligibleEmploymentStartDate = true
+                                StartDatesAreEligible = true
                             }
                         }
                     }
@@ -403,7 +403,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     LastName = "Shipman",
                                     FirstName = "Harry",
                                     TotalIncentiveAmount = 2000m,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 },
                                 new IncentiveApplicationApprenticeshipDto
                                 {
@@ -412,7 +412,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                                     LastName = "Leeman",
                                     FirstName = "Thomas",
                                     TotalIncentiveAmount = 1000m,
-                                    HasEligibleEmploymentStartDate = true
+                                    StartDatesAreEligible = true
                                 }
                             }
                         }
