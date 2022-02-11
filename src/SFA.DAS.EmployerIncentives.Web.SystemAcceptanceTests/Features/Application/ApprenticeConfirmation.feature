@@ -18,3 +18,8 @@ Scenario: An employer has signed the extension agreement
 	Given an employer has selected an apprentice within the extension window and has signed the extension agreement
 	When the employer confirms their selection
 	Then the employer is asked to read and accept a declaration
+
+Scenario: An employer is confirming selected apprenticeships for a previously submitted application
+	Given a initial application has been created and submitted
+	When the employer arrives on the confirm apprentices page
+	Then the user is directed to the hub page

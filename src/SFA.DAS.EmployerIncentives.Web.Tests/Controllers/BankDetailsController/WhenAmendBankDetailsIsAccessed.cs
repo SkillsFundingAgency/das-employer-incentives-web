@@ -55,7 +55,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
             var legalEntity = _fixture.Create<LegalEntityModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(application);
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId)).ReturnsAsync(legalEntity);
 
             // Act
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
 
             var achieveServiceUrl = _fixture.Create<string>();

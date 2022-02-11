@@ -26,14 +26,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("")]
         public async Task<IActionResult> Confirmation(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
             var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
-            if (String.IsNullOrWhiteSpace(legalEntity.VrfCaseStatus))
+            if (string.IsNullOrWhiteSpace(legalEntity.VrfCaseStatus))
             {
                 legalEntity.VrfCaseStatus = VrfStatusRequested;
                 await _legalEntitiesService.UpdateVrfCaseStatus(legalEntity);
             }
-            var showBankDetailsInReview = (!String.IsNullOrWhiteSpace(legalEntity.VrfCaseStatus) && legalEntity.VrfCaseStatus != VrfStatusCompleted);
+            var showBankDetailsInReview = (!string.IsNullOrWhiteSpace(legalEntity.VrfCaseStatus) && legalEntity.VrfCaseStatus != VrfStatusCompleted);
             var model = new ConfirmationViewModel(accountId, application.AccountLegalEntityId, legalEntity.Name, showBankDetailsInReview);
             return View(model);
         }

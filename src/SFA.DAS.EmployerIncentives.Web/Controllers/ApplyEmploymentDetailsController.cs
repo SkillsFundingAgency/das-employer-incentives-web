@@ -41,6 +41,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> EmploymentStartDates(string accountId, Guid applicationId)
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: true);
+            if(application == null)
+            {
+                return RedirectToAction("Home", "Home", new { accountId });
+            }
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             var model = new EmploymentStartDatesViewModel
             {
@@ -57,7 +61,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitEmploymentStartDates(EmploymentStartDatesRequest request)
         {
-            var application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: true);
+            var application = await _applicationService.Get(request.AccountId, request.ApplicationId, includeApprenticeships: true);            
+            if (application == null)
+            {
+                return RedirectToAction("Home", "Home", new { request.AccountId });
+            }
             var validationResults = _employmentStartDateValidator.Validate(request).ToList();
             if (validationResults.Any()) 
             {

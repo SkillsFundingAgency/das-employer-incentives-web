@@ -63,7 +63,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> SelectApprenticeships(string accountId, Guid applicationId)
         {
             var model = await GetSelectApprenticeshipsViewModel(accountId, applicationId);
-
+            if (model == null)
+            {
+                return RedirectToAction("Home", "Home", new { accountId });
+            }
             if (!model.Apprenticeships.Any())
             {
                 return RedirectToAction("CannotApplyYet", "Apply", new { accountId, accountLegalEntityId = model.AccountLegalEntityId });
@@ -83,6 +86,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             var viewModel = await GetSelectApprenticeshipsViewModel(form.AccountId, applicationId, false);
+            if (viewModel == null)
+            {
+                return RedirectToAction("Home", "Home", new { form.AccountId });
+            }    
             ModelState.AddModelError(viewModel.FirstCheckboxId, SelectApprenticeshipsViewModel.SelectApprenticeshipsMessage);
 
             return View(viewModel);
@@ -93,6 +100,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         public async Task<IActionResult> ConfirmApprenticeships(string accountId, Guid applicationId, bool all = true)
         {
             var viewModel = await GetConfirmApprenticeshipViewModel(accountId, applicationId);
+            if(viewModel == null)
+            {
+                return RedirectToAction("Home", "Home", new { accountId });
+            }
 
             if (all && viewModel.HasIneligibleApprentices)
             {
@@ -127,6 +138,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private async Task<SelectApprenticeshipsViewModel> GetSelectApprenticeshipsViewModel(string accountId, Guid applicationId, bool showSelected = true)
         {
             var application = await _applicationService.Get(accountId, applicationId);
+            if (application == null)
+            {
+                return null;
+            }
 
             var apprenticeships = (await _apprenticesService.Get(new ApprenticesQuery(accountId, application.AccountLegalEntityId))).ToList();
 
@@ -148,6 +163,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private async Task<ApplicationConfirmationViewModel> GetConfirmApprenticeshipViewModel(string accountId, Guid applicationId)
         {
             var application = await _applicationService.Get(accountId, applicationId);
+            if(application == null)
+            {
+                return null;
+            }
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
 
             var apprenticeships = application.Apprentices.Select(MapFromApplicationApprenticeDto);

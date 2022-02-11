@@ -159,7 +159,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public void ThenTheEmployerIsAskedToProvideStartDatesForTheSelectedApprentices()
         {
             var hashedAccountId = _testData.Get<string>("HashedAccountId");
-            var hashedLegalEntityId = _testData.Get<string>("HashedAccountLegalEntityId");
 
             var viewResult = _testContext.ActionResult.LastViewResult;
             viewResult.Should().NotBeNull();

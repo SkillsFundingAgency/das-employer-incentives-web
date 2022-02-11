@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("need-bank-details")]
         public async Task<IActionResult> BankDetailsConfirmation(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
 
             if (!application.BankDetailsRequired)
             {
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("add-bank-details")]
         public async Task<IActionResult> AddBankDetails(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             var model = new AddBankDetailsViewModel { OrganisationName = legalEntityName };
             return View(model);
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var confirmationActionUrl = Url.Action("Confirmation", "ApplicationComplete", new { accountId, applicationId });
             var returnUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{confirmationActionUrl}";
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
             var achieveServiceUrl = await _verificationService.BuildAchieveServiceUrl(accountId, application.AccountLegalEntityId, applicationId, returnUrl);
 
             return Redirect(achieveServiceUrl);
@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("complete/application-saved")]
         public async Task<IActionResult> NeedBankDetails(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             var model = new NeedBankDetailsViewModel(accountId, application.AccountLegalEntityId, legalEntityName);
             return View(model);
@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("change-bank-details")]
         public async Task<IActionResult> AmendBankDetails(string accountId, Guid applicationId)
         {
-            var application = await _applicationService.Get(accountId, applicationId, false);
+            var application = await _applicationService.Get(accountId, applicationId, false, includeSubmitted: true);
             var legalEntity = await _legalEntitiesService.Get(accountId, application.AccountLegalEntityId);
             var model = new AmendBankDetailsViewModel(accountId, application.AccountLegalEntityId, applicationId, legalEntity.Name);
             return View(model);

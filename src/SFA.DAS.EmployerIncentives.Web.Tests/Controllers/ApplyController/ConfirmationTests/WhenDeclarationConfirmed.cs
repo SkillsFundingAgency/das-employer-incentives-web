@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
             var user = new ClaimsPrincipal(identity);
 
             _applicationService.Setup(x => x.Confirm(_accountId, _applicationId, _emailAddress, _userName)).ThrowsAsync(new UlnAlreadySubmittedException());
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(_fixture.Create<ApplicationModel>());
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(_fixture.Create<ApplicationModel>());
 
             _sut = new Web.Controllers.ApplyController(_configuration.Object, _applicationService.Object, _legalEntitiesService.Object)
             {

@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(application);
 
             var achieveServiceUrl = _fixture.Create<string>();
             _verificationService.Setup(x => x.BuildAchieveServiceUrl(_accountId, application.AccountLegalEntityId, _applicationId, It.IsAny<string>(), false)).ReturnsAsync(achieveServiceUrl);

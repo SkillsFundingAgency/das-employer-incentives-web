@@ -36,9 +36,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("declaration/{applicationId}")]
-        public async Task<ViewResult> Declaration(string accountId, Guid applicationId)
+        public async Task<IActionResult> Declaration(string accountId, Guid applicationId)
         {
             var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+            if(application == null)
+            {
+                return RedirectToAction("Home", "Home", new { accountId });
+            }
             var legalEntityName = await GetLegalEntityName(accountId, application.AccountLegalEntityId);
             return View(new DeclarationViewModel(accountId, applicationId, legalEntityName, _configuration.ManageApprenticeshipSiteUrl));
         }
@@ -57,7 +61,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
             catch (UlnAlreadySubmittedException)
             {
-                var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false);
+                var application = await _applicationService.Get(accountId, applicationId, includeApprenticeships: false, includeSubmitted: true);
                 return RedirectToAction("UlnAlreadyAppliedFor", new {accountId, application.AccountLegalEntityId });
             }
 
