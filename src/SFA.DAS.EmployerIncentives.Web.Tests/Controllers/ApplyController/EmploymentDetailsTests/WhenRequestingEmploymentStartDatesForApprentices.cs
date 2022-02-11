@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             {
                 apprentice.EmploymentStartDate = _fixture.Create<DateTime>();
             }
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, true, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId))
                 .ReturnsAsync(legalEntity);
@@ -95,6 +95,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
                 apprentice.EmploymentStartDateMonth.Should().Be(apprentice.EmploymentStartDate.Value.Month);
                 apprentice.EmploymentStartDateYear.Should().Be(apprentice.EmploymentStartDate.Value.Year);
             }
+        }
+
+        [Test]
+        public async Task Then_the_caller_is_redirected_to_the_home_page_when_the_application_has_already_been_submitted()
+        {
+            _applicationService
+                .Setup(x => x.Get(_accountId, _applicationId, false, false))
+                .ReturnsAsync(null as ApplicationModel);
+
+            var result = _sut.EmploymentStartDates(_accountId, _applicationId);
+            var redirectResult = await result as RedirectToActionResult;
+
+            redirectResult.Should().NotBeNull();
+            redirectResult?.ActionName.Should().Be("Home");
+            redirectResult?.ControllerName.Should().Be("Home");
         }
     }
 }

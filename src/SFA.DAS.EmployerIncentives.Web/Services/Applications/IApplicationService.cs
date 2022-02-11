@@ -9,7 +9,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     public interface IApplicationService
     {
         Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds);
-        Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true);
+        Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true, bool includeSubmitted = false);
         Task Update(Guid applicationId, string accountId, IEnumerable<string> apprenticeshipIds);
         Task Confirm(string accountId, Guid applicationId, string userEmail, string userName);
         Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId);

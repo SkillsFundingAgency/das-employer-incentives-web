@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);     
             
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))
@@ -129,7 +129,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);
 
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))
@@ -180,7 +180,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
                 false);
 
             _mockApplicationService
-                .Setup(m => m.Get(_accountId, _applicationId, true))
+                .Setup(m => m.Get(_accountId, _applicationId, true, false))
                 .ReturnsAsync(applicationResponse);
             _mockLegalEntitiesService
                 .Setup(m => m.Get(_accountId, _accountLegalEntityId))
@@ -199,6 +199,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyApprenticeshipsC
             model.Apprentices.Count.Should().Be(1);
             model.AllInEligible.Should().BeFalse();
             AssertAreEquivalent(model.Apprentices.Single(a => a.ApprenticeshipId == apprenticeship2.ApprenticeshipId), apprenticeship2);            
+        }
+
+        [Test]
+        public async Task Then_the_caller_is_redirected_to_the_home_page_when_the_application_has_already_been_submitted()
+        {
+            _mockApplicationService
+                .Setup(x => x.Get(_accountId, _applicationId, false, false))
+                .ReturnsAsync(null as ApplicationModel);
+
+            var result = _sut.ConfirmApprenticeships(_accountId, _applicationId);
+            var redirectResult = await result as RedirectToActionResult;
+
+            redirectResult.Should().NotBeNull();
+            redirectResult?.ActionName.Should().Be("Home");
+            redirectResult?.ControllerName.Should().Be("Home");
         }
 
         private void AssertAreEquivalent(ApplicationApprenticeship applicationApprenticeship, ApplicationApprenticeshipModel model)

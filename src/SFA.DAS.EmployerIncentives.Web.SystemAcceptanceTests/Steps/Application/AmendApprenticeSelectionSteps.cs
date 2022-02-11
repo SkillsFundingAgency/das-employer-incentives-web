@@ -1,11 +1,13 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +21,15 @@ using WireMock.ResponseBuilders;
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
     [Binding]
+    [Scope(Feature = "AmendApprenticeSelection")]
     public class AmendApprenticeSelectionSteps : StepsBase
     {
         private readonly TestContext _testContext;
         private readonly IHashingService _hashingService;
         private List<ApprenticeDto> _apprenticeshipData;
-        private TestData.Account.WithInitialApplicationForASingleEntity _data;
+        private readonly TestData.Account.WithInitialApplicationForASingleEntity _data;
+        private readonly ApplicationResponse _getApplicationResponse;
+        
         private HttpResponseMessage _response;
         private LegalEntityDto _legalEntity;
 
@@ -33,6 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _testContext = testContext;
             _hashingService = _testContext.HashingService;
             _data = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _getApplicationResponse = _data.GetApplicationResponseWithFirstTwoApprenticesSelected;
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _data.HashedAccountId);
         }
 
@@ -83,7 +89,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_data.GetApplicationResponseWithFirstTwoApprenticesSelected, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonConvert.SerializeObject(_getApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -97,6 +103,25 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
                       .WithBody(_data.AccountLegalEntityId.ToString()));
+
+            _testContext.EmployerIncentivesApi.MockServer
+              .Given(
+                      Request
+                      .Create()
+                      .WithPath($"/accounts/{_data.AccountId}/legalentities")
+                      .UsingGet()
+                      )
+                  .RespondWith(
+              Response.Create()
+                  .WithStatusCode(HttpStatusCode.OK)
+                  .WithBody(JsonConvert.SerializeObject(_data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+        }
+
+        [Given(@"a initial application has been created and submitted")]
+        public void GivenAInitialApplicationHasBeenCreatedAndSubmitted()
+        {
+            _getApplicationResponse.Application.SubmittedByEmail = "SubmittedBy@test.co.uk";
+            GivenAInitialApplicationHasBeenCreated();
         }
 
         [Given(@"a initial application has been created and it includes an apprentice who is no longer eligible")]
@@ -173,6 +198,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             model.Should().NotBeNull();
             _response.Should().HaveBackLink($"/{hashedAccountId}/apply/select-apprentices/{model.ApplicationId}");
             model.Should().HaveTitle($"When did they join {_legalEntity.LegalEntityName}?");
+        }
+
+        [Then(@"the user is directed to the hub page")]
+        public void ThenTheUserIsDirectedToTheHubPage()
+        {
+            _response.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{_data.HashedAccountId}/{_data.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Hire a new apprentice payment");
         }
 
         [Then(@"the employer will receive an error")]

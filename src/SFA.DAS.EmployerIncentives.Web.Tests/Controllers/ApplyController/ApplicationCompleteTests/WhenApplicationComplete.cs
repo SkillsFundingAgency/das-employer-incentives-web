@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Appli
             _applicationService = new Mock<IApplicationService>();
             var application = new ApplicationModel(_applicationId, _accountId, _accountLegalEntityId,
                 _fixture.CreateMany<ApplicationApprenticeshipModel>(2), false, false);
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, true)).ReturnsAsync(application);
             
             _sut = new ApplicationCompleteController(_legalEntitiesService.Object, _applicationService.Object);
         }

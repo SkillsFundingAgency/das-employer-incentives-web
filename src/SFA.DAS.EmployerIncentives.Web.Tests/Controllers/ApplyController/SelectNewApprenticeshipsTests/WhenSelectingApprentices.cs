@@ -132,5 +132,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Selec
             redirectResult?.ActionName.Should().Be("EmploymentStartDates");
             redirectResult?.ControllerName.Should().Be("ApplyEmploymentDetails");
         }
+
+        [Test]
+        public async Task Then_the_caller_is_redirected_to_the_home_page_when_the_application_has_already_been_submitted()
+        {
+            _applicationServiceMock
+                .Setup(x => x.Get(_hashedAccountId, _applicationId, false, true))
+                .ReturnsAsync(null as ApplicationModel);
+
+            var result = _sut.SelectApprenticeships(_hashedAccountId, _applicationId);
+            var redirectResult = await result as RedirectToActionResult;
+
+            redirectResult.Should().NotBeNull();
+            redirectResult?.ActionName.Should().Be("Home");
+            redirectResult?.ControllerName.Should().Be("Home");
+        }
     }
 }

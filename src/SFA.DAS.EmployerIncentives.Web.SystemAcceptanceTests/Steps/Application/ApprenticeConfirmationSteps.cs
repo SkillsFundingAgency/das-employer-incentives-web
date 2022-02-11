@@ -13,7 +13,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -22,34 +22,37 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     public class ApprenticeConfirmationSteps : StepsBase
     {
         private readonly TestContext _testContext;
-        private TestData.Account.WithInitialApplicationForASingleEntity _testData;
+        private readonly TestData.Account.WithInitialApplicationForASingleEntity _testData;
         private HttpResponseMessage _continueNavigationResponse;
-        private bool _newAgreementRequired = false;
+        private readonly bool _newAgreementRequired = false;
 
         public ApprenticeConfirmationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
         }
 
         [Given(@"an employer applying for a grant has already selected (.*) eligible apprentices")]
         public void GivenAnEmployerApplyingForAGrantHasAlreadySelectedEligibleApprentices(int p0)
         {
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
             SetupServiceMocks(_testData.ApplicationResponse);
         }
 
         [Given(@"an employer has selected an apprentice within the extension window and has signed the extension agreement")]
         public void GivenAnEmployerHasSelectedAnApprenticeWithinTheExtensionWindowAndHasSignedTheAgreement()
         {
-            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
             _testData.ApplicationResponse.Application.NewAgreementRequired = false;
-            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
-
             SetupServiceMocks(_testData.GetApplicationResponseWithFirstTwoApprenticesSelected);
+        }
+
+        [Given(@"a initial application has been created and submitted")]
+        public void GivenAInitialApplicationHasBeenCreatedAndSubmitted()
+        {
+            var response = _testData.ApplicationResponse;
+            response.Application.SubmittedByEmail = "SubmittedBy@test.co.uk";
+            SetupServiceMocks(response);
         }
 
         [When(@"the employer arrives on the confirm apprentices page")]
@@ -59,8 +62,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 HttpMethod.Get,
                 $"{_testData.HashedAccountId}/apply/confirm-apprentices/{_testData.ApplicationId}");
 
-            var continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
-            continueNavigationResponse.EnsureSuccessStatusCode();
+            _continueNavigationResponse = await _testContext.WebsiteClient.SendAsync(request);
+            _continueNavigationResponse.EnsureSuccessStatusCode();
         }
 
         [Then(@"the employer is asked to confirm the apprentices and expected amounts")]
@@ -113,6 +116,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _continueNavigationResponse.Should().HaveBackLink($"/{_testData.HashedAccountId}/apply/confirm-apprentices/{_testData.ApplicationId}?all=false");
         }
 
+        [Then(@"the user is directed to the hub page")]
+        public void ThenTheUserIsDirectedToTheHubPage()
+        {
+            _continueNavigationResponse.RequestMessage.RequestUri.PathAndQuery.Should().Be($"/{_testData.HashedAccountId}/{_testData.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
+
+            var viewResult = _testContext.ActionResult.LastViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as HubPageViewModel;
+            model.Should().NotBeNull();
+            model.Should().HaveTitle("Hire a new apprentice payment");
+        }
+
         private void SetupServiceMocks(ApplicationResponse applicationResponse)
         {
             _testContext.EmployerIncentivesApi.MockServer
@@ -153,6 +168,18 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithBody(JsonConvert.SerializeObject(_testData.LegalEntity, TestHelper.DefaultSerialiserSettings)));
+
+            _testContext.EmployerIncentivesApi.MockServer
+             .Given(
+                     Request
+                     .Create()
+                     .WithPath($"/accounts/{_testData.AccountId}/legalentities")
+                     .UsingGet()
+                     )
+                 .RespondWith(
+             Response.Create()
+                 .WithStatusCode(HttpStatusCode.OK)
+                 .WithBody(JsonConvert.SerializeObject(_testData.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
         }
     }

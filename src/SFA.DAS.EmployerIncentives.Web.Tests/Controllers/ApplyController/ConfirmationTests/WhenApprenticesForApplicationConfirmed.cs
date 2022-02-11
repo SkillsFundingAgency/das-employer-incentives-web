@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
         {
             // Arrange
             var application = _fixture.Create<ApplicationModel>();
-            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false)).ReturnsAsync(application);
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, false)).ReturnsAsync(application);
             var legalEntity = _fixture.Create<LegalEntityModel>();
             _legalEntitiesService.Setup(x => x.Get(_accountId, application.AccountLegalEntityId)).ReturnsAsync(legalEntity);
             
@@ -60,6 +60,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Confi
             model.ApplicationId.Should().Be(_applicationId);
             model.OrganisationName.Should().Be(legalEntity.Name);
             model.AgreementsUrl.Should().Be($"{_externalLinksConfiguration.ManageApprenticeshipSiteUrl}/accounts/{_accountId}/agreements");
+        }
+
+        [Test]
+        public async Task Then_the_caller_is_redirected_to_the_home_page_when_the_application_has_already_been_submitted()
+        {
+            _applicationService.Setup(x => x.Get(_accountId, _applicationId, false, false)).ReturnsAsync(null as ApplicationModel);
+
+            var result = _sut.Declaration(_accountId, _applicationId);
+            var redirectResult = await result as RedirectToActionResult;
+
+            redirectResult.Should().NotBeNull();
+            redirectResult?.ActionName.Should().Be("Home");
+            redirectResult?.ControllerName.Should().Be("Home");
         }
 
         [Test]

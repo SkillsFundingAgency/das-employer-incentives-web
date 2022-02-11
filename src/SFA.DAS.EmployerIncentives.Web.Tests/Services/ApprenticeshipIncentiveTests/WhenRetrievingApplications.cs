@@ -41,8 +41,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             _hashingServiceMock = new Mock<IHashingService>();
             _hashingServiceMock.Setup(x => x.DecodeValue(It.IsAny<string>())).Returns((string s) => Convert.ToInt64(s));
 
-            _httpClient = new HttpClient(_httpClientHandlerFake);
-            _httpClient.BaseAddress = new Uri(_baseUrl);
+            _httpClient = new HttpClient(_httpClientHandlerFake)
+            {
+                BaseAddress = new Uri(_baseUrl)
+            };
 
             _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
         }
