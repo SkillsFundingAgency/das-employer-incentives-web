@@ -63,31 +63,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 return RedirectToAction("NoApplications", new { accountId, accountLegalEntityId });
             }
+
             var viewAgreementLink = CreateViewAgreementLink(accountId);
             var legalEntity = await _legalEntitiesService.Get(accountId, accountLegalEntityId);
-            
-            var employmentCheckFeatureToggle = _webConfiguration.DisplayEmploymentCheckResult;
-            foreach (var apprenticeApplicationModel in submittedApplications)
+
+            submittedApplications = submittedApplications.Sort(sortOrder, sortField);
+            submittedApplications.ForEach(m =>
             {
-                if (apprenticeApplicationModel.FirstPaymentStatus != null)
-                {
-                    apprenticeApplicationModel.FirstPaymentStatus.ViewAgreementLink = viewAgreementLink;
-                    apprenticeApplicationModel.FirstPaymentStatus.InLearning = true;
-                    apprenticeApplicationModel.FirstPaymentStatus.IsClawedBack = apprenticeApplicationModel.FirstClawbackStatus != null && apprenticeApplicationModel.FirstClawbackStatus.IsClawedBack;
-                    apprenticeApplicationModel.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
-
-                if (apprenticeApplicationModel.SecondPaymentStatus != null)
-                {
-                    apprenticeApplicationModel.SecondPaymentStatus.ViewAgreementLink = viewAgreementLink;
-                    apprenticeApplicationModel.SecondPaymentStatus.InLearning = true;
-                    apprenticeApplicationModel.SecondPaymentStatus.IsClawedBack = apprenticeApplicationModel.SecondClawbackStatus != null && apprenticeApplicationModel.SecondClawbackStatus.IsClawedBack;
-                    apprenticeApplicationModel.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-                }
-            }
-
-            submittedApplications = SortApplications(sortOrder, sortField, submittedApplications);
-
+                m.SetClawedBackStatus();
+                m.SetInLearning();
+                m.SetViewAgreementLink(viewAgreementLink);
+                m.SetEmploymentCheckFeatureToggle(_webConfiguration);
+            });
+            
             var model = new ViewApplicationsViewModel
             {
                 AccountId = accountId,
@@ -107,7 +95,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             return View("ListPayments", model);
         }
-
+        
         [Route("{accountLegalEntityId}/no-applications")]
         public async Task<IActionResult> NoApplications(string accountId, string accountLegalEntityId)
         {
@@ -150,34 +138,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             }
 
             return View(model);
-        }
-
-        private static IQueryable<ApprenticeApplicationModel> SortApplications(string sortOrder, string sortField, IQueryable<ApprenticeApplicationModel> submittedApplications)
-        {
-            if (sortOrder == ApplicationsSortOrder.Descending)
-            {
-                if (sortField != ApplicationsSortField.ApprenticeName)
-                {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
-                }
-                else
-                {
-                    submittedApplications = submittedApplications.OrderByDescending(sortField).ThenBy(x => x.ULN);
-                }
-            }
-            else
-            {
-                if (sortField != ApplicationsSortField.ApprenticeName)
-                {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
-                }
-                else
-                {
-                    submittedApplications = submittedApplications.OrderBy(sortField).ThenBy(x => x.ULN);
-                }
-            }
-
-            return submittedApplications;
         }
         
         private string CreateAddBankDetailsLink(string accountId, Guid? firstSubmittedApplicationId)
