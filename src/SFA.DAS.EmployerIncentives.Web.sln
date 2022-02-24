@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web", "SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj", "{5EEF6E4D-7386-4988-8C6F-D88535B539C0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{797B8311-9A6E-4ABA-8EA2-4ED7EAC0B1CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web.Tests", "SFA.DAS.EmployerIncentives.Web.Tests\SFA.DAS.EmployerIncentives.Web.Tests.csproj", "{F2B5E3E8-52FA-49EF-B6E6-282B8ABD2517}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web.UnitTests", "SFA.DAS.EmployerIncentives.Web.Tests\SFA.DAS.EmployerIncentives.Web.UnitTests.csproj", "{F2B5E3E8-52FA-49EF-B6E6-282B8ABD2517}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests", "SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests\SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.csproj", "{83C67A00-B539-44F9-8163-83308C054CFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web.AcceptanceTests", "SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests\SFA.DAS.EmployerIncentives.Web.AcceptanceTests.csproj", "{83C67A00-B539-44F9-8163-83308C054CFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.EmployerIncentives.Web.MockServer", "SFA.DAS.EmployerIncentives.Web.MockServer\SFA.DAS.EmployerIncentives.Web.MockServer.csproj", "{855A7600-5395-4278-BB9D-C377B3B09461}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.EmployerIncentives.Web.MockServer", "SFA.DAS.EmployerIncentives.Web.MockServer\SFA.DAS.EmployerIncentives.Web.MockServer.csproj", "{855A7600-5395-4278-BB9D-C377B3B09461}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

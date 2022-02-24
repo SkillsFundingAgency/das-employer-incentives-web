@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests\SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.csproj" />
+    <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests\SFA.DAS.EmployerIncentives.Web.AcceptanceTests.csproj" />
     <ProjectReference Include="..\SFA.DAS.EmployerIncentives.Web\SFA.DAS.EmployerIncentives.Web.csproj" />
   </ItemGroup>
 
