@@ -9,7 +9,7 @@
 {
     @if (Model.EmploymentCheckPassed.HasValue && !Model.EmploymentCheckPassed.Value)
     {
-        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Application ineligible</p>
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Confirm Eligibility</p>
         <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Apprentice and/or employer details are ineligible</p>
     }
     else if (Model.PaymentIsStopped)
