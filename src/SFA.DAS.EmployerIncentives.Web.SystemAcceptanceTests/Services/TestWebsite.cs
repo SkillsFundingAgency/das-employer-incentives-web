@@ -72,7 +72,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                         o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
                         o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
                         o.ApplicationShutterPageDate = _testContext.WebConfigurationOptions.ApplicationShutterPageDate;
-                        o.DisplayEmploymentCheckResult = _testContext.WebConfigurationOptions.DisplayEmploymentCheckResult;
                     });
                     s.Configure<ExternalLinksConfiguration>(o =>
                     {

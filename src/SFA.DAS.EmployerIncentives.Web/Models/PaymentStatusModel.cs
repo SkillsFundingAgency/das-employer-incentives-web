@@ -20,13 +20,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool IsClawedBack { get; set; }
         public bool? EmploymentCheckPassed { get; set; }
 
-        public bool DisplayEmploymentCheckResult { get; set; }
 
         public bool ShowPaymentStatus
         {
             get
             {
-                return PaymentIsStopped || !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || RequiresNewEmployerAgreement || WithdrawnByCompliance || WithdrawnByEmployer || (DisplayEmploymentCheckResult && EmploymentCheckPassed.HasValue && !EmploymentCheckPassed.Value);
+                return PaymentIsStopped || !LearnerMatchFound || HasDataLock || !InLearning || PausePayments || RequiresNewEmployerAgreement || WithdrawnByCompliance || WithdrawnByEmployer || (EmploymentCheckPassed.HasValue && !EmploymentCheckPassed.Value);
             }
         }
     }
