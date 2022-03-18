@@ -22,7 +22,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
                 RequiresNewEmployerAgreement = false,
                 WithdrawnByCompliance = false,
                 WithdrawnByEmployer = false,
-                DisplayEmploymentCheckResult = false,
                 EmploymentCheckPassed = true
             };
         }
@@ -118,7 +117,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
         public void Then_show_payment_status_is_set_when_employment_check_failed()
         {
             // Arrange
-            _sut.DisplayEmploymentCheckResult = true;
             _sut.EmploymentCheckPassed = false;
 
             // Act / Assert
@@ -129,7 +127,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
         public void Then_show_payment_status_is_not_set_when_employment_check_passed()
         {
             // Arrange
-            _sut.DisplayEmploymentCheckResult = true;
             _sut.EmploymentCheckPassed = true;
 
             // Act / Assert
@@ -140,24 +137,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Models
         public void Then_show_payment_status_is_not_set_when_employment_check_result_not_found()
         {
             // Arrange
-            _sut.DisplayEmploymentCheckResult = true;
             _sut.EmploymentCheckPassed = null;
 
             // Act / Assert
             _sut.ShowPaymentStatus.Should().BeFalse();
         }
 
-        [TestCase(null)]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void Then_show_payment_status_is_not_set_when_employment_check_feature_toggle_off(bool? employmentCheckStatus)
-        {
-            // Arrange
-            _sut.DisplayEmploymentCheckResult = false;
-            _sut.EmploymentCheckPassed = employmentCheckStatus;
-
-            // Act / Assert
-            _sut.ShowPaymentStatus.Should().BeFalse();
-        }
     }
 }
