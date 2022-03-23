@@ -78,5 +78,22 @@ namespace SFA.DAS.EmployerIncentives.Web.ViewModels.Applications
 
         public string Title => "Hire a new apprentice payment applications";
 
-        public string OrganisationName { get; set; }    }
+        public string OrganisationName { get; set; }    
+
+        public string Filter { get; set; }
+
+        public string TabCssClass(string tabName)
+        {
+            if (tabName == Filter)
+            {
+                return "govuk-tabs__list-item--selected";
+            }
+
+            return string.Empty;
+        }
+
+        public bool ShowActionsTab { get; set; }
+        public bool ShowPaymentsTab { get; set; }
+        public bool ShowStoppedTab { get; set; }
+    }
 }
