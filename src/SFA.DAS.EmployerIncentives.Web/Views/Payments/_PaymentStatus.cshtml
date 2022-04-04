@@ -9,8 +9,18 @@
 {
     @if (Model.EmploymentCheckPassed.HasValue && !Model.EmploymentCheckPassed.Value)
     {
-        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Confirm Eligibility</p>
-        <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Apprentice and/or employer details are ineligible</p>
+        <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-3">Confirm eligibility</strong>
+        @if(Model.EmploymentCheckErrorMessages.Any())
+        {
+            @foreach(var message in Model.EmploymentCheckErrorMessages)
+            {
+                <p class="govuk-body govuk-!-margin-bottom-3" data-paragraphtype="application-ineligible">@message</p>
+            }
+        }
+        else
+        {
+            <p class="govuk-body govuk-!-margin-bottom-0" data-paragraphtype="application-ineligible">Apprentice and/or employer details are ineligible</p>
+        }
     }
     else if (Model.PaymentIsStopped)
     {

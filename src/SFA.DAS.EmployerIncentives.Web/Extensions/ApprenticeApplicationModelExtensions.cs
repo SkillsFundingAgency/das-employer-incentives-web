@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -79,5 +80,32 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
+        public static ApprenticeApplicationModel SetEmploymentCheckStatusMessage(this ApprenticeApplicationModel model, WebConfigurationOptions configuration)
+        {
+            if (model.FirstPaymentStatus != null)
+            {
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.FirstPaymentStatus, configuration);
+            }
+
+            if (model.SecondPaymentStatus != null)
+            {
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.SecondPaymentStatus, configuration);
+            }
+
+            return model;
+        }
+
+        private static void SetEmploymentCheckErrorMessagesForApplicableErrorCodes(PaymentStatusModel model, WebConfigurationOptions configuration)
+        {
+            model.EmploymentCheckErrorMessages = new List<string>();
+            if (model.EmploymentCheckErrorCodes == null || !model.EmploymentCheckErrorCodes.Any())
+            {
+                return;
+            }
+            foreach (var errorCode in model.EmploymentCheckErrorCodes.Where(errorCode => configuration.EmploymentCheckErrorMessages.ContainsKey(errorCode)))
+            {
+                model.EmploymentCheckErrorMessages.Add(configuration.EmploymentCheckErrorMessages[errorCode]);
+            }
+        }
     }
 }

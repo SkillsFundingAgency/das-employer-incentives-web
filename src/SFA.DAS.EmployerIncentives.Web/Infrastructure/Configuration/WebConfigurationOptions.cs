@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
 {
     public class WebConfigurationOptions
     {
@@ -13,5 +15,6 @@
         public virtual string AchieveServiceBaseUrl { get; set; }
         public virtual string DataEncryptionServiceKey { get; set; }
         public virtual string ApplicationShutterPageDate { get; set; }
+        public virtual Dictionary<string, string> EmploymentCheckErrorMessages { get; set; }
     }
 }

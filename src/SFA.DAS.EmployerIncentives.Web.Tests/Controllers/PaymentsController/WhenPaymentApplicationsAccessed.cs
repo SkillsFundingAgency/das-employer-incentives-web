@@ -24,6 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IOptions<ExternalLinksConfiguration>> _linksConfiguration;
+        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -34,9 +35,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         [SetUp]
         public void Arrange()
         {
+            _fixture = new Fixture();
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _linksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
+            _webConfiguration.Setup(x => x.Value).Returns(_fixture.Create<WebConfigurationOptions>());
             _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
 
             _linksConfiguration.Setup(m => m.Value).Returns(new ExternalLinksConfiguration
@@ -44,14 +48,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                 ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl
             });
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
                     HttpContext = new DefaultHttpContext()
                 }
             };
-            _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
@@ -427,7 +430,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -471,6 +474,104 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Should().NotBeNull();
             viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
             viewModel.Applications.First().SecondPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Then_the_mapped_employment_check_error_message_is_shown_if_available_for_the_error_code()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error1" })
+                        .Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error1" })
+                        .Create())
+                    .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            var configuration = new WebConfigurationOptions
+            {
+                EmploymentCheckErrorMessages = new Dictionary<string, string>()
+            };
+            configuration.EmploymentCheckErrorMessages.Add("Error1", "Error Message 1");
+            configuration.EmploymentCheckErrorMessages.Add("Error2", "Error Message 2");
+            _webConfiguration.Setup(x => x.Value).Returns(configuration);
+
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain("Error Message 1");
+        }
+
+        [Test]
+        public async Task Then_the_default_employment_check_error_message_is_shown_if_no_message_mapped_for_the_error_code()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error3" })
+                        .Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error3" })
+                        .Create())
+                    .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            var configuration = new WebConfigurationOptions
+            {
+                EmploymentCheckErrorMessages = new Dictionary<string, string>()
+            };
+            configuration.EmploymentCheckErrorMessages.Add("Error1", "Error Message 1");
+            configuration.EmploymentCheckErrorMessages.Add("Error2", "Error Message 2");
+            _webConfiguration.Setup(x => x.Value).Returns(configuration);
+
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().BeEmpty();
         }
     }
 }
