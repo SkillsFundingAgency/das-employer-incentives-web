@@ -18,16 +18,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly IApplicationService _applicationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly ExternalLinksConfiguration _linksConfiguration;
-        private readonly WebConfigurationOptions _webConfiguration;
-
+        
         public PaymentsController(IApplicationService applicationService, ILegalEntitiesService legalEntitiesService, 
-                                  IOptions<ExternalLinksConfiguration> linksConfiguration,
-                                  IOptions<WebConfigurationOptions> webConfiguration)
+                                  IOptions<ExternalLinksConfiguration> linksConfiguration)
         {
             _applicationService = applicationService;
             _legalEntitiesService = legalEntitiesService;
             _linksConfiguration = linksConfiguration.Value;
-            _webConfiguration = webConfiguration.Value;
         }
 
         [Route("payment-applications")]
@@ -73,7 +70,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 m.SetClawedBackStatus();
                 m.SetInLearning();
                 m.SetViewAgreementLink(viewAgreementLink);
-                m.SetEmploymentCheckFeatureToggle(_webConfiguration);
             });
             
             var model = new ViewApplicationsViewModel

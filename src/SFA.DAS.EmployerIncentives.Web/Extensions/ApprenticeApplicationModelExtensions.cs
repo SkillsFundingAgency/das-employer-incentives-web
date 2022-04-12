@@ -79,21 +79,5 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
-        public static ApprenticeApplicationModel SetEmploymentCheckFeatureToggle(this ApprenticeApplicationModel model, WebConfigurationOptions configuration)
-        {
-            var employmentCheckFeatureToggle = configuration.DisplayEmploymentCheckResult;
-
-            if (model.FirstPaymentStatus != null)
-            {
-                model.FirstPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle; 
-            }
-
-            if (model.SecondPaymentStatus != null)
-            {
-                model.SecondPaymentStatus.DisplayEmploymentCheckResult = employmentCheckFeatureToggle;
-            }
-
-            return model;
-        }
     }
 }

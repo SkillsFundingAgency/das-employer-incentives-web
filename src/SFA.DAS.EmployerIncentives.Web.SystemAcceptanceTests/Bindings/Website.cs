@@ -36,8 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context.WebConfigurationOptions.RedisCacheConnectionString = "localhost";
             _context.WebConfigurationOptions.AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information";
             _context.WebConfigurationOptions.DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
-            _context.WebConfigurationOptions.DisplayEmploymentCheckResult = true;
- 
+            
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {
                 CommitmentsSiteUrl = $"http://{Guid.NewGuid()}",
