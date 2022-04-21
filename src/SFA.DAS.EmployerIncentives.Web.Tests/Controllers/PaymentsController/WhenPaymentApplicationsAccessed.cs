@@ -535,7 +535,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
-            viewModel.Applications.Count().Should().Be(1);
+            viewModel.Applications.Count().Should().Be(2);
         }
 
         [Test]
@@ -555,7 +555,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
-            viewModel.Applications.Count().Should().Be(2);
+            viewModel.Applications.Count().Should().Be(3);
         }
         
         [Test]
@@ -594,6 +594,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByEmployer, false)
                             .With(x => x.WithdrawnByCompliance, false)
                             .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
                             .Create()
                     )
                     .Without(x => x.SecondPaymentStatus)
@@ -607,6 +608,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByEmployer, false)
                             .With(x => x.WithdrawnByCompliance, false)
                             .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
                             .Create()
                     )
                     .Without(x => x.SecondPaymentStatus)
@@ -621,6 +623,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByEmployer, true)
                             .With(x => x.WithdrawnByCompliance, false)
                             .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
                             .Create()
                     )
                     .Without(x => x.SecondPaymentStatus)
@@ -635,6 +638,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByCompliance, true)
                             .With(x => x.WithdrawnByEmployer, false)
                             .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
                             .Create()
                     ).Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
@@ -648,6 +652,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByEmployer, false)
                             .With(x => x.WithdrawnByCompliance, false)
                             .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
                             .Create()
                     )
                     .Without(x => x.SecondPaymentStatus)
@@ -661,6 +666,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .With(x => x.WithdrawnByEmployer, false)
                             .With(x => x.WithdrawnByCompliance, false)
                             .With(x => x.PaymentIsStopped, true)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.RequiresNewEmployerAgreement, true)
+                            .With(x => x.InLearning, true)
+                            .With(x => x.HasDataLock, false)
+                            .With(x => x.PaymentSent, false)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
                             .Create()
                     )
                     .Without(x => x.SecondPaymentStatus)

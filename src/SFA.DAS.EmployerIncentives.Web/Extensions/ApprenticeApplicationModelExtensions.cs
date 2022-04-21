@@ -79,8 +79,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
 
         public static IQueryable<ApprenticeApplicationModel> FilterByEmployerActions(this IQueryable<ApprenticeApplicationModel> applications)
         {
-            return applications.Where(x => (x.FirstPaymentStatus != null && x.FirstPaymentStatus.EmploymentCheckPassed == false)
-                                           || (x.SecondPaymentStatus != null && x.SecondPaymentStatus.EmploymentCheckPassed == false));
+            return applications.Where(x => (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false || x.FirstPaymentStatus.RequiresNewEmployerAgreement == true))
+                                           || (x.SecondPaymentStatus != null && (x.SecondPaymentStatus.EmploymentCheckPassed == false || x.SecondPaymentStatus.RequiresNewEmployerAgreement == true)));
         }
 
         public static IQueryable<ApprenticeApplicationModel> FilterByPayments(this IQueryable<ApprenticeApplicationModel> applications)
@@ -103,6 +103,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return (paymentStatus != null 
                         && (paymentStatus.PaymentSent || paymentStatus.PaymentSentIsEstimated) 
                         && paymentStatus.LearnerMatchFound && !paymentStatus.PausePayments && paymentStatus.InLearning && !paymentStatus.HasDataLock)
+                        && !paymentStatus.RequiresNewEmployerAgreement
                         && (!paymentStatus.EmploymentCheckPassed.HasValue || paymentStatus.EmploymentCheckPassed.Value);
         }
     }
