@@ -232,5 +232,44 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             var viewModel = viewResult.Model as HubPageViewModel;
             viewModel.ShowBankDetailsRequired.Should().BeFalse();
         }
+
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(true, true, false)]
+        [TestCase(false, false, true)]
+        public async Task Then_the_notification_banner_is_shown_if_other_banners_are_not_displayed(bool bankDetailsBannerShown, bool legalAgreementBannerShown, bool notificationBannerShown)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, legalAgreementBannerShown).Create())
+                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, legalAgreementBannerShown).Create())
+                .Create()
+            };
+
+            var applicationsResponse = new GetApplicationsModel
+            {
+                ApprenticeApplications = applications,
+                FirstSubmittedApplicationId = Guid.NewGuid()
+            };
+            if (bankDetailsBannerShown)
+            {
+                applicationsResponse.BankDetailsStatus = BankDetailsStatus.NotSupplied;
+            }
+            else
+            {
+                applicationsResponse.BankDetailsStatus = BankDetailsStatus.Completed;
+            }
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
+
+            // Act
+            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
+
+            // Assert
+            var viewModel = viewResult.Model as HubPageViewModel;
+            viewModel.ShowNotificationBanner.Should().Be(notificationBannerShown);
+        }
     }
 }
