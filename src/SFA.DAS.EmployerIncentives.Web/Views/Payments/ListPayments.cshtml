@@ -163,15 +163,48 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <table class="govuk-table das-table--fixed das-table--responsive">
-                <caption class="govuk-table__caption govuk-visually-hidden">
-                    Your applications
-                </caption>
-                <thead class="govuk-table__head">
+
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item @Model.TabCssClass("All")">
+                    <a class="govuk-tabs__tab" asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-filter="All">
+                        All applications
+                    </a>
+                </li>
+                @if (Model.ShowActionsTab)
+                {
+                    <li class="govuk-tabs__list-item @Model.TabCssClass("EmployerActions")">
+                        <a class="govuk-tabs__tab" asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-filter="EmployerActions">
+                            Your actions
+                        </a>
+                    </li>
+                }
+                @if (Model.ShowPaymentsTab)
+                {
+                    <li class="govuk-tabs__list-item @Model.TabCssClass("Payments")">
+                        <a class="govuk-tabs__tab" asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-filter="Payments">
+                            Payments
+                        </a>
+                    </li>
+                }
+                @if (Model.ShowStoppedTab)
+                {
+                    <li class="govuk-tabs__list-item @Model.TabCssClass("StoppedOrWithdrawn")">
+                        <a class="govuk-tabs__tab" asp-action="ListPaymentsForLegalEntity" asp-controller="Payments" asp-route-filter="StoppedOrWithdrawn">
+                            Paused, stopped and rejected
+                        </a>
+                    </li>
+                }
+            </ul>
+            <div class="govuk-tabs__panel">
+                <table class="govuk-table das-table--fixed das-table--responsive">
+                    <caption class="govuk-table__caption govuk-visually-hidden">
+                        Your applications
+                    </caption>
+                    <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.ApprenticeName)" scope="col" class="govuk-table__header">
                             <a asp-route-sortorder="@Model.ToggleSortOrder(ApplicationsSortField.ApprenticeName)" asp-route-sortfield="@ApplicationsSortField.ApprenticeName" class="das-table__sort das-table__sort--@Model.GetSortOrder(ApplicationsSortField.ApprenticeName)">
-                                Apprentice name
+                                Apprentice
                             </a>
                         </th>
                         <th aria-sort="@Model.GetAriaSortOrder(@ApplicationsSortField.CourseName)" scope="col" class="govuk-table__header">
@@ -191,8 +224,8 @@
                             Second payment
                         </th>
                     </tr>
-                </thead>
-                <tbody class="govuk-table__body">
+                    </thead>
+                    <tbody class="govuk-table__body">
                     @foreach (var apprenticeApplication in Model.Applications)
                     {
                         <tr class="govuk-table__row">
@@ -221,44 +254,44 @@
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            @*
-                <nav role="navigation" aria-label="Pagination">
-                    <div class="das-pagination__summary">
-                        Showing 101 - 150 of 246 results
-                    </div>
-                    <ul class="das-pagination">
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Previous page">Previous</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Page 1">1</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Page 2">2</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link current" href="#0" aria-current="true" aria-label="Page 3, current
-                        page">3</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Page 4">4</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Page 5">5</a>
-                        </li>
-                        <li class="das-pagination__item">
-                            <a class="das-pagination__link" href="#0" aria-label="Next page">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            *@
+                @*
+            <nav role="navigation" aria-label="Pagination">
+                <div class="das-pagination__summary">
+                    Showing 101 - 150 of 246 results
+                </div>
+                <ul class="das-pagination">
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Previous page">Previous</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 1">1</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 2">2</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link current" href="#0" aria-current="true" aria-label="Page 3, current
+                    page">3</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 4">4</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Page 5">5</a>
+                    </li>
+                    <li class="das-pagination__item">
+                        <a class="das-pagination__link" href="#0" aria-label="Next page">Next</a>
+                    </li>
+                </ul>
+            </nav>
+                *@
 
+            </div>
+
+            </div>
         </div>
-
-    </div>
-
 
 </main>

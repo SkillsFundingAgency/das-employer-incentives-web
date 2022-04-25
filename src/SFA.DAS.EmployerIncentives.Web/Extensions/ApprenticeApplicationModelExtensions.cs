@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Razor.Language;
-using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Extensions
@@ -79,5 +77,34 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
+        public static IQueryable<ApprenticeApplicationModel> FilterByEmployerActions(this IQueryable<ApprenticeApplicationModel> applications)
+        {
+            return applications.Where(x => (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false || x.FirstPaymentStatus.RequiresNewEmployerAgreement == true))
+                                           || (x.SecondPaymentStatus != null && (x.SecondPaymentStatus.EmploymentCheckPassed == false || x.SecondPaymentStatus.RequiresNewEmployerAgreement == true)));
+        }
+
+        public static IQueryable<ApprenticeApplicationModel> FilterByPayments(this IQueryable<ApprenticeApplicationModel> applications)
+        {
+            return applications.Where(x => x.FirstPaymentStatus.ShowPayments()|| x.SecondPaymentStatus.ShowPayments());
+        }
+
+        public static IQueryable<ApprenticeApplicationModel> FilterByStoppedOrWithdrawn(this IQueryable<ApprenticeApplicationModel> applications)
+        {
+            return applications.Where(x => (x.FirstPaymentStatus != null && 
+                                            (x.FirstPaymentStatus.PausePayments || x.FirstPaymentStatus.PaymentIsStopped ||
+                                             x.FirstPaymentStatus.WithdrawnByCompliance || x.FirstPaymentStatus.WithdrawnByEmployer)) ||
+                                             (x.SecondPaymentStatus != null && 
+                                              (x.SecondPaymentStatus.PausePayments || x.SecondPaymentStatus.PaymentIsStopped ||
+                                             x.SecondPaymentStatus.WithdrawnByCompliance || x.SecondPaymentStatus.WithdrawnByEmployer)));
+        }
+
+        private static bool ShowPayments(this PaymentStatusModel paymentStatus)
+        {
+            return (paymentStatus != null 
+                        && (paymentStatus.PaymentSent || paymentStatus.PaymentSentIsEstimated) 
+                        && paymentStatus.LearnerMatchFound && !paymentStatus.PausePayments && paymentStatus.InLearning && !paymentStatus.HasDataLock)
+                        && !paymentStatus.RequiresNewEmployerAgreement
+                        && (!paymentStatus.EmploymentCheckPassed.HasValue || paymentStatus.EmploymentCheckPassed.Value);
+        }
     }
 }

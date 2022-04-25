@@ -30,6 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private string _sortOrder;
         private string _sortField;
         private string _manageApprenticeshipSiteUrl;
+        private string _filter;
 
         [SetUp]
         public void Arrange()
@@ -56,6 +57,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
             _sortField = ApplicationsSortField.ApprenticeName;
+            _filter = "All";
         }
 
         [Test]
@@ -72,7 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -94,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as RedirectToActionResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as RedirectToActionResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -129,7 +131,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -175,7 +177,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApprenticeName) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApprenticeName, _filter) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -202,7 +204,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Descending, ApplicationsSortField.ApplicationDate) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Descending, ApplicationsSortField.ApplicationDate, _filter) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -229,7 +231,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApplicationDate) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.ApplicationDate, _filter) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -267,7 +269,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.CourseName) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, ApplicationsSortOrder.Ascending, ApplicationsSortField.CourseName, _filter) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -304,7 +306,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -338,7 +340,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -372,7 +374,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -400,7 +402,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -436,7 +438,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             };
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
@@ -464,13 +466,231 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
             // Act
-            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField) as ViewResult;
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
             viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
             viewModel.Applications.First().SecondPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase(" ")]
+        [TestCase("unknown")]
+        public async Task Then_all_applications_should_be_displayed_when_no_filter_set_or_unknown_value(string filter)
+        {
+            // Arrange
+            var applications = CreateApplicationListForFiltering();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, filter) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Applications.Count().Should().Be(applications.Count);
+        }
+        
+        [Test]
+        public async Task Then_all_applications_should_be_displayed_when_filter_set_to_all()
+        {
+            // Arrange
+            var applications = CreateApplicationListForFiltering();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, "All") as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Applications.Count().Should().Be(applications.Count);
+        }
+ 
+        [Test]
+        public async Task Then_filtered_applications_should_be_displayed_when_filter_set_to_employer_actions()
+        {
+            // Arrange
+            var applications = CreateApplicationListForFiltering();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, "EmployerActions") as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Applications.Count().Should().Be(2);
+        }
+
+        [Test]
+        public async Task Then_filtered_applications_should_be_displayed_when_filter_set_to_payments()
+        {
+            // Arrange
+            var applications = CreateApplicationListForFiltering();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, "Payments") as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Applications.Count().Should().Be(3);
+        }
+        
+        [Test]
+        public async Task Then_filtered_applications_should_be_displayed_when_filter_set_to_stopped_or_withdrawn()
+        {
+            // Arrange
+            var applications = CreateApplicationListForFiltering();
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, "StoppedOrWithdrawn") as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Applications.Count().Should().Be(3);
+        }
+
+        private List<ApprenticeApplicationModel> CreateApplicationListForFiltering()
+        {
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.InLearning, true)
+                            .With(x => x.HasDataLock, false)
+                            .With(x => x.PaymentSent, true)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, false)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.InLearning, false)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByEmployer, true)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.InLearning, false)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByCompliance, true)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    ).Create(),
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.PaymentSent, false)
+                            .With(x => x.PaymentSentIsEstimated, false)
+                            .Without(x => x.EmploymentCheckPassed)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.PausePayments, true)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, true)
+                            .With(x => x.RequiresNewEmployerAgreement, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create(),
+                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .With(x => x.LearnerMatchFound, true)
+                            .With(x => x.RequiresNewEmployerAgreement, true)
+                            .With(x => x.InLearning, true)
+                            .With(x => x.HasDataLock, false)
+                            .With(x => x.PaymentSent, false)
+                            .With(x => x.PausePayments, false)
+                            .With(x => x.EmploymentCheckPassed, true)
+                            .With(x => x.WithdrawnByEmployer, false)
+                            .With(x => x.WithdrawnByCompliance, false)
+                            .With(x => x.PaymentIsStopped, false)
+                            .Create()
+                    )
+                    .Without(x => x.SecondPaymentStatus)
+                    .Create()
+            };
+            
+            return applications;
         }
     }
 }
