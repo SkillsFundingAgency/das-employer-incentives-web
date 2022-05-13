@@ -589,11 +589,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
                         .With(p => p.EmploymentCheckPassed, false)
-                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error1" })
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "NinoNotFound" })
                         .Create())
                     .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
                         .With(p => p.EmploymentCheckPassed, false)
-                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error1" })
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "NinoNotFound" })
                         .Create())
                     .Create());
 
@@ -603,15 +603,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
-            var configuration = new WebConfigurationOptions
-            {
-                EmploymentCheckErrorMessages = new Dictionary<string, string>()
-            };
-            configuration.EmploymentCheckErrorMessages.Add("Error1", "Error Message 1");
-            configuration.EmploymentCheckErrorMessages.Add("Error2", "Error Message 2");
-            _webConfiguration.Setup(x => x.Value).Returns(configuration);
-
+            
             _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
@@ -626,7 +618,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
-            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain("Error Message 1");
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain(EmploymentCheckErrorCodes.DisplayText["NinoNotFound"]);
         }
 
         [Test]
@@ -652,15 +644,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
-
-            var configuration = new WebConfigurationOptions
-            {
-                EmploymentCheckErrorMessages = new Dictionary<string, string>()
-            };
-            configuration.EmploymentCheckErrorMessages.Add("Error1", "Error Message 1");
-            configuration.EmploymentCheckErrorMessages.Add("Error2", "Error Message 2");
-            _webConfiguration.Setup(x => x.Value).Returns(configuration);
-
+            
             _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()

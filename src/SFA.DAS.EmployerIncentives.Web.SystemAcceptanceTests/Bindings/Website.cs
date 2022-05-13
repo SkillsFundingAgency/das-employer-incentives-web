@@ -5,7 +5,6 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.HashingService;
 using System;
-using System.Collections.Generic;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
@@ -37,13 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context.WebConfigurationOptions.RedisCacheConnectionString = "localhost";
             _context.WebConfigurationOptions.AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information";
             _context.WebConfigurationOptions.DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
-            _context.WebConfigurationOptions.EmploymentCheckErrorMessages = new Dictionary<string, string>
-            {
-                {"NinoNotFound", "Check and update National Insurance number"},
-                {"PAYENotFound", "Check and update PAYE scheme"},
-                {"NinoAndPAYENotFound", "Check and update PAYE scheme and National Insurance number"}
-            };
-
+            
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {
                 CommitmentsSiteUrl = $"http://{Guid.NewGuid()}",

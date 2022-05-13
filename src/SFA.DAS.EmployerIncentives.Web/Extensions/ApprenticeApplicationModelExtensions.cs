@@ -111,9 +111,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             }
 
             foreach (var errorCode in model.EmploymentCheckErrorCodes.Where(errorCode =>
-                         configuration.EmploymentCheckErrorMessages.ContainsKey(errorCode)))
+                         EmploymentCheckErrorCodes.DisplayText.ContainsKey(errorCode)))
             {
-                model.EmploymentCheckErrorMessages.Add(configuration.EmploymentCheckErrorMessages[errorCode]);
+                model.EmploymentCheckErrorMessages.Add(EmploymentCheckErrorCodes.DisplayText[errorCode]);
             }
         }
 
