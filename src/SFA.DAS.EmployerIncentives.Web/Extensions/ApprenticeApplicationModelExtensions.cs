@@ -120,7 +120,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
         {
             return applications.Where(x =>
                 (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false ||
-                                                  x.FirstPaymentStatus.RequiresNewEmployerAgreement == true)));
+                                                  x.FirstPaymentStatus.RequiresNewEmployerAgreement)));
         }
 
         public static IQueryable<ApprenticeApplicationModel> FilterByPayments(
