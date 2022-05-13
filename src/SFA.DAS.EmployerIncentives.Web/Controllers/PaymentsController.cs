@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }       
 
         [Route("{accountLegalEntityId}/payment-applications")]
-        public async Task<IActionResult> ListPaymentsForLegalEntity(string accountId, string accountLegalEntityId, string sortOrder, string sortField)
+        public async Task<IActionResult> ListPaymentsForLegalEntity(string accountId, string accountLegalEntityId, string sortOrder, string sortField, string filter)
         {
             if (string.IsNullOrWhiteSpace(sortOrder))
             {
@@ -52,6 +52,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             if (string.IsNullOrWhiteSpace(sortField))
             {
                 sortField = ApplicationsSortField.ApprenticeName;
+            }
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                filter = "All";
             }
 
             var getApplicationsResponse = await _applicationService.GetList(accountId, accountLegalEntityId);
@@ -74,7 +78,27 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 m.SetViewAgreementLink(viewAgreementLink);
                 m.SetEmploymentCheckStatusMessage(_webConfiguration);
             });
-            
+
+            var applicationsWithActions = submittedApplications.FilterByEmployerActions();
+            var applicationsWithPayments = submittedApplications.FilterByPayments();
+            var applicationsStopped = submittedApplications.FilterByStoppedOrWithdrawn();
+
+            if (filter != "All")
+            {
+                switch (filter)
+                {
+                    case "EmployerActions":
+                        submittedApplications = applicationsWithActions;
+                        break;
+                    case "Payments":
+                        submittedApplications = applicationsWithPayments;
+                        break;
+                    case "StoppedOrWithdrawn":
+                        submittedApplications = applicationsStopped;
+                        break;
+                }
+            }
+
             var model = new ViewApplicationsViewModel
             {
                 AccountId = accountId,
@@ -88,7 +112,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 OrganisationName = legalEntity?.Name,
                 ViewAgreementLink = viewAgreementLink,
                 ShowCancelLink = getApplicationsResponse.ApprenticeApplications.Any(a => !a.IsWithdrawn),
-                CancelLink = CreateCancelApprenticesLink(accountId, accountLegalEntityId)
+                CancelLink = CreateCancelApprenticesLink(accountId, accountLegalEntityId),
+                Filter = filter,
+                ShowActionsTab = applicationsWithActions.Any(),
+                ShowPaymentsTab = applicationsWithPayments.Any(),
+                ShowStoppedTab = applicationsStopped.Any()
             };
             model.SetSortOrder(sortField, sortOrder);
 
