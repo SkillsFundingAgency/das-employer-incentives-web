@@ -85,24 +85,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
-        public static ApprenticeApplicationModel SetEmploymentCheckStatusMessage(this ApprenticeApplicationModel model,
-            WebConfigurationOptions configuration)
+        public static ApprenticeApplicationModel SetEmploymentCheckStatusMessage(this ApprenticeApplicationModel model)
         {
             if (model.FirstPaymentStatus != null)
             {
-                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.FirstPaymentStatus, configuration);
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.FirstPaymentStatus);
             }
 
             if (model.SecondPaymentStatus != null)
             {
-                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.SecondPaymentStatus, configuration);
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.SecondPaymentStatus);
             }
 
             return model;
         }
 
-        private static void SetEmploymentCheckErrorMessagesForApplicableErrorCodes(PaymentStatusModel model,
-            WebConfigurationOptions configuration)
+        private static void SetEmploymentCheckErrorMessagesForApplicableErrorCodes(PaymentStatusModel model)
         {
             model.EmploymentCheckErrorMessages = new List<string>();
             if (model.EmploymentCheckErrorCodes == null || !model.EmploymentCheckErrorCodes.Any())

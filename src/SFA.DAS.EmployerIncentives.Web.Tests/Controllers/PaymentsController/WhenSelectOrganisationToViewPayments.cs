@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IOptions<ExternalLinksConfiguration>> _linksConfiguration;
-        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _manageAccountsUrl;
@@ -34,12 +33,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _linksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _manageAccountsUrl = _fixture.Create<string>();
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object);
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object);
         }
 
         [Test]

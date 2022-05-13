@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                 ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl
             });
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -432,7 +432,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
 
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -604,7 +604,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
             
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -645,7 +645,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
             _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
             
-            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object, _webConfiguration.Object)
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
