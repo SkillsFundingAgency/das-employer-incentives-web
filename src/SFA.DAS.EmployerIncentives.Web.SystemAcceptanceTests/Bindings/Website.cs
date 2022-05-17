@@ -36,7 +36,11 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
             _context.WebConfigurationOptions.RedisCacheConnectionString = "localhost";
             _context.WebConfigurationOptions.AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information";
             _context.WebConfigurationOptions.DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
-            
+            if (String.IsNullOrWhiteSpace(_context.WebConfigurationOptions.ApplicationShutterPageDate)) // can already be set by shutter page hook so don't override
+            {
+                _context.WebConfigurationOptions.ApplicationShutterPageDate = DateTime.Today.AddDays(1).ToString("dd MMM yyyy");
+            }
+
             _context.ExternalLinksOptions = new ExternalLinksConfiguration
             {
                 CommitmentsSiteUrl = $"http://{Guid.NewGuid()}",

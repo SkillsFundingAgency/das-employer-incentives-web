@@ -1,15 +1,15 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.System
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Maintenance
 {
     [Binding]
     [Scope(Feature = "ApplicationShutter")]
