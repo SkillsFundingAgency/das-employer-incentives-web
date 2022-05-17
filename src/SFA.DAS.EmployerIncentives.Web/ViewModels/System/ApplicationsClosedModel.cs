@@ -9,6 +9,7 @@
 
         public ApplicationsClosedModel(string accountId,string manageApprenticeshipSiteUrl)
         {
+            AccountId = accountId;
             ManageApprenticeshipSiteUrl = manageApprenticeshipSiteUrl;
             if (!manageApprenticeshipSiteUrl.EndsWith("/"))
             {
