@@ -102,7 +102,7 @@ Examples:
     | /VBKBLD/payments/choose-organisation                                                 |
 
 Scenario Outline: An employer is shown the apply link before the phase 3 period has closed
-	Given the application is configured to prevent applications
+	Given the application is configured to allow applications
 	When the employer is on the hub page
 	Then the employer is shown the apply link
     And the heading text indicates that they can apply for incentive payments

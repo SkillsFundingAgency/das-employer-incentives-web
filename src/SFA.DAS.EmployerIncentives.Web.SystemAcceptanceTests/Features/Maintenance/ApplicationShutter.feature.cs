@@ -358,7 +358,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 105
- testRunner.Given("the application is configured to prevent applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("the application is configured to allow applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 106
  testRunner.When("the employer is on the hub page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
