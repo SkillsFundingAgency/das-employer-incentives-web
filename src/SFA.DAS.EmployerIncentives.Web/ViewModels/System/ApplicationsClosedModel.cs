@@ -4,6 +4,7 @@
     {
         public string Title => "Applications open on 11 January 2022";
         public string AccountHomeUrl { get; set; }
+        public string AccountId { get; set; }
         private string ManageApprenticeshipSiteUrl { get; set; }
 
         public ApplicationsClosedModel(string accountId,string manageApprenticeshipSiteUrl)
