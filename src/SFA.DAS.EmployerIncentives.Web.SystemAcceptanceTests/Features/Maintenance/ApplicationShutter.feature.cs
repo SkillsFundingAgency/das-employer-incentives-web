@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Maintena
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ApplicationShutter", "\tAs an employer applying for an apprenticeship payment after the phase 2 period h" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ApplicationShutter", "\tAs an employer applying for an apprenticeship payment after the phase 3 period h" +
                     "as closed\r\n\tI want to be prevented from applying for the application\r\n\tSo that I" +
                     " can get the correct apprenticeship grant", ProgrammingLanguage.CSharp, new string[] {
                         "employerIncentivesApi"});
@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Maintena
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("An employer is prevented from applying for a new apprenticeship payment after the" +
-            " phase 2 period has closed")]
+            " phase 3 period has closed")]
         [NUnit.Framework.CategoryAttribute("applyApplicationShutterPage")]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/application-complete/fd0f5a2d-b45b-4a73-8750-ddd167b270c3", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply", null)]
@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Maintena
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/MLP7DD/eligible-apprentices", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/MLP7DD/taken-on-new-apprentices", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/MLP7DD", null)]
-        public virtual void AnEmployerIsPreventedFromApplyingForANewApprenticeshipPaymentAfterThePhase2PeriodHasClosed(string url, string[] exampleTags)
+        public virtual void AnEmployerIsPreventedFromApplyingForANewApprenticeshipPaymentAfterThePhase3PeriodHasClosed(string url, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "applyApplicationShutterPage"};
@@ -107,7 +107,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Features.Maintena
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("url", url);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is prevented from applying for a new apprenticeship payment after the" +
-                    " phase 2 period has closed", null, tagsOfScenario, argumentsOfScenario);
+                    " phase 3 period has closed", null, tagsOfScenario, argumentsOfScenario);
 #line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -184,7 +184,7 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer is allowed to use some areas of the site after the phase 2 period has" +
+        [NUnit.Framework.DescriptionAttribute("An employer is allowed to use some areas of the site after the phase 3 period has" +
             " closed")]
         [NUnit.Framework.CategoryAttribute("applyApplicationShutterPage")]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply/cannot-apply", null)]
@@ -206,7 +206,7 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/payments/MLP7DD/no-applications", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/payments/choose-organisation", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/cancel/MLP7DD/cancel-application", null)]
-        public virtual void AnEmployerIsAllowedToUseSomeAreasOfTheSiteAfterThePhase2PeriodHasClosed(string url, string[] exampleTags)
+        public virtual void AnEmployerIsAllowedToUseSomeAreasOfTheSiteAfterThePhase3PeriodHasClosed(string url, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "applyApplicationShutterPage"};
@@ -217,7 +217,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = @__tags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("url", url);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is allowed to use some areas of the site after the phase 2 period has" +
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is allowed to use some areas of the site after the phase 3 period has" +
                     " closed", null, tagsOfScenario, argumentsOfScenario);
 #line 36
 this.ScenarioInitialize(scenarioInfo);
@@ -253,7 +253,7 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An employer is allowed to use all areas of the site before the phase 2 period has" +
+        [NUnit.Framework.DescriptionAttribute("An employer is allowed to use all areas of the site before the phase 3 period has" +
             " closed")]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/application-complete/fd0f5a2d-b45b-4a73-8750-ddd167b270c3", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/apply", null)]
@@ -290,12 +290,12 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/payments/MLP7DD/payment-applications", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/payments/MLP7DD/no-applications", null)]
         [NUnit.Framework.TestCaseAttribute("/VBKBLD/payments/choose-organisation", null)]
-        public virtual void AnEmployerIsAllowedToUseAllAreasOfTheSiteBeforeThePhase2PeriodHasClosed(string url, string[] exampleTags)
+        public virtual void AnEmployerIsAllowedToUseAllAreasOfTheSiteBeforeThePhase3PeriodHasClosed(string url, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("url", url);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is allowed to use all areas of the site before the phase 2 period has" +
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer is allowed to use all areas of the site before the phase 3 period has" +
                     " closed", null, tagsOfScenario, argumentsOfScenario);
 #line 62
 this.ScenarioInitialize(scenarioInfo);

@@ -1,11 +1,11 @@
 ﻿@employerIncentivesApi
 Feature: ApplicationShutter
-	As an employer applying for an apprenticeship payment after the phase 2 period has closed
+	As an employer applying for an apprenticeship payment after the phase 3 period has closed
 	I want to be prevented from applying for the application
 	So that I can get the correct apprenticeship grant
 
 @applyApplicationShutterPage
-Scenario Outline: An employer is prevented from applying for a new apprenticeship payment after the phase 2 period has closed
+Scenario Outline: An employer is prevented from applying for a new apprenticeship payment after the phase 3 period has closed
 	Given the application is configured to prevent applications
 	When the employer access the <url> page
 	Then the employer is shown the application shutter page
@@ -33,7 +33,7 @@ Scenario: An employer is prevented from submitting a new apprenticeship applicat
 	Then the employer is shown the application shutter page
 
 @applyApplicationShutterPage
-Scenario Outline: An employer is allowed to use some areas of the site after the phase 2 period has closed
+Scenario Outline: An employer is allowed to use some areas of the site after the phase 3 period has closed
 	Given the application is configured to prevent applications
 	When the employer access the <url> page
 	Then the employer is not shown the application shutter page
@@ -59,7 +59,7 @@ Examples:
     | /VBKBLD/payments/choose-organisation                                                 |
     | /VBKBLD/cancel/MLP7DD/cancel-application                                             |
 
-Scenario Outline: An employer is allowed to use all areas of the site before the phase 2 period has closed
+Scenario Outline: An employer is allowed to use all areas of the site before the phase 3 period has closed
 	Given the application is configured to allow applications
 	When the employer access the <url> page
 	Then the employer is not shown the application shutter page
