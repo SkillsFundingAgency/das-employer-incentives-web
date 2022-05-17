@@ -81,7 +81,8 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddMvc(
                     options =>
                     {
-
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         options.Filters.Add(new ApplicationShutterFilterAttribute(_configuration));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
