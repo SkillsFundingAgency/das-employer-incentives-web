@@ -100,3 +100,17 @@ Examples:
     | /VBKBLD/payments/MLP7DD/payment-applications                                         |
     | /VBKBLD/payments/MLP7DD/no-applications                                              |
     | /VBKBLD/payments/choose-organisation                                                 |
+
+Scenario Outline: An employer is shown the apply link before the phase 3 period has closed
+	Given the application is configured to allow applications
+	When the employer is on the hub page
+	Then the employer is shown the apply link
+    And the heading text indicates that they can apply for incentive payments
+
+@applyApplicationShutterPage
+Scenario Outline: An employer is not shown the apply link after the phase 3 period has closed
+	Given the application is configured to prevent applications
+	When the employer is on the hub page
+	Then the employer is not shown the apply link
+    And the employer is shown a link to the guidance page
+    And the heading text does not indicate that they can apply for incentive payments
