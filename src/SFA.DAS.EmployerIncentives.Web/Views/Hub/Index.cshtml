@@ -158,11 +158,29 @@ else
                         View @Model.OrganisationName's applications and estimated payments.
                     </p>
                 </div>
+                @if (Model.ShowAmendBankDetails && Model.ApplicationWindowClosed)
+                {
+                    <div class="govuk-grid-column-one-half">
+                        <h2 class="govuk-heading-m">
+                            <a asp-controller="BankDetails"
+                               asp-action="AmendBankDetails"
+                               asp-route-accountid="@Model.AccountId"
+                               asp-route-applicationId="@Model.BankDetailsApplicationId"
+                               class="govuk-link govuk-link--no-visited-state"
+                               data-linktype="hub-amend-bank-details">
+                                Change organisation and finance details
+                            </a>
+                        </h2>
+                        <p class="govuk-body">
+                            Change @Model.OrganisationName's address, contact or bank account details.
+                        </p>
+                    </div>
+                }
             </div>
         </div>
     </div>
 
-    @if (Model.ShowAmendBankDetails)
+    @if (Model.ShowAmendBankDetails && !Model.ApplicationWindowClosed)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
