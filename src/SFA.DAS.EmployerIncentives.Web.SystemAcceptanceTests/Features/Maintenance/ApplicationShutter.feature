@@ -25,6 +25,7 @@ Examples:
     | /VBKBLD/apply/MLP7DD/eligible-apprentices                                            |
     | /VBKBLD/apply/MLP7DD/taken-on-new-apprentices                                        |
     | /VBKBLD/MLP7DD                                                                       |
+    | /VBKBLD/MLP7DD/before-you-start                                                      |
     
 @applyApplicationShutterPage
 Scenario: An employer is prevented from submitting a new apprenticeship application
