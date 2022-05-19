@@ -1,15 +1,20 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
-namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.System
+namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Maintenance
 {
     [Binding]
     [Scope(Feature = "ApplicationShutter")]
@@ -79,6 +84,37 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.System
             });
         }
 
+        [When(@"the employer is on the hub page")]
+        public async Task WhenTheEmployerIsOnTheHubPage()
+        {
+            var testdata = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testDataStore.Add("HashedAccountId", testdata.HashedAccountId);
+            _testDataStore.Add("HashedAccountLegalEntityId", testdata.HashedAccountLegalEntityId);
+            _testDataStore.Add("LegalEntityName", testdata.LegalEntity.LegalEntityName);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, testdata.HashedAccountId);
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath($"/accounts/{testdata.AccountId}/legalentities")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{testdata.HashedAccountId}/{testdata.HashedAccountLegalEntityId}/hire-new-apprentice-payment");
+
+            var response = await _testContext.WebsiteClient.SendAsync(request);
+
+            _testContext.TestDataStore.GetOrCreate("Response", onCreate: () =>
+            {
+                return response;
+            });
+        }
+
         [Then(@"the employer is shown the application shutter page")]
         public void ThenTheEmployerIsShownTheApplicationShutterPage()
         {
@@ -105,6 +141,54 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.System
                 var model = viewResult.Model as ApplicationsClosedModel;
                 model.Should().BeNull();
             }
+        }
+
+        [Then(@"the employer is shown the apply link")]
+        public void ThenTheEmployerIsShownTheApplyLink()
+        {
+            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var url = $"/{hashedAccountId}/{hashedAccountLegalEntityId}/before-you-start";
+
+            response.Should().HaveLink("[data-linktype='hub-before-apply']", url);
+        }
+
+        [Then(@"the employer is not shown the apply link")]
+        public void ThenTheEmployerIsNotShownTheApplyLink()
+        {
+            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
+            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var url = $"/{hashedAccountId}/{hashedAccountLegalEntityId}/before-you-start";
+
+            response.Should().NotHaveLink("[data-linktype='hub-before-apply']", url);
+        }
+
+        [Then(@"the employer is shown a link to the guidance page")]
+        public void ThenTheEmployerIsShownTheGuidanceLink()
+        {
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var url = "https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application";
+
+            response.Should().HaveLink("[data-linktype='incentive-payment-guidance']", url);
+        }
+
+        [Then(@"the heading text indicates that they can apply for incentive payments")]
+        public void ThenTheHeadingTextContainsApply()
+        {
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var legalEntityName = _testDataStore.Get<string>("LegalEntityName");
+            response.Should().HaveInnerHtml("[data-paragraphtype='hub-heading']", $"Apply for the payment and view {legalEntityName}'s applications.");
+        }
+
+
+        [Then(@"the heading text does not indicate that they can apply for incentive payments")]
+        public void ThenTheHeadingTextDoesNotContainApply()
+        {
+            var response = _testDataStore.Get<HttpResponseMessage>("Response");
+            var legalEntityName = _testDataStore.Get<string>("LegalEntityName");
+            response.Should().HaveInnerHtml("[data-paragraphtype='hub-heading']", $"View {legalEntityName}'s applications or change their organisation and finance details.");
         }
     }
 }

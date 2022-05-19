@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -38,7 +39,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
-                HasMultipleLegalEntities = legalEntities.Count() > 1
+                HasMultipleLegalEntities = legalEntities.Count() > 1,
+                ApplicationWindowClosed = DateTime.Now >= DateTime.Parse(_webConfiguration.ApplicationShutterPageDate)
             };
             
             if (applicationsResponse.ApprenticeApplications.Any())
