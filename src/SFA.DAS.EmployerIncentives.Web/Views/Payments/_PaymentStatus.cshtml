@@ -7,7 +7,7 @@
 
 @if (Model != null)
 {
-    @if (Model.EmploymentCheckPassed.HasValue && !Model.EmploymentCheckPassed.Value)
+    @if (Model.EmploymentCheckPassed.HasValue && !Model.EmploymentCheckPassed.Value || !Model.EmploymentCheckPassed.HasValue && Model.EmploymentCheckErrorMessages.Any())
     {
         <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-3">Confirm eligibility</strong>
         @if(Model.EmploymentCheckErrorMessages.Any())
