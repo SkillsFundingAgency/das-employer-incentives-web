@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions
             .FailWith("InnerHtml to assert on not provided")
             .Then
             .Given(() => _document.DocumentElement.QuerySelector(selector))
-            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).InnerHtml == innerHtml)
+            .ForCondition(t => _document.DocumentElement.QuerySelector(selector).InnerHtml.Trim() == innerHtml)
             .FailWith("Expected {context:DocumentElement} to contain {0} but found {1}",
                 _ => innerHtml, item => item.InnerHtml);
 

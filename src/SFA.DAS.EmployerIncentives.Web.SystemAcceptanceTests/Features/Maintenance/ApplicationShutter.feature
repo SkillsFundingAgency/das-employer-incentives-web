@@ -1,11 +1,11 @@
 ﻿@employerIncentivesApi
 Feature: ApplicationShutter
-	As an employer applying for an apprenticeship payment after the phase 2 period has closed
+	As an employer applying for an apprenticeship payment after the phase 3 period has closed
 	I want to be prevented from applying for the application
 	So that I can get the correct apprenticeship grant
 
 @applyApplicationShutterPage
-Scenario Outline: An employer is prevented from applying for a new apprenticeship payment after the phase 2 period has closed
+Scenario Outline: An employer is prevented from applying for a new apprenticeship payment after the phase 3 period has closed
 	Given the application is configured to prevent applications
 	When the employer access the <url> page
 	Then the employer is shown the application shutter page
@@ -25,6 +25,7 @@ Examples:
     | /VBKBLD/apply/MLP7DD/eligible-apprentices                                            |
     | /VBKBLD/apply/MLP7DD/taken-on-new-apprentices                                        |
     | /VBKBLD/MLP7DD                                                                       |
+    | /VBKBLD/MLP7DD/before-you-start                                                      |
     
 @applyApplicationShutterPage
 Scenario: An employer is prevented from submitting a new apprenticeship application
@@ -33,7 +34,7 @@ Scenario: An employer is prevented from submitting a new apprenticeship applicat
 	Then the employer is shown the application shutter page
 
 @applyApplicationShutterPage
-Scenario Outline: An employer is allowed to use some areas of the site after the phase 2 period has closed
+Scenario Outline: An employer is allowed to use some areas of the site after the phase 3 period has closed
 	Given the application is configured to prevent applications
 	When the employer access the <url> page
 	Then the employer is not shown the application shutter page
@@ -59,7 +60,7 @@ Examples:
     | /VBKBLD/payments/choose-organisation                                                 |
     | /VBKBLD/cancel/MLP7DD/cancel-application                                             |
 
-Scenario Outline: An employer is allowed to use all areas of the site before the phase 2 period has closed
+Scenario Outline: An employer is allowed to use all areas of the site before the phase 3 period has closed
 	Given the application is configured to allow applications
 	When the employer access the <url> page
 	Then the employer is not shown the application shutter page
@@ -100,3 +101,17 @@ Examples:
     | /VBKBLD/payments/MLP7DD/payment-applications                                         |
     | /VBKBLD/payments/MLP7DD/no-applications                                              |
     | /VBKBLD/payments/choose-organisation                                                 |
+
+Scenario Outline: An employer is shown the apply link before the phase 3 period has closed
+	Given the application is configured to allow applications
+	When the employer is on the hub page
+	Then the employer is shown the apply link
+    And the heading text indicates that they can apply for incentive payments
+
+@applyApplicationShutterPage
+Scenario Outline: An employer is not shown the apply link after the phase 3 period has closed
+	Given the application is configured to prevent applications
+	When the employer is on the hub page
+	Then the employer is not shown the apply link
+    And the employer is shown a link to the guidance page
+    And the heading text does not indicate that they can apply for incentive payments
