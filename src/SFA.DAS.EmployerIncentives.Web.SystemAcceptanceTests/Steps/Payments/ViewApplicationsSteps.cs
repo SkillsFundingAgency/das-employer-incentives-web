@@ -395,6 +395,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             AnApplicationWithAFailedEmploymentCheck(_testApplicationId);
         }
 
+        [Given(@"an employer with an application with a employment check error code of '(.*)'")]
+        public void GivenAnEmployerWithAnApplicationWithAFailedEmploymentCheckWithErrorCode(string errorCode)
+        {
+            AnApplicationWithAFailedEmploymentCheckWithErrorCode(_testApplicationId, errorCode);
+        }
+            
         [Then(@"the message showing the application is ineligible is shown")]
         public void ThenTheMessageShowingTheApplicationIsIneligibleIsShown()
         {
@@ -409,6 +415,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
             response.Should().HaveLink("[data-linktype='payment-status-help']", "https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application");
         }
 
+        [Then(@"the message showing the employment check has failed is shown with a message of '(.*)'")]
+        public void ThenTheMessageShowingTheEmploymentCheckHasFailedIsShown(string errorMessage)
+        {
+            var response = _testContext.TestDataStore.Get<HttpResponseMessage>("Response");
+            response.Should().HaveInnerHtml("[data-paragraphtype='application-ineligible']", errorMessage);
+        }
 
         private void AnEmployerHasASingleSubmittedApplication(Guid applicationId,
             BankDetailsStatus bankDetailsStatus = BankDetailsStatus.Completed)
@@ -768,6 +780,51 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
 
             var getApplications = new GetApplicationsModel
                 { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
+
+            _testContext.EmployerIncentivesApi.MockServer
+                .Given(
+                    Request
+                        .Create()
+                        .WithPath(
+                            $"/accounts/{_testData.AccountId}/legalentity/{_testData.AccountLegalEntityId}/applications")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(HttpStatusCode.OK)
+                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+        }
+
+        private void AnApplicationWithAFailedEmploymentCheckWithErrorCode(Guid applicationId, string errorCode)
+        {
+            _testData = new TestData.Account.WithInitialApplicationForASingleEntity();
+            _testContext.TestDataStore.Add("HashedAccountId", _testData.HashedAccountId);
+            _testContext.TestDataStore.Add("HashedAccountLegalEntityId", _testData.HashedAccountLegalEntityId);
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _testData.HashedAccountId);
+
+            var applications = new List<ApprenticeApplicationModel>
+            {
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.AccountId, _testData.AccountId)
+                    .With(p => p.FirstPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .Without(p => p.EmploymentCheckPassed)
+                            .With(p => p.EmploymentCheckErrorCodes, new List<string>{ errorCode})
+                            .Create()
+                    )
+                    .With(p => p.SecondPaymentStatus,
+                        _fixture.Build<PaymentStatusModel>()
+                            .Without(p => p.EmploymentCheckPassed)
+                            .With(p => p.EmploymentCheckErrorCodes, new List<string>{ errorCode})
+                            .Create()
+                    )
+                    .Without(p => p.FirstClawbackStatus)
+                    .Without(p => p.SecondClawbackStatus)
+                    .Create()
+            };
+
+            var getApplications = new GetApplicationsModel
+            { ApprenticeApplications = applications, FirstSubmittedApplicationId = applicationId };
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(

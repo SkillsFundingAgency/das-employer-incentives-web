@@ -688,6 +688,54 @@ this.ScenarioInitialize(scenarioInfo);
             }
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("An employer who has an ineligible application due to an employment check returnin" +
+            "g an error code")]
+        [NUnit.Framework.TestCaseAttribute("NinoNotFound", "Check and update National Insurance number", null)]
+        [NUnit.Framework.TestCaseAttribute("PAYENotFound", "Check and update PAYE scheme", null)]
+        [NUnit.Framework.TestCaseAttribute("NinoAndPAYENotFound", "Check and update PAYE scheme and National Insurance number", null)]
+        public virtual void AnEmployerWhoHasAnIneligibleApplicationDueToAnEmploymentCheckReturningAnErrorCode(string employmentCheckErrorCode, string employmentCheckErrorMessage, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("EmploymentCheckErrorCode", employmentCheckErrorCode);
+            argumentsOfScenario.Add("EmploymentCheckErrorMessage", employmentCheckErrorMessage);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An employer who has an ineligible application due to an employment check returnin" +
+                    "g an error code", null, tagsOfScenario, argumentsOfScenario);
+#line 82
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 83
+ testRunner.Given(string.Format("an employer with an application with a employment check error code of \'{0}\'", employmentCheckErrorCode), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 84
+ testRunner.When("the employer views their applications", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 85
+ testRunner.Then(string.Format("the message showing the employment check has failed is shown with a message of \'{" +
+                            "0}\'", employmentCheckErrorMessage), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
