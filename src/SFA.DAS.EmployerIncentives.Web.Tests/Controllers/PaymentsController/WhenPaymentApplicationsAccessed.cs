@@ -580,20 +580,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.Count().Should().Be(3);
         }
 
-         [Test]
-        public async Task Then_the_mapped_employment_check_error_message_is_shown_if_available_for_the_error_code()
+        [TestCase("NinoNotFound")]
+        [TestCase("PAYENotFound")]
+        [TestCase("NinoAndPAYENotFound")]
+        public async Task Then_the_mapped_employment_check_error_message_is_shown_if_available_for_the_error_code(string errorCode)
         {
             // Arrange
             var applications = new List<ApprenticeApplicationModel>();
             applications.Add(
                 _fixture.Build<ApprenticeApplicationModel>()
                     .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
-                        .With(p => p.EmploymentCheckPassed, false)
-                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "NinoNotFound" })
+                        .Without(p => p.EmploymentCheckPassed)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { errorCode })
                         .Create())
                     .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
-                        .With(p => p.EmploymentCheckPassed, false)
-                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "NinoNotFound" })
+                        .Without(p => p.EmploymentCheckPassed)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { errorCode })
                         .Create())
                     .Create());
 
@@ -618,7 +620,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
             viewModel.Should().NotBeNull();
-            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain(EmploymentCheckErrorCodes.DisplayText["NinoNotFound"]);
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain(EmploymentCheckErrorCodes.DisplayText[errorCode]);
         }
 
         [Test]
