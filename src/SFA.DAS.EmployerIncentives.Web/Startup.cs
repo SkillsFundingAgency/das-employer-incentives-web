@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["EnvironmentName"].StartsWith("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 configBuilder.AddAzureTableStorage(options =>
                         {

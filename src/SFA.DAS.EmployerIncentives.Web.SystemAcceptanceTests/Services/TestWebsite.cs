@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
             _appConfig = new Dictionary<string, string>
             {
-                { "EnvironmentName", "LOCAL" },
+                { "EnvironmentName", "LOCAL_ACCEPTANCE_TESTS" },
                 { "Identity:ClientId", "employerincentivesdev" },
                 { "Identity:ClientSecret", "secret" },
                 { "Identity:BaseAddress", @"https://localhost:8082/identity" },
