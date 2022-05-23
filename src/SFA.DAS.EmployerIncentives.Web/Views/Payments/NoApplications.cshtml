@@ -14,16 +14,21 @@
 
             <h1 class="govuk-heading-l">@Model.Title</h1>
 
-            <p class="govuk-body">
-                @Model.OrganisationName can only apply for eligible apprentices with an employment start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022.</span>
-            </p>
-            <p class="govuk-body">
-                They will also need to have an apprenticeship start date from <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022.</span>
-            </p>
-
-            <a asp-action="Start" asp-controller="Home" asp-route-accountid="@Model.AccountId" asp-route-accountlegalentityid="@Model.AccountLegalEntityId" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-                Apply
-            </a>
+            <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-body">
+                        Applications for the hire a new apprentice incentive payment closed on <span class="das-no-wrap">20 May 2022.</span>
+                    </p>
+                    <p class="govuk-body">
+                        <a rel="noopener" class="govuk-link govuk-link--no-visited-state" href="https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application" target="_blank">View guidance on incentive payments for hiring a new apprentice (opens in a new tab)</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
