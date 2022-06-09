@@ -16,15 +16,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly IApplicationService _applicationService;
         private readonly ExternalLinksConfiguration _externalLinksConfiguration;
-        private readonly WebConfigurationOptions _webConfiguration;
 
         public HubController(ILegalEntitiesService legalEntitiesService, IApplicationService applicationService, 
-                             IOptions<ExternalLinksConfiguration> externalLinksConfiguration, IOptions<WebConfigurationOptions> webConfiguration)
+                             IOptions<ExternalLinksConfiguration> externalLinksConfiguration)
         {
             _legalEntitiesService = legalEntitiesService;
             _applicationService = applicationService;
             _externalLinksConfiguration = externalLinksConfiguration.Value;
-            _webConfiguration = webConfiguration.Value;
         }
 
         [Route("{accountId}/{accountLegalEntityId}/hire-new-apprentice-payment")]
