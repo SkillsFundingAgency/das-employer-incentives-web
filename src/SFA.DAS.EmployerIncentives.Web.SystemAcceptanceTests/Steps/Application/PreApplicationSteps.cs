@@ -81,17 +81,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             });
         }       
 
-        [When(@"the employer selects the Hire a new apprentice payment link")]
-        public async Task WhenTheEmployerSelectstheHireANewApprenticePaymentLink()
-        {
-            var url = $"/{_testdata.HashedAccountId}/{_testdata.HashedAccountLegalEntityId}/before-you-start";
-
-            _response.Should().HaveLink("[data-linktype='hub-before-apply']", url);
-
-            _response = await _testContext.WebsiteClient.GetAsync(url);
-            _response.EnsureSuccessStatusCode();
-        }
-
         [When(@"the employer selects the Start now button")]
         public async Task WhenTheEmployerSelectsTheStartNowButton()
         {
@@ -114,6 +103,15 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 
             _response = await _testContext.WebsiteClient.GetAsync(url);
             _response.EnsureSuccessStatusCode();
+        }
+
+
+        [Then(@"the employer is not shown the Hire a new apprentice payment link")]
+        public void ThenTheEmployerIsNotShownTheHireANewApprenticePaymentLink()
+        {
+            var url = $"/{_testdata.HashedAccountId}/{_testdata.HashedAccountLegalEntityId}/before-you-start";
+
+            _response.Should().NotHaveLink("[data-linktype='hub-before-apply']", url);
         }
 
         [Then(@"the employer is on the before you start page")]

@@ -39,8 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 AccountLegalEntityId = accountLegalEntityId,
                 OrganisationName = selectedLegalEntity?.Name,
-                HasMultipleLegalEntities = legalEntities.Count() > 1,
-                ApplicationWindowClosed = DateTime.Now >= DateTime.Parse(_webConfiguration.ApplicationShutterPageDate)
+                HasMultipleLegalEntities = legalEntities.Count() > 1
             };
             
             if (applicationsResponse.ApprenticeApplications.Any())
