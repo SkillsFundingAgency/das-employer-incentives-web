@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
 {
@@ -6,16 +7,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
     {
         public WithdrawalType WithdrawalType { get; }
         public long AccountId { get; }
-        public long AccountLegalEntityId { get; }
-        public long ULN { get; }
+        public IEnumerable<Application> Applications { get; }
         public ServiceRequest ServiceRequest { get; }
         public string EmailAddress { get; }
 
-        public WithdrawRequest(WithdrawalType type, long accountLegalEntityId, long uln, ServiceRequest serviceRequest, long accountId, string emailAddress)
+        public WithdrawRequest(WithdrawalType type, IEnumerable<Application> applications, ServiceRequest serviceRequest, long accountId, string emailAddress)
         {
             WithdrawalType = type;
-            AccountLegalEntityId = accountLegalEntityId;
-            ULN = uln;
+            Applications = applications;
             ServiceRequest = serviceRequest;
             AccountId = accountId;
             EmailAddress = emailAddress;
