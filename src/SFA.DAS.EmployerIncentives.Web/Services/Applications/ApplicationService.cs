@@ -1,7 +1,6 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +9,19 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Exceptions;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public class ApplicationService : IApplicationService
     {
         private readonly HttpClient _client;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
 
-        public ApplicationService(HttpClient client, IHashingService hashingService)
+        public ApplicationService(HttpClient client, IAccountEncodingService encodingService)
         {
             _client = client;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
         }
 
         public async Task<Guid> Create(string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<ApplicationModel> Get(string accountId, Guid applicationId, bool includeApprenticeships = true, bool includeSubmitted = false)
         {
-            var url = OuterApiRoutes.Application.GetApplication(_hashingService.DecodeValue(accountId), applicationId, includeApprenticeships);
+            var url = OuterApiRoutes.Application.GetApplication(_encodingService.Decode(accountId), applicationId, includeApprenticeships);
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
@@ -56,8 +56,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<GetApplicationsModel> GetList(string accountId, string accountLegalEntityId)
         {
-            var decodedAccountId = _hashingService.DecodeValue(accountId);
-            var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
+            var decodedAccountId = _encodingService.Decode(accountId);
+            var decodedAccountLegalEntityId = _encodingService.Decode(accountLegalEntityId);
             using var response = await _client.GetAsync($"accounts/{decodedAccountId}/legalentity/{decodedAccountLegalEntityId}/applications", HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
@@ -102,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<long> GetApplicationLegalEntity(string accountId, Guid applicationId)
         {
-            var url = OuterApiRoutes.Application.GetApplicationLegalEntity(_hashingService.DecodeValue(accountId), applicationId);
+            var url = OuterApiRoutes.Application.GetApplicationLegalEntity(_encodingService.Decode(accountId), applicationId);
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
@@ -123,7 +123,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         private ApplicationModel MapFromGetApplicationResponse(IncentiveApplicationDto application, string accountId, Guid applicationId)
         {
             return new ApplicationModel(applicationId, accountId,
-                _hashingService.HashValue(application.AccountLegalEntityId),
+                _encodingService.Encode(application.AccountLegalEntityId),
                 application.Apprenticeships.OrderBy(x => x.LastName).Select(MapFromApplicationApprenticeDto),
                 application.BankDetailsRequired, application.NewAgreementRequired);
         }
@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
         {
             return new ApplicationApprenticeshipModel
             {
-                ApprenticeshipId = _hashingService.HashValue(apprentice.ApprenticeshipId),
+                ApprenticeshipId = _encodingService.Encode(apprentice.ApprenticeshipId),
                 CourseName = apprentice.CourseName,
                 FirstName = apprentice.FirstName,
                 LastName = apprentice.LastName,
@@ -146,9 +146,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         private CreateApplicationRequest MapToCreateApplicationRequest(Guid applicationId, string accountId, string accountLegalEntityId, IEnumerable<string> apprenticeshipIds)
         {
-            return new CreateApplicationRequest(applicationId, _hashingService.DecodeValue(accountId),
-                _hashingService.DecodeValue(accountLegalEntityId),
-                apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)));
+            return new CreateApplicationRequest(applicationId, _encodingService.Decode(accountId),
+                _encodingService.Decode(accountLegalEntityId),
+                apprenticeshipIds.Select(x => _encodingService.Decode(x)));
         }
 
         private UpdateApplicationRequest MapToUpdateApplicationRequest(Guid applicationId, string accountId, IEnumerable<string> apprenticeshipIds)
@@ -156,14 +156,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
             return new UpdateApplicationRequest
             {
                 ApplicationId = applicationId,
-                AccountId = _hashingService.DecodeValue(accountId),
-                ApprenticeshipIds = apprenticeshipIds.Select(x => _hashingService.DecodeValue(x)).ToArray()
+                AccountId = _encodingService.Decode(accountId),
+                ApprenticeshipIds = apprenticeshipIds.Select(x => _encodingService.Decode(x)).ToArray()
             };
         }
 
         private ConfirmApplicationRequest MapToConfirmApplicationRequest(Guid applicationId, string accountId, string userEmail, string userName)
         {
-            return new ConfirmApplicationRequest(applicationId, _hashingService.DecodeValue(accountId), userEmail, userName);
+            return new ConfirmApplicationRequest(applicationId, _encodingService.Decode(accountId), userEmail, userName);
         }
 
     }

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.HashingService;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Filters
 {
@@ -59,8 +59,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Filters
             var applicationId = new Guid(applicationIdRouteValue.ToString());
             var accountLegalEntityId = applicationService.GetApplicationLegalEntity(accountIdRouteValue.ToString(), applicationId).GetAwaiter().GetResult();
 
-            var hashingService = context.HttpContext.RequestServices.GetService<IHashingService>();
-            hashedAccountLegalEntityId = hashingService.HashValue(accountLegalEntityId.ToString());
+            var encodingService = context.HttpContext.RequestServices.GetService<IAccountEncodingService>();
+            hashedAccountLegalEntityId = encodingService.Encode(accountLegalEntityId);
             return hashedAccountLegalEntityId;
         }
 

@@ -5,9 +5,9 @@ using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -16,20 +16,20 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     {
         private readonly IEmailService _emailService;
         private readonly IApplicationService _applicationService;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         private readonly IVerificationService _verificationService;
         private readonly ILegalEntitiesService _legalEntitiesService;
 
         public BankDetailsController(IVerificationService verificationService,
             IEmailService emailService,
             IApplicationService applicationService,
-            IHashingService hashingService,
+            IAccountEncodingService encodingService,
             ILegalEntitiesService legalEntitiesService) : base(legalEntitiesService)
         {
             _verificationService = verificationService;
             _emailService = emailService;
             _applicationService = applicationService;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
             _legalEntitiesService = legalEntitiesService;
         }
 
@@ -148,7 +148,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
             var sendEmailRequest = new SendBankDetailsEmailRequest
             {
-                AccountId = _hashingService.DecodeValue(accountId),
+                AccountId = _encodingService.Decode(accountId),
                 AccountLegalEntityId = accountLegalEntityId,
                 EmailAddress = emailAddress,
                 AddBankDetailsUrl = bankDetailsUrl

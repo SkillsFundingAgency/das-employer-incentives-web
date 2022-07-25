@@ -3,7 +3,6 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
-using SFA.DAS.HashingService;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,23 +13,23 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
     {
         private readonly IBankingDetailsService _bankingDetailsService;
         private readonly IDataEncryptionService _dataEncryptionService;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         private readonly ILegalEntitiesService _legalEntitiesService;
         private readonly WebConfigurationOptions _configuration;
 
-        public VerificationService(IBankingDetailsService bankingDetailsService, IDataEncryptionService dataEncryptionService, IHashingService hashingService,
+        public VerificationService(IBankingDetailsService bankingDetailsService, IDataEncryptionService dataEncryptionService, IAccountEncodingService encodingService,
             ILegalEntitiesService legalEntitiesService, WebConfigurationOptions configuration)
         {
             _bankingDetailsService = bankingDetailsService;
             _dataEncryptionService = dataEncryptionService;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
             _legalEntitiesService = legalEntitiesService;
             _configuration = configuration;
         }
 
         public async Task<string> BuildAchieveServiceUrl(string hashedAccountId, string hashedAccountLegalEntityId, Guid applicationId, string returnUrl, bool amendBankDetails = false)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId);
 
             var bankingDetails = await _bankingDetailsService.GetBankingDetails(accountId, applicationId, hashedAccountId);
 
