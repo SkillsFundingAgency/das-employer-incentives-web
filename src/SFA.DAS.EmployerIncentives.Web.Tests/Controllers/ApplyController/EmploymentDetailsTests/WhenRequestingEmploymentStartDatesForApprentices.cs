@@ -11,9 +11,9 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Validators;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.EmploymentDetailsTests
 {
@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
     {
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
-        private Mock<IHashingService> _hashingService;
+        private Mock<IAccountEncodingService> _encodingService;
         private Mock<IEmploymentStartDateValidator> _validator;
         private ApplyEmploymentDetailsController _sut;
         private Fixture _fixture;
@@ -36,12 +36,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Emplo
             _fixture = new Fixture();
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
-            _hashingService = new Mock<IHashingService>();
+            _encodingService = new Mock<IAccountEncodingService>();
             _validator = new Mock<IEmploymentStartDateValidator>();
             _mockConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
 
             _sut = new ApplyEmploymentDetailsController(_applicationService.Object, _legalEntitiesService.Object,
-                _hashingService.Object, _validator.Object, _mockConfiguration.Object);
+                _encodingService.Object, _validator.Object, _mockConfiguration.Object);
 
             _accountId = _fixture.Create<string>();
             _applicationId = Guid.NewGuid();

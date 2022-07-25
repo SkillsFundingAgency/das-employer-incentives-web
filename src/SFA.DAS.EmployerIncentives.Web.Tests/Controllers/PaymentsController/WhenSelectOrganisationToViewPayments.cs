@@ -10,7 +10,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
-using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
