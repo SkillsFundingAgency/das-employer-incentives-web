@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
             
             _appConfig = new Dictionary<string, string>
             {
-                { "EnvironmentName", "LOCAL" }
+                { "EnvironmentName", "LOCAL_ACCEPTANCE_TESTS" }
             };
         }
 
@@ -44,9 +44,9 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                    a.Sources.Clear();
                    a.AddInMemoryCollection(new Dictionary<string, string>
                         {
-                            { "EnvironmentName", "LOCAL" }
+                            { "EnvironmentName", "LOCAL_ACCEPTANCE_TESTS" }
                         });
-                   a.AddJsonFile("appsettings.development.json");
+                   a.AddJsonFile("appsettings.development.json"); 
                });
 
             builder

@@ -8,6 +8,8 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services.Authentication;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 {
@@ -28,14 +30,17 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             _actionResultHook = actionResultHook;
             _authContextHook = authContextHook;
 
+            var encodingConfig = File.ReadAllText(testContext.TestDirectory.Parent + "\\local.encoding.json");
+
             _appConfig = new Dictionary<string, string>
             {
-                { "EnvironmentName", "LOCAL" },
+                { "EnvironmentName", "LOCAL_ACCEPTANCE_TESTS" },
                 { "Identity:ClientId", "employerincentivesdev" },
                 { "Identity:ClientSecret", "secret" },
                 { "Identity:BaseAddress", @"https://localhost:8082/identity" },
                 { "Identity:Scopes", "openid profile" },
-                { "Identity:UsePkce", "false" }
+                { "Identity:UsePkce", "false" },
+                { "SFA.DAS.Encoding", encodingConfig }
             };
 
             if(!string.IsNullOrEmpty(_testContext.WebConfigurationOptions?.ApplicationShutterPageDate))
@@ -67,8 +72,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
                     s.Configure<WebConfigurationOptions>(o =>
                     {
-                        o.AllowedHashstringCharacters = _testContext.WebConfigurationOptions.AllowedHashstringCharacters;
-                        o.Hashstring = _testContext.WebConfigurationOptions.Hashstring;
                         o.AchieveServiceBaseUrl = _testContext.WebConfigurationOptions.AchieveServiceBaseUrl;
                         o.DataEncryptionServiceKey = _testContext.WebConfigurationOptions.DataEncryptionServiceKey;
                         o.ApplicationShutterPageDate = _testContext.WebConfigurationOptions.ApplicationShutterPageDate;

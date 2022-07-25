@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
-using SFA.DAS.HashingService;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
@@ -31,8 +31,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
                 _context.WebConfigurationOptions = new WebConfigurationOptions();
             }
 
-            _context.WebConfigurationOptions.AllowedHashstringCharacters = "46789BCDFGHJKLMNPRSTVWXY";
-            _context.WebConfigurationOptions.Hashstring = "SFA: digital apprenticeship service";
             _context.WebConfigurationOptions.RedisCacheConnectionString = "localhost";
             _context.WebConfigurationOptions.AchieveServiceBaseUrl = "https://test.achieveservice.com/service/provide-organisation-information";
             _context.WebConfigurationOptions.DataEncryptionServiceKey = "P5T1NjQ1xqo1FgFM8RG+Yg==";
@@ -50,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Bindings
 
             _context.Website = new TestWebsite(_context, hook, authHook);
             _context.WebsiteClient = _context.Website.CreateClient();
-            _context.HashingService = _context.Website.Services.GetService(typeof(IHashingService)) as IHashingService;
+            _context.EncodingService = _context.Website.Services.GetService(typeof(IAccountEncodingService)) as IAccountEncodingService;
         }
     }
 }
