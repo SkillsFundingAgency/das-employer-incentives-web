@@ -70,25 +70,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
             _testDataStore.Add<HttpResponseMessage>("Response", response);
         }
 
-        [Then(@"they can apply for the employer incentive")]
-        public void ThenTheyArePresentedWithALinkToApplyForTheEmployerIncentive()
-        {
-            var accountId = _testDataStore.Get<string>("HashedAccountId");
-            var accountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-            var response = _testDataStore.Get<HttpResponseMessage>("Response");
-            var viewResult = _testContext.ActionResult.LastViewResult;
-
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as HubPageViewModel;
-            model.Should().NotBeNull();
-            model.Should().HaveTitle("Hire a new apprentice payment");
-            model.AccountId.Should().Be(accountId);
-            model.AccountLegalEntityId.Should().Be(accountLegalEntityId);
-
-            response.Should().HaveTitle(model.Title);
-            response.Should().HaveLink("[data-linktype='hub-before-apply']", $"/{accountId}/{accountLegalEntityId}/before-you-start");
-        }
-
         [Then(@"they can view previous applications")]
         public void ThenTheyArePresentedWithALinkToViewPreviousApplications()
         {

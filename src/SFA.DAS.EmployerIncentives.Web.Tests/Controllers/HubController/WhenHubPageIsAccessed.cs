@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IApplicationService> _applicationService;
         private Mock<IOptions<ExternalLinksConfiguration>> _externalLinksConfiguration;
-        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -56,11 +55,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             _externalLinksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
             var linksConfig = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = _manageApprenticeshipSiteUrl };
             _externalLinksConfiguration.Setup(x => x.Value).Returns(linksConfig);
-            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
-            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Today.AddDays(1).ToString("dd MMM yyyy") };
-            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
-
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+            
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object);
         }
 
         [Test]
@@ -218,12 +214,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
         public async Task Then_the_bank_details_banner_content_should_be_not_shown_if_none_supplied_and_the_cut_off_date_has_elapsed_and_no_applications_submitted(BankDetailsStatus bankDetailsStatus)
         {
             // Arrange
-            var webConfig = new WebConfigurationOptions { ApplicationShutterPageDate = DateTime.Now.ToString() };
-            _webConfiguration.Setup(x => x.Value).Returns(webConfig);
             var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = new List<ApprenticeApplicationModel>(), FirstSubmittedApplicationId = null, BankDetailsStatus = bankDetailsStatus };
             _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
 
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
+            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object);
 
             // Act
             var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
@@ -233,117 +227,5 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HubController
             viewModel.ShowBankDetailsRequired.Should().BeFalse();
         }
 
-        [TestCase(true, false, false)]
-        [TestCase(false, true, false)]
-        [TestCase(true, true, false)]
-        [TestCase(false, false, true)]
-        public async Task Then_the_notification_banner_is_shown_if_other_banners_are_not_displayed(bool bankDetailsBannerShown, bool legalAgreementBannerShown, bool notificationBannerShown)
-        {
-            // Arrange
-            var applications = new List<ApprenticeApplicationModel>
-            {
-                _fixture.Build<ApprenticeApplicationModel>()
-                .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, legalAgreementBannerShown).Create())
-                .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, legalAgreementBannerShown).Create())
-                .Create()
-            };
-
-            var applicationsResponse = new GetApplicationsModel
-            {
-                ApprenticeApplications = applications,
-                FirstSubmittedApplicationId = Guid.NewGuid()
-            };
-            if (bankDetailsBannerShown)
-            {
-                applicationsResponse.BankDetailsStatus = BankDetailsStatus.NotSupplied;
-            }
-            else
-            {
-                applicationsResponse.BankDetailsStatus = BankDetailsStatus.Completed;
-            }
-
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
-
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowNotificationBanner.Should().Be(notificationBannerShown);
-        }
-        
-        [Test]
-        public async Task Then_the_notification_banner_is_shown_when_the_application_window_is_open()
-        {
-            // Arrange
-            var applications = new List<ApprenticeApplicationModel>
-            {
-                _fixture.Build<ApprenticeApplicationModel>()
-                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, false).Create())
-                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, false).Create())
-                    .Create()
-            };
-            var webConfiguration = new WebConfigurationOptions
-            {
-                ApplicationShutterPageDate = DateTime.Now.AddDays(1).ToString("dd MMM yyyy")
-            };
-
-            var applicationsResponse = new GetApplicationsModel
-            {
-                ApprenticeApplications = applications,
-                FirstSubmittedApplicationId = Guid.NewGuid(),
-                BankDetailsStatus = BankDetailsStatus.Completed
-            };
-
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
-
-            _webConfiguration.Setup(x => x.Value).Returns(webConfiguration);
-
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
-
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowNotificationBanner.Should().BeTrue();
-        }
-
-        [Test]
-        public async Task Then_the_notification_banner_is_not_shown_when_the_application_window_has_closed()
-        {
-            // Arrange
-            var applications = new List<ApprenticeApplicationModel>
-            {
-                _fixture.Build<ApprenticeApplicationModel>()
-                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, false).Create())
-                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>().With(p => p.RequiresNewEmployerAgreement, false).Create())
-                    .Create()
-            };
-            var webConfiguration = new WebConfigurationOptions
-            {
-                ApplicationShutterPageDate = DateTime.Now.ToString("dd MMM yyyy")
-            };
-
-            var applicationsResponse = new GetApplicationsModel
-            {
-                ApprenticeApplications = applications,
-                FirstSubmittedApplicationId = Guid.NewGuid(),
-                BankDetailsStatus = BankDetailsStatus.Completed
-            };
-
-            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(applicationsResponse);
-
-            _webConfiguration.Setup(x => x.Value).Returns(webConfiguration);
-
-            _sut = new Web.Controllers.HubController(_legalEntitiesService.Object, _applicationService.Object, _externalLinksConfiguration.Object, _webConfiguration.Object);
-            
-            // Act
-            var viewResult = await _sut.Index(_accountId, _accountLegalEntityId) as ViewResult;
-
-            // Assert
-            var viewModel = viewResult.Model as HubPageViewModel;
-            viewModel.ShowNotificationBanner.Should().BeFalse();
-        }
     }
 }

@@ -36,10 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Application\PreApplication.feature">
-      <Visible>$(UsingMicrosoftNETSdk)</Visible>
-      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Application\CancelApprenticeship.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
@@ -84,9 +80,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Features\Application\PreApplication.feature.cs">
-      <DependentUpon>PreApplication.feature</DependentUpon>
-    </Compile>
     <Compile Update="Features\Application\CancelApprenticeship.feature.cs">
       <DependentUpon>CancelApprenticeship.feature</DependentUpon>
     </Compile>
