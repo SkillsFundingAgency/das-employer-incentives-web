@@ -1,17 +1,21 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 
 namespace SFA.DAS.EmployerIncentives.Web.Extensions
 {
     public static class ApprenticeApplicationModelExtensions
     {
-        public static IQueryable<ApprenticeApplicationModel> Sort(this IQueryable<ApprenticeApplicationModel> applications, string sortOrder, string sortField)
+        public static IQueryable<ApprenticeApplicationModel> Sort(
+            this IQueryable<ApprenticeApplicationModel> applications, string sortOrder, string sortField)
         {
             if (sortOrder == ApplicationsSortOrder.Descending)
             {
                 if (sortField != ApplicationsSortField.ApprenticeName)
                 {
-                    applications = applications.OrderByDescending(sortField).ThenBy(x => x.ULN).ThenBy(x => x.ApprenticeName);
+                    applications = applications.OrderByDescending(sortField).ThenBy(x => x.ULN)
+                        .ThenBy(x => x.ApprenticeName);
                 }
                 else
                 {
@@ -32,7 +36,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
 
             return applications;
         }
-        
+
         public static ApprenticeApplicationModel SetInLearning(this ApprenticeApplicationModel model)
         {
             if (model.FirstPaymentStatus != null)
@@ -52,17 +56,21 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
         {
             if (model.FirstPaymentStatus != null)
             {
-                model.FirstPaymentStatus.IsClawedBack = model.FirstClawbackStatus != null && model.FirstClawbackStatus.IsClawedBack;
+                model.FirstPaymentStatus.IsClawedBack =
+                    model.FirstClawbackStatus != null && model.FirstClawbackStatus.IsClawedBack;
             }
+
             if (model.SecondPaymentStatus != null)
             {
-                model.SecondPaymentStatus.IsClawedBack = model.SecondClawbackStatus != null && model.SecondClawbackStatus.IsClawedBack;
+                model.SecondPaymentStatus.IsClawedBack =
+                    model.SecondClawbackStatus != null && model.SecondClawbackStatus.IsClawedBack;
             }
 
             return model;
         }
 
-        public static ApprenticeApplicationModel SetViewAgreementLink(this ApprenticeApplicationModel model, string viewAgreementLink)
+        public static ApprenticeApplicationModel SetViewAgreementLink(this ApprenticeApplicationModel model,
+            string viewAgreementLink)
         {
             if (model.FirstPaymentStatus != null)
             {
@@ -77,34 +85,73 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
-        public static IQueryable<ApprenticeApplicationModel> FilterByEmployerActions(this IQueryable<ApprenticeApplicationModel> applications)
+        public static ApprenticeApplicationModel SetEmploymentCheckStatusMessage(this ApprenticeApplicationModel model)
         {
-            return applications.Where(x => (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false || x.FirstPaymentStatus.RequiresNewEmployerAgreement == true))
-                                           || (x.SecondPaymentStatus != null && (x.SecondPaymentStatus.EmploymentCheckPassed == false || x.SecondPaymentStatus.RequiresNewEmployerAgreement == true)));
+            if (model.FirstPaymentStatus != null)
+            {
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.FirstPaymentStatus);
+            }
+
+            if (model.SecondPaymentStatus != null)
+            {
+                SetEmploymentCheckErrorMessagesForApplicableErrorCodes(model.SecondPaymentStatus);
+            }
+
+            return model;
         }
 
-        public static IQueryable<ApprenticeApplicationModel> FilterByPayments(this IQueryable<ApprenticeApplicationModel> applications)
+        private static void SetEmploymentCheckErrorMessagesForApplicableErrorCodes(PaymentStatusModel model)
         {
-            return applications.Where(x => x.FirstPaymentStatus.ShowPayments()|| x.SecondPaymentStatus.ShowPayments());
+            model.EmploymentCheckErrorMessages = new List<string>();
+            if (model.EmploymentCheckErrorCodes == null || !model.EmploymentCheckErrorCodes.Any())
+            {
+                return;
+            }
+
+            foreach (var errorCode in model.EmploymentCheckErrorCodes.Where(errorCode =>
+                         EmploymentCheckErrorCodes.DisplayText.ContainsKey(errorCode)))
+            {
+                model.EmploymentCheckErrorMessages.Add(EmploymentCheckErrorCodes.DisplayText[errorCode]);
+            }
         }
 
-        public static IQueryable<ApprenticeApplicationModel> FilterByStoppedOrWithdrawn(this IQueryable<ApprenticeApplicationModel> applications)
+        public static IQueryable<ApprenticeApplicationModel> FilterByEmployerActions(
+            this IQueryable<ApprenticeApplicationModel> applications)
         {
-            return applications.Where(x => (x.FirstPaymentStatus != null && 
-                                            (x.FirstPaymentStatus.PausePayments || x.FirstPaymentStatus.PaymentIsStopped ||
-                                             x.FirstPaymentStatus.WithdrawnByCompliance || x.FirstPaymentStatus.WithdrawnByEmployer)) ||
-                                             (x.SecondPaymentStatus != null && 
-                                              (x.SecondPaymentStatus.PausePayments || x.SecondPaymentStatus.PaymentIsStopped ||
-                                             x.SecondPaymentStatus.WithdrawnByCompliance || x.SecondPaymentStatus.WithdrawnByEmployer)));
+            return applications.Where(x =>
+                (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false ||
+                                                  x.FirstPaymentStatus.RequiresNewEmployerAgreement)));
+        }
+
+        public static IQueryable<ApprenticeApplicationModel> FilterByPayments(
+            this IQueryable<ApprenticeApplicationModel> applications)
+        {
+            return applications.Where(x => x.FirstPaymentStatus.ShowPayments() || x.SecondPaymentStatus.ShowPayments());
+        }
+
+        public static IQueryable<ApprenticeApplicationModel> FilterByStoppedOrWithdrawn(
+            this IQueryable<ApprenticeApplicationModel> applications)
+        {
+            return applications.Where(x => (x.FirstPaymentStatus != null &&
+                                            (x.FirstPaymentStatus.PausePayments ||
+                                             x.FirstPaymentStatus.PaymentIsStopped ||
+                                             x.FirstPaymentStatus.WithdrawnByCompliance ||
+                                             x.FirstPaymentStatus.WithdrawnByEmployer)) ||
+                                           (x.SecondPaymentStatus != null &&
+                                            (x.SecondPaymentStatus.PausePayments ||
+                                             x.SecondPaymentStatus.PaymentIsStopped ||
+                                             x.SecondPaymentStatus.WithdrawnByCompliance ||
+                                             x.SecondPaymentStatus.WithdrawnByEmployer)));
         }
 
         private static bool ShowPayments(this PaymentStatusModel paymentStatus)
         {
-            return (paymentStatus != null 
-                        && (paymentStatus.PaymentSent || paymentStatus.PaymentSentIsEstimated) 
-                        && paymentStatus.LearnerMatchFound && !paymentStatus.PausePayments && paymentStatus.InLearning && !paymentStatus.HasDataLock)
-                        && !paymentStatus.RequiresNewEmployerAgreement
-                        && (!paymentStatus.EmploymentCheckPassed.HasValue || paymentStatus.EmploymentCheckPassed.Value);
+            return (paymentStatus != null
+                    && (paymentStatus.PaymentSent || paymentStatus.PaymentSentIsEstimated)
+                    && paymentStatus.LearnerMatchFound && !paymentStatus.PausePayments && paymentStatus.InLearning &&
+                    !paymentStatus.HasDataLock)
+                   && !paymentStatus.RequiresNewEmployerAgreement
+                   && (!paymentStatus.EmploymentCheckPassed.HasValue || paymentStatus.EmploymentCheckPassed.Value);
         }
     }
 }

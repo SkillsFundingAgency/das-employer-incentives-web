@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
             _appConfig = new Dictionary<string, string>
             {
-                { "EnvironmentName", "LOCAL" },
+                { "EnvironmentName", "LOCAL_ACCEPTANCE_TESTS" },
                 { "Identity:ClientId", "employerincentivesdev" },
                 { "Identity:ClientSecret", "secret" },
                 { "Identity:BaseAddress", @"https://localhost:8082/identity" },
@@ -75,7 +75,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                     });
                     s.Configure<ExternalLinksConfiguration>(o =>
                     {
-
                         o.ManageApprenticeshipSiteUrl = _testContext.ExternalLinksOptions.ManageApprenticeshipSiteUrl;
                         o.CommitmentsSiteUrl = _testContext.ExternalLinksOptions.CommitmentsSiteUrl;
                         o.EmployerRecruitmentSiteUrl = _testContext.ExternalLinksOptions.EmployerRecruitmentSiteUrl;

@@ -78,3 +78,13 @@ Scenario: An employer who has an ineligible application due to a failed employme
 	Given an employer with an application with a failed employment check
 	When the employer views their applications
 	Then the message showing the application is ineligible is shown
+
+Scenario: An employer who has an ineligible application due to an employment check returning an error code
+	Given an employer with an application with a employment check error code of '<EmploymentCheckErrorCode>'
+	When the employer views their applications
+	Then the message showing the employment check has failed is shown with a message of '<EmploymentCheckErrorMessage>'
+	Examples:
+	| EmploymentCheckErrorCode	| EmploymentCheckErrorMessage									|
+	| NinoNotFound				| Check and update National Insurance number					|
+	| PAYENotFound				| Check and update PAYE scheme									|
+	| NinoAndPAYENotFound		| Check and update PAYE scheme and National Insurance number	|

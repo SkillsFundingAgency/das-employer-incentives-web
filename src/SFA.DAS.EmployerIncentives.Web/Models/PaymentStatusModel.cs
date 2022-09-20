@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerIncentives.Web.Models
 {
@@ -19,6 +20,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool WithdrawnByCompliance { get; set; }
         public bool IsClawedBack { get; set; }
         public bool? EmploymentCheckPassed { get; set; }
+        public List<string> EmploymentCheckErrorCodes { get; set; }
+        public List<string> EmploymentCheckErrorMessages { get; set; }
 
 
         public bool ShowPaymentStatus

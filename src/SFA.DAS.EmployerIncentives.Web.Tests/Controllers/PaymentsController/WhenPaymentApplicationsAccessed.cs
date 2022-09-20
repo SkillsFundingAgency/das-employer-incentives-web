@@ -24,6 +24,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         private Mock<IApplicationService> _applicationService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Mock<IOptions<ExternalLinksConfiguration>> _linksConfiguration;
+        private Mock<IOptions<WebConfigurationOptions>> _webConfiguration;
         private Fixture _fixture;
         private string _accountId;
         private string _accountLegalEntityId;
@@ -35,9 +36,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
         [SetUp]
         public void Arrange()
         {
+            _fixture = new Fixture();
             _applicationService = new Mock<IApplicationService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _linksConfiguration = new Mock<IOptions<ExternalLinksConfiguration>>();
+            _webConfiguration = new Mock<IOptions<WebConfigurationOptions>>();
+            _webConfiguration.Setup(x => x.Value).Returns(_fixture.Create<WebConfigurationOptions>());
             _manageApprenticeshipSiteUrl = $"http://{Guid.NewGuid()}";
 
             _linksConfiguration.Setup(m => m.Value).Returns(new ExternalLinksConfiguration
@@ -52,7 +56,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     HttpContext = new DefaultHttpContext()
                 }
             };
-            _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
             _sortOrder = ApplicationsSortOrder.Ascending;
@@ -474,8 +477,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
             viewModel.Applications.First().SecondPaymentStatus.EmploymentCheckPassed.Should().BeTrue();
         }
-
-        [TestCase("")]
+      [TestCase("")]
         [TestCase(null)]
         [TestCase(" ")]
         [TestCase("unknown")]
@@ -578,6 +580,91 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             viewModel.Applications.Count().Should().Be(3);
         }
 
+        [TestCase("NinoNotFound")]
+        [TestCase("PAYENotFound")]
+        [TestCase("NinoAndPAYENotFound")]
+        public async Task Then_the_mapped_employment_check_error_message_is_shown_if_available_for_the_error_code(string errorCode)
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .Without(p => p.EmploymentCheckPassed)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { errorCode })
+                        .Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .Without(p => p.EmploymentCheckPassed)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { errorCode })
+                        .Create())
+                    .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+            
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().Contain(EmploymentCheckErrorCodes.DisplayText[errorCode]);
+        }
+
+        [Test]
+        public async Task Then_the_default_employment_check_error_message_is_shown_if_no_message_mapped_for_the_error_code()
+        {
+            // Arrange
+            var applications = new List<ApprenticeApplicationModel>();
+            applications.Add(
+                _fixture.Build<ApprenticeApplicationModel>()
+                    .With(p => p.FirstPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error3" })
+                        .Create())
+                    .With(p => p.SecondPaymentStatus, _fixture.Build<PaymentStatusModel>()
+                        .With(p => p.EmploymentCheckPassed, false)
+                        .With(p => p.EmploymentCheckErrorCodes, new List<string> { "Error3" })
+                        .Create())
+                    .Create());
+
+            var getApplicationsResponse = new GetApplicationsModel { ApprenticeApplications = applications };
+
+            _applicationService.Setup(x => x.GetList(_accountId, _accountLegalEntityId)).ReturnsAsync(getApplicationsResponse);
+
+            var legalEntities = new List<LegalEntityModel> { new LegalEntityModel { AccountId = _accountId, AccountLegalEntityId = _accountLegalEntityId } };
+            _legalEntitiesService.Setup(x => x.Get(_accountId)).ReturnsAsync(legalEntities);
+            
+            _sut = new Web.Controllers.PaymentsController(_applicationService.Object, _legalEntitiesService.Object, _linksConfiguration.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+
+            // Act
+            var result = await _sut.ListPaymentsForLegalEntity(_accountId, _accountLegalEntityId, _sortOrder, _sortField, _filter) as ViewResult;
+
+            // Assert
+            var viewModel = result.Model as ViewApplicationsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Applications.First().FirstPaymentStatus.EmploymentCheckErrorMessages.Should().BeEmpty();
+        }
+
+        
         private List<ApprenticeApplicationModel> CreateApplicationListForFiltering()
         {
             var applications = new List<ApprenticeApplicationModel>
@@ -690,7 +777,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Create()
             };
             
-            return applications;
+            return applications;        
         }
     }
 }

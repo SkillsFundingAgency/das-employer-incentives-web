@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerIncentives.Web
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["EnvironmentName"].StartsWith("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 configBuilder.AddAzureTableStorage(options =>
                         {
@@ -81,8 +81,12 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddMvc(
                     options =>
                     {
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
+                        if (_configuration["EnvironmentName"] != "LOCAL")
+                        {
+                            options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                            options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
+                        }
+
                         options.Filters.Add(new ApplicationShutterFilterAttribute(_configuration));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;

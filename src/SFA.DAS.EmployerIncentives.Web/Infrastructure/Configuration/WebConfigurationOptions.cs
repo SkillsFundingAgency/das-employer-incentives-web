@@ -1,4 +1,5 @@
-﻿namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
+﻿
+namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration
 {
     public class WebConfigurationOptions
     {

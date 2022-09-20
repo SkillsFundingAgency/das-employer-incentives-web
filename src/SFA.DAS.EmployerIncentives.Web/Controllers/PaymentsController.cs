@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 m.SetClawedBackStatus();
                 m.SetInLearning();
                 m.SetViewAgreementLink(viewAgreementLink);
+                m.SetEmploymentCheckStatusMessage();
             });
 
             var applicationsWithActions = submittedApplications.FilterByEmployerActions();
