@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services
 {
@@ -86,6 +87,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Services
             {
                 return $"accounts/{accountId}/legalentity/{accountLegalEntityId}/vrfcasestatus";
            }
+        }
+
+        public static class UserEmployerAccounts
+        {
+            public static string GetEmployerAccountInfo(string userId, string email)
+            {
+                return $"AccountUsers/{userId}/accounts?{HttpUtility.UrlEncode(email)}";
+            }
         }
     }
 }

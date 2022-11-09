@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -143,6 +143,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IHashingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
             serviceCollection.AddClient<IEmailService>((c, s) => new EmailService(c));
+
+            serviceCollection.AddClient<ICustomClaims>((c,s) => new EmployerAccountPostAuthenticationClaimsHandler(c));
 
             return serviceCollection;
         }
