@@ -555,7 +555,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
 
             // Assert
             var viewModel = result.Model as ViewApplicationsViewModel;
-            viewModel.Applications.Count().Should().Be(3);
+            viewModel.Applications.Count().Should().Be(2);
         }
         
         [Test]
@@ -583,6 +583,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
             var applications = new List<ApprenticeApplicationModel>
             {
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -600,6 +601,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Without(x => x.SecondPaymentStatus)
                     .Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -614,6 +616,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Without(x => x.SecondPaymentStatus)
                     .Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -629,6 +632,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Without(x => x.SecondPaymentStatus)
                     .Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -642,6 +646,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                             .Create()
                     ).Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -658,6 +663,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Without(x => x.SecondPaymentStatus)
                     .Create(),
                 _fixture.Build<ApprenticeApplicationModel>()
+                    .With(x => x.IncentiveCompleted, false)
                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
@@ -672,7 +678,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.PaymentsController
                     .Without(x => x.SecondPaymentStatus)
                     .Create(),
                  _fixture.Build<ApprenticeApplicationModel>()
-                    .With(x => x.FirstPaymentStatus,
+                     .With(x => x.IncentiveCompleted, false)
+                     .With(x => x.FirstPaymentStatus,
                         _fixture.Build<PaymentStatusModel>()
                             .With(x => x.LearnerMatchFound, true)
                             .With(x => x.RequiresNewEmployerAgreement, true)
