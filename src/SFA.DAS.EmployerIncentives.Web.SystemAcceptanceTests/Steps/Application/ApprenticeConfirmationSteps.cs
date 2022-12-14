@@ -77,8 +77,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var apiResponse = _testData.ApplicationResponse;
 
             model.ApplicationId.Should().Be(_testData.ApplicationId);
-            model.AccountId.Should().Be(_testContext.HashingService.HashValue(_testData.AccountId));
-            model.AccountLegalEntityId.Should().Be(_testContext.HashingService.HashValue(_testData.AccountLegalEntityId));
+            model.AccountId.Should().Be(_testContext.EncodingService.Encode(_testData.AccountId));
+            model.AccountLegalEntityId.Should().Be(_testContext.EncodingService.Encode(_testData.AccountLegalEntityId));
             model.Apprentices.Count.Should().Be(apiResponse.Application.Apprenticeships.Count());
             model.TotalPaymentAmount.Should().Be(apiResponse.Application.Apprenticeships.Sum(x => x.TotalIncentiveAmount));
 

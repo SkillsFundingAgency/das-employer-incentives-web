@@ -3,7 +3,6 @@ using SFA.DAS.CosmosDb;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
-using SFA.DAS.HashingService;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
@@ -11,20 +10,21 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Users
 {
     public class UserService : IUserService
     {
         private readonly IAccountUsersReadOnlyRepository _accountUsersRepository;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
 
         public UserService(
             IAccountUsersReadOnlyRepository accountUsersRepository,
-            IHashingService hashingService)
+            IAccountEncodingService encodingService)
         {
             _accountUsersRepository = accountUsersRepository;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
         }
 
         public async Task<IEnumerable<Claim>> GetClaims(Guid userRef)
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Users
                         request.Roles.Contains(r.role.Value))
                     .ToListAsync();
 
-            return acccountUsers.ToUserModel(_hashingService);
+            return acccountUsers.ToUserModel(_encodingService);
         }
     }
 }

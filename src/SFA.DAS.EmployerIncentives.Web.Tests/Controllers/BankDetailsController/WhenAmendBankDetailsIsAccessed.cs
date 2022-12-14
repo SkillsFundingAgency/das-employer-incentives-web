@@ -9,9 +9,9 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
 {
@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         private Mock<IVerificationService> _verificationService;
         private Mock<IEmailService> _emailService;
         private Mock<IApplicationService> _applicationService;
-        private Mock<IHashingService> _hashingService;
+        private Mock<IAccountEncodingService> _encodingService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Web.Controllers.BankDetailsController _sut;
         private Fixture _fixture;
@@ -40,10 +40,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             _verificationService = new Mock<IVerificationService>();
             _emailService = new Mock<IEmailService>();
             _applicationService = new Mock<IApplicationService>();
-            _hashingService = new Mock<IHashingService>();
+            _encodingService = new Mock<IAccountEncodingService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _sut = new Web.Controllers.BankDetailsController(_verificationService.Object, _emailService.Object, _applicationService.Object, 
-                                                             _hashingService.Object, _legalEntitiesService.Object);
+                                                             _encodingService.Object, _legalEntitiesService.Object);
             var urlHelper = new Mock<IUrlHelper>();
             _sut.Url = urlHelper.Object;
             _sut.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
