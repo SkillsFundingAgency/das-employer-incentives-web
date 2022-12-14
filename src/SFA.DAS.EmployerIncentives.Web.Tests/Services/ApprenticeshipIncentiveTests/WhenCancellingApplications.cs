@@ -11,7 +11,7 @@ using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.HashingService;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveTests
 {
@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
     {
         private HttpClient _httpClient;
         private FakeHttpMessageHandler _httpClientHandlerFake;
-        private Mock<IHashingService> _hashingServiceMock;
+        private Mock<IAccountEncodingService> _accountEncodingServiceMock;
         private HttpResponseMessage _httpResponseMessage;
         private ApprenticeshipIncentiveService _sut;
         private Fixture _fixture;
@@ -33,14 +33,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
 
             _httpClientHandlerFake = new FakeHttpMessageHandler();
 
-            _hashingServiceMock = new Mock<IHashingService>();
+            _accountEncodingServiceMock = new Mock<IAccountEncodingService>();
 
             _httpClient = new HttpClient(_httpClientHandlerFake)
             {
                 BaseAddress = new Uri(_baseUrl)
             };
 
-            _sut = new ApprenticeshipIncentiveService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApprenticeshipIncentiveService(_httpClient, _accountEncodingServiceMock.Object);
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             var accountLegalEntityId = _fixture.Create<string>();
             var decodedAccountId = _fixture.Create<long>();
             var decodedAccountLegalEntityId = _fixture.Create<long>();
-            _hashingServiceMock.Setup(x => x.DecodeValue(accountId)).Returns(decodedAccountId);
-            _hashingServiceMock.Setup(x => x.DecodeValue(accountLegalEntityId)).Returns(decodedAccountLegalEntityId);
+            _accountEncodingServiceMock.Setup(x => x.Decode(accountId)).Returns(decodedAccountId);
+            _accountEncodingServiceMock.Setup(x => x.Decode(accountLegalEntityId)).Returns(decodedAccountLegalEntityId);
             
             var emailAddress = _fixture.Create<string>();
             var apprenticeshipIncentives = _fixture.CreateMany<ApprenticeshipIncentiveModel>(3).ToList();
