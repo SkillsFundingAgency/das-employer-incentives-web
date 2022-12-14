@@ -10,6 +10,7 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -72,12 +73,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [AllowAnonymous()]
         public async Task<IActionResult> SignOut()
         {
+            var idToken = await HttpContext.GetTokenAsync("id_token");
+
+            var authenticationProperties = new AuthenticationProperties
+            {
+                RedirectUri = "signoutcleanup",
+                AllowRefresh = true
+            };
+            authenticationProperties.Parameters.Clear();
+            authenticationProperties.Parameters.Add("id_token",idToken);
+            
             return SignOut(
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties
-                {
-                    RedirectUri = "signoutcleanup",
-                    AllowRefresh = true
-                },
+                authenticationProperties,
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 OpenIdConnectDefaults.AuthenticationScheme);
         }

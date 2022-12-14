@@ -143,17 +143,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Maintenance
             }
         }
 
-        [Then(@"the employer is shown the apply link")]
-        public void ThenTheEmployerIsShownTheApplyLink()
-        {
-            var hashedAccountId = _testDataStore.Get<string>("HashedAccountId");
-            var hashedAccountLegalEntityId = _testDataStore.Get<string>("HashedAccountLegalEntityId");
-            var response = _testDataStore.Get<HttpResponseMessage>("Response");
-            var url = $"/{hashedAccountId}/{hashedAccountLegalEntityId}/before-you-start";
-
-            response.Should().HaveLink("[data-linktype='hub-before-apply']", url);
-        }
-
         [Then(@"the employer is not shown the apply link")]
         public void ThenTheEmployerIsNotShownTheApplyLink()
         {
