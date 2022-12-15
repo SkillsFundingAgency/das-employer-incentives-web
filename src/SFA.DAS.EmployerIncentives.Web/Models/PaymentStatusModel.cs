@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Models
         public bool WithdrawnByCompliance { get; set; }
         public bool IsClawedBack { get; set; }
         public bool? EmploymentCheckPassed { get; set; }
+        public bool IncentiveCompleted { get; set; }
 
 
         public bool ShowPaymentStatus
