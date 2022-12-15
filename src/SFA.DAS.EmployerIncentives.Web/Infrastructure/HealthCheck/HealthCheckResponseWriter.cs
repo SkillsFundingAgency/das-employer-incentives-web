@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.HealthCheck
 {
@@ -13,16 +13,26 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure.HealthCheck
         {
             httpContext.Response.ContentType = "application/json";
 
-            var json = new JObject(
-                new JProperty("status", result.Status.ToString()),
-                new JProperty("results", new JObject(result.Entries.Select(pair =>
-                    new JProperty(pair.Key, new JObject(
-                        new JProperty("status", pair.Value.Status.ToString()),
-                        new JProperty("description", pair.Value.Description),
-                        new JProperty("data", new JObject(pair.Value.Data.Select(
-                            p => new JProperty(p.Key, p.Value))))))))));
-            return httpContext.Response.WriteAsync(
-                json.ToString(Formatting.Indented));
+            var json = JsonSerializer.Serialize(new
+            {
+                status = result.Status.ToString(),
+                results = result.Entries.ToDictionary(
+                   d => d.Key,
+                                 d => new
+                                 {
+                                     Status = d.Value.Status.ToString(),
+                                     Duration = d.Value.Duration.TotalSeconds.ToString(NumberFormatInfo.InvariantInfo),
+                                     d.Value.Description,
+                                     d.Value.Data
+                                 })
+            }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            return httpContext.Response.WriteAsync(json);
+
         }
     }
 }

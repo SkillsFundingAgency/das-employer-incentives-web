@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Newtonsoft.Json;
 using SFA.DAS.Encoding;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -105,7 +106,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 options.HttpsPort = _configuration["EnvironmentName"].StartsWith("LOCAL") ? 5001 : 443;
             });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry(new ApplicationInsightsServiceOptions { ConnectionString = _configuration["APPINSIGHTS_INSTRUMENTATIONKEY"] });
 
             if (_configuration["EnvironmentName"] == "LOCAL" || _configuration["EnvironmentName"] == "DEV")
             {
@@ -113,7 +114,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             }
             else
             {
-                services.AddStackExchangeRedisCache(options =>
+                services.AddDistributedRedisCache(options =>
                 {
                     options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:RedisCacheConnectionString");
                 });
