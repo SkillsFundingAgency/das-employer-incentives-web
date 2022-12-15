@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveTests
 {
@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             _httpClientHandlerFake.LastRequestMessage.Method.Should().Be(HttpMethod.Post);
             _httpClientHandlerFake.LastRequestMessage.RequestUri.Should().Be(uri);
             var json = await _httpClientHandlerFake.LastRequestMessage.Content.ReadAsStringAsync();
-            var withdrawRequest = JsonConvert.DeserializeObject<WithdrawRequest>(json);
+            var withdrawRequest = JsonSerializer.Deserialize<WithdrawRequest>(json);
 
             withdrawRequest.Should().NotBeNull();
             withdrawRequest.AccountId.Should().Be(decodedAccountId);

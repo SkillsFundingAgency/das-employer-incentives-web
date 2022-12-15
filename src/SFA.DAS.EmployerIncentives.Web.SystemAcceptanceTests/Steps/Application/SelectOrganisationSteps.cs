@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.OK)
-                  .WithBody(JsonConvert.SerializeObject(legalEntities, TestHelper.DefaultSerialiserSettings)));
+                  .WithBody(JsonSerializer.Serialize(legalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
+                  .WithBody(JsonSerializer.Serialize(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
                   .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -78,7 +78,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                       )
                   .RespondWith(
               Response.Create()
-                  .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First()))
+                  .WithBody(JsonSerializer.Serialize(testdata.LegalEntities.First()))
                   .WithStatusCode(HttpStatusCode.OK));
         }
 

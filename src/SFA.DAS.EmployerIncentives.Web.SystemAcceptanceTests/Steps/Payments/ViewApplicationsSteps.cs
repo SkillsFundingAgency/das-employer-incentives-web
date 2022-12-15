@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
@@ -142,7 +142,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Then(@"the employer is shown submitted applications")]
@@ -252,7 +252,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Then(@"the employer is shown only submitted applications")]
@@ -300,7 +300,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Then(@"the employer is shown no applications")]
@@ -340,7 +340,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Given(@"an employer account has multiple legal entities")]
@@ -367,7 +367,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(legalEntities)));
+                        .WithBody(JsonSerializer.Serialize(legalEntities)));
         }
 
         [Given(@"an employer with an application with a clawed back payment")]
@@ -449,7 +449,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnEmployerHasAnApplicationWithAnAgreementVersionThatNeedsSigning(Guid applicationId)
@@ -494,7 +494,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnEmployerHasAnApplicationWithAnAgreementVersionThatDoesNotNeedSigning(Guid applicationId)
@@ -536,7 +536,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnEmployerWithAStoppedApplication(Guid applicationId)
@@ -576,7 +576,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnApplicationWithAClawedBackPayment(Guid applicationId)
@@ -616,7 +616,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnApplicationWithAnUnsentClawedBackPayment(Guid applicationId)
@@ -656,7 +656,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         private void AnEmployerHasWithdrawnAnApplication(Guid applicationId)
@@ -696,7 +696,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
         private void AnEmployerWithAnApplicationWithdrawnByCompliance(Guid applicationId)
         {
@@ -737,7 +737,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
         
         private void AnApplicationWithAFailedEmploymentCheck(Guid applicationId)
@@ -780,7 +780,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Payments
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using TechTalk.SpecFlow;
@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(_testData.ApplicationResponse)));
+                      .WithBody(JsonSerializer.Serialize(_testData.ApplicationResponse)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(_testData.BankingDetails, TestHelper.DefaultSerialiserSettings))
+                        .WithBody(JsonSerializer.Serialize(_testData.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(_testData.LegalEntity)));
+                      .WithBody(JsonSerializer.Serialize(_testData.LegalEntity)));
         }
 
         [When(@"the employer wishes to update their bank details")]

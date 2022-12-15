@@ -1,7 +1,6 @@
 ﻿using AngleSharp.Html.Parser;
 using AutoFixture;
 using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.Matchers;
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(response)));
+                      .WithBody(JsonSerializer.Serialize(response)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_data.LegalEntity)));
+                        .WithBody(JsonSerializer.Serialize(_data.LegalEntity)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -146,7 +146,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                      .WithBody(JsonSerializer.Serialize(_data.ApplicationResponse))
                       .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -173,7 +173,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(_data.BankingDetails, TestHelper.DefaultSerialiserSettings))
+                        .WithBody(JsonSerializer.Serialize(_data.BankingDetails, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -187,7 +187,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                  Response.Create()
                      .WithStatusCode(HttpStatusCode.OK)
                      .WithHeader("Content-Type", "application/json")
-                     .WithBody(JsonConvert.SerializeObject(_data.LegalEntity)));
+                     .WithBody(JsonSerializer.Serialize(_data.LegalEntity)));
 
             var url = $"{_data.HashedAccountId}/bank-details/{_data.ApplicationId}{ReadyToEnterBankDetailsUrl}";
             var request = new HttpRequestMessage(HttpMethod.Post, url)
@@ -265,7 +265,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                  Response.Create()
                      .WithStatusCode(HttpStatusCode.OK)
                      .WithHeader("Content-Type", "application/json")
-                     .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
+                     .WithBody(JsonSerializer.Serialize(_data.ApplicationResponse))
                      .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -278,7 +278,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(_data.LegalEntity, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(_data.LegalEntity, TestHelper.DefaultSerialiserSettings)));
 
             var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
@@ -380,7 +380,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(response)));
+                      .WithBody(JsonSerializer.Serialize(response)));
         }
 
         [When(@"the employer has already provided bank details")]
@@ -402,7 +402,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(response)));
+                      .WithBody(JsonSerializer.Serialize(response)));
         }
 
         [Then(@"the employer is shown the application complete page")]

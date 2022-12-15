@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
                 return (response.StatusCode, default);
 
             var content = await response.Content.ReadAsStringAsync();
-            var responseValue = JsonConvert.DeserializeObject<T>(content);
+            var responseValue = JsonSerializer.Deserialize<T>(content);
 
             return (response.StatusCode, responseValue);
         }
