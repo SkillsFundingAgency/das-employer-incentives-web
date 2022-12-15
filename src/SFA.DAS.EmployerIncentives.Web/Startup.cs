@@ -18,6 +18,7 @@ using System.IO;
 using Newtonsoft.Json;
 using SFA.DAS.Encoding;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -114,7 +115,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             }
             else
             {
-                services.AddDistributedRedisCache(options =>
+                services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = _configuration.GetValue<string>("EmployerIncentivesWeb:RedisCacheConnectionString");
                 });
