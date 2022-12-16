@@ -111,7 +111,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                     options.ClaimActions.MapUniqueJsonKey("sub", "id");
 
-                    // TODO: add redirect code ?
                     // https://auth0.com/docs/quickstart/webapp/aspnet-core-3/01-login                    
                 });
 

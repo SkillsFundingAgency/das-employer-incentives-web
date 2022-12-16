@@ -136,27 +136,6 @@ namespace SFA.DAS.EmployerIncentives.Web
                 .AddVerificationService()
                 .AddDataProtection(_configuration);
 
-            /* if (!_environment.IsDevelopment())
-            {
-                services.AddHealthChecks()
-                    .AddCheck<ReservationsApiHealthCheck>(
-                        "Reservation Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<CommitmentsApiHealthCheck>(
-                        "Commitments Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<ProviderRelationshipsApiHealthCheck>(
-                        "ProviderRelationships Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<AccountApiHealthCheck>(
-                        "Accounts Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" });
-            } */
-
             if (!_environment.IsDevelopment())
             {
                 services.AddHealthChecks();
