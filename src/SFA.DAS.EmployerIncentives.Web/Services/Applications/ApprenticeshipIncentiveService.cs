@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -33,21 +34,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 TaskCreatedDate = DateTime.UtcNow
             };
 
-            foreach (var apprenticeshipIncentive in apprenticeshipIncentives)
-            {
-                var request = new WithdrawRequest(
-                    WithdrawalType.Employer,
-                    decodedAccountLegalEntityId,
-                    apprenticeshipIncentive.Uln,
-                    serviceRequest,
-                    _encodingService.Decode(hashedAccountId),
-                    emailAddress
-                    );
+            var applications = apprenticeshipIncentives.Select(apprenticeshipIncentive => new Application { AccountLegalEntityId = decodedAccountLegalEntityId, ULN = apprenticeshipIncentive.Uln }).ToList();
+            
+            var request = new WithdrawRequest(
+                WithdrawalType.Employer,
+                applications,
+                serviceRequest,
+                _encodingService.Decode(hashedAccountId),
+                emailAddress
+                );
 
-                using var response = await _client.PostAsJsonAsync(url, request);
+            using var response = await _client.PostAsJsonAsync(url, request);
 
-                response.EnsureSuccessStatusCode();
-            }
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<IEnumerable<ApprenticeshipIncentiveModel>> GetList(string accountId, string accountLegalEntityId)

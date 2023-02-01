@@ -77,6 +77,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Extensions
             return model;
         }
 
+        public static ApprenticeApplicationModel SetIncentiveCompleted(this ApprenticeApplicationModel model)
+        {
+            if (model.FirstPaymentStatus != null)
+            {
+                model.FirstPaymentStatus.IncentiveCompleted = model.IncentiveCompleted;
+            }
+
+            if (model.SecondPaymentStatus != null)
+            {
+                model.SecondPaymentStatus.IncentiveCompleted = model.IncentiveCompleted;
+            }
+
+            return model;
+        }
+
+
         public static IQueryable<ApprenticeApplicationModel> FilterByEmployerActions(this IQueryable<ApprenticeApplicationModel> applications)
         {
             return applications.Where(x => (x.FirstPaymentStatus != null && (x.FirstPaymentStatus.EmploymentCheckPassed == false || x.FirstPaymentStatus.RequiresNewEmployerAgreement == true))

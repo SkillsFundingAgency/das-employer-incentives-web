@@ -23,43 +23,23 @@ else
             </h1>
 
             <p data-paragraphtype="hub-heading" class="govuk-body govuk-!-margin-bottom-6">
-                @if (Model.ApplicationWindowClosed)
+                @if (Model.ShowBankDetailsRequired)
                 {
-                    if (Model.ShowBankDetailsRequired)
-                    {
-                        <text>View @Model.OrganisationName's applications or add their organisation and finance details.</text>
-                    }
-                    else
-                    {
-                        <text>View @Model.OrganisationName's applications or change their organisation and finance details.</text>
-                    }
+                    <text>View @Model.OrganisationName's applications or add their organisation and finance details.</text>
                 }
                 else
                 {
-                    if (Model.ShowBankDetailsRequired)
-                    {
-                        <text>Apply for the payment, view @Model.OrganisationName's applications or add their organisation and finance details.</text>
-                    }
-                    else if (Model.ShowAmendBankDetails)
-                    {
-                        <text>Apply for the payment, view @Model.OrganisationName's applications and change their organisation and finance details.</text>
-                    }
-                    else
-                    {
-                        <text>Apply for the payment and view @Model.OrganisationName's applications.</text>
-                    }
+                    <text>View @Model.OrganisationName's applications or change their organisation and finance details.</text>
                 }
             </p>
-                        
-            @if (Model.ApplicationWindowClosed)
-            {
-                <div class="govuk-details__text govuk-!-margin-bottom-6">
-                    <p class="govuk-body">
-                        Applications for the hire a new apprentice incentive payment closed on <span class="das-no-wrap">20 May 2022.</span> <br />
-                        <a class="govuk-link" data-linktype="incentive-payment-guidance" href="https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application" target="_blank" rel="noopener">View guidance on incentive payments for hiring a new apprentice (opens in a new tab)</a>
-                    </p>
-                </div>
-            }
+
+            <div class="govuk-details__text govuk-!-margin-bottom-6">
+                <p class="govuk-body">
+                    Applications for the hire a new apprentice incentive payment closed on <span class="das-no-wrap">20 May 2022.</span> <br />
+                    <a class="govuk-link" data-linktype="incentive-payment-guidance" href="https://help.apprenticeships.education.gov.uk/hc/en-gb/articles/4403316291090-Incentive-payment-for-hiring-a-new-apprentice-view-your-application" target="_blank" rel="noopener">View guidance on incentive payments for hiring a new apprentice (opens in a new tab)</a>
+                </p>
+            </div>
+            
         </div>
     </div>
 
@@ -103,46 +83,7 @@ else
                 </div>
             }
 
-            @if (Model.ShowNotificationBanner)
-            {
-                <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-                <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                    Important
-                </h2>
-                        </div>
-                        <div class="govuk-notification-banner__content">
-                            <p class="govuk-notification-banner__heading">
-                                Applications for incentive payments close <span class="das-no-wrap">20 May 2022</span>
-                            </p>
-                            <p class="govuk-body"> 
-                                You must submit applications for incentive payments for hiring a new apprentice by <span class="das-no-wrap">20 May 2022.</span> Training providers can't apply on your behalf.
-                            <p class="govuk-body">
-                                Employers can apply for a payment of £3000 for a new apprentice with an employment start date of <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 January 2022.</span> These apprentices must also have an apprenticeship start date of <span class="das-no-wrap">1 October 2021</span> to <span class="das-no-wrap">31 March 2022</span> registered on your account.
-                            </p>
-                        </div>
-                    </div>
-            }
-
             <div class="govuk-grid-row">
-                @if(!Model.ApplicationWindowClosed)
-                {
-                    <div class="govuk-grid-column-one-half">
-                        <h2 class="govuk-heading-m">
-                            <a asp-controller="Home"
-                               asp-action="BeforeStart"
-                               asp-route-accountid="@Model.AccountId"
-                               asp-route-accountlegalentityid="@Model.AccountLegalEntityId"
-                               class="govuk-link govuk-link--no-visited-state"
-                               data-linktype="hub-before-apply">
-                                Apply for the hire a new apprentice payment
-                            </a>
-                        </h2>
-                        <p class="govuk-body">
-                            @Model.OrganisationName can apply for a payment of £3,000 for eligible new apprentices.
-                        </p>
-                    </div>
-                }
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m">
                         <a asp-controller="Payments"
@@ -158,7 +99,7 @@ else
                         View @Model.OrganisationName's applications and estimated payments.
                     </p>
                 </div>
-                @if (Model.ShowAmendBankDetails && Model.ApplicationWindowClosed)
+                @if (Model.ShowAmendBankDetails)
                 {
                     <div class="govuk-grid-column-one-half">
                         <h2 class="govuk-heading-m">
@@ -180,28 +121,4 @@ else
         </div>
     </div>
 
-    @if (Model.ShowAmendBankDetails && !Model.ApplicationWindowClosed)
-    {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-half">
-                        <h2 class="govuk-heading-m">
-                            <a asp-controller="BankDetails"
-                               asp-action="AmendBankDetails"
-                               asp-route-accountid="@Model.AccountId"
-                               asp-route-applicationId="@Model.BankDetailsApplicationId"
-                               class="govuk-link govuk-link--no-visited-state"
-                               data-linktype="hub-amend-bank-details">
-                                Change organisation and finance details
-                            </a>
-                        </h2>
-                        <p class="govuk-body">
-                            Change @Model.OrganisationName's address, contact or bank account details.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 </main>

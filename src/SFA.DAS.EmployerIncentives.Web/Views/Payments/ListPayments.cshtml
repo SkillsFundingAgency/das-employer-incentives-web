@@ -79,12 +79,15 @@
                 <li>365 days of their apprenticeship for your second payment</li>
             </ul>
             <p class="govuk-body">
-                We will complete our checks, including cross-referencing the PAYE information. If the application is eligible, we will process the payments.
+                We will complete our checks, including cross-referencing the PAYE information. This can take up to 6 weeks. If the application is eligible, we will then process the payments in the next payment run.
+            </p>
+            <p class="govuk-body">
+                Your estimated payment date may change whilst these checks are taking place. You will receive an email from us if additional information is required to confirm your eligibility.
             </p>
             <p class="govuk-body">
                 You can track when your payments are due to be paid below.
             </p>
-            
+
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
@@ -138,7 +141,7 @@
                     </ul>
                 </div>
             </details>
-            
+
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
@@ -152,7 +155,7 @@
                 </div>
             </details>
 
-            @if(Model.ShowCancelLink)
+            @if (Model.ShowCancelLink)
             {
                 <p class="govuk-body">
                     <a href="@Model.CancelLink" class="govuk-link" data-linktype="cancel-application">Cancel an application</a>

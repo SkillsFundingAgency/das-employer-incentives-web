@@ -78,3 +78,8 @@ Scenario: An employer who has an ineligible application due to a failed employme
 	Given an employer with an application with a failed employment check
 	When the employer views their applications
 	Then the message showing the application is ineligible is shown
+
+Scenario: An employer with a completed employer incentive application
+	Given an employer with a completed application
+	When the employer views their applications
+	Then the message showing the application is stopped is not shown

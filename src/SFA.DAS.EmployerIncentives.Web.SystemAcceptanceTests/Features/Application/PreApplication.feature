@@ -5,10 +5,9 @@ Feature: PreApplication
 	I want to see the pre application information
 	So I can ensure I have all the information required during the application
 	
-Scenario: An employer is starting the application process
-	Given the employer is on the hub page
-	When the employer selects the Hire a new apprentice payment link
-	Then the employer is on the before you start page
+Scenario: An employer is unable to start the application process
+	Given the employer is on the hub page	
+	Then the employer is not shown the Hire a new apprentice payment link
 
 Scenario: An employer continues after viewing the before you start information
 	Given the employer is on the before you start page
