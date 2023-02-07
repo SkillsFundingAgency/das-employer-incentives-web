@@ -5,8 +5,6 @@
         public const string EmployerIncentivesWebConfiguration = "EmployerIncentivesWeb";
         public virtual string RedisCacheConnectionString { get; set; }
         public virtual string DataProtectionKeysDatabase { get; set; }
-        public virtual string AllowedHashstringCharacters { get; set; }
-        public virtual string Hashstring { get; set; }
         public virtual string ZenDeskSnippetKey { get; set; }
         public virtual string ZenDeskSectionId { get; set; }
         public virtual string ZenDeskCobrowsingSnippetKey { get; set; }

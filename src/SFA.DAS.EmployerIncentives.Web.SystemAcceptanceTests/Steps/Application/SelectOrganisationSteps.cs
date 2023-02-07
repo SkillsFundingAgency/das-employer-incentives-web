@@ -5,12 +5,12 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
-using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -23,12 +23,12 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testDataStore;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         public SelectOrganisationSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
             _testDataStore = _testContext.TestDataStore;
-            _hashingService = _testContext.HashingService;
+            _encodingService = _testContext.EncodingService;
         }
 
         [Given(@"an employer applying for a grant has multiple legal entities with eligible apprenticeships")]
@@ -37,9 +37,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var testdata = new TestData.Account.WithMultipleLegalEntitiesWithEligibleApprenticeships();
 
             var accountId = _testDataStore.GetOrCreate("AccountId", onCreate: () => testdata.AccountId);
-            _testDataStore.Add("HashedAccountId", _hashingService.HashValue(accountId));
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
-            _testDataStore.Add("HashedAccountLegalEntityId", _hashingService.HashValue(testdata.LegalEntities.First().AccountLegalEntityId));
+            _testDataStore.Add("HashedAccountId", _encodingService.Encode(accountId));
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _encodingService.Encode(accountId));
+            _testDataStore.Add("HashedAccountLegalEntityId", _encodingService.Encode(testdata.LegalEntities.First().AccountLegalEntityId));
 
             var legalEntities = _testDataStore.GetOrCreate("Legalentities", onCreate: () => testdata.LegalEntities);
 

@@ -12,8 +12,8 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.Email.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
 {
@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
         private Mock<IVerificationService> _verificationService;
         private Mock<IEmailService> _emailService;
         private Mock<IApplicationService> _applicationService;
-        private Mock<IHashingService> _hashingService;
+        private Mock<IAccountEncodingService> _encodingService;
         private Mock<ILegalEntitiesService> _legalEntitiesService;
         private Fixture _fixture;
         private Web.Controllers.BankDetailsController _sut;
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             _verificationService = new Mock<IVerificationService>();
             _emailService = new Mock<IEmailService>();
             _applicationService = new Mock<IApplicationService>();
-            _hashingService = new Mock<IHashingService>();
+            _encodingService = new Mock<IAccountEncodingService>();
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.BankDetailsController
             var user = new ClaimsPrincipal(identity);
 
             _sut = new Web.Controllers.BankDetailsController(_verificationService.Object, _emailService.Object,
-                _applicationService.Object, _hashingService.Object, _legalEntitiesService.Object)
+                _applicationService.Object, _encodingService.Object, _legalEntitiesService.Object)
             {
                 ControllerContext = new ControllerContext()
             };

@@ -11,12 +11,12 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using System;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     public class EmploymentStartDatesSteps : StepsBase
     {
         private readonly TestContext _testContext;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         private TestData.Account.WithInitialApplicationForASingleEntity _data;
         private HttpResponseMessage _response;
         private LegalEntityDto _legalEntity;
@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         public EmploymentStartDatesSteps(TestContext testContext) : base(testContext)
         {
             _testContext = testContext;
-            _hashingService = _testContext.HashingService;
+            _encodingService = _testContext.EncodingService;
             _data = new TestData.Account.WithInitialApplicationForASingleEntity();
             _legalEntity = _data.LegalEntities.First();
             _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _data.HashedAccountId);
@@ -125,7 +125,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer has selected apprentices for the application")]
         public async Task WhenTheEmployerHasSelectedApprenticesForTheApplication()
         {
-            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_encodingService).ToArray();
             var url = $"{_data.HashedAccountId}/apply/{_data.HashedAccountLegalEntityId}/select-apprentices";
             var form = new KeyValuePair<string, string>("SelectedApprenticeships", apprenticeships.First().Id);
 
@@ -142,7 +142,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies valid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesValidStartDatesForTheSelectedApprentices()
         {
-            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_encodingService).ToArray();
 
             var values = new List<KeyValuePair<string, string>>
             {
@@ -179,7 +179,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         [When(@"the employer supplies invalid start dates for the selected apprentices")]
         public async Task WhenTheEmployerSuppliesInvalidStartDatesForTheSelectedApprentices()
         {
-            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_encodingService).ToArray();
 
             var values = new List<KeyValuePair<string, string>>
             {
@@ -238,7 +238,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                         .WithBody(JsonConvert.SerializeObject(_data.ApplicationResponse))
                         .WithStatusCode(HttpStatusCode.OK));
 
-            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_hashingService).ToArray();
+            var apprenticeships = _data.Apprentices.ToApprenticeshipModel(_encodingService).ToArray();
 
             var values = new List<KeyValuePair<string, string>>
             {

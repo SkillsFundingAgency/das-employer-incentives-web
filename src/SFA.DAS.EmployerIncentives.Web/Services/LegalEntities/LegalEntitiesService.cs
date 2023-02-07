@@ -1,31 +1,31 @@
 ﻿using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 {
     public class LegalEntitiesService : ILegalEntitiesService
     {
         private readonly HttpClient _client;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
 
-        public LegalEntitiesService(HttpClient client, IHashingService hashingService)
+        public LegalEntitiesService(HttpClient client, IAccountEncodingService encodingService)
         {
             _client = client;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
         }
 
         public async Task<IEnumerable<LegalEntityModel>> Get(string accountId)
         {
             try
             {
-                var id = _hashingService.DecodeValue(accountId);
+                var id = _encodingService.Decode(accountId);
                 var url = OuterApiRoutes.LegalEntities.GetLegalEntities(id);
 
                 using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
                 var data = await JsonSerializer.DeserializeAsync<IEnumerable<LegalEntityDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                return data.ToLegalEntityModel(_hashingService);
+                return data.ToLegalEntityModel(_encodingService);
             }
             catch (IndexOutOfRangeException) // invalid hashed id
             {
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
         {
             try
             {
-                var accountLegalEntityId = _hashingService.DecodeValue(hashedAccountLegalEntityId);
+                var accountLegalEntityId = _encodingService.Decode(hashedAccountLegalEntityId);
                 return await Get(hashedAccountId, accountLegalEntityId);
             }
             catch (IndexOutOfRangeException) // hashed id contains invalid characters
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
         public async Task<LegalEntityModel> Get(string hashedAccountId, long accountLegalEntityId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId);
             var url = OuterApiRoutes.LegalEntities.GetLegalEntity(accountId, accountLegalEntityId);
 
             using var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -76,13 +76,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.LegalEntities
 
             var data = await JsonSerializer.DeserializeAsync<LegalEntityDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return data.ToLegalEntityModel(_hashingService);
+            return data.ToLegalEntityModel(_encodingService);
         }
 
         public async Task UpdateVrfCaseStatus(LegalEntityModel legalEntity)
         {
-            var accountId = _hashingService.DecodeValue(legalEntity.AccountId);
-            var accountLegalEntityId = _hashingService.DecodeValue(legalEntity.AccountLegalEntityId);
+            var accountId = _encodingService.Decode(legalEntity.AccountId);
+            var accountLegalEntityId = _encodingService.Decode(legalEntity.AccountLegalEntityId);
             
             var queryParams = new Dictionary<string, string>
             {

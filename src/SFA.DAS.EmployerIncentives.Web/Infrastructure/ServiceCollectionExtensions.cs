@@ -18,7 +18,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
-using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using StackExchange.Redis;
 using System;
@@ -27,6 +26,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
 using SFA.DAS.EmployerIncentives.Web.Validators;
+using SFA.DAS.Encoding;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Configuration;
 using SFA.DAS.GovUK.Auth.Services;
@@ -133,16 +133,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             return serviceCollection;
         }
 
-        public static IServiceCollection AddHashingService(this IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddSingleton<IHashingService>(c =>
-            {
-                var settings = c.GetService<IOptions<WebConfigurationOptions>>().Value;
-                return new HashingService.HashingService(settings.AllowedHashstringCharacters, settings.Hashstring);
-            });
-
-            return serviceCollection;
-        }
 
         public static IServiceCollection AddEmployerIncentivesService(this IServiceCollection serviceCollection)
         {
@@ -150,11 +140,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
             serviceCollection.AddTransient<IUserService, UserService>();
             serviceCollection.AddTransient<IEmploymentStartDateValidator, EmploymentStartDateValidator>();
+            serviceCollection.AddSingleton<IEncodingService, EncodingService>();
+            serviceCollection.AddSingleton<IAccountEncodingService, AccountEncodingService>();
 
-            serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IHashingService>()));
-            serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IHashingService>()));
+            serviceCollection.AddClient<ILegalEntitiesService>((c, s) => new LegalEntitiesService(c, s.GetRequiredService<IAccountEncodingService>()));
+            serviceCollection.AddClient<IApprenticesService>((c, s) => new ApprenticesService(c, s.GetRequiredService<IAccountEncodingService>()));
+            serviceCollection.AddClient<IApplicationService>((c, s) => new ApplicationService(c, s.GetRequiredService<IAccountEncodingService>()));
+            serviceCollection.AddClient<IApprenticeshipIncentiveService>((c, s) => new ApprenticeshipIncentiveService(c, s.GetRequiredService<IAccountEncodingService>()));
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
             serviceCollection.AddClient<IEmailService>((c, s) => new EmailService(c));
 
@@ -266,7 +258,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddTransient<IVerificationService>(s => new VerificationService(
                 s.GetService<IBankingDetailsService>(),
                 s.GetService<IDataEncryptionService>(),
-                s.GetService<IHashingService>(),
+                s.GetService<IAccountEncodingService>(),
                 s.GetService<ILegalEntitiesService>(),
                 s.GetService<IOptions<WebConfigurationOptions>>().Value
             ));

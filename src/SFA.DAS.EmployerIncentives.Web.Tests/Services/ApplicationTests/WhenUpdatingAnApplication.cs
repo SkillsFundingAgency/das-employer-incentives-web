@@ -4,13 +4,13 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.HashingService;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 {
@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 
         private HttpClient _httpClient;
         private FakeHttpMessageHandler _httpClientHandlerFake;
-        private Mock<IHashingService> _hashingServiceMock;
+        private Mock<IAccountEncodingService> _encodingServiceMock;
         private HttpResponseMessage _httpResponseMessage;
         private Guid _applicationId;
         private string _accountHashedId;
@@ -45,13 +45,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
             _httpClientHandlerFake = new FakeHttpMessageHandler();
             _httpResponseMessage = new HttpResponseMessage(HttpStatusCode.Accepted);
 
-            _hashingServiceMock = new Mock<IHashingService>();
-            _hashingServiceMock.Setup(x => x.DecodeValue(It.IsAny<string>())).Returns((string s) => Convert.ToInt64(s));
+            _encodingServiceMock = new Mock<IAccountEncodingService>();
+            _encodingServiceMock.Setup(x => x.Decode(It.IsAny<string>())).Returns((string s) => Convert.ToInt64(s));
 
             _httpClient = new HttpClient(_httpClientHandlerFake);
             _httpClient.BaseAddress = new Uri(_baseUrl);
 
-            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApplicationService(_httpClient, _encodingServiceMock.Object);
         }
 
         [Test]

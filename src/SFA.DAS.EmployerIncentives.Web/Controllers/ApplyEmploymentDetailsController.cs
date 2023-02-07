@@ -9,9 +9,9 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Validators;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
@@ -19,19 +19,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class ApplyEmploymentDetailsController : ControllerBase
     {
         private readonly IApplicationService _applicationService;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         private readonly IEmploymentStartDateValidator _employmentStartDateValidator;
         private readonly ExternalLinksConfiguration _configuration;
 
         public ApplyEmploymentDetailsController(
             IApplicationService applicationService,
             ILegalEntitiesService legalEntityService,
-            IHashingService hashingService,
+            IAccountEncodingService encodingService,
             IEmploymentStartDateValidator employmentStartDateValidator,
             IOptions<ExternalLinksConfiguration> configuration) : base(legalEntityService)
         {
             _applicationService = applicationService;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
             _employmentStartDateValidator = employmentStartDateValidator;
             _configuration = configuration.Value;
         }
@@ -138,7 +138,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             var confirmRequest = new ApprenticeshipDetailsRequest
             {
-                AccountId = _hashingService.DecodeValue(application.AccountId),
+                AccountId = _encodingService.Decode(application.AccountId),
                 ApplicationId = application.ApplicationId,
                 ApprenticeshipDetails = new List<ApprenticeshipDetailsDto>()
             };
@@ -148,7 +148,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
                 var employmentStartDate = new DateTime(request.EmploymentStartDateYears[index].Value, request.EmploymentStartDateMonths[index].Value, request.EmploymentStartDateDays[index].Value);
                 var employmentDetails = new ApprenticeshipDetailsDto
                 {
-                    ApprenticeId = _hashingService.DecodeValue(request.ApprenticeshipIds[index]),
+                    ApprenticeId = _encodingService.Decode(request.ApprenticeshipIds[index]),
                     EmploymentStartDate = employmentStartDate
                 };
                 confirmRequest.ApprenticeshipDetails.Add(employmentDetails);

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Configuration.AzureTableStorage;
@@ -16,6 +15,8 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Newtonsoft.Json;
+using SFA.DAS.Encoding;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -24,36 +25,36 @@ namespace SFA.DAS.EmployerIncentives.Web
     {
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
+        private const string EncodingConfigKey = "SFA.DAS.Encoding";
 
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
             var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Directory.GetCurrentDirectory());
+
+            if (!configuration["EnvironmentName"]
+                    .Equals("LOCAL_ACCEPTANCE_TESTS", StringComparison.CurrentCultureIgnoreCase))
+            {
 #if DEBUG
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.development.json", true)
+                configBuilder.AddJsonFile("appsettings.json", true);
+                configBuilder.AddJsonFile("appsettings.development.json", true);
 #endif
-                .AddEnvironmentVariables();
+                configBuilder.AddEnvironmentVariables();
 
-            if (!configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
-            {
                 configBuilder.AddAzureTableStorage(options =>
-                        {
-                            options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                            options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                            options.EnvironmentName = configuration["EnvironmentName"];
-                            options.PreFixConfigurationKeys = false;
-                        }
-                    );
+                    {
+                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                        options.EnvironmentName = configuration["EnvironmentName"];
+                        options.PreFixConfigurationKeys = false;
+                        options.ConfigurationKeysRawJsonResult = new[] { EncodingConfigKey };
+                    }
+                );
+            }
 
-                _configuration = configBuilder.Build();
-            }
-            else
-            {
-                _configuration = configuration;
-            }
+            _configuration = configBuilder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -71,7 +72,11 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.Configure<CosmosDbConfigurationOptions>(_configuration.GetSection(CosmosDbConfigurationOptions.CosmosDbConfiguration));
             services.Configure<IdentityServerOptions>(_configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
             services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
-
+            
+            var encodingConfigJson = _configuration.GetSection(EncodingConfigKey).Value;
+            var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+            services.AddSingleton(encodingConfig);
+            
             services.AddAuthorizationPolicies();
             services.AddAuthorization<DefaultAuthorizationContextProvider>();
             services.AddEmployerAuthentication(_configuration);
@@ -79,10 +84,15 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddMvc(
-                    options =>
-                    {
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
-                        options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
+                options =>
+                {
+                        if (!_configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+                        {
+
+                            options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
+                            options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
+                        }
+
                         options.Filters.Add(new ApplicationShutterFilterAttribute(_configuration));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
@@ -92,7 +102,7 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.AddHttpsRedirection(options =>
             {
-                options.HttpsPort = _configuration["EnvironmentName"] == "LOCAL" ? 5001 : 443;
+                options.HttpsPort = _configuration["EnvironmentName"].StartsWith("LOCAL") ? 5001 : 443;
             });
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
@@ -121,7 +131,6 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".EmployerIncentives.AntiForgery", HttpOnly = false });
 
             services
-                .AddHashingService()
                 .AddEmployerIncentivesService()
                 .AddDataEncryptionService()
                 .AddVerificationService()

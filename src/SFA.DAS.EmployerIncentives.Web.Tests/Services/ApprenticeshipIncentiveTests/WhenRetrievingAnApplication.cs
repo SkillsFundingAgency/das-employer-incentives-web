@@ -4,12 +4,12 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.HashingService;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveTests
 {
@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
     {
         private HttpClient _httpClient;
         private FakeHttpMessageHandler _httpClientHandlerFake;
-        private Mock<IHashingService> _hashingServiceMock;
+        private Mock<IAccountEncodingService> _encodingServiceMock;
         private HttpResponseMessage _httpResponseMessage;
         private ApplicationService _sut;
         private Fixture _fixture;
@@ -31,15 +31,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
 
             _httpClientHandlerFake = new FakeHttpMessageHandler();
 
-            _hashingServiceMock = new Mock<IHashingService>();
-            _hashingServiceMock.Setup(x => x.DecodeValue(It.IsAny<string>())).Returns((string s) => Convert.ToInt64(s));
+            _encodingServiceMock = new Mock<IAccountEncodingService>();
+            _encodingServiceMock.Setup(x => x.Decode(It.IsAny<string>())).Returns((string s) => Convert.ToInt64(s));
 
             _httpClient = new HttpClient(_httpClientHandlerFake)
             {
                 BaseAddress = new Uri(_baseUrl)
             };
 
-            _sut = new ApplicationService(_httpClient, _hashingServiceMock.Object);
+            _sut = new ApplicationService(_httpClient, _encodingServiceMock.Object);
         }
 
         [Test]

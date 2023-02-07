@@ -2,13 +2,13 @@
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
 {
@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public TestCosmosDb ReadStore { get; set; }        
         public HttpClient WebsiteClient { get; set; }
         public TestEmployerIncentivesApi EmployerIncentivesApi { get; set; }
-        public IHashingService HashingService { get; set; }
+        public IAccountEncodingService EncodingService { get; set; }
         public TestDataStore TestDataStore { get; set; }
         public List<IHook> Hooks { get; set; }
         public List<Claim> Claims { get; set; }
