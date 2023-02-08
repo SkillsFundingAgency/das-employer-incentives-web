@@ -198,6 +198,10 @@
                                     "value": "[parameters('environmentName')]"
                                 },
                                 {
+                                    "name": "ResourceEnvironmentName",
+                                    "value": "[parameters('resourceEnvironmentName')]"
+                                },
+                                {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                     "value": "[reference(concat('app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
