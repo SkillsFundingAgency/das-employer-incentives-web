@@ -19,17 +19,18 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
-using SFA.DAS.EmployerIncentives.Web.Validators;
-using SFA.DAS.Encoding;
-using SFA.DAS.GovUK.Auth.AppStart;
-using SFA.DAS.GovUK.Auth.Configuration;
-using SFA.DAS.GovUK.Auth.Services;
 using SFA.DAS.Http;
 using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
+using SFA.DAS.EmployerIncentives.Web.Validators;
+using SFA.DAS.Encoding;
+using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Configuration;
+using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 {

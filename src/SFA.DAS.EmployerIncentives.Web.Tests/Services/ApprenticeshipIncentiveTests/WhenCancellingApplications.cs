@@ -20,9 +20,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
     {
         private HttpClient _httpClient;
         private FakeHttpMessageHandler _httpClientHandlerFake;
-        private Mock<IAccountEncodingService> _accountEncodingServiceMock;
         private HttpResponseMessage _httpResponseMessage;
         private ApprenticeshipIncentiveService _sut;
+        private Mock<IAccountEncodingService> _encodingServiceMock;
         private Fixture _fixture;
         private readonly string _baseUrl = "http://www.someurl.com";
 
@@ -32,15 +32,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             _fixture = new Fixture();
 
             _httpClientHandlerFake = new FakeHttpMessageHandler();
-
-            _accountEncodingServiceMock = new Mock<IAccountEncodingService>();
-
+            
             _httpClient = new HttpClient(_httpClientHandlerFake)
             {
                 BaseAddress = new Uri(_baseUrl)
             };
 
-            _sut = new ApprenticeshipIncentiveService(_httpClient, _accountEncodingServiceMock.Object);
+            _encodingServiceMock = new Mock<IAccountEncodingService>();
+
+            _sut = new ApprenticeshipIncentiveService(_httpClient, _encodingServiceMock.Object);
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApprenticeshipIncentiveT
             var accountLegalEntityId = _fixture.Create<string>();
             var decodedAccountId = _fixture.Create<long>();
             var decodedAccountLegalEntityId = _fixture.Create<long>();
-            _accountEncodingServiceMock.Setup(x => x.Decode(accountId)).Returns(decodedAccountId);
-            _accountEncodingServiceMock.Setup(x => x.Decode(accountLegalEntityId)).Returns(decodedAccountLegalEntityId);
+            _encodingServiceMock.Setup(x => x.Decode(accountId)).Returns(decodedAccountId);
+            _encodingServiceMock.Setup(x => x.Decode(accountLegalEntityId)).Returns(decodedAccountLegalEntityId);
             
             var emailAddress = _fixture.Create<string>();
             var apprenticeshipIncentives = _fixture.CreateMany<ApprenticeshipIncentiveModel>(3).ToList();

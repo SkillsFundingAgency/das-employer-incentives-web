@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 WithdrawalType.Employer,
                 applications,
                 serviceRequest,
-                 _encodingService.Decode(hashedAccountId),
+                _encodingService.Decode(hashedAccountId),
                 emailAddress
                 );
 
