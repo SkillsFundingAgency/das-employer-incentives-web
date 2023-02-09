@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -37,6 +36,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
         }
 
         public static StringContent GetStringContent(this object obj)
-            => new StringContent(JsonConvert.SerializeObject(obj), Encoding.Default, "application/json");
+            => new StringContent(JsonConvert.SerializeObject(obj), System.Text.Encoding.Default, "application/json");
     }
 }

@@ -7,25 +7,25 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
-using SFA.DAS.HashingService;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 {
     public class ApprenticeshipIncentiveService : IApprenticeshipIncentiveService
     {
         private readonly HttpClient _client;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
 
-        public ApprenticeshipIncentiveService(HttpClient client, IHashingService hashingService)
+        public ApprenticeshipIncentiveService(HttpClient client, IAccountEncodingService encodingService)
         {
             _client = client;
-            _hashingService = hashingService;
+            _encodingService = encodingService;
         }
 
         public async Task Cancel(string accountLegalEntityId, IEnumerable<ApprenticeshipIncentiveModel> apprenticeshipIncentives,
             string hashedAccountId, string emailAddress)
         {
-            var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
+            var decodedAccountLegalEntityId = _encodingService.Decode(accountLegalEntityId);
 
             var url = $"withdrawals";
             var serviceRequest = new ServiceRequest()
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
                 WithdrawalType.Employer,
                 applications,
                 serviceRequest,
-                _hashingService.DecodeValue(hashedAccountId),
+                _encodingService.Decode(hashedAccountId),
                 emailAddress
                 );
 
@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications
 
         public async Task<IEnumerable<ApprenticeshipIncentiveModel>> GetList(string accountId, string accountLegalEntityId)
         {
-            var decodedAccountId = _hashingService.DecodeValue(accountId);
-            var decodedAccountLegalEntityId = _hashingService.DecodeValue(accountLegalEntityId);
+            var decodedAccountId = _encodingService.Decode(accountId);
+            var decodedAccountLegalEntityId = _encodingService.Decode(accountLegalEntityId);
             using var response = await _client.GetAsync($"accounts/{decodedAccountId}/legalentities/{decodedAccountLegalEntityId}/apprenticeshipIncentives", HttpCompletionOption.ResponseHeadersRead);
 
             if (response.StatusCode == HttpStatusCode.NotFound)

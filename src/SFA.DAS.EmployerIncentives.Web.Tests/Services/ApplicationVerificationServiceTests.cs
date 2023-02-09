@@ -9,7 +9,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -47,8 +46,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var bankDetailsServiceMock = new Mock<IBankingDetailsService>();
             bankDetailsServiceMock.Setup(x => x.GetBankingDetails(accountId, applicationId, hashedAccountId)).ReturnsAsync(bankDetails);
 
-            var hashingServiceMock = new Mock<IHashingService>();
-            hashingServiceMock.Setup(x => x.DecodeValue(hashedAccountId)).Returns(accountId);
+            var encodingServiceMock = new Mock<IAccountEncodingService>();
+            encodingServiceMock.Setup(x => x.Decode(hashedAccountId)).Returns(accountId);
             
             var legalEntitiesServiceMock = new Mock<ILegalEntitiesService>();
             var legalEntity = new LegalEntityModel
@@ -75,7 +74,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             var expectedUrl = $"{achieveServiceBaseUrl}?journey=new&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
 
-            var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, legalEntitiesServiceMock.Object, webConfigurationOptionsMock.Object);
+            var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, encodingServiceMock.Object, legalEntitiesServiceMock.Object, webConfigurationOptionsMock.Object);
 
             // Act
             var actual = await sut.BuildAchieveServiceUrl(hashedAccountId, hashedAccountLegalEntityId, applicationId, returnUrl);
@@ -112,9 +111,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var bankDetailsServiceMock = new Mock<IBankingDetailsService>();
             bankDetailsServiceMock.Setup(x => x.GetBankingDetails(accountId, applicationId, hashedAccountId)).ReturnsAsync(bankDetails);
 
-            var hashingServiceMock = new Mock<IHashingService>();
-            hashingServiceMock.Setup(x => x.DecodeValue(hashedAccountId)).Returns(accountId);
-            hashingServiceMock.Setup(x => x.HashValue(legalEntityId)).Returns(hashedLegalEntityId);
+            var encodingServiceMock = new Mock<IAccountEncodingService>();
+            encodingServiceMock.Setup(x => x.Decode(hashedAccountId)).Returns(accountId);
+            encodingServiceMock.Setup(x => x.Encode(legalEntityId)).Returns(hashedLegalEntityId);
 
             var legalEntitiesServiceMock = new Mock<ILegalEntitiesService>();
             var legalEntity = new LegalEntityModel
@@ -140,7 +139,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
 
             var expectedUrl = $"https://dfeuat.achieveservice.com/service/provide-organisation-information?journey=amend&return={returnUrl.ToUrlString()}&data={encryptedData.ToUrlString()}";
 
-            var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, hashingServiceMock.Object, legalEntitiesServiceMock.Object, webConfigurationOptionsMock.Object);
+            var sut = new VerificationService(bankDetailsServiceMock.Object, dataEncryptionServiceMock.Object, encodingServiceMock.Object, legalEntitiesServiceMock.Object, webConfigurationOptionsMock.Object);
 
             // Act
             var actual = await sut.BuildAchieveServiceUrl(hashedAccountId, hashedAccountLegalEntityId, applicationId, returnUrl, amendBankDetails: true);

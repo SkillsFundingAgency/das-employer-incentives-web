@@ -7,12 +7,12 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Cancel;
-using SFA.DAS.HashingService;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -25,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
     {
         private readonly TestContext _testContext;
         private readonly TestDataStore _testData;
-        private readonly IHashingService _hashingService;
+        private readonly IAccountEncodingService _encodingService;
         private HttpResponseMessage _continueNavigationResponse;
         private List<ApprenticeshipIncentiveModel> _apprenticeshipData;
         private LegalEntityDto _legalEntity;
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
         {
             _testContext = testContext;
             _testData = _testContext.TestDataStore;
-            _hashingService = _testContext.HashingService;
+            _encodingService = _testContext.EncodingService;
             _data = new TestData.Account.WithPreviousApprenticeshipIncentiveForFirstLegalEntity();
         }
 
@@ -46,10 +46,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _legalEntity = _data.LegalEntities.First();
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => _data.AccountId);
-            _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
+            _testData.Add("HashedAccountId", _encodingService.Encode(accountId));
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _encodingService.Encode(accountId));
             var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => _legalEntity.AccountLegalEntityId);
-            _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
+            _testData.Add("HashedAccountLegalEntityId", _encodingService.Encode(accountLegalEntityId));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -94,10 +94,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             _legalEntity = _data.LegalEntities.First();
 
             var accountId = _testData.GetOrCreate("AccountId", onCreate: () => _data.AccountId);
-            _testData.Add("HashedAccountId", _hashingService.HashValue(accountId));
-            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _hashingService.HashValue(accountId));
+            _testData.Add("HashedAccountId", _encodingService.Encode(accountId));
+            _testContext.AddOrReplaceClaim(EmployerClaimTypes.Account, _encodingService.Encode(accountId));
             var accountLegalEntityId = _testData.GetOrCreate("AccountLegalEntityId", onCreate: () => _legalEntity.AccountLegalEntityId);
-            _testData.Add("HashedAccountLegalEntityId", _hashingService.HashValue(accountLegalEntityId));
+            _testData.Add("HashedAccountLegalEntityId", _encodingService.Encode(accountLegalEntityId));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(

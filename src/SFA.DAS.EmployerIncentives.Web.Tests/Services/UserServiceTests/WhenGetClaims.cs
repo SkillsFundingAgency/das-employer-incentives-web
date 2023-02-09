@@ -5,11 +5,9 @@ using Microsoft.Azure.Documents.Linq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
-using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Users;
 using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +16,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
 {
@@ -27,7 +26,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
         private UserService _sut;
         private Fixture _fixture;
         private Mock<IAccountUsersReadOnlyRepository> _mockAccountUsersReadOnlyRepository;
-        private Mock<IHashingService> _mockHashingService;
+        private Mock<IAccountEncodingService> _mockEncodingService;
 
         [SetUp]
         public void Arrange()
@@ -35,9 +34,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
             _fixture = new Fixture();
 
             _mockAccountUsersReadOnlyRepository = new Mock<IAccountUsersReadOnlyRepository>();
-            _mockHashingService = new Mock<IHashingService>();
+            _mockEncodingService = new Mock<IAccountEncodingService>();
 
-            _sut = new UserService(_mockAccountUsersReadOnlyRepository.Object, _mockHashingService.Object);
+            _sut = new UserService(_mockAccountUsersReadOnlyRepository.Object, _mockEncodingService.Object);
         }
 
         [Test]
@@ -55,7 +54,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
                 a.role = UserRole.Viewer;
                 var hashedValue = $"HASH{a.accountId}";
 
-                _mockHashingService.Setup(m => m.HashValue(a.accountId)).Returns(hashedValue);
+                _mockEncodingService.Setup(m => m.Encode(a.accountId)).Returns(hashedValue);
             });
 
             var documentQuery = new FakeDocumentQuery<AccountUsers>(accountUsers);
@@ -92,7 +91,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services.ApplicationTests
                 {
                     expected.Add(new Claim(EmployerClaimTypes.Account, hashedValue));
                 }
-                _mockHashingService.Setup(m => m.HashValue(a.accountId)).Returns(hashedValue);
+                _mockEncodingService.Setup(m => m.Encode(a.accountId)).Returns(hashedValue);
                 count++;
             });
 

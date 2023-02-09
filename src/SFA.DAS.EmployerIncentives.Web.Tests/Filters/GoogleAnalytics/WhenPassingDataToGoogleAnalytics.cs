@@ -12,9 +12,9 @@ using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using AutoFixture;
 using System;
 using Moq;
-using SFA.DAS.HashingService;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Filters
 {
@@ -131,15 +131,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Filters
             _routeData.Values.Add("applicationId", _applicationId);
 
             var unhashedAccountId = _fixture.Create<long>();
-            var hashingService = new Mock<IHashingService>();
+            var encodingService = new Mock<IAccountEncodingService>();
             var hashedAccountLegalEntityId = _fixture.Create<string>();
-            hashingService.Setup(x => x.HashValue(It.IsAny<string>())).Returns(hashedAccountLegalEntityId);
+            encodingService.Setup(x => x.Encode(It.IsAny<long>())).Returns(hashedAccountLegalEntityId);
 
             var applicationService = new Mock<IApplicationService>();
             applicationService.Setup(x => x.GetApplicationLegalEntity(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(_accountLegalEntityId);
 
             var services = new ServiceCollection();
-            services.AddScoped<IHashingService>(x => hashingService.Object);
+            services.AddScoped<IAccountEncodingService>(x => encodingService.Object);
             services.AddScoped<IApplicationService>(x => applicationService.Object);
 
             _httpContext.RequestServices = services.BuildServiceProvider();
