@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,11 +13,11 @@ using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
+using SFA.DAS.Encoding;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Newtonsoft.Json;
-using SFA.DAS.Encoding;
+using System.Text.Json;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -74,7 +75,7 @@ namespace SFA.DAS.EmployerIncentives.Web
             services.Configure<ExternalLinksConfiguration>(_configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
             
             var encodingConfigJson = _configuration.GetSection(EncodingConfigKey).Value;
-            var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+            var encodingConfig = JsonSerializer.Deserialize<EncodingConfig>(encodingConfigJson);
             services.AddSingleton(encodingConfig);
             
             services.AddAuthorizationPolicies();
@@ -88,7 +89,6 @@ namespace SFA.DAS.EmployerIncentives.Web
                 {
                         if (!_configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
                         {
-
                             options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
                             options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         }
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                         options.Filters.Add(new ApplicationShutterFilterAttribute(_configuration));
                         options.Filters.Add(new GoogleAnalyticsFilterAttribute());
                         options.EnableEndpointRouting = false;
-                        options.SuppressOutputFormatterBuffering = true;
+                        options.SuppressOutputFormatterBuffering = true;                        
                     })
                 .AddControllersAsServices();
 
@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                 options.HttpsPort = _configuration["EnvironmentName"].StartsWith("LOCAL") ? 5001 : 443;
             });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry(new ApplicationInsightsServiceOptions { ConnectionString = _configuration["APPINSIGHTS_INSTRUMENTATIONKEY"] });
 
             if (_configuration["EnvironmentName"] == "LOCAL" || _configuration["EnvironmentName"] == "DEV")
             {
@@ -135,27 +135,6 @@ namespace SFA.DAS.EmployerIncentives.Web
                 .AddDataEncryptionService()
                 .AddVerificationService()
                 .AddDataProtection(_configuration);
-
-            /* if (!_environment.IsDevelopment())
-            {
-                services.AddHealthChecks()
-                    .AddCheck<ReservationsApiHealthCheck>(
-                        "Reservation Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<CommitmentsApiHealthCheck>(
-                        "Commitments Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<ProviderRelationshipsApiHealthCheck>(
-                        "ProviderRelationships Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" })
-                    .AddCheck<AccountApiHealthCheck>(
-                        "Accounts Api",
-                        failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" });
-            } */
 
             if (!_environment.IsDevelopment())
             {

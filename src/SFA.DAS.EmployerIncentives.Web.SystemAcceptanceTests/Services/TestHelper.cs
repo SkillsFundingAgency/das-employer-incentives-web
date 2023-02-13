@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using System;
-using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using WireMock.Admin.Mappings;
@@ -20,9 +18,9 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
     {
         private readonly TestContext _testContext;
 
-        public static JsonSerializerSettings DefaultSerialiserSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+        public static JsonSerializerOptions DefaultSerialiserSettings = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-        public TestHelper(TestContext testContext)
+    public TestHelper(TestContext testContext)
         {
             _testContext = testContext;
         }

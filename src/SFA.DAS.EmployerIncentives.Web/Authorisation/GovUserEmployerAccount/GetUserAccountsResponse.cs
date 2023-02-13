@@ -1,27 +1,24 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
 {
     public class GetUserAccountsResponse
     {
-        [JsonProperty]
         public string EmployerUserId { get; set; }
-        [JsonProperty]
         public string FirstName { get; set; }
-        [JsonProperty]
         public string LastName { get; set; }
-        [JsonProperty("UserAccounts")]
+        [JsonPropertyName("UserAccounts")]
         public List<EmployerIdentifier> UserAccounts { get; set; }
     }
     
     public class EmployerIdentifier
     {
-        [JsonProperty("EncodedAccountId")]
+        [JsonPropertyName("EncodedAccountId")]
         public string AccountId { get; set; }
-        [JsonProperty("DasAccountName")]
+        [JsonPropertyName("DasAccountName")]
         public string EmployerName { get; set; }
-        [JsonProperty("Role")]
+        [JsonPropertyName("Role")]
         public string Role { get; set; }
     }
 }

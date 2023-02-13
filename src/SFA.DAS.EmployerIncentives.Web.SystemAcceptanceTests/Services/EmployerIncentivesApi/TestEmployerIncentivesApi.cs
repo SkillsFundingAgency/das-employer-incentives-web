@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Diagnostics;
+using System.Text.Json;
 using WireMock.Logging;
 using WireMock.Server;
 
@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             foreach (LogEntry newItem in e.NewItems)
             {
                 Debug.WriteLine("============================= TestEmployerIncentivesApi MockServer called ================================");
-                Debug.WriteLine(JsonConvert.SerializeObject(TestHelper.Map(newItem), Formatting.Indented));
+                Debug.WriteLine(JsonSerializer.Serialize(TestHelper.Map(newItem), new JsonSerializerOptions { WriteIndented = true }));
                 Debug.WriteLine("==========================================================================================================");
             }
         }
@@ -52,8 +52,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
 
             isDisposed = true;
         }
-
-
 
     }
 }

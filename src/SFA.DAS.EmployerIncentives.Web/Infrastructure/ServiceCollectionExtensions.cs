@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
+using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
@@ -111,7 +112,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
                     options.ClaimActions.MapUniqueJsonKey("sub", "id");
 
-                    // TODO: add redirect code ?
                     // https://auth0.com/docs/quickstart/webapp/aspnet-core-3/01-login                    
                 });
 

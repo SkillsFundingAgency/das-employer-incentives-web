@@ -1,14 +1,13 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using TechTalk.SpecFlow;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
@@ -67,8 +66,8 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   Response.Create()
                       .WithStatusCode(HttpStatusCode.OK)
                       .WithHeader("Content-Type", "application/json")
-                      .WithBody(JsonConvert.SerializeObject(response)));
-
+                      .WithBody(JsonSerializer.Serialize(response)));
+            
             var url = $"{_testData.HashedAccountId}/apply/declaration/{_testData.ApplicationId}/";
             var formData = new KeyValuePair<string, string>();
             _continueNavigationResponse = await _testContext.WebsiteClient.PostFormAsync(url, formData);

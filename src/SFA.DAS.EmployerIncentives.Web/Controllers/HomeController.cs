@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         [Route("/signout")]
         [Route("{accountId}/signout")]
         [AllowAnonymous()]
-        public async Task<IActionResult> SignOut()
+        public new async Task<IActionResult> SignOut()
         {
             var idToken = await HttpContext.GetTokenAsync("id_token");
 
