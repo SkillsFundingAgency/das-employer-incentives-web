@@ -30,15 +30,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Services
             var bytes = Convert.FromBase64String(ivAndData);
             var iv = bytes.Take(16).ToArray();
 
-            using var aes = new AesManaged
-            {
-                KeySize = 128,
-                BlockSize = 128,
-                Key = Convert.FromBase64String(TestAesKey),
-                Mode = CipherMode.CBC,
-                Padding = PaddingMode.PKCS7,
-                IV = iv
-            };
+            using var aes = Aes.Create();
+            aes.KeySize = 128;
+            aes.BlockSize = 128;
+            aes.Key = Convert.FromBase64String(TestAesKey);
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+            aes.IV = iv;
+
             var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
             var rawData = decryptor.TransformFinalBlock(bytes, 16, bytes.Length - 16);
 

@@ -1,19 +1,18 @@
-﻿using FluentAssertions;
-using Newtonsoft.Json;
+﻿using AutoFixture;
+using FluentAssertions;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
+using SFA.DAS.EmployerIncentives.Web.Models;
+using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
-using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
-using SFA.DAS.EmployerIncentives.Web.Models;
-using System.Collections.Generic;
-using AutoFixture;
-using System;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
 {
@@ -52,7 +51,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                .RespondWith(
              Response.Create()
                .WithStatusCode(HttpStatusCode.OK)
-               .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+               .WithBody(JsonSerializer.Serialize(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [When(@"the employer accesses the hub page")]
@@ -107,7 +106,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                .RespondWith(
              Response.Create()
                .WithStatusCode(HttpStatusCode.OK)
-               .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+               .WithBody(JsonSerializer.Serialize(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [Given(@"the employer has previously supplied their bank details")]
@@ -138,7 +137,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Given(@"the employer has not yet supplied bank details")]
@@ -169,7 +168,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Hub
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(getApplications)));
+                        .WithBody(JsonSerializer.Serialize(getApplications)));
         }
 
         [Then(@"they can navigate back to the choose organisation page")]

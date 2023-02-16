@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Newtonsoft.Json;
+﻿using FluentAssertions;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                .RespondWith(
              Response.Create()
                .WithStatusCode(HttpStatusCode.OK)
-               .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+               .WithBody(JsonSerializer.Serialize(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -60,7 +60,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
              .Given(
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                      )
                  .RespondWith(
              Response.Create()
-                 .WithBody(JsonConvert.SerializeObject(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
+                 .WithBody(JsonSerializer.Serialize(testdata.Apprentices, TestHelper.DefaultSerialiserSettings))
                  .WithStatusCode(HttpStatusCode.OK));
         }
 
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(testdata.LegalEntities, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
                 .Given(
@@ -108,7 +108,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 .RespondWith(
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
-                        .WithBody(JsonConvert.SerializeObject(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(testdata.LegalEntities.First(), TestHelper.DefaultSerialiserSettings)));
 
         }
 

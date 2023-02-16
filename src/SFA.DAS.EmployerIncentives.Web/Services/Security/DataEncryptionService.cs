@@ -16,27 +16,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Security
 
         public string Encrypt(string raw)
         {
-            using var aes = GetAes();
+            using var aes = Aes.Create();
+            aes.KeySize = 128;
+            aes.BlockSize = 128;
+            aes.Key = Convert.FromBase64String(_key);
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;            
+            
             var bytes = System.Text.Encoding.UTF8.GetBytes(raw);
             var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
             var encryptedData = encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
             var data = aes.IV.Concat(encryptedData).ToArray();
 
             return Convert.ToBase64String(data);
-        }
-
-        private AesManaged GetAes()
-        {
-#pragma warning disable S5542 // Encryption algorithms should be used with secure mode and padding scheme
-            return new AesManaged
-            {
-                KeySize = 128,
-                BlockSize = 128,
-                Key = Convert.FromBase64String(_key),
-                Mode = CipherMode.CBC, // TODO: Review this (see https://docs.microsoft.com/en-us/dotnet/standard/security/vulnerabilities-cbc-mode)
-                Padding = PaddingMode.PKCS7
-            };
-#pragma warning restore S5542 // Encryption algorithms should be used with secure mode and padding scheme
         }
     }
 }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
@@ -31,7 +31,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
                 .Value;
             
             var apiResponse = await _client.GetAsync(OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(userId, email));
-            var result = JsonConvert.DeserializeObject<GetUserAccountsResponse>(await apiResponse.Content.ReadAsStringAsync());
+            var result = JsonSerializer.Deserialize<GetUserAccountsResponse>(await apiResponse.Content.ReadAsStringAsync());
             
             var claims = new List<Claim>();
 

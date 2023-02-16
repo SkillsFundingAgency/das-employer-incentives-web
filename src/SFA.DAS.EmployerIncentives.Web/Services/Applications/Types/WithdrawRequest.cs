@@ -11,9 +11,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Services.Applications.Types
         public ServiceRequest ServiceRequest { get; }
         public string EmailAddress { get; }
 
-        public WithdrawRequest(WithdrawalType type, IEnumerable<Application> applications, ServiceRequest serviceRequest, long accountId, string emailAddress)
+        public WithdrawRequest(WithdrawalType withdrawalType, IEnumerable<Application> applications, ServiceRequest serviceRequest, long accountId, string emailAddress)
         {
-            WithdrawalType = type;
+            WithdrawalType = withdrawalType;
             Applications = applications;
             ServiceRequest = serviceRequest;
             AccountId = accountId;

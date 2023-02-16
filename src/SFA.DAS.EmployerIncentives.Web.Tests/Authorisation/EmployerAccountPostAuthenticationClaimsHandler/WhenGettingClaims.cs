@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
@@ -13,13 +5,20 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services;
 using SFA.DAS.EmployerIncentives.Web.Services.Users.Types;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPostAuthenticationClaimsHandler
 {
@@ -44,12 +43,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
             
             var response = new HttpResponseMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(_response)),
+                Content = new StringContent(JsonSerializer.Serialize(_response)),
                 StatusCode = HttpStatusCode.OK
             };
             var notFoundResponse = new HttpResponseMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new GetUserAccountsResponse())),
+                Content = new StringContent(JsonSerializer.Serialize(new GetUserAccountsResponse())),
                 StatusCode = HttpStatusCode.OK
             };
             var employerAccountRequest = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _email);
@@ -147,12 +146,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
                 throw new NotImplementedException();
             }
 
-            public Task ChallengeAsync(AuthenticationProperties? properties)
+            public Task ChallengeAsync(AuthenticationProperties properties)
             {
                 throw new NotImplementedException();
             }
 
-            public Task ForbidAsync(AuthenticationProperties? properties)
+            public Task ForbidAsync(AuthenticationProperties properties)
             {
                 throw new NotImplementedException();
             }

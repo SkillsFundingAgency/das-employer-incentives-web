@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications.Types;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities.Types;
+using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Extensions;
 using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
@@ -12,8 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Services.Security;
 using TechTalk.SpecFlow;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(_apprenticeshipData, TestHelper.DefaultSerialiserSettings))
+                        .WithBody(JsonSerializer.Serialize(_apprenticeshipData, TestHelper.DefaultSerialiserSettings))
                         .WithStatusCode(HttpStatusCode.OK));
 
             _testContext.EmployerIncentivesApi.MockServer
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                 )
                 .RespondWith(
                     Response.Create()
-                        .WithBody(JsonConvert.SerializeObject(_legalEntity))
+                        .WithBody(JsonSerializer.Serialize(_legalEntity))
                         .WithStatusCode(HttpStatusCode.OK));
         }
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_getApplicationResponse, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(_getApplicationResponse, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
               .Given(
@@ -114,7 +114,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                   .RespondWith(
               Response.Create()
                   .WithStatusCode(HttpStatusCode.OK)
-                  .WithBody(JsonConvert.SerializeObject(_data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
+                  .WithBody(JsonSerializer.Serialize(_data.LegalEntities, TestHelper.DefaultSerialiserSettings)));
         }
 
         [Given(@"a initial application has been created and submitted")]
@@ -138,7 +138,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
                     Response.Create()
                         .WithStatusCode(HttpStatusCode.OK)
                         .WithHeader("Content-Type", "application/json")
-                        .WithBody(JsonConvert.SerializeObject(_data.GetApplicationResponseWithFirstTwoApprenticesSelectedAndAnAdditionalApprentice, TestHelper.DefaultSerialiserSettings)));
+                        .WithBody(JsonSerializer.Serialize(_data.GetApplicationResponseWithFirstTwoApprenticesSelectedAndAnAdditionalApprentice, TestHelper.DefaultSerialiserSettings)));
 
             _testContext.EmployerIncentivesApi.MockServer
                   .Given(
