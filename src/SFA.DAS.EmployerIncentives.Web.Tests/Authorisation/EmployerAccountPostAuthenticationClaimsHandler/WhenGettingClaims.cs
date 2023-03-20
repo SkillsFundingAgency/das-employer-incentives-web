@@ -27,8 +27,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
         private string _userId;
         private string _email;
         private string _emailNotMatching;
+        private string _emailSuspended;
         private Web.Authorisation.GovUserEmployerAccount.EmployerAccountPostAuthenticationClaimsHandler _handler;
         private GetUserAccountsResponse _response;
+        private GetUserAccountsResponse _responseSuspended;
 
         [SetUp]
         public void Arrange()
@@ -37,13 +39,22 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
             _response = fixture.Create<GetUserAccountsResponse>();
             _response.UserAccounts.First().Role = UserRole.Owner.ToString();
             _response.UserAccounts.Last().Role = UserRole.Transactor.ToString();
+            _response.IsSuspended = false;
+            _responseSuspended = fixture.Create<GetUserAccountsResponse>();
+            _responseSuspended.IsSuspended = true;
             _userId = fixture.Create<string>();
             _email = fixture.Create<string>();
             _emailNotMatching = fixture.Create<string>();
+            _emailSuspended = fixture.Create<string>();
             
             var response = new HttpResponseMessage
             {
                 Content = new StringContent(JsonSerializer.Serialize(_response)),
+                StatusCode = HttpStatusCode.OK
+            };
+            var suspendedResponse = new HttpResponseMessage
+            {
+                Content = new StringContent(JsonSerializer.Serialize(_responseSuspended)),
                 StatusCode = HttpStatusCode.OK
             };
             var notFoundResponse = new HttpResponseMessage
@@ -52,6 +63,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
                 StatusCode = HttpStatusCode.OK
             };
             var employerAccountRequest = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _email);
+            var employerAccountRequestSuspended = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _emailSuspended);
             var employerAccountRequestNonMatching = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _emailNotMatching);
             var httpMessageHandler = new Mock<HttpMessageHandler>();
             httpMessageHandler.Protected()
@@ -64,6 +76,16 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => response);
+            httpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(c =>
+                        c.Method.Equals(HttpMethod.Get)
+                        && c.RequestUri.Equals(new Uri("https://tempuri.org/"+ employerAccountRequestSuspended))
+                    ),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => suspendedResponse);
             httpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -91,6 +113,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
             actual.First(c=>c.Type.Equals(EmployerClaimTypes.UserId)).Value.Should().Be(_response.EmployerUserId);
             actual.First(c=>c.Type.Equals(EmployerClaimTypes.GivenName)).Value.Should().Be(_response.FirstName);
             actual.First(c=>c.Type.Equals(EmployerClaimTypes.FamilyName)).Value.Should().Be(_response.LastName);
+            actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Should().BeNull();
+        }
+        [Test]
+        public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated_And_Suspended_Set_If_True()
+        {
+            var tokenValidatedContext = ArrangeTokenValidatedContext(_userId, _emailSuspended);
+            
+            var actual = (await _handler.GetClaims(tokenValidatedContext)).ToList();
+
+            actual.First(c=>c.Type.Equals(EmployerClaimTypes.UserId)).Value.Should().Be(_responseSuspended.EmployerUserId);
+            actual.First(c=>c.Type.Equals(EmployerClaimTypes.GivenName)).Value.Should().Be(_responseSuspended.FirstName);
+            actual.First(c=>c.Type.Equals(EmployerClaimTypes.FamilyName)).Value.Should().Be(_responseSuspended.LastName);
+            actual.First(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Value.Should().Be("Suspended");
         }
 
         [Test]

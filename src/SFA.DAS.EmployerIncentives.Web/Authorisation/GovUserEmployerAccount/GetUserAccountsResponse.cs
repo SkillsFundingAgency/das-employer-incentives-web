@@ -10,6 +10,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
         public string LastName { get; set; }
         [JsonPropertyName("UserAccounts")]
         public List<EmployerIdentifier> UserAccounts { get; set; }
+
+        public bool IsSuspended { get; set; }
     }
     
     public class EmployerIdentifier
