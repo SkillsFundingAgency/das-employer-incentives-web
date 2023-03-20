@@ -29,6 +29,7 @@ using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
 using SFA.DAS.EmployerIncentives.Web.Validators;
 using SFA.DAS.Encoding;
 using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
 using SFA.DAS.GovUK.Auth.Services;
 
@@ -41,17 +42,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddAuthorization(options =>
             {
                 options.AddPolicy(
-                    PolicyNames.IsAuthenticated,
-                    policy =>
-                    {
-                        policy.Requirements.Add(new IsAuthenticatedRequirement());
-                    });
-
-                options.AddPolicy(
                     PolicyNames.HasEmployerAccount,
                     policy =>
                     {
                         policy.Requirements.Add(new EmployerAccountRequirement());
+                        policy.Requirements.Add(new AccountActiveRequirement());
+                        policy.RequireAuthenticatedUser();
                     });
             });
 
@@ -62,7 +58,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
     this IServiceCollection serviceCollection,
     IConfiguration configuration)
         {
-            serviceCollection.AddSingleton<IAuthorizationHandler, IsAuthenticatedAuthorizationHandler>();
+            serviceCollection.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();//TODO remove once gov login is live
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
             if (configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null 

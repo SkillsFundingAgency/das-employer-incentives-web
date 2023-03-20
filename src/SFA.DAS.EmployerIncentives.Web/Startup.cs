@@ -89,7 +89,6 @@ namespace SFA.DAS.EmployerIncentives.Web
                 {
                         if (!_configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
                             options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         }
 
