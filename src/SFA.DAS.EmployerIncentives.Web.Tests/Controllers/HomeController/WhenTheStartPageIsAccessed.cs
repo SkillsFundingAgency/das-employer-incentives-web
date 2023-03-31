@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
             var config = new ExternalLinksConfiguration { ManageApprenticeshipSiteUrl = "Https://manage-apprenticeships.com" };
             _configuration.Setup(x => x.Value).Returns(config);
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object, null, null);
             _fixture = new Fixture();
             _accountId = _fixture.Create<string>();
             _accountLegalEntityId = _fixture.Create<string>();
