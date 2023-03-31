@@ -49,6 +49,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                         policy.Requirements.Add(new AccountActiveRequirement());
                         policy.RequireAuthenticatedUser();
                     });
+#if DEBUG
+                options.AddPolicy(
+                    "StubAuthentication",
+                    policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                    });
+#endif
+                
             });
 
             return serviceCollection;
@@ -59,6 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
     IConfiguration configuration)
         {
             serviceCollection.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();//TODO remove once gov login is live
+            serviceCollection.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();//TODO remove once gov login is live
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
             if (configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null 
