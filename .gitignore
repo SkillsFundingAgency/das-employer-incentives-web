@@ -286,4 +286,4 @@ SonarQube.Analysis.xml
 
 #Test generated nservicebus queues
 **/.learningtransport/**
-src/SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests/Features/Application/*.feature.cs
+src/SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests/Features/**/*.feature.cs
