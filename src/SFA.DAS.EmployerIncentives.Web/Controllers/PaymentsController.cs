@@ -9,13 +9,10 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Applications;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.Employer.Shared.UI.Attributes;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/payments")]
-    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class PaymentsController : Controller
     {
         private readonly IApplicationService _applicationService;

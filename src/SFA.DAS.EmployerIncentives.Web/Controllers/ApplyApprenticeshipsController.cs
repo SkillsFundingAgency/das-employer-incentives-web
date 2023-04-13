@@ -6,8 +6,6 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply.SelectApprenticeships;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.Models;
@@ -16,7 +14,6 @@ using SFA.DAS.EmployerIncentives.Web.Models;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ApplyApprenticeshipsController : ControllerBase
     {
         private readonly IApprenticesService _apprenticesService;

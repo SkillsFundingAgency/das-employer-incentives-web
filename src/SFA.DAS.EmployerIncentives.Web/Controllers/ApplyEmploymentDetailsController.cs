@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.EmployerIncentives.Web.Models;
 using SFA.DAS.EmployerIncentives.Web.Services.Applications;
@@ -18,7 +16,6 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
-    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ApplyEmploymentDetailsController : ControllerBase
     {
         private readonly IApplicationService _applicationService;

@@ -7,12 +7,9 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Hub;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.Employer.Shared.UI.Attributes;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
-    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class HubController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
