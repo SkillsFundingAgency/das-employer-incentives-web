@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -82,7 +82,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("/signout")]
-        [Route("{accountId}/signout")]
+        [Route("{accountId}/signout", Name = "signout")]
         [AllowAnonymous()]
         public new async Task<IActionResult> SignOut()
         {
@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             {
                 Email = _config["StubEmail"],
                 Id = _config["StubId"]
-            });
+            },true);
 
             return RedirectToRoute("Signed-in-stub");
         }
