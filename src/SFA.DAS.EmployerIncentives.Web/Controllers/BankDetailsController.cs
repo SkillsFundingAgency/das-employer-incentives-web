@@ -7,11 +7,14 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/bank-details/{applicationId}")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class BankDetailsController : ControllerBase
     {
         private readonly IEmailService _emailService;

@@ -4,10 +4,13 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.ApplicationComplete;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/application-complete/{applicationId}")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ApplicationCompleteController : ControllerBase
     {
         private readonly ILegalEntitiesService _legalEntitiesService;

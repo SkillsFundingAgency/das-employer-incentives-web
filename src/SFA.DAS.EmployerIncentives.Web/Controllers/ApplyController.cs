@@ -7,12 +7,15 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.EmployerIncentives.Web.Exceptions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ApplyController : ControllerBase
     {
         private readonly ExternalLinksConfiguration _configuration;

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.GovUK.Auth.Models;
 using SFA.DAS.GovUK.Auth.Services;
 
@@ -20,6 +22,7 @@ using SFA.DAS.GovUK.Auth.Services;
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("/")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class HomeController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
