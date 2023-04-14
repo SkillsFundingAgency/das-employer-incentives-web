@@ -112,6 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;                        
                     })
+                .SetDefaultNavigationSection(NavigationSection.AccountsFinance)
                 .AddControllersAsServices();
 
             services.AddHttpsRedirection(options =>
