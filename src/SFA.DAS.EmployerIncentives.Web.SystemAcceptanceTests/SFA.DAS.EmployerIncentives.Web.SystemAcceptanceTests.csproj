@@ -10,7 +10,7 @@
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.12" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.45-prerelease-11" />
+    <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.45-prerelease-12" />
     <PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Include="WireMock.Net" Version="1.5.13" />
