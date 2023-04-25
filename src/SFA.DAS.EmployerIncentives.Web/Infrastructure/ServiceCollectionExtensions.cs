@@ -203,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                     services.AddDataProtection()
-                        .SetApplicationName("das-employer-incentives-web")
+                        .SetApplicationName("das-employer")
                         .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
                 }
             }
