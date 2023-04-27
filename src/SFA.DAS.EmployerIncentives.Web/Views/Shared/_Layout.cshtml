@@ -3,7 +3,7 @@
 
 @{
     var tagManagerCode = "GTM-MMR39G8";
-    string accountId = (string)this.ViewContext.RouteData.Values["employerAccountId"] ?? "";
+    string accountId = (string)this.ViewContext.RouteData.Values["accountId"] ?? "";
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountId, UsePrivacyV2 = true };
     
