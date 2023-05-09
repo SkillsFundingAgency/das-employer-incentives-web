@@ -49,6 +49,15 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                         policy.Requirements.Add(new AccountActiveRequirement());
                         policy.RequireAuthenticatedUser();
                     });
+#if DEBUG
+                options.AddPolicy(
+                    "StubAuthentication",
+                    policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                    });
+#endif
+                
             });
 
             return serviceCollection;
@@ -59,6 +68,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
     IConfiguration configuration)
         {
             serviceCollection.AddSingleton<IAuthorizationHandler, AccountActiveAuthorizationHandler>();//TODO remove once gov login is live
+            serviceCollection.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();//TODO remove once gov login is live
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
             if (configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null 
@@ -66,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 serviceCollection.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-                serviceCollection.AddAndConfigureGovUkAuthentication(configuration, $"{typeof(ServiceCollectionExtensions).Assembly.GetName().Name}.Auth",typeof(EmployerAccountPostAuthenticationClaimsHandler));
+                serviceCollection.AddAndConfigureGovUkAuthentication(configuration, typeof(EmployerAccountPostAuthenticationClaimsHandler), "","/SignIn-Stub");
             }
             else
             {
@@ -193,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                     services.AddDataProtection()
-                        .SetApplicationName("das-employer-incentives-web")
+                        .SetApplicationName("das-employer")
                         .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
                 }
             }
