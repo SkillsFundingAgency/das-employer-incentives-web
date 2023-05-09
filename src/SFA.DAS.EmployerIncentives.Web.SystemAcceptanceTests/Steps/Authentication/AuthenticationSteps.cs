@@ -6,6 +6,8 @@ using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Hooks;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using SFA.DAS.GovUK.Auth.Authentication;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
@@ -58,9 +60,10 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Steps.Application
             var challengeResult = _testContext.ActionResult.LastActionResult as ChallengeResult;
             challengeResult.Should().NotBeNull();
 
-            _authContext.Requirements.Count().Should().Be(2);
-            _authContext.Requirements.SingleOrDefault(r => r is IsAuthenticatedRequirement).Should().NotBeNull();
+            _authContext.Requirements.Count().Should().Be(3);
+            _authContext.Requirements.SingleOrDefault(r => r is AccountActiveRequirement).Should().NotBeNull();
             _authContext.Requirements.SingleOrDefault(r => r is EmployerAccountRequirement).Should().NotBeNull();
+            _authContext.Requirements.SingleOrDefault(r => r is DenyAnonymousAuthorizationRequirement).Should().NotBeNull();
         }
     }
 }

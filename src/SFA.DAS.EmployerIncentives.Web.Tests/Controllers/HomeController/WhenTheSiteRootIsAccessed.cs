@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         {
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
             _configuration = new Mock<IOptions<ExternalLinksConfiguration>>();
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object);
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object, null, null);
         }
 
         [Test]

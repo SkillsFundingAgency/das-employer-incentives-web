@@ -46,6 +46,13 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
             claims.Add(new Claim(EmployerClaimTypes.UserId, result.EmployerUserId));
             claims.Add(new Claim(EmployerClaimTypes.GivenName, result.FirstName));
             claims.Add(new Claim(EmployerClaimTypes.FamilyName, result.LastName));
+
+            if (result.IsSuspended)
+            {
+                claims.Add(new Claim(ClaimTypes.AuthorizationDecision, "Suspended"));
+            }
+            
+            
             return claims;
         }
     }

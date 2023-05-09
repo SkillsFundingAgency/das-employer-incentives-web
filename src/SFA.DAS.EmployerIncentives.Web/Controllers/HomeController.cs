@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,9 @@ using SFA.DAS.EmployerIncentives.Web.ViewModels.Home;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
+using SFA.DAS.GovUK.Auth.Models;
+using SFA.DAS.GovUK.Auth.Services;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
@@ -19,13 +23,19 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILegalEntitiesService _legalEntitiesService;
+        private readonly IConfiguration _config;
+        private readonly IStubAuthenticationService _stubAuthenticationService;
         private readonly ExternalLinksConfiguration _configuration;
 
         public HomeController(
             ILegalEntitiesService legalEntitiesService,
-            IOptions<ExternalLinksConfiguration> configuration)
+            IOptions<ExternalLinksConfiguration> configuration,
+            IConfiguration config,
+            IStubAuthenticationService stubAuthenticationService)
         {
             _legalEntitiesService = legalEntitiesService;
+            _config = config;
+            _stubAuthenticationService = stubAuthenticationService;
             _configuration = configuration.Value;
         }
 
@@ -69,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("/signout")]
-        [Route("{accountId}/signout")]
+        [Route("{accountId}/signout", Name = "signout")]
         [AllowAnonymous()]
         public new async Task<IActionResult> SignOut()
         {
@@ -83,10 +93,18 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             authenticationProperties.Parameters.Clear();
             authenticationProperties.Parameters.Add("id_token",idToken);
             
+            var schemes = new List<string>
+            {
+                CookieAuthenticationDefaults.AuthenticationScheme
+            };
+            _ = bool.TryParse(_config["StubAuth"], out var stubAuth);
+            if (!stubAuth)
+            {
+                schemes.Add(OpenIdConnectDefaults.AuthenticationScheme);
+            }
+            
             return SignOut(
-                authenticationProperties,
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                OpenIdConnectDefaults.AuthenticationScheme);
+                authenticationProperties, schemes.ToArray());
         }
 
         [Route("signoutcleanup")]
@@ -95,6 +113,41 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             Response.Cookies.Delete(CookieNames.AuthCookie);
         }
+        
+#if DEBUG
+        [AllowAnonymous()]
+        [HttpGet]
+        [Route("SignIn-Stub")]
+        public IActionResult SigninStub()
+        {
+            return View("SigninStub", new List<string>{_config["StubId"],_config["StubEmail"]});
+        }
+        
+        [AllowAnonymous()]
+        [HttpPost]
+        [Route("SignIn-Stub")]
+        public async Task<IActionResult> SigninStubPost()
+        {
+            var claims = await _stubAuthenticationService.GetStubSignInClaims(new StubAuthUserDetails
+            {
+                Email = _config["StubEmail"],
+                Id = _config["StubId"]
+            });
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims,
+                new AuthenticationProperties());
+            
+            return RedirectToRoute("Signed-in-stub");
+        }
+
+        [Authorize("StubAuthentication")]
+        [HttpGet]
+        [Route("signed-in-stub", Name = "Signed-in-stub")]
+        public IActionResult SignedInStub()
+        {
+            return View();
+        }
+#endif
     }
 }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

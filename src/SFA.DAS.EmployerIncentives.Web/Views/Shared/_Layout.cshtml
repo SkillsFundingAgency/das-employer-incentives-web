@@ -1,83 +1,74 @@
-﻿@using SFA.DAS.EmployerIncentives.Web.Extensions
+﻿@using SFA.DAS.Employer.Shared.UI.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    var tagManagerCode = "GTM-MMR39G8";
+    string accountId = (string)this.ViewContext.RouteData.Values["accountId"] ?? "";
+    ViewBag.HideHeaderBorder = true;
+    var footerModel = new FooterModel { AccountId = accountId, UsePrivacyV2 = true };
+    
+}
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
-<head>
+<html lang="en" class="govuk-template">
+    <head>
+        <meta charset="utf-8" />
+            <title>@(ViewData["Title"] ?? "GOV.UK - The best place to find government services and information")</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+            <meta name="theme-color" content="#0b0c0c">
 
-    <partial name="_GoogleAnalyticsInfo" />
-    <partial name="_GoogleTagManager" />
-    <partial name="_ZenDeskWidget" />
+            <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon" />
+            <link rel="mask-icon" href="assets/images/govuk-mask-icon.svg" color="#0b0c0c"/>
+            <link rel="apple-touch-icon" sizes="180x180" href="assets/images/govuk-apple-touch-icon-180x180.png"/>
+            <link rel="apple-touch-icon" sizes="167x167" href="assets/images/govuk-apple-touch-icon-167x167.png"/>
+            <link rel="apple-touch-icon" sizes="152x152" href="assets/images/govuk-apple-touch-icon-152x152.png"/>
+            <link rel="apple-touch-icon" href="assets/images/govuk-apple-touch-icon.png"/>
 
-    <meta charset="utf-8" />
-    <title>@(ViewData["Title"] ?? "GOV.UK - The best place to find government services and information")</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0c0c">
+            <!--[if !IE 8]><!-->
+            <link href="css/main.css" rel="stylesheet" />
+            <!--<![endif]-->
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png" />
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png" />
-
-    <!--[if !IE 8]><!-->
-        <link href="/css/main.css" rel="stylesheet" />
-    <!--<![endif]-->
-    <!--[if IE 8]>
-        <link href="/govuk-frontend/all-ie8.css" rel="stylesheet" />
-    <![endif]-->
-    <!--[if lt IE 9]>
-        <script src="/html5-shiv/html5shiv.js"></script>
-    <![endif]-->
-
-     <link href="/stylesheets/application.css" rel="stylesheet" no-cdn />
-
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
-</head>
-
-<body class="govuk-template__body ">
-    <script>
+        <meta property="og:image" content="assets/images/govuk-opengraph-image.png">
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','@tagManagerCode');
+        </script>
+        <!-- End Google Tag Manager -->
+        @await Html.PartialAsync("_ZenDeskWidget")
+    </head>
+    <body class="govuk-template__body ">
+        <script nws-csp-add-nonce="true">
             document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
+        </script>
+        <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <environment exclude="Development">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMR39G8" height="0" width="0" style="display: none; visibility: hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-    </environment>
+        @* ReSharper disable once Mvc.PartialViewNotResolved *@
+        <partial name="_Header">
+            @* ReSharper disable once Mvc.PartialViewNotResolved *@
+            <partial name="_Menu" model="@accountId">
+            </partial>
+        </partial>
 
-    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+        <div class="govuk-width-container">
+            @RenderSection("breadcrumb", required: false)
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                @RenderBody()
+            </main>
+        </div>
 
-    @await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())
-    @await Html.PartialAsync("_Header", Html.GetHeaderViewModel())
-
-    <div class="govuk-phase-banner govuk-width-container">
-        <p class="govuk-phase-banner__content">
-            <strong class="govuk-tag govuk-phase-banner__content__tag">
-                beta
-            </strong>
-            <span class="govuk-phase-banner__text">
-                This is a new service – your <a href="https://www.smartsurvey.co.uk/s/HANAIP" class="govuk-link" rel="noreferrer noopener" target="_blank">feedback</a> will help us to improve it.
-            </span>
-        </p>
-    </div>
-
-    <div class="govuk-width-container">
-        @RenderBody()
-    </div>
-
-    @await Html.PartialAsync("_Footer", Html.GetFooterViewModel())    
-
-    <script src="/libs/govuk-frontend/all.js"></script>
-    <script src="/libs/jquery/jquery.min.js"></script>
-    <script src="/js/das-all.js"></script>
-    <script src="/js/app.min.js"></script>
-    <script>
+        @* ReSharper disable once Mvc.PartialViewNotResolved *@
+        <partial name="_Footer" model="@footerModel"/>
+        <script src="/libs/jquery/jquery.min.js"></script>
+        <script src="/libs/govuk-frontend/all.js"></script>
+        <script src="/js/das-all.min.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script>
             window.GOVUKFrontend.initAll();
             window.DASFrontend.initAll();
-    </script>
-
-</body>
-
+        </script>
+        @RenderSection("javascript", required: false)
+    </body>
 </html>

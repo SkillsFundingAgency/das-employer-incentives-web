@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
             _actionResultHook = actionResultHook;
             _authContextHook = authContextHook;
 
-            var encodingConfig = File.ReadAllText(testContext.TestDirectory.Parent + "\\local.encoding.json");
+            var encodingConfig = File.ReadAllText(Path.Combine(testContext.TestDirectory.Parent.ToString(), "local.encoding.json"));
 
             _appConfig = new Dictionary<string, string>
             {

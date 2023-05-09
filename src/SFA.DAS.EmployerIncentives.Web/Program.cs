@@ -16,11 +16,11 @@ namespace SFA.DAS.EmployerIncentives.Web
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
-            {
+            {   
                 logger.Error(ex, "Could not start host");
                 throw;
             }
-        }
+        }   
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)

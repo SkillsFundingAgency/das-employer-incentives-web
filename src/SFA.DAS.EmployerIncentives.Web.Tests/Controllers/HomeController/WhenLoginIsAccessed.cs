@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
             var user = new ClaimsPrincipal(_claimsIdentity);
             _legalEntitiesService = new Mock<ILegalEntitiesService>();
 
-            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object)
+            _sut = new Web.Controllers.HomeController(_legalEntitiesService.Object, _configuration.Object, null, null)
             {
                 ControllerContext = new ControllerContext()
                 {

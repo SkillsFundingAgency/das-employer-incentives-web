@@ -18,6 +18,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.EmployerIncentives.Web.RouteValues;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
@@ -84,12 +86,24 @@ namespace SFA.DAS.EmployerIncentives.Web
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
+            if (_configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null
+                && _configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"]
+                    .Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                services.AddMaMenuConfiguration("signout",  _configuration["ResourceEnvironmentName"]);
+            }
+            else
+            {
+                var identityServerOptions = new IdentityServerOptions();
+                _configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration).Bind(identityServerOptions);
+                services.AddMaMenuConfiguration("signout", identityServerOptions.ClientId, _configuration["ResourceEnvironmentName"]);
+            }
+
             services.AddMvc(
                 options =>
                 {
                         if (!_configuration["EnvironmentName"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            options.Filters.Add(new AuthorizeFilter(PolicyNames.IsAuthenticated));
                             options.Filters.Add(new AuthorizeFilter(PolicyNames.HasEmployerAccount));
                         }
 
@@ -98,6 +112,7 @@ namespace SFA.DAS.EmployerIncentives.Web
                         options.EnableEndpointRouting = false;
                         options.SuppressOutputFormatterBuffering = true;                        
                     })
+                .SetDefaultNavigationSection(NavigationSection.AccountsFinance)
                 .AddControllersAsServices();
 
             services.AddHttpsRedirection(options =>
