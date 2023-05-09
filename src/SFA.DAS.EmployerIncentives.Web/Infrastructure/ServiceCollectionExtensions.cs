@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 serviceCollection.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-                serviceCollection.AddAndConfigureGovUkAuthentication(configuration, $"{typeof(ServiceCollectionExtensions).Assembly.GetName().Name}.Auth",typeof(EmployerAccountPostAuthenticationClaimsHandler));
+                serviceCollection.AddAndConfigureGovUkAuthentication(configuration, typeof(EmployerAccountPostAuthenticationClaimsHandler), "","/SignIn-Stub");
             }
             else
             {
@@ -203,7 +203,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
                     var redis = ConnectionMultiplexer.Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                     services.AddDataProtection()
-                        .SetApplicationName("das-employer-incentives-web")
+                        .SetApplicationName("das-employer")
                         .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
                 }
             }
