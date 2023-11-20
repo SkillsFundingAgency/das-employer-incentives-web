@@ -9,7 +9,6 @@ using System;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerIncentives.Web.Exceptions;
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
@@ -29,7 +28,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> Default()
+        public IActionResult Default()
         {
             return RedirectToAction("GetChooseOrganisation", "ApplyOrganisation");
         }
@@ -79,7 +78,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("cannot-apply")]
-        public async Task<IActionResult> Forbidden()
+        public IActionResult Forbidden()
         {
             return Forbid();
         }
@@ -95,25 +94,24 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("cannot-apply-yet")]
-        public async Task<IActionResult> Redirect()
+        public IActionResult Redirect()
         {
             return RedirectToActionPermanent("CannotApplyYet");
         }
 
         [HttpGet]
         [Route("{accountLegalEntityId}/no-eligible-apprentices")]
-        public async Task<IActionResult> RedirectShutter()
+        public IActionResult RedirectShutter()
         {
             return RedirectToActionPermanent("CannotApply");
         }
 
         [HttpGet]
         [Route("{accountLegalEntityId}/problem-with-service")]
-        public async Task<IActionResult> UlnAlreadyAppliedFor(string accountId, string accountLegalEntityId)
+        public IActionResult UlnAlreadyAppliedFor(string accountId, string accountLegalEntityId)
         {
             var viewModel = new UlnAlreadyAppliedForViewModel(accountId, accountLegalEntityId);
             return View(viewModel);
         }
     }
 }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

@@ -10,7 +10,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using SFA.DAS.EmployerIncentives.Web.Models;
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
@@ -117,7 +116,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpPost]
         [Route("confirm-apprentices/{applicationId}")]
-        public async Task<IActionResult> DisplayDeclaration(string accountId, Guid applicationId)
+        public IActionResult DisplayDeclaration(string accountId, Guid applicationId)
         {
             return RedirectToAction("Declaration", "Apply", new { accountId, applicationId });
         }
@@ -191,4 +190,3 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
     }
 }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

@@ -25,9 +25,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         }
 
         [Test]
-        public async Task Then_the_caller_is_redirected_to_login()
+        public void Then_the_caller_is_redirected_to_login()
         {
-            var result = await _sut.AnonymousHome() as RedirectToActionResult;
+            var result = _sut.AnonymousHome() as RedirectToActionResult;
 
             result.ActionName.Should().Be("login");
         }
