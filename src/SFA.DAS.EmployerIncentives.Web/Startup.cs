@@ -1,4 +1,8 @@
-﻿using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Text.Json;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,22 +10,17 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.EmployerIncentives.Web.Authorisation;
 using SFA.DAS.EmployerIncentives.Web.Filters;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure;
 using SFA.DAS.EmployerIncentives.Web.Infrastructure.Configuration;
 using SFA.DAS.Encoding;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Text.Json;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.ApplicationInsights;
-using SFA.DAS.Employer.Shared.UI;
-using SFA.DAS.EmployerIncentives.Web.RouteValues;
 
 namespace SFA.DAS.EmployerIncentives.Web
 {
