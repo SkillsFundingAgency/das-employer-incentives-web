@@ -13,7 +13,7 @@
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
     <PackageReference Include="SFA.DAS.CosmosDb" Version="1.0.47" />
-    <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.44" />
+    <PackageReference Include="SFA.DAS.Employer.Shared.UI" Version="17.1.75" />
     <PackageReference Include="SFA.DAS.GovUK.Auth" Version="17.1.76" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="SFA.DAS.Http" Version="3.2.69" />
@@ -21,6 +21,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.6.86" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.1" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.4" />
     <PackageReference Include="WebEssentials.AspNetCore.CdnTagHelpers" Version="1.0.21" />
   </ItemGroup>
 
