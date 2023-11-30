@@ -24,12 +24,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.ApplyController.Quali
 
 
         [Test]
-        public async Task Then_The_Agreement_Is_Checked_When_Eligible_Apprenticeships_Exist()
+        public void Then_The_Agreement_Is_Checked_When_Eligible_Apprenticeships_Exist()
         {
             var accountId = "ABC123";
             var viewModel = new QualificationQuestionViewModel { AccountId = accountId, HasTakenOnNewApprentices = true };
 
-            var result = await _sut.QualificationQuestion(viewModel);
+            var result = _sut.QualificationQuestion(viewModel);
 
             var redirectResult = result as RedirectToActionResult;
             redirectResult.ActionName.Should().Be("ValidateTermsSigned");

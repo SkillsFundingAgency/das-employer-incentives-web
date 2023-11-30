@@ -30,10 +30,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         }
 
         [Test]
-        public async Task Then_the_page_redirects_to_choose_organisation()
+        public void Then_the_page_redirects_to_choose_organisation()
         {
             // Act
-            var result = await _sut.Home(_accountId) as RedirectToActionResult;
+            var result = _sut.Home(_accountId) as RedirectToActionResult;
 
             // Assert
             result.Should().NotBeNull();

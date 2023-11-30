@@ -16,7 +16,6 @@ using Microsoft.Extensions.Configuration;
 using SFA.DAS.GovUK.Auth.Models;
 using SFA.DAS.GovUK.Auth.Services;
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("/")]
@@ -40,14 +39,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("")]            
-        [AllowAnonymous()]
-        public async Task<IActionResult> AnonymousHome()
+        [AllowAnonymous]
+        public IActionResult AnonymousHome()
         {            
             return RedirectToAction("login");
         }
 
         [Route("/login")]        
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
             if (User.HasClaim(c => c.Type.Equals(EmployerClaimTypes.Account)))
             {
@@ -57,7 +56,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("{accountId}")]
-        public async Task<IActionResult> Home(string accountId)
+        public IActionResult Home(string accountId)
         {
             return RedirectToAction("GetChooseOrganisation", "ApplyOrganisation");
         }
@@ -80,7 +79,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [Route("/signout")]
         [Route("{accountId}/signout", Name = "signout")]
-        [AllowAnonymous()]
+        [AllowAnonymous]
         public new async Task<IActionResult> SignOut()
         {
             var idToken = await HttpContext.GetTokenAsync("id_token");
@@ -108,14 +107,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         }
 
         [Route("signoutcleanup")]
-        [AllowAnonymous()]
-        public async Task SignOutCleanup()
+        [AllowAnonymous]
+        public void SignOutCleanup()
         {
             Response.Cookies.Delete(CookieNames.AuthCookie);
         }
         
 #if DEBUG
-        [AllowAnonymous()]
+        [AllowAnonymous]
         [HttpGet]
         [Route("SignIn-Stub")]
         public IActionResult SigninStub()
@@ -123,7 +122,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
             return View("SigninStub", new List<string>{_config["StubId"],_config["StubEmail"]});
         }
         
-        [AllowAnonymous()]
+        [AllowAnonymous]
         [HttpPost]
         [Route("SignIn-Stub")]
         public async Task<IActionResult> SigninStubPost()
@@ -150,4 +149,3 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 #endif
     }
 }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

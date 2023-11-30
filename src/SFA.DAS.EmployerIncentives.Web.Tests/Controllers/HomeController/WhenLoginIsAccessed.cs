@@ -43,14 +43,14 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         }
 
         [Test]
-        public async Task Then_the_caller_is_redirected_to_home_if_the_user_has_an_account_claim()
+        public void Then_the_caller_is_redirected_to_home_if_the_user_has_an_account_claim()
         {
             // arrange
             var claimValue = Guid.NewGuid().ToString();
             _claimsIdentity.AddClaim(new Claim(EmployerClaimTypes.Account, claimValue));
 
             // act
-            var result = await _sut.Login() as RedirectToActionResult;
+            var result = _sut.Login() as RedirectToActionResult;
 
             // assert
             result.ActionName.Should().Be("Home");
@@ -59,10 +59,10 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Controllers.HomeController
         }
 
         [Test]
-        public async Task Then_the_caller_is_redirected_to_forbid_if_the_user_has_no_claim()
+        public void Then_the_caller_is_redirected_to_forbid_if_the_user_has_no_claim()
         {
             // act
-            var result = await _sut.Login() as ForbidResult;
+            var result = _sut.Login() as ForbidResult;
 
             // assert
             result.Should().NotBeNull();

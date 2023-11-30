@@ -3,7 +3,6 @@ using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
 using SFA.DAS.EmployerIncentives.Web.ViewModels.Apply;
 using System.Threading.Tasks;
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 namespace SFA.DAS.EmployerIncentives.Web.Controllers
 {
     [Route("{accountId}/apply")]
@@ -26,7 +25,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [Route("{accountLegalEntityId}/eligible-apprentices")]
         [HttpPost]
-        public async Task<IActionResult> QualificationQuestion(QualificationQuestionViewModel viewModel)
+        public IActionResult QualificationQuestion(QualificationQuestionViewModel viewModel)
         {
             if (!viewModel.HasTakenOnNewApprentices.HasValue)
             {
@@ -44,10 +43,9 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
 
         [HttpGet]
         [Route("{accountLegalEntityId}/taken-on-new-apprentices")]
-        public async Task<IActionResult> Redirect()
+        public IActionResult Redirect()
         {
             return RedirectToActionPermanent("GetQualificationQuestion");
         }
     }
 }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
