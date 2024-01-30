@@ -88,11 +88,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests.Services
                           o.ApiBaseUrl = _testContext.EmployerIncentivesApi.BaseAddress;
                           o.SubscriptionKey = "";
                       });
-                    s.Configure<CosmosDbConfigurationOptions>(o =>
-                    {
-                        o.Uri = "https://localhost:8081/";
-                        o.AuthKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-                    });
                     s.AddControllersWithViews(options =>
                     {
                         options.Filters.Add(new TestActionResultFilter(_actionResultHook));
