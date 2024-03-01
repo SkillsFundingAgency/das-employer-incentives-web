@@ -48,7 +48,6 @@ public static class ConfigurationExtensions
         services.Configure<WebConfigurationOptions>(configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
         services.Configure<WebConfigurationOptions>(configuration.GetSection(WebConfigurationOptions.EmployerIncentivesWebConfiguration));
         services.Configure<EmployerIncentivesApiOptions>(configuration.GetSection(EmployerIncentivesApiOptions.EmployerIncentivesApi));
-        services.Configure<CosmosDbConfigurationOptions>(configuration.GetSection(CosmosDbConfigurationOptions.CosmosDbConfiguration));
         services.Configure<IdentityServerOptions>(configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration));
         services.Configure<ExternalLinksConfiguration>(configuration.GetSection(ExternalLinksConfiguration.EmployerIncentivesExternalLinksConfiguration));
             

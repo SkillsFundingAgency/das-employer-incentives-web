@@ -1,6 +1,4 @@
-﻿using SFA.DAS.EmployerIncentives.Web.MockServer.CosmosDb;
-using SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi;
-using SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests;
+﻿using SFA.DAS.EmployerIncentives.Web.MockServer.EmployerIncentivesApi;
 using System;
 using System.Threading.Tasks;
 
@@ -31,10 +29,6 @@ namespace SFA.DAS.EmployerIncentives.Web.MockServer
                 .WithPreviousApprenticeshipIncentives()
                 .WithUpdateVrfCaseStatus()
                 .Build();
-
-            var readStore = await AccountsReadStoreBuilder.Create();
-            await readStore.WithAccountForAccountOwnerUserId(new TestData.Account.WithSingleLegalEntityWithEligibleApprenticeships().AccountId);
-            readStore.Build();
 
             var webSite = new LocalWebSite(employerIncentivesApi.Claims)
                 .Build()

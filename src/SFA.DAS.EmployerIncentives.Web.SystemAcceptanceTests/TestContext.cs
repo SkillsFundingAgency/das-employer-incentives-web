@@ -15,8 +15,7 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
     public class TestContext : IDisposable
     {
         public DirectoryInfo TestDirectory { get; set; }
-        public TestWebsite Website { get; set; }
-        public TestCosmosDb ReadStore { get; set; }        
+        public TestWebsite Website { get; set; }     
         public HttpClient WebsiteClient { get; set; }
         public TestEmployerIncentivesApi EmployerIncentivesApi { get; set; }
         public IAccountEncodingService EncodingService { get; set; }
@@ -26,7 +25,6 @@ namespace SFA.DAS.EmployerIncentives.Web.SystemAcceptanceTests
         public TestActionResult ActionResult { get; set; }
         public WebConfigurationOptions WebConfigurationOptions { get; set; }
         public ExternalLinksConfiguration ExternalLinksOptions { get; set; }
-        public CosmosDbConfigurationOptions CosmosDbConfigurationOptions { get; set; }
         
         private bool _isDisposed;
 

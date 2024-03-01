@@ -16,16 +16,12 @@ using SFA.DAS.EmployerIncentives.Web.Services.Applications;
 using SFA.DAS.EmployerIncentives.Web.Services.Apprentices;
 using SFA.DAS.EmployerIncentives.Web.Services.Email;
 using SFA.DAS.EmployerIncentives.Web.Services.LegalEntities;
-using SFA.DAS.EmployerIncentives.Web.Services.ReadStore;
 using SFA.DAS.EmployerIncentives.Web.Services.Security;
-using SFA.DAS.EmployerIncentives.Web.Services.Users;
 using SFA.DAS.Http;
 using StackExchange.Redis;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount;
 using SFA.DAS.EmployerIncentives.Web.Validators;
 using SFA.DAS.Encoding;
 using SFA.DAS.GovUK.Auth.AppStart;
@@ -123,13 +119,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
             serviceCollection
                 .AddOptions<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme)
-                .Configure<IUserService>((options, userService) =>
-                {
-                    options.Events.OnTokenValidated = async (ctx) => await PopulateAccountsClaim(ctx, userService);
-                });
-
-            serviceCollection
-                .AddOptions<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme)
                 .Configure<ILoggerFactory>((options, loggerFactory) =>
                 {
                     options.Events.OnRemoteFailure = async (ctx) => await OnRemoteFailure(ctx, loggerFactory);
@@ -142,9 +131,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
 
         public static IServiceCollection AddEmployerIncentivesService(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IDocumentClientFactory, DocumentClientFactory>();
-            serviceCollection.AddTransient<IAccountUsersReadOnlyRepository, AccountUsersReadOnlyRepository>();
-            serviceCollection.AddTransient<IUserService, UserService>();
             serviceCollection.AddTransient<IEmploymentStartDateValidator, EmploymentStartDateValidator>();
             serviceCollection.AddSingleton<IEncodingService, EncodingService>();
             serviceCollection.AddSingleton<IAccountEncodingService, AccountEncodingService>();
@@ -230,22 +216,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             }
 
             return Task.CompletedTask;
-        }
-
-        private static async Task PopulateAccountsClaim(
-            TokenValidatedContext ctx,
-            IUserService userService)
-        {
-            var userIdString = ctx.Principal.Claims
-                .First(c => c.Type.Equals(EmployerClaimTypes.UserId))
-                .Value;
-
-            if (Guid.TryParse(userIdString, out Guid userId))
-            {
-                var claims = await userService.GetClaims(userId);
-
-                claims.ToList().ForEach(c => ctx.Principal.Identities.First().AddClaim(c));
-            }
         }
 
         public static IServiceCollection AddDataEncryptionService(this IServiceCollection serviceCollection)
