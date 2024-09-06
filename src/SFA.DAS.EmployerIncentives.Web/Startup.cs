@@ -56,19 +56,8 @@ public class Startup
 
         services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
-        if (_configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null
-            && _configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"]
-                .Equals("true", StringComparison.CurrentCultureIgnoreCase))
-        {
-            services.AddMaMenuConfiguration("signout",  _configuration["ResourceEnvironmentName"]);
-        }
-        else
-        {
-            var identityServerOptions = new IdentityServerOptions();
-            _configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration).Bind(identityServerOptions);
-            services.AddMaMenuConfiguration("signout", identityServerOptions.ClientId, _configuration["ResourceEnvironmentName"]);
-        }
-
+        services.AddMaMenuConfiguration("signout",  _configuration["ResourceEnvironmentName"]);
+        
         services.AddMvc(
                 options =>
                 {

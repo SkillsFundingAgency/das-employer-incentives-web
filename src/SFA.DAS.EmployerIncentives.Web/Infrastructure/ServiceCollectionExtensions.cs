@@ -67,63 +67,8 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddSingleton<IStubAuthenticationService, StubAuthenticationService>();//TODO remove once gov login is live
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
-            if (configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"] != null 
-                && configuration[$"{WebConfigurationOptions.EmployerIncentivesWebConfiguration}:UseGovSignIn"]
-                    .Equals("true", StringComparison.CurrentCultureIgnoreCase))
-            {
-                serviceCollection.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-                serviceCollection.AddAndConfigureGovUkAuthentication(configuration, typeof(EmployerAccountPostAuthenticationClaimsHandler), "","/SignIn-Stub");
-            }
-            else
-            {
-                _ = serviceCollection
-                .AddAuthentication(options =>
-                {
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.AccessDeniedPath = new PathString("/error/403");
-                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
-                    options.Cookie.Name = CookieNames.AuthCookie;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.SlidingExpiration = true;
-                    options.Cookie.SameSite = SameSiteMode.None;
-                })
-                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-                {
-                    var identityServerOptions = new IdentityServerOptions();
-                    configuration.GetSection(IdentityServerOptions.IdentityServerConfiguration).Bind(identityServerOptions);
-
-                    options.UsePkce = identityServerOptions.UsePkce;
-
-                    options.ClientId = identityServerOptions.ClientId;
-                    options.ClientSecret = identityServerOptions.ClientSecret;
-                    options.Authority = identityServerOptions.BaseAddress;
-                    options.MetadataAddress = $"{identityServerOptions.BaseAddress}/.well-known/openid-configuration";
-                    options.ResponseType = OpenIdConnectResponseType.Code;
-
-                    var scopes = identityServerOptions.Scopes.Split(' ');
-                    foreach (var scope in scopes)
-                    {
-                        options.Scope.Add(scope);
-                    }
-
-                    options.ClaimActions.MapUniqueJsonKey("sub", "id");
-
-                    // https://auth0.com/docs/quickstart/webapp/aspnet-core-3/01-login                    
-                });
-
-            serviceCollection
-                .AddOptions<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme)
-                .Configure<ILoggerFactory>((options, loggerFactory) =>
-                {
-                    options.Events.OnRemoteFailure = async (ctx) => await OnRemoteFailure(ctx, loggerFactory);
-                });
-            }
+            serviceCollection.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
+            serviceCollection.AddAndConfigureGovUkAuthentication(configuration, typeof(EmployerAccountPostAuthenticationClaimsHandler), "","/SignIn-Stub");
 
             return serviceCollection;
         }
