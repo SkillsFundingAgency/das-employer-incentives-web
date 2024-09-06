@@ -141,28 +141,6 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             return services;
         }
 
-        private static Task OnRemoteFailure(
-           RemoteFailureContext ctx,
-           ILoggerFactory loggerFactory)
-        {
-            try
-            {
-                if (ctx.Failure.Message.Contains("Correlation failed"))
-                {
-                    var redirectUri = ctx.Properties.RedirectUri;
-                    var logger = loggerFactory.CreateLogger("SFA.DAS.EmployerIncentives.Authentication");
-
-                    logger.LogError(ctx.Failure, $"Correlation failed error when redirecting from {redirectUri}");
-                }
-            }
-            catch 
-            {
-                // ignore errors
-            }
-
-            return Task.CompletedTask;
-        }
-
         public static IServiceCollection AddDataEncryptionService(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IDataEncryptionService>(s =>
