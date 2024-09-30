@@ -11,6 +11,5 @@
         public virtual string AchieveServiceBaseUrl { get; set; }
         public virtual string DataEncryptionServiceKey { get; set; }
         public virtual string ApplicationShutterPageDate { get; set; }
-        public virtual bool UseGovSignIn { get; set; }
     }
 }
