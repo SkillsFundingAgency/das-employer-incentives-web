@@ -13,7 +13,20 @@ else
 }
 
 <main class="govuk-main-wrapper" id="main-content" role="main">
-    <div class="govuk-grid-row">
+	<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+		<div class="govuk-notification-banner__header">
+			<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+				Important
+			</h2>
+		</div>
+		<div class="govuk-notification-banner__content">
+			<p class="govuk-notification-banner__heading">
+				Your hire a new apprentice payments section will be removed after <span class="das-no-wrap">31 March 2025.</span>
+				Applications for these payments closed in 2022.
+			</p>
+		</div>
+	</div>
+	<div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <span class="govuk-caption-xl">
                 @Model.OrganisationName
