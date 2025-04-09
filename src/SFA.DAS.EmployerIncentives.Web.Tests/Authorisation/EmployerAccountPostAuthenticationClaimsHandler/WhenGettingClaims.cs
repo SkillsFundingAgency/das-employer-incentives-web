@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.GovUK.Auth.Employer;
 
 namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPostAuthenticationClaimsHandler
 {
@@ -28,7 +29,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
         private string _email;
         private string _emailNotMatching;
         private string _emailSuspended;
-        private Web.Authorisation.GovUserEmployerAccount.EmployerAccountPostAuthenticationClaimsHandler _handler;
+        private Web.Authorisation.GovUserEmployerAccount.GovAuthEmployerAccountService _handler;
         private GetUserAccountsResponse _response;
         private GetUserAccountsResponse _responseSuspended;
 
@@ -52,19 +53,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
                 Content = new StringContent(JsonSerializer.Serialize(_response)),
                 StatusCode = HttpStatusCode.OK
             };
-            var suspendedResponse = new HttpResponseMessage
-            {
-                Content = new StringContent(JsonSerializer.Serialize(_responseSuspended)),
-                StatusCode = HttpStatusCode.OK
-            };
-            var notFoundResponse = new HttpResponseMessage
-            {
-                Content = new StringContent(JsonSerializer.Serialize(new GetUserAccountsResponse())),
-                StatusCode = HttpStatusCode.OK
-            };
             var employerAccountRequest = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _email);
-            var employerAccountRequestSuspended = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _emailSuspended);
-            var employerAccountRequestNonMatching = OuterApiRoutes.UserEmployerAccounts.GetEmployerAccountInfo(_userId, _emailNotMatching);
             var httpMessageHandler = new Mock<HttpMessageHandler>();
             httpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -76,120 +65,35 @@ namespace SFA.DAS.EmployerIncentives.Web.Tests.Authorisation.EmployerAccountPost
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => response);
-            httpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(c =>
-                        c.Method.Equals(HttpMethod.Get)
-                        && c.RequestUri.Equals(new Uri("https://tempuri.org/"+ employerAccountRequestSuspended))
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => suspendedResponse);
-            httpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(c =>
-                        c.Method.Equals(HttpMethod.Get)
-                        && c.RequestUri.Equals(new Uri("https://tempuri.org/"+ employerAccountRequestNonMatching))
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => notFoundResponse);
             
             var client = new HttpClient(httpMessageHandler.Object);
             client.BaseAddress = new Uri("https://tempuri.org");
 
-            _handler = new Web.Authorisation.GovUserEmployerAccount.EmployerAccountPostAuthenticationClaimsHandler(client);
+            _handler = new Web.Authorisation.GovUserEmployerAccount.GovAuthEmployerAccountService(client);
 
-        }
-        [Test]
-        public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated()
-        {
-            var tokenValidatedContext = ArrangeTokenValidatedContext(_userId, _email);
-            
-            var actual = (await _handler.GetClaims(tokenValidatedContext)).ToList();
-
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.UserId)).Value.Should().Be(_response.EmployerUserId);
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.GivenName)).Value.Should().Be(_response.FirstName);
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.FamilyName)).Value.Should().Be(_response.LastName);
-            actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Should().BeNull();
-        }
-        [Test]
-        public async Task Then_The_Claims_Are_Passed_To_The_Api_And_Id_FirstName_LastName_Populated_And_Suspended_Set_If_True()
-        {
-            var tokenValidatedContext = ArrangeTokenValidatedContext(_userId, _emailSuspended);
-            
-            var actual = (await _handler.GetClaims(tokenValidatedContext)).ToList();
-
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.UserId)).Value.Should().Be(_responseSuspended.EmployerUserId);
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.GivenName)).Value.Should().Be(_responseSuspended.FirstName);
-            actual.First(c=>c.Type.Equals(EmployerClaimTypes.FamilyName)).Value.Should().Be(_responseSuspended.LastName);
-            actual.First(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Value.Should().Be("Suspended");
         }
 
         [Test]
         public async Task Then_The_Accounts_Are_Populated_For_Owner_And_Transactor_Accounts()
         {
-            var tokenValidatedContext = ArrangeTokenValidatedContext(_userId, _email);
             
-            var actual = (await _handler.GetClaims(tokenValidatedContext)).ToList();
+            var actual = (await _handler.GetUserAccounts(_userId, _email));
 
-            var actualAccountClaims = actual.Where(c => c.Type.Equals(EmployerClaimTypes.Account)).Select(c => c.Value)
-                .ToList();
-            actualAccountClaims.Count.Should().Be(2);
-            actualAccountClaims.Should().BeEquivalentTo(
-                _response.UserAccounts
-                    .Where(c => c.Role.Equals(UserRole.Owner.ToString()) ||
-                                c.Role.Equals(UserRole.Transactor.ToString())).Select(c => c.AccountId).ToList());
-        }
-
-        [Test]
-        public async Task Then_If_No_Response_From_Api_Null_Returned()
-        {
-            var tokenValidatedContext = ArrangeTokenValidatedContext(_userId, _emailNotMatching);
-            
-            var actual = (await _handler.GetClaims(tokenValidatedContext)).ToList();
-
-            actual.Should().BeEmpty();
-        }
-        
-        private TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string emailAddress)
-        {
-            var identity = new ClaimsIdentity(new List<Claim>
+            actual.Should().BeEquivalentTo(new
             {
-                new Claim(ClaimTypes.NameIdentifier, nameIdentifier),
-                new Claim(ClaimTypes.Email, emailAddress)
+                EmployerAccounts = _response.UserAccounts != null? _response.UserAccounts.Select(c => new EmployerUserAccountItem
+                {
+                    Role = c.Role,
+                    AccountId = c.AccountId,
+                    ApprenticeshipEmployerType = Enum.Parse<ApprenticeshipEmployerType>(c.ApprenticeshipEmployerType.ToString()),
+                    EmployerName = c.EmployerName,
+                }).ToList() : [],
+                FirstName = _response.FirstName,
+                IsSuspended = _response.IsSuspended,
+                LastName = _response.LastName,
+                EmployerUserId = _response.EmployerUserId,
             });
-        
-            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(identity));
-            return new TokenValidatedContext(new DefaultHttpContext(), new AuthenticationScheme(",","", typeof(TestAuthHandler)),
-                new OpenIdConnectOptions(), Mock.Of<ClaimsPrincipal>(), new AuthenticationProperties())
-            {
-                Principal = claimsPrincipal
-            };
         }
-        private class TestAuthHandler : IAuthenticationHandler
-        {
-            public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
-            {
-                throw new NotImplementedException();
-            }
 
-            public Task<AuthenticateResult> AuthenticateAsync()
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task ChallengeAsync(AuthenticationProperties properties)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task ForbidAsync(AuthenticationProperties properties)
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 }
