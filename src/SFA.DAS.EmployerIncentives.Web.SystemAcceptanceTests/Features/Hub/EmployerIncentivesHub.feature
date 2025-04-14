@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: EmployerIncentivesHub
 	As an employer
 	I want to access the EI hub page

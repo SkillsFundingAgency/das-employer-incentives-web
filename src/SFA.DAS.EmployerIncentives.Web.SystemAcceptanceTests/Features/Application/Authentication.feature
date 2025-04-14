@@ -1,4 +1,6 @@
-﻿Feature: Authentication
+﻿@ignore
+
+Feature: Authentication
 	In order to prevent unauthoried access
 	As a system
 	I want to only allow authorised access

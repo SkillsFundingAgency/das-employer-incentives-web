@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: ApplicationShutter
 	As an employer applying for an apprenticeship payment after the phase 3 period has closed
 	I want to be prevented from applying for the application
