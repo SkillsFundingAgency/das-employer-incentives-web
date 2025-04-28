@@ -27,6 +27,8 @@ using SFA.DAS.Encoding;
 using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Configuration;
+using SFA.DAS.GovUK.Auth.Employer;
+using SFA.DAS.GovUK.Auth.Models;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
@@ -68,7 +70,11 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
 
             serviceCollection.Configure<GovUkOidcConfiguration>(configuration.GetSection("GovUkOidcConfiguration"));
-            serviceCollection.AddAndConfigureGovUkAuthentication(configuration, typeof(EmployerAccountPostAuthenticationClaimsHandler), "","/SignIn-Stub");
+            serviceCollection.AddAndConfigureGovUkAuthentication(configuration, new AuthRedirects
+            {
+                SignedOutRedirectUrl = "",
+                LocalStubLoginPath = "/SignIn-Stub"
+            }, null, typeof(GovAuthEmployerAccountService));
 
             return serviceCollection;
         }
@@ -87,7 +93,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Infrastructure
             serviceCollection.AddClient<IBankingDetailsService>((c, s) => new BankingDetailsService(c));
             serviceCollection.AddClient<IEmailService>((c, s) => new EmailService(c));
 
-            serviceCollection.AddClient<ICustomClaims>((c,s) => new EmployerAccountPostAuthenticationClaimsHandler(c));
+            serviceCollection.AddClient<IGovAuthEmployerAccountService>((c,s) => new GovAuthEmployerAccountService(c));
 
             return serviceCollection;
         }

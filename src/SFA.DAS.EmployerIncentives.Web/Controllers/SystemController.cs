@@ -20,5 +20,12 @@ namespace SFA.DAS.EmployerIncentives.Web.Controllers
         {
             return View(new ApplicationsClosedModel(accountId, _configuration.ManageApprenticeshipSiteUrl));
         }
+
+        [HttpGet]
+        [Route("{accountId}/service-closed")]
+        public IActionResult ServiceClosed(string accountId)
+        {
+            return View();
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SFA.DAS.GovUK.Auth.Employer;
 
 namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
 {
@@ -26,5 +27,7 @@ namespace SFA.DAS.EmployerIncentives.Web.Authorisation.GovUserEmployerAccount
         public string EmployerName { get; set; }
         [JsonPropertyName("role")]
         public string Role { get; set; }
+        [JsonPropertyName("apprenticeshipEmployerType")]
+        public ApprenticeshipEmployerType ApprenticeshipEmployerType { get; set; }
     }
 }

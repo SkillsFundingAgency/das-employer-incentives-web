@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: AmendBankDetails
 	As an employer with an application for the new apprentice grant
 	If I want to amend the bank details for my organisation

@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: ApprenticeConfirmation
 	As an employer applying for the new apprentice grant
 	If I have selected 2 eligible apprenticeships

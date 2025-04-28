@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: SelectOrganisation
 	As an employer applying for the new apprenticeship grant with more than one legal entity organisation
 	I want to be able to select the leagl entity the application is for

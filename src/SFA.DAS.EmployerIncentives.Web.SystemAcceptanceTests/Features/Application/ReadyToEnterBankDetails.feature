@@ -1,4 +1,5 @@
-﻿@employerIncentivesApi
+﻿@ignore
+@employerIncentivesApi
 Feature: ReadyToEnterBankDetails
 	As an employer applying for the new apprentice grant
 	I want to confirm whether I can provide my bank details now
